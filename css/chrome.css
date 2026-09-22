@@ -11,7 +11,15 @@
    ================================================================ */
 
 .icon-chip { display: inline-flex; align-items: center; justify-content: center; }
-.inline-icon { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+/* 🩹 flexコンテナに直接置かれたSVGは、幅/高さをHTML属性でしか指定していないと
+   （CSSのwidth/heightではないため）ブラウザのflexアイテムのデフォルト
+   min-width:auto/flex-shrinkの計算対象になり、意図した正方形サイズより
+   大幅に細く潰れて描画されることがある（例: 14x14指定のはずが6x14になる）。
+   .icon-chip配下（inline-flex）では起きないが、category-view.jsの
+   .cv-tile-fav-btn/.cv-tile-wish-btnのような素のdisplay:flexボタン直下に
+   置かれた場合に発生を確認したため、アイコン全体に一律flex-shrink:0を
+   付けて再発を防ぐ。 */
+.inline-icon { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; flex-shrink: 0; }
 
 #app-root { padding-bottom: 84px; min-height: 100vh; }
 

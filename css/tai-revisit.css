@@ -1,0 +1,176 @@
+/* ================================================================
+   tai-revisit（再訪精霊データベース）機能専用のデザイントークン・スタイル。
+
+   移植元: tai-revisit/index.html の <style> のうち、このツール自身のUI
+   （イントロカード・進行中/次回の特別来訪・シーズン別達成度・検索/フィルター
+   カード・精霊カード・まだ一度も再訪が来ていない精霊セクション・フッター）
+   に関わる部分だけを抽出したもの。nav（上部バー）/サイドバー/site-dock/
+   settings-modal等の「共有chrome」に relatedなスタイルは、tai-hubの
+   js/chrome/*.js・css/chrome.cssに既に同等のものがあるため移植していない。
+
+   スコープは #app-root 配下の .tai-revisit-view のみ（tai-nomacan.css等
+   既存の移植ツールと同じ考え方）。このファイルは index.html には
+   <link> していない ── tai-revisit-view.js の mount() が最初の描画時に
+   <link rel="stylesheet"> を動的に1回だけ挿入する。
+
+   色トークン（--cyan等）は元のindex.htmlの:root定義をそのままこの
+   スコープ内に持ち込んだもの（tai-hubの共有--hub-*トークンとは別系統。
+   このツール自身の見た目は元のものを変更せず維持する、という既存の
+   移植ツールと同じ方針）。
+   ================================================================ */
+
+.tai-revisit-view {
+  --bg:        #F2F2F7;
+  --card:      #FFFFFF;
+  --sep:       rgba(60,60,67,0.12);
+  --cyan:      #32ADE6;
+  --cyan-d:    #1673A1;
+  --cyan-bg:   rgba(50,173,230,0.10);
+  --green:     #34C759;
+  --red:       #FF3B30;
+  --text:      #1C1C1E;
+  --text-2:    #636366;
+  --text-3:    #C7C7CC;
+  --r:         16px;
+  --r-sm:      10px;
+
+  color: var(--text);
+  min-height: 100%;
+  padding: 20px 0 24px;
+}
+[data-theme="dark"] .tai-revisit-view {
+  --bg:        #000000;
+  --card:      #1C1C1E;
+  --sep:       rgba(255,255,255,0.14);
+  --cyan-d:    #64D2FF;
+  --cyan-bg:   rgba(50,173,230,0.18);
+  --green:     #30D158;
+  --text:      #F2F2F7;
+  --text-2:    #98989D;
+  --text-3:    #636366;
+}
+
+.tai-revisit-view .tr-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 850px) { .tai-revisit-view .tr-wrap { max-width: 960px; } }
+
+.tai-revisit-view .page-head { text-align: center; margin-bottom: 18px; }
+.tai-revisit-view .page-head h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+
+.tai-revisit-view .sec-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: var(--text-2); padding: 20px 4px 10px; display: flex; align-items: center; gap: 6px; }
+.tai-revisit-view .sec-sub { font-size: 12px; color: var(--text-2); padding: 0 4px 12px; line-height: 1.7; }
+.tai-revisit-view .card { background: var(--card); border-radius: var(--r); padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); margin-bottom: 14px; }
+.tai-revisit-view .card p { font-size: 13px; line-height: 1.8; color: var(--text); }
+.tai-revisit-view .card a { color: var(--cyan-d); text-decoration: underline; text-underline-offset: 2px; }
+
+/* ── 検索・フィルター ─────────────────────── */
+.tai-revisit-view .filter-card { background: var(--card); border-radius: var(--r); padding: 14px; margin-top: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.tai-revisit-view .filter-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tai-revisit-view .filter-search, .tai-revisit-view .filter-select {
+  flex: 1 1 200px; background: var(--bg); border: 1.5px solid var(--sep); border-radius: var(--r-sm);
+  padding: 10px 12px; font-size: 14px; color: var(--text); box-sizing: border-box; font-family: inherit;
+}
+.tai-revisit-view .filter-search:focus, .tai-revisit-view .filter-select:focus { outline: none; border-color: var(--cyan); }
+.tai-revisit-view .filter-select { flex: 1 1 140px; }
+.tai-revisit-view .filter-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--sep); }
+.tai-revisit-view .filter-stats-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.tai-revisit-view .filter-stats { font-size: 12px; color: var(--text-2); padding: 10px 2px 0; }
+.tai-revisit-view .filter-clear-btn {
+  font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 999px;
+  background: var(--bg); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap; flex-shrink: 0; cursor: pointer;
+}
+.tai-revisit-view .filter-clear-btn:hover { border-color: var(--cyan); color: var(--cyan-d); }
+
+.tai-revisit-view .season-summary { display: none; background: var(--cyan-bg); color: var(--cyan-d); border-radius: var(--r-sm); padding: 10px 12px; margin-top: 10px; font-size: 12.5px; font-weight: 600; line-height: 1.7; }
+.tai-revisit-view .season-summary.show { display: block; }
+
+/* ── 精霊カード ─────────────────────────── */
+.tai-revisit-view .spirit-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+.tai-revisit-view .spirit-card { background: var(--card); border-radius: var(--r); padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); display: flex; gap: 12px; }
+.tai-revisit-view .spirit-icon {
+  width: 52px; height: 52px; border-radius: 12px; background: var(--bg); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.tai-revisit-view .spirit-icon img { width: 100%; height: 100%; object-fit: contain; }
+.tai-revisit-view .spirit-icon-fallback { display: none; color: var(--cyan-d); }
+.tai-revisit-view .spirit-icon.no-image img { display: none; }
+.tai-revisit-view .spirit-icon.no-image .spirit-icon-fallback { display: block; }
+.tai-revisit-view .spirit-body { flex: 1; min-width: 0; }
+.tai-revisit-view .spirit-name-ja { font-size: 15px; font-weight: 700; display: block; }
+.tai-revisit-view .spirit-name-en { font-size: 11.5px; color: var(--text-2); margin-top: 1px; }
+.tai-revisit-view .spirit-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.tai-revisit-view .spirit-badge { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--cyan-bg); color: var(--cyan-d); }
+.tai-revisit-view .spirit-badge.area { background: var(--bg); color: var(--text-2); font-weight: 500; }
+.tai-revisit-view .spirit-badge.ongoing { background: rgba(52,199,89,0.12); color: #248A3D; }
+[data-theme="dark"] .tai-revisit-view .spirit-badge.ongoing { background: rgba(48,209,88,0.18); color: var(--green); }
+.tai-revisit-view .visit-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tai-revisit-view .visit-chip { font-size: 11px; font-variant-numeric: tabular-nums; padding: 3px 8px; border-radius: 6px; background: var(--bg); color: var(--text); white-space: nowrap; }
+.tai-revisit-view .ongoing-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--green); vertical-align: middle; }
+.tai-revisit-view .visit-chip.sv { background: rgba(52,199,89,0.12); color: #248A3D; }
+[data-theme="dark"] .tai-revisit-view .visit-chip.sv { background: rgba(48,209,88,0.18); color: var(--green); }
+.tai-revisit-view .visit-chip.err { background: rgba(255,59,48,0.10); color: var(--red); }
+.tai-revisit-view .visit-count { font-size: 11px; color: var(--text-2); margin-top: 6px; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.tai-revisit-view .spirit-rank-badge { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: var(--cyan-bg); color: var(--cyan-d); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.tai-revisit-view .spirit-items { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.tai-revisit-view .spirit-item-icon {
+  width: 26px; height: 26px; border-radius: 6px; background: var(--bg); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.tai-revisit-view .spirit-item-icon img { width: 100%; height: 100%; object-fit: contain; }
+
+/* 🔗 #/tai-revisit/spirit=<精霊名> ディープリンクでジャンプしてきた際、対象
+   カードだけを一時的に目立たせるワンショットのハイライト。 */
+@keyframes trSpiritCardFlash {
+  0%, 100% { box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+  20%, 80% { box-shadow: 0 0 0 3px var(--cyan); }
+}
+.tai-revisit-view .spirit-card-highlight { animation: trSpiritCardFlash 2s ease-in-out; }
+
+.tai-revisit-view .empty-state { text-align: center; padding: 40px 16px; color: var(--text-2); font-size: 13px; }
+
+/* ── 折り畳み: まだ再訪が来ていない精霊 / シーズン別達成度 ─────────── */
+.tai-revisit-view .collapse-section { background: var(--card); border-radius: var(--r); padding: 14px 16px; margin-top: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.tai-revisit-view .collapse-summary {
+  cursor: pointer; font-size: 15px; font-weight: 700; list-style: none;
+  display: flex; align-items: center; gap: 8px; color: var(--text);
+}
+.tai-revisit-view .collapse-summary::-webkit-details-marker { display: none; }
+.tai-revisit-view .collapse-summary::before {
+  content: ""; display: inline-block; width: 10px; height: 10px; flex-shrink: 0;
+  background-color: var(--text-2);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  transition: transform 0.15s;
+}
+.tai-revisit-view .collapse-section[open] .collapse-summary::before { transform: rotate(90deg); }
+.tai-revisit-view .collapse-count { font-size: 12.5px; font-weight: 500; color: var(--text-2); }
+.tai-revisit-view .collapse-note { font-size: 12px; color: var(--text-2); line-height: 1.7; margin: 10px 2px 0; }
+.tai-revisit-view .collapse-section .spirit-list { margin-top: 12px; }
+.tai-revisit-view .collapse-section .filter-row { margin-top: 10px; }
+.tai-revisit-view .collapse-section .filter-stats { padding: 8px 2px 0; }
+.tai-revisit-view .spirit-icon.no-image { display: flex; align-items: center; justify-content: center; font-size: 22px; opacity: 0.5; }
+
+.tai-revisit-view .season-overview-overall {
+  font-size: 12.5px; font-weight: 600; color: var(--cyan-d); background: var(--cyan-bg);
+  border-radius: var(--r-sm); padding: 10px 12px; margin-top: 10px; line-height: 1.6;
+}
+.tai-revisit-view .season-overview-row {
+  display: block; width: 100%; text-align: left; padding: 10px 2px; border-bottom: 0.5px solid var(--sep);
+  background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; font-family: inherit;
+}
+.tai-revisit-view .season-overview-row:last-child { border-bottom: none; }
+.tai-revisit-view .season-overview-row:hover .season-overview-name { color: var(--cyan-d); }
+.tai-revisit-view .season-overview-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.tai-revisit-view .season-overview-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.tai-revisit-view .season-overview-pct { font-size: 12px; font-weight: 700; color: var(--cyan-d); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.tai-revisit-view .season-overview-track { height: 6px; border-radius: 999px; background: var(--bg); margin-top: 6px; overflow: hidden; }
+.tai-revisit-view .season-overview-fill { height: 100%; background: var(--cyan); border-radius: 999px; }
+.tai-revisit-view .season-overview-sub { font-size: 11px; color: var(--text-2); margin-top: 4px; }
+
+.tai-revisit-view .num-value { font-weight: 700; }
+.tai-revisit-view .num-unit { font-weight: 400; opacity: 0.7; }
+
+.tai-revisit-view footer { text-align: center; padding: 24px 16px 4px; color: var(--text-2); font-size: 12px; border-top: 1px solid var(--sep); margin-top: 40px; line-height: 1.7; }
+.tai-revisit-view footer a { color: var(--cyan-d); text-decoration: underline; text-underline-offset: 2px; }

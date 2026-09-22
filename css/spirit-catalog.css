@@ -1,0 +1,297 @@
+/* ================================================================
+   spirit-catalog（精霊ツリー管理）機能専用のデザイントークン・スタイル。
+
+   移植元: spirit-catalog/index.html の <style> のうち、このツール自身の
+   UI（検索・絞り込みパネル・統計サマリー・称号・精霊グリッド／エリア別・
+   シーズン別グループ表示・精霊詳細ツリー図・段階ツリー・再訪バッジ・
+   トースト）に関わる部分だけを抽出したもの。nav/sidebar/site-dock/
+   pf-modal等の「共有chrome」相当のスタイルはtai-hubのcss/chrome.cssに
+   既にあるため移植していない（.pf-row/.pf-icon-btn等の土台をそのまま
+   流用し、このファイルはこのツール固有の追加分だけを持つ）。
+
+   スコープは .spirit-catalog-view 配下のみ（他の移植済みツールと同じ
+   考え方）。色トークンは元サイトの配色をそのまま移植している
+   （tai-hubのchrome向けトークンには寄せず、ツール本来の見た目を維持）。
+
+   このファイルは index.html に<link>していない —— spirit-catalog-view.js
+   の mount() が最初の描画時に <link rel="stylesheet"> を動的に1回だけ
+   挿入する。
+   ================================================================ */
+
+.spirit-catalog-view {
+  --sc-bg:        #F2F2F7;
+  --sc-card:      #FFFFFF;
+  --sc-sep:       rgba(60,60,67,0.12);
+  --sc-green:     #34C759;
+  --sc-green-d:   #248A3D;
+  --sc-green-bg:  rgba(52,199,89,0.10);
+  --sc-green-fill: #22813A;
+  --sc-node-unlocked-tint: rgba(52,199,89,0.52);
+  --sc-blue:      #007AFF;
+  --sc-blue-bg:   rgba(0,122,255,0.08);
+  --sc-orange:    #FF9500;
+  --sc-orange-bg: rgba(255,149,0,0.10);
+  --sc-red:       #FF3B30;
+  --sc-next-avail:      #B8860B;
+  --sc-next-avail-glow: rgba(184,134,11,0.32);
+  --sc-text:      #1C1C1E;
+  --sc-text-2:    #8E8E93;
+  --sc-text-3:    #C7C7CC;
+  --sc-r:         16px;
+  --sc-r-sm:      10px;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  color: var(--sc-text);
+  background: var(--sc-bg);
+  min-height: 100%;
+  padding: 14px 16px 30px;
+  box-sizing: border-box;
+}
+.spirit-catalog-view * { box-sizing: border-box; }
+[data-theme="dark"] .spirit-catalog-view {
+  --sc-bg:        #000000;
+  --sc-card:      #1C1C1E;
+  --sc-sep:       rgba(255,255,255,0.14);
+  --sc-green-d:   #30D158;
+  --sc-green-bg:  rgba(52,199,89,0.16);
+  --sc-node-unlocked-tint: rgba(52,199,89,0.42);
+  --sc-blue-bg:   rgba(0,122,255,0.14);
+  --sc-orange-bg: rgba(255,149,0,0.16);
+  --sc-next-avail:      #FFD60A;
+  --sc-next-avail-glow: rgba(255,214,10,0.38);
+  --sc-text:      #F2F2F7;
+  --sc-text-2:    #98989D;
+  --sc-text-3:    #636366;
+}
+.spirit-catalog-view .sc-inline-icon { stroke: var(--sc-green-d); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; color: var(--sc-green-d); }
+.spirit-catalog-view .sc-wrap { max-width: 720px; margin: 0 auto; }
+@media (min-width: 850px) { .spirit-catalog-view .sc-wrap { max-width: 960px; } }
+
+.spirit-catalog-view .sc-head { text-align: center; margin-bottom: 16px; }
+.spirit-catalog-view .sc-head h1 { font-size: 19px; font-weight: 700; letter-spacing: -0.3px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* ── 再訪連携バッジ ── */
+.spirit-catalog-view .revisit-badge:empty { display: none; }
+.spirit-catalog-view .revisit-badge {
+  max-width: 100%; margin: 0 0 12px; background: var(--sc-card); border: 1px solid var(--sc-sep);
+  border-radius: var(--sc-r-sm); padding: 10px 14px; font-size: 13px; color: var(--sc-text);
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; line-height: 1.5;
+}
+.spirit-catalog-view .revisit-badge-text { flex: 1; min-width: 0; }
+.spirit-catalog-view .revisit-badge-text b { color: var(--sc-green-d); }
+.spirit-catalog-view .revisit-badge-btn {
+  background: var(--sc-green-fill); color: #fff; border: none; border-radius: var(--sc-r-sm);
+  padding: 8px 12px; font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+  white-space: nowrap; flex-shrink: 0;
+}
+
+/* ── ダッシュボードを開くボタン ── */
+.spirit-catalog-view .sc-dash-open-row { display: flex; justify-content: center; margin: 0 0 12px; }
+.spirit-catalog-view .sc-dash-open-btn {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--sc-card); border: 1px solid var(--sc-sep);
+  border-radius: var(--sc-r-sm); padding: 8px 14px; font-size: 12.5px; font-weight: 700; color: var(--sc-text-2);
+  cursor: pointer; font-family: inherit;
+}
+
+/* ── フィルターバー ── */
+.spirit-catalog-view .sc-sec-label { font-size: 12px; font-weight: 700; color: var(--sc-text-2); text-transform: uppercase; letter-spacing: 0.4px; padding: 18px 4px 10px; }
+.spirit-catalog-view .sc-sec-label:first-child { padding-top: 0; }
+.spirit-catalog-view .filter-card { background: var(--sc-card); border-radius: var(--sc-r); padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.spirit-catalog-view .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.spirit-catalog-view .filter-search {
+  flex: 1 1 200px; background: var(--sc-bg); border: 1.5px solid var(--sc-sep); border-radius: var(--sc-r-sm);
+  padding: 10px 12px; font-size: 14.5px; color: var(--sc-text); outline: none; font-family: inherit;
+}
+.spirit-catalog-view .filter-search:focus { border-color: var(--sc-green); }
+.spirit-catalog-view .filter-select {
+  flex: 1 1 120px; background: var(--sc-bg); border: 1.5px solid var(--sc-sep); border-radius: var(--sc-r-sm);
+  padding: 10px 10px; font-size: 13.5px; color: var(--sc-text); outline: none; font-family: inherit;
+}
+.spirit-catalog-view .filter-reset-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.spirit-catalog-view .filter-reset-btn {
+  background: var(--sc-bg); border: none; padding: 8px 14px; border-radius: var(--sc-r-sm);
+  font-size: 13px; font-weight: 600; color: var(--sc-blue); cursor: pointer; font-family: inherit;
+}
+.spirit-catalog-view .filter-reset-btn:active { background: var(--sc-sep); }
+.spirit-catalog-view .filter-toggle-btn {
+  background: var(--sc-bg); border: 1px solid var(--sc-sep); padding: 7px 13px; border-radius: var(--sc-r-sm);
+  font-size: 13px; font-weight: 600; color: var(--sc-text-2); cursor: pointer; font-family: inherit;
+}
+.spirit-catalog-view .filter-toggle-btn.active { background: var(--sc-green-fill); border-color: var(--sc-green-fill); color: #fff; }
+.spirit-catalog-view .filter-stats { font-size: 12px; color: var(--sc-text-2); padding: 10px 2px 0; }
+.spirit-catalog-view .filter-remaining-cost { font-size: 12.5px; color: var(--sc-text-2); padding: 6px 2px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.spirit-catalog-view .bulk-catchup-row:empty { display: none; }
+.spirit-catalog-view .bulk-catchup-row { padding: 8px 2px 0; }
+.spirit-catalog-view .bulk-catchup-row .sc-block-btn { width: 100%; box-sizing: border-box; padding: 8px; }
+.spirit-catalog-view .sc-cost-toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--sc-sep); font-size: 12.5px; color: var(--sc-text-2); }
+.spirit-catalog-view .sc-cost-toggle-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.spirit-catalog-view .sc-test-tag { display: inline-block; font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--sc-bg); border: 1px solid var(--sc-sep); color: var(--sc-text-2); }
+
+/* 汎用のブロックボタン（一括操作等。chrome.cssの.pf-icon-btnと違い自ツールの緑パレット） */
+.spirit-catalog-view .sc-block-btn {
+  display: block; width: 100%; background: var(--sc-bg); border: 1px solid var(--sc-sep); color: var(--sc-text);
+  border-radius: var(--sc-r-sm); padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; text-align: center;
+}
+.spirit-catalog-view .sc-block-btn:active { background: var(--sc-sep); }
+.spirit-catalog-view .sc-confirm-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 2px 0; }
+.spirit-catalog-view .sc-confirm-text { flex: 1; font-size: 12.5px; color: var(--sc-text); line-height: 1.5; }
+.spirit-catalog-view .sc-confirm-btn { border-radius: var(--sc-r-sm); padding: 8px 14px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; }
+.spirit-catalog-view .sc-confirm-btn.ok { background: var(--sc-green-fill); color: #fff; }
+.spirit-catalog-view .sc-confirm-btn.danger { background: #ff3b30; color: #fff; }
+.spirit-catalog-view .sc-confirm-btn.cancel { background: var(--sc-bg); border: 1px solid var(--sc-sep); color: var(--sc-text); }
+
+/* ── 表示モード切替 ── */
+.spirit-catalog-view .view-mode-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+.spirit-catalog-view .view-mode-btn {
+  flex: 1 1 100px; background: var(--sc-card); border: 1.5px solid var(--sc-sep); border-radius: var(--sc-r-sm);
+  padding: 10px; font-size: 13px; font-weight: 700; color: var(--sc-text-2); cursor: pointer;
+  font-family: inherit; box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.spirit-catalog-view .view-mode-btn.active { background: var(--sc-green-fill); border-color: var(--sc-green-fill); color: #fff; }
+
+/* ── 統計サマリー ── */
+.spirit-catalog-view .overall-pct-card {
+  background: var(--sc-card); border-radius: var(--sc-r); padding: 16px; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); margin-top: 14px;
+}
+.spirit-catalog-view .overall-pct-num { font-size: 34px; font-weight: 800; color: var(--sc-green-d); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.spirit-catalog-view .overall-pct-label { font-size: 12px; color: var(--sc-text-2); margin-top: 2px; }
+.spirit-catalog-view .stats-row { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.spirit-catalog-view .stat-box { flex: 1; min-width: 100px; background: var(--sc-card); border-radius: var(--sc-r); padding: 14px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.spirit-catalog-view .stat-num { font-size: 22px; font-weight: 800; color: var(--sc-green-d); font-variant-numeric: tabular-nums; }
+.spirit-catalog-view .stat-label { font-size: 11.5px; color: var(--sc-text-2); margin-top: 2px; }
+.spirit-catalog-view .sync-refresh-row { display: flex; justify-content: center; margin-top: 10px; }
+.spirit-catalog-view .sync-refresh-btn { display: inline-flex; align-items: center; gap: 5px; }
+
+/* ── 称号 ── */
+.spirit-catalog-view .titles-panel { margin-top: 10px; }
+.spirit-catalog-view .titles-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 6px; }
+.spirit-catalog-view .titles-label { font-size: 11.5px; font-weight: 700; color: var(--sc-text-2); }
+.spirit-catalog-view .titles-count { font-size: 11.5px; font-weight: 700; color: var(--sc-text-2); }
+.spirit-catalog-view .titles-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.spirit-catalog-view .title-chip { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px; white-space: nowrap; background: var(--sc-orange-bg); color: #B8740A; }
+[data-theme="dark"] .spirit-catalog-view .title-chip { color: var(--sc-orange); }
+.spirit-catalog-view .title-chip.locked { background: var(--sc-bg); color: var(--sc-text-3); }
+
+/* ── 精霊グリッド ── */
+.spirit-catalog-view .spirit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
+.spirit-catalog-view .spirit-card {
+  background: var(--sc-card); border-radius: var(--sc-r-sm); padding: 10px; text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; border: 1.5px solid transparent; cursor: pointer;
+  font-family: inherit;
+}
+.spirit-catalog-view .spirit-card:active { opacity: 0.75; }
+.spirit-catalog-view .spirit-card.complete { background: var(--sc-blue-bg); border-color: var(--sc-blue); }
+.spirit-catalog-view .spirit-thumb-wrap { width: 100%; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden; background: var(--sc-bg); margin-bottom: 6px; display: flex; align-items: center; justify-content: center; }
+.spirit-catalog-view .spirit-thumb-wrap img { width: 100%; height: 100%; object-fit: contain; }
+.spirit-catalog-view .spirit-thumb-fallback { font-size: 28px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.spirit-catalog-view .spirit-name { font-size: 12.5px; font-weight: 600; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 2.6em; }
+.spirit-catalog-view .spirit-meta { font-size: 10px; color: var(--sc-text-2); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spirit-catalog-view .spirit-progress-bar { height: 4px; border-radius: 2px; background: var(--sc-sep); margin-top: 6px; overflow: hidden; }
+.spirit-catalog-view .spirit-progress-fill { height: 100%; background: var(--sc-green); }
+.spirit-catalog-view .spirit-progress-fill.complete { background: var(--sc-blue); }
+.spirit-catalog-view .spirit-badge {
+  position: absolute; top: 6px; left: 6px; font-size: 9px; font-weight: 700; padding: 2px 6px;
+  border-radius: 999px; background: rgba(0,0,0,0.55); color: #fff;
+}
+.spirit-catalog-view .spirit-revisit-badge { position: absolute; top: 6px; right: 6px; font-size: 12px; }
+.spirit-catalog-view .spirit-area-tag { font-size: 9.5px; color: var(--sc-text-2); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.spirit-catalog-view .empty-note { text-align: center; color: var(--sc-text-2); font-size: 13px; padding: 30px 0; grid-column: 1 / -1; }
+
+/* ── エリア別／シーズン別 グループ表示 ── */
+.spirit-catalog-view .area-group { margin-top: 18px; }
+.spirit-catalog-view .area-group:first-child { margin-top: 0; }
+.spirit-catalog-view .area-group-head { background: var(--sc-card); border-radius: var(--sc-r); padding: 12px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.spirit-catalog-view .area-group-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.spirit-catalog-view .area-group-title { font-size: 14.5px; font-weight: 800; color: var(--sc-text); }
+.spirit-catalog-view .area-group-badge { font-size: 12px; color: var(--sc-text-2); margin-top: 3px; }
+.spirit-catalog-view .area-group-badge b { color: var(--sc-green-d); }
+.spirit-catalog-view .area-group-remaining-cost { font-size: 12px; color: var(--sc-text-2); margin-top: 3px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.spirit-catalog-view .area-group-remaining-cost b { color: var(--sc-text-2); }
+.spirit-catalog-view .area-group-pct-bar { height: 5px; border-radius: 2.5px; background: var(--sc-sep); margin-top: 10px; overflow: hidden; }
+.spirit-catalog-view .area-group-pct-fill { height: 100%; background: var(--sc-green); }
+.spirit-catalog-view .area-group-pct-fill.complete { background: var(--sc-blue); }
+.spirit-catalog-view .area-group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-top: 12px; }
+
+/* ── 精霊詳細モーダル（フルスクリーン寄りのシート。上から出るため
+   chrome.cssの下からのボトムシート(.modal-overlay/.modal-card)とは
+   別クラスで持つ。CLAUDE.mdの「開くアニメーションはanimationで」規約に
+   合わせ、フェードのみ簡易にanimationで行う） ── */
+.spirit-catalog-view .sc-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: flex-start; justify-content: center; padding: 0; overflow-y: auto; }
+.spirit-catalog-view .sc-detail-overlay.open { display: flex; animation: scDetailFade 0.2s ease; }
+@keyframes scDetailFade { from { opacity: 0; } to { opacity: 1; } }
+.spirit-catalog-view .sc-detail-card { width: 100%; max-width: 560px; min-height: 100%; background: var(--sc-bg); box-sizing: border-box; }
+@media (min-width: 620px) { .spirit-catalog-view .sc-detail-card { min-height: 0; margin: 30px auto; border-radius: var(--sc-r); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.4); } }
+@media (min-width: 900px) { .spirit-catalog-view .sc-detail-card { max-width: 880px; } }
+.spirit-catalog-view .detail-head { background: var(--sc-card); padding: 16px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid var(--sc-sep); position: sticky; top: 0; z-index: 2; }
+.spirit-catalog-view .detail-thumb { width: 56px; height: 56px; border-radius: 14px; overflow: hidden; background: var(--sc-bg); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 26px; }
+.spirit-catalog-view .detail-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.spirit-catalog-view .detail-title { font-size: 16px; font-weight: 700; }
+.spirit-catalog-view .detail-sub { font-size: 12px; color: var(--sc-text-2); margin-top: 2px; }
+.spirit-catalog-view .detail-close { margin-left: auto; flex-shrink: 0; padding: 4px; background: none; border: none; cursor: pointer; color: var(--sc-text-2); }
+.spirit-catalog-view .detail-body { padding: 14px 16px 30px; }
+.spirit-catalog-view .detail-summary { background: var(--sc-card); border-radius: var(--sc-r); padding: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); margin-bottom: 14px; font-size: 12.5px; color: var(--sc-text-2); display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.spirit-catalog-view .detail-summary b { color: var(--sc-text); }
+.spirit-catalog-view .tier-label { font-size: 12px; font-weight: 700; color: var(--sc-text-2); padding: 12px 2px 6px; }
+
+/* コスト表示（テスト機能・既定オフ） */
+.spirit-catalog-view:not(.sc-cost-on) .filter-remaining-cost,
+.spirit-catalog-view:not(.sc-cost-on) .area-group-remaining-cost,
+.spirit-catalog-view:not(.sc-cost-on) .tree-node-cost,
+.spirit-catalog-view:not(.sc-cost-on) .cost-stat-box { display: none !important; }
+.spirit-catalog-view .cost-chip { font-size: 10.5px; font-weight: 700; padding: 3px 7px; border-radius: 999px; white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
+.spirit-catalog-view .cost-c, .spirit-catalog-view .cost-sc { background: var(--sc-orange-bg); color: #B8740A; }
+.spirit-catalog-view .cost-h, .spirit-catalog-view .cost-sh { background: rgba(255,45,85,0.10); color: #D6294F; }
+.spirit-catalog-view .cost-ac { background: var(--sc-blue-bg); color: var(--sc-blue); }
+.spirit-catalog-view .cost-ec { background: rgba(175,82,222,0.10); color: #8A3FC0; }
+[data-theme="dark"] .spirit-catalog-view .cost-c, [data-theme="dark"] .spirit-catalog-view .cost-sc { color: var(--sc-orange); }
+[data-theme="dark"] .spirit-catalog-view .cost-h, [data-theme="dark"] .spirit-catalog-view .cost-sh { background: rgba(255,55,95,0.16); color: #FF375F; }
+[data-theme="dark"] .spirit-catalog-view .cost-ec { background: rgba(191,90,242,0.16); color: #BF5AF2; }
+
+/* ── ツリー図（本家のような枝分かれ構造） ── */
+.spirit-catalog-view .tree-scroll { overflow-x: auto; margin: 0 -16px 6px; padding: 4px 16px 10px; }
+.spirit-catalog-view .tree-canvas { position: relative; margin: 0 auto; }
+.spirit-catalog-view .tree-lines { position: absolute; top: 0; left: 0; pointer-events: none; }
+.spirit-catalog-view .tree-node-wrap { position: absolute; display: flex; flex-direction: column; align-items: center; }
+.spirit-catalog-view .tree-node-circle-holder { position: relative; }
+.spirit-catalog-view .tree-node {
+  width: calc(44px * var(--tree-scale, 1)); height: calc(44px * var(--tree-scale, 1)); border-radius: 50%; background: var(--sc-card); border: 2.5px solid var(--sc-sep);
+  display: flex; align-items: center; justify-content: center; font-size: calc(18px * var(--tree-scale, 1)); flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; padding: 0;
+}
+.spirit-catalog-view .tree-node.checked { background: var(--sc-node-unlocked-tint); border-color: var(--sc-green-d); color: #fff; }
+.spirit-catalog-view .tree-node.next-available { border-color: var(--sc-next-avail); box-shadow: 0 0 0 3px var(--sc-next-avail-glow), 0 1px 3px rgba(0,0,0,0.08); }
+.spirit-catalog-view .tree-node-excluded { opacity: 0.45; border-style: dashed; cursor: default; box-shadow: none; }
+.spirit-catalog-view .tree-node-icon { line-height: 1; display: flex; align-items: center; justify-content: center; }
+.spirit-catalog-view .tree-node-icon svg { width: calc(24px * var(--tree-scale, 1)); height: calc(24px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-wingtag { position: absolute; top: -6px; right: -4px; font-size: calc(13px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-tier-badge {
+  position: absolute; top: -6px; left: -6px; font-size: calc(9px * var(--tree-scale, 1));
+  font-weight: 800; padding: 1px 5px; border-radius: 999px; line-height: 1.4;
+  background: var(--sc-blue); color: #fff; white-space: nowrap;
+}
+.spirit-catalog-view .tree-node-sync-badge { position: absolute; bottom: -4px; right: -4px; font-size: calc(12px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-label {
+  font-size: calc(10px * var(--tree-scale, 1)); color: var(--sc-text); text-align: center; margin-top: 3px; line-height: 1.25;
+  max-width: calc(74px * var(--tree-scale, 1)); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.spirit-catalog-view .tree-node-label.no-ja { color: var(--sc-text-2); font-style: italic; }
+.spirit-catalog-view .tree-node-cost { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 2px; max-width: calc(78px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-cost .cost-chip { font-size: calc(8.5px * var(--tree-scale, 1)); padding: calc(1.5px * var(--tree-scale, 1)) calc(4px * var(--tree-scale, 1)); }
+
+/* ── 段階ツリー（恒常/長老精霊のフレンドシップレベル） ── */
+.spirit-catalog-view .tier-block { margin-bottom: 4px; }
+.spirit-catalog-view .tier-block + .tier-block { border-top: 1px solid var(--sc-sep); padding-top: 4px; }
+.spirit-catalog-view .tier-grid-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.spirit-catalog-view .tier-grid-row .tree-node-wrap { position: static; }
+
+/* ── トースト通知 ── */
+.spirit-catalog-view .sc-toast {
+  position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(10px);
+  background: rgba(28,28,30,0.92); color: #fff; padding: 12px 20px; border-radius: 999px;
+  font-size: 13.5px; font-weight: 600; z-index: 2000; opacity: 0; transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none; white-space: nowrap; max-width: 90vw; text-overflow: ellipsis; overflow: hidden;
+}
+.spirit-catalog-view .sc-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.spirit-catalog-view .sc-footer { text-align: center; font-size: 11.5px; color: var(--sc-text-3); padding: 28px 16px 4px; line-height: 1.8; }

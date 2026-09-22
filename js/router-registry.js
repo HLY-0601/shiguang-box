@@ -11,6 +11,15 @@ import * as emoteView from '../features/emote/emote-view.js';
 import * as nomacanView from '../features/tai-nomacan/nomacan-view.js';
 import * as starCandleView from '../features/star-candle/star-candle-view.js';
 import * as shareView from '../features/share/share-view.js';
+import * as wingsView from '../features/wings/wings-view.js';
+import * as companionView from '../features/companion/companion-view.js';
+import * as spiritCatalogView from '../features/spirit-catalog/spirit-catalog-view.js';
+import * as taiRevisitView from '../features/tai-revisit/tai-revisit-view.js';
+import * as taiScoreView from '../features/tai-score/tai-score-view.js';
+import * as taiCardView from '../features/tai-card/tai-card-view.js';
+import * as dataTransferView from '../features/data-transfer/data-transfer-view.js';
+import * as taiInfoView from '../features/tai-info/tai-info-view.js';
+import * as profileView from '../features/profile/profile-view.js';
 import { CATEGORY_REGISTRY } from '../features/item/data/categories.js';
 import { CURRENT_LANG } from './i18n.js';
 
@@ -55,10 +64,12 @@ function placeholderEntry(toolKey, nameJa, nameEn, icon) {
   };
 }
 
-// サブルートを持たない単一ページ系ツール（emote/tai-nomacan/star-candle/share）共通のROUTESエントリ
+// 単一ページ系ツール共通のROUTESエントリ。subは常にそのままビューへ渡す
+// （サブルートを持たないビューのmount(container)はJSの仕様上、余分な第2引数を
+// 単に無視するだけなので安全——item以外の全ツールをこの1関数で統一できる）。
 function simpleToolEntry(viewModule, nameJa, nameEn) {
   return {
-    mount(container) { viewModule.mount(container); },
+    mount(container, sub) { viewModule.mount(container, sub); },
     unmount() { viewModule.unmount(); },
     title() { return `${CURRENT_LANG === 'en' ? nameEn : nameJa} - tai-hub`; },
   };
@@ -70,4 +81,13 @@ export const ROUTES = {
   share: simpleToolEntry(shareView, '創作物管理ツール', 'Creation Manager'),
   'tai-nomacan': simpleToolEntry(nomacanView, 'ノマキャン計算機', 'Candle Calculator'),
   'star-candle': simpleToolEntry(starCandleView, '星のキャンドル計算機', 'Star Candle Calculator'),
+  wings: simpleToolEntry(wingsView, '羽トラッカー', 'Wing Tracker'),
+  companion: simpleToolEntry(companionView, '精霊同行ツール', 'Spirit Companion Tool'),
+  'spirit-catalog': simpleToolEntry(spiritCatalogView, '精霊ツリー管理', 'Spirit Tree Catalog'),
+  'tai-revisit': simpleToolEntry(taiRevisitView, '再訪精霊データベース', 'Revisit Spirit Database'),
+  'tai-score': simpleToolEntry(taiScoreView, '楽譜づくり', 'Sheet Music Maker'),
+  'tai-card': simpleToolEntry(taiCardView, '星紡ぎカード', 'Self-Intro Card Maker'),
+  'data-transfer': simpleToolEntry(dataTransferView, 'データ引継ぎ', 'Data Transfer'),
+  'tai-info': simpleToolEntry(taiInfoView, '設定・更新情報', 'Settings & Updates'),
+  profile: simpleToolEntry(profileView, '作者プロフィール', 'Creator Profile'),
 };

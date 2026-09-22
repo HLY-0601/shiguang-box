@@ -1,0 +1,303 @@
+/* ================================================================
+   profile（作者プロフィール）機能専用のデザイントークン・スタイル。
+
+   移植元: profile/index.html の <style> のうち、このツール自身のUI
+   （プロフィールカード・アバター・闇の破片バッジ・リンク一覧・
+   フッター・シャボン玉パーティクル）に関わる部分だけを抽出したもの。
+   site-nav/sidebar/site-dock/settings-modal/トースト用の土台等、
+   「共有chrome」relatedなスタイルは、tai-hubの css/chrome.css に
+   既に同等のものがあるため意図的に移植していない
+   （.modal-overlay/.modal-card/.modal-close-btn/.modal-titleなど、
+   ダッシュボードモーダルの土台は chrome.css の汎用ルールをそのまま
+   流用し、このファイルではこのツール固有の追加分だけを足している）。
+
+   スコープは #app-root 配下の .profile-view のみ（item.css の
+   .item-view と同じ考え方）。ただしアバターのイースターエッグで弾ける
+   シャボン玉（.pv-particle）だけは position:fixed でdocument.body直下に
+   都度追加されるため（.profile-view の overflow に巻き込まれず画面全体に
+   飛び散らせるための、元実装どおりの構造）、例外的にスコープ外
+   （トップレベル）で定義している。
+
+   このファイルは js/app.js 側の index.html には <link> していない ──
+   profile-view.js の mount() が最初の描画時に <link rel="stylesheet">
+   を動的に1回だけ挿入する（nomacan-view.js等と同じパターン）。
+   ================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@400;500;700&display=swap');
+
+.profile-view {
+  --pv-bg: #EEF5FC;
+  --pv-panel: #FFFFFF;
+  --pv-panel-alt: #E4EFFA;
+  --pv-row: #F1F7FD;
+  --pv-border: rgba(15, 23, 42, 0.12);
+  --pv-border-strong: rgba(2, 132, 199, 0.45);
+  --pv-text: #0F172A;
+  --pv-text-muted: #51607A;
+  --pv-sky: #0284C7;
+  --pv-sky-bright: #0369A1;
+  --pv-sky-deep: #0EA5E9;
+  --pv-sky-deep-contrast: #075985;
+  --pv-teal: #0F766E;
+  --pv-indigo: #818CF8;
+  --pv-indigo-contrast: #4338CA;
+  --pv-radius: 16px;
+
+  font-family: 'M PLUS 1 Code', 'Consolas', 'Hiragino Sans', monospace;
+  color: var(--pv-text);
+  background: var(--pv-bg);
+  min-height: 100%;
+  padding: 20px 0 24px;
+}
+
+[data-theme="dark"] .profile-view {
+  --pv-bg: #0B1220;
+  --pv-panel: #131E30;
+  --pv-panel-alt: #0C1729;
+  --pv-row: #101D32;
+  --pv-border: rgba(148, 163, 184, 0.22);
+  --pv-border-strong: rgba(56, 189, 248, 0.5);
+  --pv-text: #EDF2F9;
+  --pv-text-muted: #A9B8CC;
+  --pv-sky: #38BDF8;
+  --pv-sky-bright: #7DD3FC;
+  --pv-teal: #2DD4BF;
+}
+
+.profile-view * { box-sizing: border-box; }
+.profile-view .pv-wrap { max-width: 680px; margin: 0 auto; padding: 0 16px; }
+
+/* ---------- ダッシュボードへの入口ボタン ---------- */
+.profile-view .pv-dash-trigger-row { margin: 0 0 14px; }
+.profile-view .pv-dash-trigger-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--pv-panel); border: 1px solid var(--pv-border-strong); border-radius: 12px;
+  padding: 11px; font-size: 13.5px; font-weight: 700; color: var(--pv-sky-bright);
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 1px 4px rgba(2, 132, 199, 0.1);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.profile-view .pv-dash-trigger-btn:hover,
+.profile-view .pv-dash-trigger-btn:focus-visible { border-color: var(--pv-sky); background: var(--pv-row); }
+
+/* ---------- カード本体 ---------- */
+.profile-view .card {
+  position: relative; width: 100%;
+  background: var(--pv-panel); border-radius: var(--pv-radius); border: 1px solid var(--pv-border);
+  padding: clamp(30px, 5vw, 56px) clamp(20px, 5vw, 48px) clamp(26px, 4.5vw, 48px);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04);
+  animation: pv-card-settle 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-theme="dark"] .profile-view .card { box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+@keyframes pv-card-settle {
+  from { opacity: 0; transform: translateY(20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ---------- ターミナル風タブバー ---------- */
+.profile-view .term-bar {
+  display: flex; align-items: center; gap: 10px;
+  margin: calc(clamp(30px, 5vw, 56px) * -1) calc(clamp(20px, 5vw, 48px) * -1) 24px;
+  padding: clamp(11px, 2.2vw, 16px) clamp(14px, 3vw, 20px);
+  background: var(--pv-panel-alt); border-bottom: 1px solid var(--pv-border);
+  border-radius: var(--pv-radius) var(--pv-radius) 0 0;
+}
+.profile-view .term-dots { display: flex; gap: 6px; flex-shrink: 0; }
+.profile-view .term-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.profile-view .term-dot:nth-child(1) { background: #FF5F56; }
+.profile-view .term-dot:nth-child(2) { background: #FFBD2E; }
+.profile-view .term-dot:nth-child(3) { background: #27C93F; }
+.profile-view .card-label {
+  flex: 1; min-width: 0; margin: 0; font-size: 13px; letter-spacing: 0.06em;
+  color: var(--pv-text-muted); font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.profile-view .lang-toggle {
+  flex-shrink: 0; margin-left: auto; font-family: inherit; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.04em; color: var(--pv-sky-bright); background: var(--pv-panel);
+  border: 1px solid var(--pv-border-strong); border-radius: 999px; padding: 6px 9px; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.profile-view .lang-toggle:hover,
+.profile-view .lang-toggle:focus-visible { border-color: var(--pv-sky); background: var(--pv-row); color: var(--pv-text); outline: 2px solid var(--pv-sky); outline-offset: 2px; }
+.profile-view .lang-toggle .inline-icon { color: var(--pv-sky-bright); stroke: var(--pv-sky-bright); }
+
+/* ---------- プロフィール ---------- */
+.profile-view .profile { text-align: center; }
+.profile-view .avatar-row { display: flex; justify-content: center; margin: 0 auto 18px; }
+.profile-view .avatar-wrap { position: relative; width: 112px; height: 112px; margin: 0 auto; cursor: pointer; }
+.profile-view .avatar.boing { animation: pv-avatar-boing 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+@keyframes pv-avatar-boing {
+  0%   { transform: scale(1, 1); }
+  30%  { transform: scale(0.88, 1.12); }
+  55%  { transform: scale(1.12, 0.9); }
+  75%  { transform: scale(0.96, 1.04); }
+  100% { transform: scale(1, 1); }
+}
+.profile-view .avatar {
+  width: 100%; height: 100%; border-radius: 50%;
+  background: linear-gradient(145deg, var(--pv-sky-deep-contrast), var(--pv-indigo-contrast));
+  color: #F8FAFC; display: flex; align-items: center; justify-content: center;
+  font-size: 42px; font-weight: 700; overflow: hidden; border: 4px solid var(--pv-panel);
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.4), 0 10px 24px -8px rgba(56,189,248,0.4);
+}
+.profile-view .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-view .name { font-size: 32px; font-weight: 700; letter-spacing: 0.01em; color: var(--pv-text); margin: 0 0 8px; }
+.profile-view .name::before { content: "> "; color: var(--pv-sky); font-weight: 700; }
+.profile-view .name::after { content: "_"; color: var(--pv-sky); margin-left: 2px; animation: pv-blink 1s step-end infinite; }
+@keyframes pv-blink { 50% { opacity: 0; } }
+
+.profile-view .tagline { display: block; font-size: 15px; font-weight: 500; font-style: italic; color: var(--pv-text-muted); letter-spacing: 0.01em; margin: 0 0 14px; }
+.profile-view .tagline::before { content: "// "; opacity: 0.7; }
+
+.profile-view .badges-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0 0 18px; }
+.profile-view .info-badge { display: inline-flex; align-items: stretch; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; border: 1px solid var(--pv-border-strong); border-radius: 4px; overflow: hidden; }
+.profile-view .info-badge-label { background: var(--pv-panel-alt); color: var(--pv-text-muted); padding: 5px 11px; }
+.profile-view .info-badge-value { background: var(--pv-sky-deep); color: #04202E; padding: 5px 11px; }
+
+.profile-view .bio { font-size: 15.5px; font-weight: 500; line-height: 1.75; color: var(--pv-text-muted); margin: 0 auto; text-align: left; white-space: pre-line; }
+
+/* ---------- もっと知りたい人向け ---------- */
+.profile-view .more-info { margin: 18px auto 0; text-align: center; }
+.profile-view .more-info-summary {
+  display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none;
+  font-size: 13px; font-weight: 700; color: var(--pv-sky-bright); padding: 6px 14px;
+  border: 1px solid var(--pv-border-strong); border-radius: 999px; background: var(--pv-panel-alt);
+  user-select: none; transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+.profile-view .more-info-summary::-webkit-details-marker { display: none; }
+.profile-view .more-info-summary::before {
+  content: ""; display: inline-block; width: 10px; height: 10px;
+  background-color: var(--pv-sky);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 6l6 6-6 6' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  transition: transform 0.2s ease;
+}
+.profile-view .more-info[open] .more-info-summary::before { transform: rotate(90deg); }
+.profile-view .more-info-summary:hover,
+.profile-view .more-info-summary:focus-visible { border-color: var(--pv-sky); background: var(--pv-row); outline: 2px solid var(--pv-sky); outline-offset: 2px; }
+.profile-view .more-info-content {
+  margin: 12px 0 0; padding: 12px 14px; border-left: 2px solid var(--pv-border-strong);
+  background: var(--pv-panel-alt); border-radius: 0 8px 8px 0; font-size: 13.5px; font-weight: 500;
+  line-height: 1.7; color: var(--pv-text-muted); text-align: left; white-space: pre-line;
+}
+
+/* ---------- 区切り線 ---------- */
+.profile-view .divider { border: none; border-top: 1px dashed var(--pv-border); margin: 26px 0 22px; }
+
+/* ---------- リンク一覧 ---------- */
+.profile-view .section-label { display: block; font-size: 13px; font-style: italic; color: var(--pv-text-muted); margin: 0 0 12px; letter-spacing: 0.02em; }
+.profile-view .section-label::before { content: "// "; opacity: 0.7; }
+.profile-view .links { display: flex; flex-direction: column; gap: 10px; }
+.profile-view .link-row {
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 13px 16px;
+  text-decoration: none; color: inherit; background: var(--pv-row); border: 1px solid var(--pv-border);
+  border-radius: 10px; transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.profile-view .link-row:hover,
+.profile-view .link-row:focus-visible {
+  background: var(--pv-panel-alt); border-color: var(--pv-border-strong);
+  transform: translateY(-2px); box-shadow: 0 10px 24px -14px rgba(56,189,248,0.55);
+  outline: 2px solid var(--pv-sky); outline-offset: 1px;
+}
+.profile-view .link-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: linear-gradient(145deg, var(--pv-sky), var(--pv-sky-deep)); color: #04202E;
+  display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0;
+  box-shadow: 0 4px 10px -3px rgba(56,189,248,0.45);
+}
+.profile-view .link-row:nth-of-type(4n+2) .link-icon { background: linear-gradient(145deg, var(--pv-teal), #0D9488); }
+.profile-view .link-row:nth-of-type(4n+3) .link-icon { background: linear-gradient(145deg, var(--pv-indigo), #4F46E5); }
+.profile-view .link-row:nth-of-type(4n+4) .link-icon { background: linear-gradient(145deg, var(--pv-sky-bright), #0369A1); }
+.profile-view .link-icon .inline-icon { stroke: #fff; color: #fff; }
+.profile-view .link-row:hover .link-icon,
+.profile-view .link-row:focus-visible .link-icon { animation: pv-icon-wiggle 0.5s ease; }
+@keyframes pv-icon-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(-12deg) scale(1.1); }
+  75% { transform: rotate(12deg) scale(1.1); }
+}
+.profile-view .link-text { flex: 1; min-width: 0; }
+.profile-view .link-title { display: block; font-weight: 700; font-size: 16px; color: var(--pv-text); }
+.profile-view .link-desc { display: block; font-size: 13.5px; font-weight: 500; line-height: 1.55; color: var(--pv-text-muted); margin-top: 3px; white-space: pre-line; }
+.profile-view .link-row:hover .link-title,
+.profile-view .link-row:focus-visible .link-title { color: var(--pv-sky-bright); }
+.profile-view .link-arrow { color: var(--pv-sky-bright); font-weight: 700; font-size: 14px; flex-shrink: 0; transition: transform 0.2s ease, color 0.2s ease; }
+.profile-view .link-row:hover .link-arrow,
+.profile-view .link-row:focus-visible .link-arrow { transform: translateX(3px); }
+/* 精度に不安がある新機能であることを示す小さな注記（楽譜づくり） */
+.profile-view .tool-badge-test { font-size: 9px; font-weight: 700; color: var(--pv-text); opacity: 0.55; text-transform: uppercase; letter-spacing: 0.3px; margin-right: 5px; }
+
+/* ---------- 闇の破片バッジ（アバターの右下に付く小さなピル） ---------- */
+.profile-view .shard-badge {
+  position: absolute; right: -8px; bottom: 4px; display: flex; align-items: center; gap: 4px;
+  background: var(--pv-panel); border: 1.5px solid var(--pv-border-strong); border-radius: 999px;
+  padding: 3px 9px 3px 6px; font-size: 10.5px; font-weight: 700; color: var(--pv-text);
+  box-shadow: 0 4px 10px -4px rgba(0,0,0,0.6); cursor: help; white-space: nowrap;
+}
+.profile-view .shard-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: #3A4356; box-shadow: 0 0 0 2px var(--pv-panel); }
+.profile-view .shard-dot.red { background: #F87171; }
+.profile-view .shard-dot.active { animation: pv-sky-pulse 1.6s ease-in-out infinite; }
+.profile-view .shard-dot.red.active { box-shadow: 0 0 6px 1px rgba(248,113,113,0.85), 0 0 0 2px var(--pv-panel); }
+.profile-view .shard-dot.black.active { box-shadow: 0 0 6px 1px rgba(148,163,184,0.6), 0 0 0 2px var(--pv-panel); }
+.profile-view .shard-badge.upcoming { opacity: 0.6; }
+.profile-view .shard-badge.tap-open::after {
+  content: attr(title); position: absolute; top: 100%; margin-top: 6px; background: var(--pv-panel);
+  color: var(--pv-text); font-size: 10.5px; font-weight: 500; line-height: 1.6; padding: 7px 10px;
+  border-radius: 8px; border: 1px solid var(--pv-border-strong); white-space: normal; width: max-content;
+  max-width: 190px; box-shadow: 0 8px 20px -8px rgba(0,0,0,0.6); z-index: 50; pointer-events: none; right: 0;
+}
+@keyframes pv-sky-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+
+/* ---------- フッター ---------- */
+.profile-view .footnote { text-align: center; color: var(--pv-text-muted); font-size: 12px; letter-spacing: 0.02em; line-height: 1.5; margin: 28px 0 0; }
+.profile-view .pv-footnote-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+/* ---------- レスポンシブ ---------- */
+@media (max-width: 480px) {
+  .profile-view .name { font-size: 26px; }
+  .profile-view .avatar-wrap { width: 96px; height: 96px; }
+  .profile-view .avatar { font-size: 34px; }
+}
+
+/* ---------- 🔔 トースト通知 ---------- */
+.profile-view .pv-toast {
+  position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom));
+  transform: translateX(-50%) translateY(12px);
+  background: rgba(15, 23, 42, 0.92); color: #F8FAFC; padding: 10px 18px; border-radius: 999px;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.02em; max-width: calc(100vw - 32px);
+  text-align: center; box-shadow: 0 12px 28px -12px rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease; z-index: 2000;
+}
+.profile-view .pv-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ---------- 飛び散るシャボン玉パーティクル ----------
+   burstParticles()がdocument.body直下に追加するため、.profile-view の
+   スコープ外（トップレベル）で定義する。 */
+.pv-particle {
+  position: fixed; pointer-events: none; z-index: 5; border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.95), rgba(125,211,252,0.4) 45%, rgba(56,189,248,0.15) 75%, transparent 100%);
+  border: 1px solid rgba(186,230,253,0.45); box-shadow: inset 0 0 5px rgba(255,255,255,0.4);
+  animation: pv-particle-float 0.9s ease-out forwards; will-change: transform, opacity;
+}
+@keyframes pv-particle-float {
+  0%   { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% - 70px)) scale(1.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-view .card,
+  .profile-view .link-row,
+  .profile-view .link-icon,
+  .profile-view .avatar,
+  .profile-view .name::after,
+  .pv-particle {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -1,0 +1,161 @@
+/* ================================================================
+   data-transfer（データ引継ぎ）機能専用のデザイントークン・スタイル。
+
+   移植元: tai-transfer/index.html の <style> のうち、このツール自身の
+   UI（ヘッダー・エクスポート/インポートの各カード・サイト選択リスト・
+   コード出力エリア・QRパネル・書き出し/読込履歴ログ）に関わる部分だけを
+   抽出したもの。nav/サイドバー/site-dock/表示設定モーダル/ボトムシート
+   演出/フォーカストラップ等の「共有chrome」相当のスタイルは、tai-hubの
+   css/chrome.css に既に同等のものがあるため意図的に移植していない
+   （このツールはtai-hub版では独自モーダルを持たないため、モーダル関連の
+   スタイルはそもそも不要）。
+
+   スコープは #app-root 配下の .data-transfer-view のみ（item.css/
+   tai-nomacan.css等と同じ規約。トークン名は元の無プレフィックスのまま
+   踏襲し、配色そのものも変更していない）。このファイルは index.html に
+   <link> していない ── data-transfer-view.js の mount() が最初の描画時に
+   <link rel="stylesheet"> を動的に1回だけ挿入する。
+   ================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap');
+
+.data-transfer-view {
+  --bg:        #F2F2F7;
+  --card:      #FFFFFF;
+  --sep:       rgba(60,60,67,0.12);
+  --purple:    #AF52DE;
+  --purple-d:  #8E3FB8;
+  --purple-bg: rgba(175,82,222,0.10);
+  --blue:      #007AFF;
+  --green:     #34C759;
+  --red:       #FF3B30;
+  --text:      #1C1C1E;
+  --text-2:    #6C6C71;
+  --text-3:    #636366;
+  --r:         16px;
+  --r-sm:      10px;
+
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+  color: var(--text);
+  min-height: 100%;
+  padding: 16px 16px 24px;
+}
+[data-theme="dark"] .data-transfer-view {
+  --bg:        #000000;
+  --card:      #1C1C1E;
+  --sep:       rgba(255,255,255,0.14);
+  --purple-d:  #C77DFF;
+  --purple-bg: rgba(175,82,222,0.22);
+  --text:      #F2F2F7;
+  --text-2:    #98989D;
+  --text-3:    #86868B;
+}
+
+.data-transfer-view * { box-sizing: border-box; }
+.data-transfer-view .inline-icon { color: var(--purple); stroke-width: 2.2; }
+.data-transfer-view .inline-icon.warn { color: var(--red); }
+.data-transfer-view .dt-wrap { max-width: 720px; margin: 0 auto; }
+@media (min-width: 850px) { .data-transfer-view .dt-wrap { max-width: 960px; } }
+
+.data-transfer-view .page-head { text-align: center; margin-bottom: 18px; }
+.data-transfer-view .page-head h1 {
+  margin: 0; font-size: 19px; font-weight: 700; letter-spacing: -0.3px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.data-transfer-view .page-head .subtitle { margin-top: 6px; font-size: 12.5px; color: var(--text-2); }
+
+.data-transfer-view .sec-label { font-size: 12px; font-weight: 700; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.4px; padding: 22px 4px 10px; }
+.data-transfer-view .sec-label:first-of-type { padding-top: 0; }
+.data-transfer-view .card { background: var(--card); border-radius: var(--r); padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.data-transfer-view .hint { font-size: 12px; color: var(--text-2); line-height: 1.7; margin-bottom: 14px; }
+
+.data-transfer-view .site-opt {
+  display: flex; align-items: center; gap: 10px; padding: 9px 4px; border-bottom: 0.5px solid var(--sep);
+  cursor: pointer;
+}
+.data-transfer-view .site-opt:last-of-type { border-bottom: none; }
+.data-transfer-view .site-opt input[type="checkbox"] { width: 18px; height: 18px; flex-shrink: 0; accent-color: var(--purple); }
+.data-transfer-view .site-opt-label { flex: 1; font-size: 14px; color: var(--text); line-height: 1.5; }
+.data-transfer-view .site-opt-count { font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.data-transfer-view .site-opt-count .num-strong { font-size: 13px; font-weight: 700; color: var(--text); }
+.data-transfer-view .site-opt-count .num-unit { font-size: 11px; color: var(--text-2); }
+.data-transfer-view .site-opt.no-data .site-opt-label { color: var(--text-2); }
+
+.data-transfer-view .site-opt.has-profile-filter { border-bottom: none; padding-bottom: 4px; }
+.data-transfer-view .site-opt-profile-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 4px 9px 32px; border-bottom: 0.5px solid var(--sep);
+}
+.data-transfer-view .site-opt-profile-row:last-child { border-bottom: none; }
+.data-transfer-view .site-profile-filter {
+  flex: 1; min-width: 0; font-size: 12.5px; color: var(--text); background: var(--bg);
+  border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 5px 8px;
+}
+
+.data-transfer-view .site-opt-changed-badge { display: none; flex-shrink: 0; font-size: 13px; line-height: 1; }
+.data-transfer-view .site-opt-changed-badge.show { display: inline; }
+
+.data-transfer-view .list-select-row { display: flex; justify-content: flex-end; gap: 6px; margin-bottom: 8px; }
+.data-transfer-view .list-select-btn {
+  font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+  background: var(--bg); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap; cursor: pointer;
+}
+
+.data-transfer-view .action-btn {
+  display: block; width: 100%; padding: 12px; border-radius: var(--r-sm); font-size: 14px; font-weight: 700;
+  text-align: center; cursor: pointer; margin-top: 12px; box-sizing: border-box; border: 0; font-family: inherit;
+}
+.data-transfer-view .action-btn.primary { background: var(--purple); color: #fff; }
+.data-transfer-view .action-btn.secondary { background: var(--bg); color: var(--text); border: 1px solid var(--sep); }
+.data-transfer-view .action-btn.danger { background: #D70015; color: #fff; }
+
+.data-transfer-view .code-textarea {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--sep); border-radius: var(--r-sm);
+  padding: 10px 12px; font-size: 11px; font-family: monospace; color: var(--text);
+  resize: vertical; min-height: 110px; background: var(--bg); outline: none; margin-top: 10px;
+}
+.data-transfer-view .code-textarea:focus { border-color: var(--purple); }
+.data-transfer-view input[type="file"] {
+  width: 100%; box-sizing: border-box; font-size: 12.5px; color: var(--text-2);
+  border: 1px dashed var(--sep); border-radius: var(--r-sm); padding: 10px 12px; margin-top: 10px;
+}
+.data-transfer-view .status-msg { font-size: 12.5px; color: var(--text-2); margin-top: 10px; line-height: 1.6; }
+.data-transfer-view .status-msg.ok { color: var(--green); }
+.data-transfer-view .status-msg.err { color: var(--red); }
+
+.data-transfer-view .transfer-history-list { margin-bottom: 10px; }
+.data-transfer-view .transfer-history-row {
+  display: flex; align-items: baseline; gap: 8px; padding: 6px 0;
+  border-bottom: 0.5px solid var(--sep); font-size: 12px; color: var(--text-2); line-height: 1.6;
+}
+.data-transfer-view .transfer-history-row:last-child { border-bottom: none; }
+.data-transfer-view .transfer-history-icon { flex-shrink: 0; }
+.data-transfer-view .transfer-history-date { flex-shrink: 0; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--text); font-weight: 600; }
+.data-transfer-view .transfer-history-sites { flex: 1; min-width: 0; }
+
+.data-transfer-view .site-updated-list { margin-top: 8px; }
+.data-transfer-view .site-updated-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  font-size: 12px; color: var(--text-2); padding: 3px 0; line-height: 1.5;
+}
+.data-transfer-view .site-updated-row .site-updated-name { flex: 1; min-width: 0; }
+.data-transfer-view .site-updated-row .site-updated-date { flex-shrink: 0; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.data-transfer-view .site-updated-row.overwrite .site-updated-date { color: var(--red); font-weight: 700; }
+
+.data-transfer-view .import-warning-box {
+  background: var(--bg); border: 1px solid var(--purple); border-radius: var(--r-sm);
+  padding: 10px 12px; margin-bottom: 8px; font-size: 12.5px; color: var(--text); line-height: 1.7;
+}
+.data-transfer-view .import-overwrite-confirm {
+  background: var(--bg); border: 1px solid var(--red); border-radius: var(--r-sm);
+  padding: 10px 12px; margin-top: 8px; font-size: 12.5px; color: var(--text); line-height: 1.7;
+}
+.data-transfer-view .site-diff-note { font-size: 11.5px; color: var(--text-2); padding: 0 0 6px; line-height: 1.6; }
+
+.data-transfer-view .qr-panel { text-align: center; margin-top: 10px; }
+.data-transfer-view .qr-box {
+  display: inline-block; background: #fff; padding: 12px; border-radius: var(--r-sm);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04);
+}
+.data-transfer-view .qr-box svg { display: block; width: 200px; height: 200px; max-width: 100%; }
+
+.data-transfer-view footer { text-align: center; font-size: 11.5px; color: var(--text-3); padding: 30px 16px 4px; line-height: 1.9; }

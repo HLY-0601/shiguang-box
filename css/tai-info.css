@@ -1,0 +1,153 @@
+/* ================================================================
+   tai-info（設定・更新情報）機能専用のデザイントークン・スタイル。
+
+   移植元: tai-info/index.html の <style> のうち、5つのページ内タブ
+   （設定について/更新情報/クレジット/プライバシーポリシー/参考文献・
+   画像引用元）自身の見た目に関わる部分（ページ内タブ・カード・更新情報
+   タイムライン・フィルタチップ・参考文献グループ・サイト別機能対応表・
+   ディープリンクのハイライト演出）だけを抽出したもの。site-dock/
+   modal-overlay/sidebar等の「共有chrome」に関わるスタイルは、tai-hubの
+   css/chrome.css に既に同等のものがあるため意図的に移植していない
+   （原文の設定モーダル・アイコンカスタマイズモーダル・流体ボトムシート
+   JS・サイドバー演出は、このツール自身がそれらを持たなくなったため
+   このファイルにも存在しない。tai-info-view.js冒頭のコメント参照）。
+
+   スコープは #app-root 配下の .tai-info-view のみ（item.css/
+   tai-nomacan.css と同じ考え方。トークン名は元のindigo系パレットの
+   色をそのまま保ち、無プレフィックスのままitem.cssの慣習に揃えている）。
+   このファイルは js/app.js 側の index.html には <link> していない ──
+   tai-info-view.js の mount() が最初の描画時に <link rel="stylesheet">
+   を動的に1回だけ挿入する（index.htmlを編集せずに済ませるため）。
+   ================================================================ */
+
+.tai-info-view {
+  --bg:        #F2F2F7;
+  --card:      #FFFFFF;
+  --sep:       rgba(60,60,67,0.12);
+  --indigo:    #5E5CE6;
+  --indigo-d:  #4A48C4;
+  --indigo-bg: rgba(94,92,230,0.10);
+  --text:      #1C1C1E;
+  --text-2:    #636366;
+  --text-3:    #6C6C70;
+  --r:         16px;
+  --r-sm:      10px;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  min-height: 100%;
+}
+[data-theme="dark"] .tai-info-view {
+  --bg:        #000000;
+  --card:      #1C1C1E;
+  --sep:       rgba(255,255,255,0.14);
+  --indigo-d:  #8B89FF;
+  --indigo-bg: rgba(94,92,230,0.16);
+  --text:      #F2F2F7;
+  --text-2:    #98989D;
+  --text-3:    #86868B;
+}
+
+.tai-info-view * { box-sizing: border-box; }
+.tai-info-view a { text-decoration: none; color: inherit; -webkit-tap-highlight-color: transparent; }
+.tai-info-view button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+.tai-info-view .ti-layout { max-width: 720px; margin: 0 auto; padding: 16px 16px 24px; }
+@media (min-width: 850px) { .tai-info-view .ti-layout { max-width: 960px; } }
+
+.tai-info-view .ti-page-head {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 17px; font-weight: 600; letter-spacing: -0.3px;
+  padding: 4px 4px 14px;
+}
+
+/* ── ページ内タブ ── */
+.tai-info-view .page-tabs {
+  display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 4px; -webkit-overflow-scrolling: touch;
+}
+.tai-info-view .page-tab {
+  position: relative; flex-shrink: 0; padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: var(--card); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap;
+}
+.tai-info-view .page-tab.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+.tai-info-view .page-tab.has-unread::after {
+  content: ''; position: absolute; top: 5px; right: 7px;
+  width: 7px; height: 7px; border-radius: 50%; background: #FF3B30;
+}
+
+/* 🔗 ディープリンクで飛んできたカード/参考文献グループを一時的に強調表示する */
+.tai-info-view .anchor-highlight { animation: tiAnchorPulse 1.6s ease-out; border-radius: var(--r); }
+@keyframes tiAnchorPulse {
+  0% { box-shadow: 0 0 0 3px var(--indigo-bg); }
+  100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); }
+}
+
+.tai-info-view .sec-label { font-size: 15px; font-weight: 700; color: var(--text); padding: 24px 4px 10px; display: flex; align-items: center; gap: 6px; }
+.tai-info-view .sec-sub { font-size: 12px; color: var(--text-2); padding: 0 4px 12px; line-height: 1.7; }
+.tai-info-view .card { background: var(--card); border-radius: var(--r); padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); margin-bottom: 14px; }
+.tai-info-view .card h3 { font-size: 14px; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.tai-info-view .card p, .tai-info-view .card li { font-size: 13px; line-height: 1.8; color: var(--text); }
+.tai-info-view .card ul { padding-left: 18px; }
+.tai-info-view .card a { color: var(--indigo-d); text-decoration: underline; text-underline-offset: 2px; }
+
+/* 更新情報タイムライン */
+.tai-info-view .log-entry { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--sep); }
+.tai-info-view .log-entry:last-child { border-bottom: none; }
+.tai-info-view .log-date { flex-shrink: 0; width: 78px; font-size: 11.5px; font-weight: 700; color: var(--indigo-d); padding-top: 2px; }
+.tai-info-view .log-body { flex: 1; min-width: 0; }
+.tai-info-view .log-title { font-size: 13.5px; font-weight: 600; margin-bottom: 2px; line-height: 1.5; }
+.tai-info-view .log-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
+.tai-info-view .log-tag { display: inline-block; font-size: 10.5px; font-weight: 700; color: var(--indigo-d); background: var(--indigo-bg); border-radius: 5px; padding: 1px 6px; margin-right: 6px; }
+
+/* 🏷️ 更新情報タブの種類別フィルタチップ */
+.tai-info-view .changelog-filters { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px 14px; }
+.tai-info-view .filter-chip {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  background: var(--card); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap;
+}
+.tai-info-view .filter-chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
+
+/* 🆕 「前回訪問以降の新着」区切り線 */
+.tai-info-view .changelog-divider {
+  display: flex; align-items: center; gap: 10px;
+  padding: 4px 0 10px; font-size: 11px; font-weight: 700; color: var(--text-3);
+}
+.tai-info-view .changelog-divider::before, .tai-info-view .changelog-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--sep); }
+
+/* ⭐ 「お使いのツール」に関連する更新情報エントリの控えめな強調 */
+.tai-info-view .log-entry.log-relevant { background: var(--indigo-bg); border-radius: var(--r-sm); padding: 12px 10px; margin: 2px 0; border-bottom: none; }
+.tai-info-view .log-tag.log-tag-relevant { background: var(--indigo); color: #fff; }
+
+/* 参考文献グループ */
+.tai-info-view .ref-group { margin: 0 0 14px; }
+.tai-info-view .ref-group:last-child { margin-bottom: 0; }
+.tai-info-view .ref-group-label { font-size: 12.5px; font-weight: 700; color: var(--indigo-d); margin: 0 0 6px; }
+.tai-info-view .ref-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.tai-info-view .ref-item { font-size: 12.5px; line-height: 1.6; }
+.tai-info-view .ref-item a { word-break: break-all; }
+.tai-info-view .ref-item .ref-note { display: block; color: var(--text-2); font-size: 11.5px; }
+
+/* 🔖 参考文献タブ上部のクイックジャンプピル */
+.tai-info-view .ref-quickjump { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 4px 14px; }
+.tai-info-view .ref-jump-pill {
+  flex-shrink: 0; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  background: var(--card); color: var(--indigo-d); border: 1px solid var(--sep); white-space: nowrap;
+}
+
+/* 📊 サイト別機能対応表 */
+.tai-info-view .compat-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 4px; }
+.tai-info-view .compat-table { width: 100%; border-collapse: collapse; font-size: 12px; white-space: nowrap; }
+.tai-info-view .compat-table th, .tai-info-view .compat-table td { padding: 7px 10px; text-align: left; border-bottom: 0.5px solid var(--sep); }
+.tai-info-view .compat-table th { color: var(--text-2); font-weight: 700; font-size: 11px; }
+.tai-info-view .compat-table td:not(:first-child), .tai-info-view .compat-table th:not(:first-child) { text-align: center; }
+.tai-info-view .compat-table td:nth-child(4), .tai-info-view .compat-table th:nth-child(4) { text-align: right; font-variant-numeric: tabular-nums; }
+.tai-info-view .compat-table tbody tr:last-child td { border-bottom: none; }
+
+/* 精度に不安がある新機能であることを示す小さな注記（例: 楽譜づくり） */
+.tai-info-view .tool-badge-test { font-size: 9px; font-weight: 700; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.3px; }
+
+/* 📖 免責文＋クレジット行はフッターとして中央揃えにする（姉妹サイト全体で統一） */
+.tai-info-view .ti-footer { text-align: center; font-size: 11.5px; color: var(--text-3); padding: 34px 16px 12px; line-height: 1.9; }
+
+.tai-info-view section[data-tab] { display: none; }
+.tai-info-view section[data-tab].show { display: block; }

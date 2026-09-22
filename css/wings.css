@@ -1,0 +1,310 @@
+/* ================================================================
+   wings（羽トラッカー）機能専用のデザイントークン・スタイル。
+
+   移植元: wings/index.html の <style> のうち、このツール自身のUI
+   （通知バナー・合計サマリー・ケープレベル・称号パネル・シェアボタン・
+   モードタブ・季節精霊/恒常精霊/光の子の各リスト・共有画像カード・
+   カスタマイズモーダル追加分・トースト）に関わる部分だけを抽出したもの。
+   site-dock/pf-modal/dash-modal/tools-drawer/サイドバー等の「共有chrome」
+   に関わるスタイルは、tai-hubの css/chrome.css に既に同等のものがある
+   ため意図的に移植していない（.modal-overlay/.modal-card/.pf-icon-btn
+   などはchrome.cssの汎用ルールをそのまま流用し、このファイルではこの
+   ツール固有の追加分だけを足している）。
+
+   スコープは #app-root 配下の .wings-view のみ（item.css/tai-nomacan.css
+   と同じ考え方。トークン名は意図的に無プレフィックスのまま元のwings/
+   index.htmlの慣習に揃えている）。このファイルは js/app.js 側の
+   index.html には <link> していない ── wings-view.js の mount() が
+   最初の描画時に <link rel="stylesheet"> を動的に1回だけ挿入する。
+   ================================================================ */
+
+.wings-view {
+  --bg:        #F2F2F7;
+  --card:      #FFFFFF;
+  --sep:       rgba(60,60,67,0.12);
+  --orange:    #FF9500;
+  --orange-d:  #FF6200;
+  --orange-bg: rgba(255,149,0,0.10);
+  --blue:      #007AFF;
+  --blue-bg:   rgba(0,122,255,0.08);
+  --blue-solid:#0062CC;
+  --green:     #34C759;
+  --green-bg:  rgba(52,199,89,0.10);
+  --red:       #FF3B30;
+  --red-bg:    rgba(255,59,48,0.10);
+  --text:      #1C1C1E;
+  --text-2:    #8E8E93;
+  --text-3:    #C7C7CC;
+  --r:         16px;
+  --r-sm:      10px;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  color: var(--text);
+  min-height: 100%;
+  padding: 4px 0 8px;
+}
+[data-theme="dark"] .wings-view {
+  --bg:        #000000;
+  --card:      #1C1C1E;
+  --sep:       rgba(255,255,255,0.14);
+  --orange:    #FF9F0A;
+  --orange-d:  #FFB340;
+  --orange-bg: rgba(255,159,10,0.16);
+  --blue:      #0A84FF;
+  --blue-bg:   rgba(10,132,255,0.16);
+  --green:     #30D158;
+  --green-bg:  rgba(48,209,88,0.16);
+  --red:       #FF453A;
+  --red-bg:    rgba(255,69,58,0.16);
+  --text:      #F2F2F7;
+  --text-2:    #98989D;
+  --text-3:    #636366;
+}
+
+.wings-view .inline-icon.warn { stroke: var(--red); color: var(--red); }
+.wings-view .inline-icon.ok { stroke: var(--green); color: var(--green); }
+.wings-view .icon-chip {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  background: var(--orange-bg); background-image: linear-gradient(180deg, rgba(255,255,255,0.32), rgba(255,255,255,0) 60%);
+  border-radius: 26%; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), inset 0 1px 1px rgba(255,255,255,0.5), 0 1px 2px rgba(0,0,0,0.10);
+  color: var(--orange);
+}
+.wings-view .icon-chip svg { display: block; stroke: var(--orange); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+.wings-view .num-unit { font-size: 0.55em; font-weight: 500; opacity: 0.75; margin-left: 2px; }
+
+/* ── 通知バナー・共通カード ───────────────────── */
+.wings-view .notice-card {
+  background: var(--card); border-radius: var(--r); padding: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); font-size: 13px; color: var(--text-2); line-height: 1.7;
+}
+.wings-view .notice-card b { color: var(--text); }
+.wings-view .notice-card.sticky-notice { position: sticky; top: 0; z-index: 5; margin-bottom: 16px; }
+.wings-view .notice-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.wings-view .filter-toggle-btn {
+  font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 999px;
+  background: var(--bg); color: var(--text-2); white-space: nowrap; flex-shrink: 0;
+  border: 1px solid var(--sep); cursor: pointer; font-family: inherit;
+}
+.wings-view .filter-toggle-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.wings-view .filter-toggle-btn.danger { color: var(--red); border-color: rgba(255,59,48,0.35); }
+.wings-view .filter-toggle-btn.success { color: var(--green); border-color: rgba(52,199,89,0.35); }
+
+.wings-view .wg-dash-trigger-row { margin: 4px 0 12px; }
+.wings-view .wg-dash-trigger-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--card); border: 1px solid var(--sep); border-radius: var(--r-sm);
+  padding: 11px; font-size: 13.5px; font-weight: 700; color: var(--text); cursor: pointer; font-family: inherit;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.wings-view .wg-dash-trigger-btn:hover { background: var(--bg); }
+
+/* 🔎 季節ジャンプ */
+.wings-view .season-jump-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.wings-view .season-jump-label { font-size: 12.5px; font-weight: 700; color: var(--text-2); white-space: nowrap; flex-shrink: 0; display: flex; align-items: center; gap: 4px; }
+.wings-view .season-jump-select { flex: 1; min-width: 0; }
+.wings-view .pf-input {
+  background: var(--bg); border: 1px solid var(--sep); border-radius: 6px;
+  padding: 8px 10px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; box-sizing: border-box;
+}
+.wings-view .pf-input:focus { border-color: var(--blue); }
+
+.wings-view .spirit-search-row { display: flex; gap: 8px; margin-top: 16px; }
+.wings-view .spirit-search-row .pf-input { flex: 1; min-width: 0; }
+.wings-view .pf-icon-btn {
+  background: var(--bg); border: 1px solid var(--sep); color: var(--text-2);
+  border-radius: 6px; padding: 5px 9px; font-size: 13px; cursor: pointer; flex-shrink: 0; font-family: inherit;
+}
+.wings-view .pf-icon-btn:hover { background: var(--sep); }
+
+/* ── 合計サマリーカード ───────────────────── */
+.wings-view .summary-card {
+  background: linear-gradient(135deg, var(--blue) 0%, #0051A8 100%);
+  border-radius: var(--r); padding: 22px; margin-top: 16px; color: #fff;
+  box-shadow: 0 4px 14px rgba(0,122,255,0.25);
+}
+.wings-view .summary-title { font-size: 14px; font-weight: 700; opacity: 0.9; margin-bottom: 14px; }
+.wings-view .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.wings-view .summary-item-label { font-size: 12px; opacity: 0.85; margin-bottom: 4px; }
+.wings-view .summary-item-value { font-size: 22px; font-weight: 800; }
+.wings-view .summary-item-sub { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+.wings-view .sec-label {
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-2); padding: 22px 4px 8px;
+}
+
+/* ── ケープレベルカード ───────────────────── */
+.wings-view .cape-card {
+  background: linear-gradient(160deg, #1b2333 0%, #05070d 100%);
+  border-radius: var(--r); padding: 20px; margin-top: 16px; color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+}
+.wings-view .cape-card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.wings-view .cape-card-sub { font-size: 12.5px; color: rgba(255,255,255,0.65); margin-bottom: 4px; }
+.wings-view .cape-level-label { font-size: 20px; font-weight: 800; text-align: center; margin-bottom: 14px; }
+.wings-view .cape-lv-prefix { font-size: 0.65em; font-weight: 600; opacity: 0.75; margin-right: 1px; }
+.wings-view .cape-pips { display: flex; flex-direction: column-reverse; gap: 9px; align-items: center; min-height: 12px; }
+.wings-view .cape-pip {
+  position: relative;
+  width: 12px; height: 12px; transform: rotate(45deg);
+  background: rgba(255,255,255,0.85); border: 1.4px solid rgba(255,255,255,0.85);
+}
+.wings-view .cape-pip.tier2, .wings-view .cape-pip.tier3 {
+  width: 21px; height: 21px;
+  background: transparent; border: 2px solid #fff;
+  box-shadow: 0 0 5px rgba(255,255,255,0.65);
+  display: flex; align-items: center; justify-content: center;
+}
+.wings-view .cape-pip-inner { width: 8px; height: 8px; background: #fff; box-shadow: 0 0 4px rgba(255,255,255,0.9); }
+.wings-view .cape-pip.tier3 { box-shadow: 0 0 8px rgba(255,255,255,0.9); }
+.wings-view .cape-pip.tier3 .cape-pip-inner { box-shadow: 0 0 6px #fff, 0 0 12px rgba(255,255,255,0.6); }
+.wings-view .cape-spark { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff; box-shadow: 0 0 3px #fff; transform: rotate(-45deg); }
+.wings-view .cape-spark.t { top: -7px; left: 50%; margin-left: -1.5px; }
+.wings-view .cape-spark.b { bottom: -7px; left: 50%; margin-left: -1.5px; }
+.wings-view .cape-spark.l { left: -7px; top: 50%; margin-top: -1.5px; }
+.wings-view .cape-spark.r { right: -7px; top: 50%; margin-top: -1.5px; }
+
+/* ── 🏆 称号パネル ───────────────────── */
+.wings-view .titles-card { background: var(--card); border-radius: var(--r); padding: 16px; margin-top: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.wings-view .titles-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.wings-view .titles-card-title { font-size: 14px; font-weight: 700; }
+.wings-view .titles-count { font-size: 12px; font-weight: 700; color: var(--text-2); }
+.wings-view .titles-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.wings-view .title-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; background: var(--orange-bg); color: var(--orange-d);
+  white-space: nowrap; cursor: default;
+}
+.wings-view .title-chip.locked { background: var(--bg); color: var(--text-3); font-weight: 600; }
+
+/* ── 達成率シェア用ボタン ─────────────────── */
+.wings-view .share-btn-row { display: flex; gap: 8px; margin: 14px 0; }
+.wings-view .share-btn { flex: 1; padding: 12px; border-radius: var(--r-sm); font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; border: none; color: #fff; }
+.wings-view .share-btn.twitter { background: #000; }
+.wings-view .share-btn.customize { background: var(--blue); }
+
+/* ── モード切替タブ ─────────────────────────── */
+.wings-view .mode-tabs { display: flex; gap: 8px; margin-top: 16px; }
+.wings-view .mode-tab {
+  flex: 1; background: var(--card); border-radius: var(--r-sm); padding: 11px;
+  font-size: 13.5px; font-weight: 700; color: var(--text-2); text-align: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07); cursor: pointer; border: none; font-family: inherit;
+}
+.wings-view .mode-tab.active { background: var(--blue); color: #fff; box-shadow: 0 2px 8px rgba(0,122,255,0.3); }
+
+/* ── 季節精霊/恒常精霊リスト ───────────────────── */
+.wings-view .sticky-section { margin-top: 8px; }
+.wings-view .season-card {
+  background: var(--card); border-radius: var(--r); padding: 16px; margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04);
+}
+.wings-view .season-card.ending-soon { box-shadow: 0 0 0 1.5px var(--red), 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04); }
+.wings-view .season-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.wings-view .season-name { font-size: 15px; font-weight: 700; }
+.wings-view .season-head-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.wings-view .season-sub-badge {
+  font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+  background: var(--blue-bg); color: var(--blue); white-space: nowrap; display: inline-flex; align-items: center; gap: 3px;
+}
+.wings-view .season-sub-badge.complete { background: var(--green-bg); color: var(--green); }
+.wings-view .season-sub-badge.warn { background: var(--red-bg); color: var(--red); }
+.wings-view .season-toggle-btn {
+  background: none; border: none; padding: 4px; margin: -4px 0; cursor: pointer;
+  color: var(--text-2); font-size: 13px; line-height: 1; flex-shrink: 0; font-family: inherit;
+}
+.wings-view .season-toggle-btn:hover { color: var(--orange-d); }
+.wings-view .season-toggle-btn .inline-icon { stroke: currentColor; color: currentColor; transition: transform 0.15s ease; }
+.wings-view .season-toggle-btn[aria-expanded="true"] .inline-icon { transform: rotate(180deg); }
+.wings-view .spirit-list { display: flex; flex-direction: column; gap: 2px; margin-top: 12px; padding-top: 12px; border-top: 0.5px solid var(--sep); }
+.wings-view .spirit-opt { display: flex; align-items: center; gap: 9px; font-size: 13.5px; padding: 6px 4px; border-radius: var(--r-sm); }
+.wings-view .spirit-opt:hover { background: var(--bg); }
+.wings-view .spirit-opt input { accent-color: var(--blue); width: 16px; height: 16px; flex-shrink: 0; }
+.wings-view .spirit-opt-label { flex: 1; min-width: 0; }
+.wings-view .spirit-opt-date { flex-shrink: 0; font-size: 10.5px; color: var(--text-2); white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
+.wings-view .spirit-opt.warn { background: var(--red-bg); }
+.wings-view .spirit-opt.warn .spirit-opt-label { color: var(--red); font-weight: 600; }
+
+.wings-view .area-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.wings-view .area-btn {
+  font-size: 10.5px; font-weight: 700; padding: 3px 9px; border-radius: 999px;
+  background: var(--bg); color: var(--text-2); white-space: nowrap; border: 1px solid var(--sep); cursor: pointer; font-family: inherit;
+}
+.wings-view .area-name {
+  font-size: 12.5px; font-weight: 700; color: var(--text-2);
+  margin: 12px 0 8px; padding-top: 10px; border-top: 0.5px solid var(--sep);
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.wings-view .area-name:first-of-type { border-top: none; padding-top: 0; }
+.wings-view .area-name-label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wings-view .realm-block { margin-bottom: 14px; }
+
+/* ── 光の子チェックリスト ───────────────────── */
+.wings-view .light-child-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.wings-view .light-child-opt { display: flex; flex-direction: column; align-items: center; gap: 5px; border-radius: var(--r-sm); padding: 6px 4px; cursor: pointer; }
+.wings-view .light-child-opt:hover { background: var(--bg); }
+.wings-view .light-child-thumb {
+  width: 100%; aspect-ratio: 1; border-radius: 10px; overflow: hidden;
+  background: var(--bg); position: relative; border: 2px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+}
+.wings-view .light-child-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wings-view .light-child-thumb.img-fallback img { display: none; }
+.wings-view .light-child-opt.checked .light-child-thumb { border-color: var(--blue); }
+.wings-view .light-child-check {
+  position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(0,0,0,0.35); color: #fff; font-size: 11px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.wings-view .light-child-opt.checked .light-child-check { background: var(--blue); }
+.wings-view .light-child-label { font-size: 10px; color: var(--text-2); text-align: center; line-height: 1.3; }
+.wings-view .light-child-thumb-fallback { display: none; font-size: 18px; }
+.wings-view .light-child-thumb.img-fallback .light-child-thumb-fallback { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+
+/* ── トースト ───────────────────── */
+.wings-view-toast, .wg-toast {
+  position: fixed; bottom: calc(84px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(28,28,30,0.92); color: #fff; padding: 10px 18px; border-radius: 999px;
+  font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.2s, transform 0.2s; z-index: 2000;
+  pointer-events: none;
+}
+.wg-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ── シェア画像カード（画面外に生成してhtml2canvasで書き出す） ─── */
+.wg-export-card {
+  position: fixed; left: -9999px; top: 0; width: 560px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  padding: 28px; border-radius: 28px; box-sizing: border-box;
+}
+.wg-exp-brand { color: #fff; font-size: 12px; font-weight: 600; opacity: 0.85; letter-spacing: 0.3px; margin-bottom: 6px; }
+.wg-exp-hero { text-align: center; padding: 6px 0 18px; }
+.wg-exp-hero-pct { color: #fff; font-size: 52px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.wg-num-unit { font-size: 0.55em; font-weight: 500; opacity: 0.75; margin-left: 2px; }
+.wg-exp-hero-label { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 6px; letter-spacing: 0.5px; }
+.wg-exp-hero-nums { color: #fff; font-size: 13px; margin-top: 10px; opacity: 0.92; }
+.wg-exp-hero-sub { color: #fff; font-size: 13px; margin-top: 4px; opacity: 0.92; }
+.wg-exp-comment {
+  color: #fff; background: rgba(255,255,255,0.16); border-radius: 14px;
+  padding: 10px 14px; font-size: 13px; line-height: 1.6; text-align: left;
+  margin-bottom: 4px; white-space: pre-wrap; word-break: break-word;
+}
+.wg-exp-date { color: rgba(255,255,255,0.75); font-size: 10.5px; text-align: right; margin-top: 10px; }
+
+/* ── 共有画像カスタマイズモーダル（.modal-card内、chrome.cssのトークンを使う） ── */
+.wg-share-section-label { font-size: 12px; font-weight: 700; color: var(--hub-text-2); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+.wg-share-section-label:first-of-type { margin-top: 0; }
+.wg-theme-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.wg-theme-swatch { width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; position: relative; }
+.wg-theme-swatch.selected { border-color: var(--hub-text); }
+.wg-theme-swatch.selected::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.5 12.5l5 5L20 6.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center; background-size: 45%;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+}
+.wg-comment-input {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--hub-sep);
+  border-radius: var(--hub-r-sm); padding: 10px 12px; font-size: 13.5px; line-height: 1.5;
+  font-family: inherit; color: var(--hub-text); resize: vertical; min-height: 60px; background: var(--hub-bg);
+}
+.wg-preview-img { width: 100%; border-radius: var(--hub-r-sm); margin: 10px 0; display: block; }

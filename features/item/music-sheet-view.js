@@ -101,7 +101,7 @@ function renderShell() {
         <div class="ms-header-card">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:16px;">
             <div class="ms-header-info">
-              <div class="ms-header-icon"><svg width="24" height="24"><use href="#i-sheet-music"/></svg></div>
+              <div class="ms-header-icon"><svg class="inline-icon" width="24" height="24"><use href="#i-sheet-music"/></svg></div>
               <div>
                 <div class="ms-header-name">${escapeHtml(catName)}</div>
                 <div class="ms-header-count" id="msCatCount">-- / -- ${en ? 'owned' : '所持'}</div>
@@ -115,7 +115,7 @@ function renderShell() {
         <div class="ms-control-panel">
           <div class="ms-control-row">
             <span class="ms-control-label">${t('名前検索', 'Name Search')}</span>
-            <svg width="16" height="16"><use href="#i-search"/></svg>
+            <svg class="inline-icon" width="16" height="16"><use href="#i-search"/></svg>
             <input type="text" class="ms-select-box ms-search-input" id="msSearchName" placeholder="${t('楽譜名・番号で絞り込み...', 'Filter by name or number...')}" oninput="window.__msViewFilterAndRender()">
           </div>
           <div class="ms-control-row">
@@ -171,7 +171,7 @@ function renderShell() {
           </div>
           <div class="ms-control-row ms-control-reset-row">
             <button type="button" class="ms-control-reset-btn" onclick="window.__msViewResetFilters()">
-              <svg width="16" height="16"><use href="#i-close"/></svg> <span>${t('フィルターを全てクリア', 'Clear All Filters')}</span>
+              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${t('フィルターを全てクリア', 'Clear All Filters')}</span>
             </button>
           </div>
         </div>
@@ -184,7 +184,7 @@ function renderShell() {
               <span>${t('グリッド', 'Grid')}</span>
             </button>
             <button type="button" class="ms-view-toggle-btn" id="msViewBtnList" onclick="window.__msViewSetViewMode('list')" aria-pressed="false">
-              <svg width="14" height="14"><use href="#i-menu"/></svg>
+              <svg class="inline-icon" width="14" height="14"><use href="#i-menu"/></svg>
               <span>${t('リスト', 'List')}</span>
             </button>
           </div>
@@ -290,7 +290,7 @@ function handleToggleFav(id, btn) {
   userStates.fav[id] = !userStates.fav[id];
   persistState();
   btn.classList.toggle('is-fav', userStates.fav[id]);
-  btn.innerHTML = `<svg width="16" height="16" style="stroke:currentColor;fill:${userStates.fav[id] ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg>`;
+  btn.innerHTML = `<svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:${userStates.fav[id] ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg>`;
 }
 
 function handleToggleWish(id, btn) {
@@ -397,7 +397,7 @@ function filterAndRender() {
 
   const priceLabel = (s) => s.price === null
     ? `<span class="ms-badge ms-price-unknown">${t('価格: -', 'Price: -')}</span>`
-    : `<span class="ms-badge"><svg width="12" height="12"><use href="#i-candle"/></svg> ${s.price}</span>`;
+    : `<span class="ms-badge"><svg class="inline-icon" width="12" height="12"><use href="#i-candle"/></svg> ${s.price}</span>`;
 
   const renderGrid = (s) => {
     const isOwned = !!userStates.owned[s.id];
@@ -420,15 +420,15 @@ function filterAndRender() {
     return `
       <div class="ms-item-tile">
         <div class="ms-sheet-frame ${isOwned ? 'is-owned' : ''}" id="card_${s.id}" title="${escapeHtml(tip)}" onclick="window.__msViewToggleOwned('${s.id}')" tabindex="0" role="button" aria-pressed="${isOwned}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.__msViewToggleOwned('${s.id}');}">
-          <button class="ms-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__msViewToggleFav('${s.id}', this)" aria-label="${t('お気に入り', 'Favorite')}"><svg width="16" height="16" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
-          <button class="ms-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__msViewToggleWish('${s.id}', this)" aria-label="${t('ウィッシュリスト', 'Wishlist')}" title="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
+          <button class="ms-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__msViewToggleFav('${s.id}', this)" aria-label="${t('お気に入り', 'Favorite')}"><svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
+          <button class="ms-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__msViewToggleWish('${s.id}', this)" aria-label="${t('ウィッシュリスト', 'Wishlist')}" title="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
           <div class="ms-sheet-img-wrap">
             <img src="${s.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('ms-img-fallback')">
-            <span class="ms-sheet-note-icon"><svg width="18" height="18"><use href="#i-music-note"/></svg></span>
+            <span class="ms-sheet-note-icon"><svg class="inline-icon" width="18" height="18"><use href="#i-music-note"/></svg></span>
           </div>
           <span class="ms-sheet-method-dot m-${s.method}" aria-hidden="true"></span>
           <span class="ms-sheet-num-badge">${s.num}</span>
-          <span class="ms-tile-owned-check"><svg width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
+          <span class="ms-tile-owned-check"><svg class="inline-icon" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
         </div>
         <a href="${wikiUrl}" target="_blank" rel="noopener noreferrer" class="ms-item-tile-name">${escapeHtml(dispName)}</a>
       </div>
@@ -455,9 +455,9 @@ function filterAndRender() {
         <div class="ms-item-left" onclick="window.__msViewToggleOwned('${s.id}')" tabindex="0" role="button" aria-pressed="${isOwned}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.__msViewToggleOwned('${s.id}');}">
           <div class="ms-sheet-thumb">
             <img src="${s.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('ms-img-fallback')">
-            <span class="ms-sheet-note-icon"><svg width="15" height="15"><use href="#i-music-note"/></svg></span>
+            <span class="ms-sheet-note-icon"><svg class="inline-icon" width="15" height="15"><use href="#i-music-note"/></svg></span>
             <span class="ms-sheet-thumb-num-badge">${s.num}</span>
-            <span class="ms-sheet-thumb-check"><svg width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
+            <span class="ms-sheet-thumb-check"><svg class="inline-icon" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
           </div>
           <div class="ms-item-details">
             <a href="${wikiUrl}" target="_blank" rel="noopener noreferrer" class="ms-item-name-link" onclick="event.stopPropagation();">
@@ -469,12 +469,12 @@ function filterAndRender() {
               <span class="ms-badge ms-key-badge">${trKey(s.key)}</span>
               ${s.note ? `<span class="ms-badge">${escapeHtml(en ? (s.noteEn || s.note) : s.note)}</span>` : ''}
             </div>
-            <div class="ms-source-row"><svg width="12" height="12"><use href="#i-calendar"/></svg> ${trEvent(s.season)}${spiritName ? ` ・ ${t('精霊', 'Spirit')}: ${escapeHtml(spiritName)}` : ''}</div>
+            <div class="ms-source-row"><svg class="inline-icon" width="12" height="12"><use href="#i-calendar"/></svg> ${trEvent(s.season)}${spiritName ? ` ・ ${t('精霊', 'Spirit')}: ${escapeHtml(spiritName)}` : ''}</div>
             <div class="ms-diff-row">${diffHtml}</div>
           </div>
         </div>
-        <button class="ms-fav-btn ${isFav ? 'is-fav' : ''}" onclick="window.__msViewToggleFav('${s.id}', this)"><svg width="18" height="18" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
-        <button class="ms-wish-btn ${isWish ? 'is-wish' : ''}" onclick="window.__msViewToggleWish('${s.id}', this)" aria-label="${t('ウィッシュリスト', 'Wishlist')}" title="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
+        <button class="ms-fav-btn ${isFav ? 'is-fav' : ''}" onclick="window.__msViewToggleFav('${s.id}', this)"><svg class="inline-icon" width="18" height="18" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
+        <button class="ms-wish-btn ${isWish ? 'is-wish' : ''}" onclick="window.__msViewToggleWish('${s.id}', this)" aria-label="${t('ウィッシュリスト', 'Wishlist')}" title="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
       </div>
     `;
   };

@@ -604,7 +604,7 @@ function initOneYearAgoBanner() {
   slot.innerHTML = `
     <div class="em-oya-banner" id="emOneYearAgoBanner" role="status">
       <span class="em-oya-text">${msg}</span>
-      <button class="em-oya-close" type="button" onclick="window.__emoteDismissOneYearAgoBanner()" aria-label="${escapeHtml(t('閉じる', 'Dismiss'))}"><svg width="16" height="16"><use href="#i-close"/></svg></button>
+      <button class="em-oya-close" type="button" onclick="window.__emoteDismissOneYearAgoBanner()" aria-label="${escapeHtml(t('閉じる', 'Dismiss'))}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
     </div>`;
 }
 function handleDismissOneYearAgoBanner() {

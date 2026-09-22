@@ -6,7 +6,7 @@
    check(stats) の判定ロジックまで完全に同一（実際のJS関数として維持し、
    JSON化はしていない）。
 
-   icon: 元実装は共有スプライト（自サイト内の<svg id="pf-icon-sprite">）の
+   icon: 元実装は共有スプライト（自サイト内の<svg class="inline-icon" id="pf-icon-sprite">）の
    #i-star・#i-masks・#i-crown・#i-map・#i-compass を<use>で参照していた。
    tai-hub側の共有スプライト（js/icon-sprite.js）には i-star/i-masks/i-crown は
    既にあるためそのまま<use>参照できるが、i-map・i-compassは無い。他の機能も

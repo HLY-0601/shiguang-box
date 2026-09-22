@@ -888,7 +888,7 @@ function renderOneYearAgoBanner() {
     msg = t('oneYearAgo.questTemplate', { text: escapeHtml(S.oneYearAgoTruncate(questEntry.text, 30)) });
   }
   wrap.innerHTML = '<span class="one-year-ago-text">' + msg + '</span>' +
-    '<button type="button" class="one-year-ago-close-btn" aria-label="' + escapeHtml(t('oneYearAgo.dismissBtn')) + '"><svg width="16" height="16"><use href="#i-close"/></svg></button>';
+    '<button type="button" class="one-year-ago-close-btn" aria-label="' + escapeHtml(t('oneYearAgo.dismissBtn')) + '"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>';
   wrap.classList.add('is-visible');
 }
 

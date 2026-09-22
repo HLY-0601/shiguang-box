@@ -145,7 +145,7 @@ function renderSeasonBanner() {
   return `
     <div class="season-banner">
       <div class="season-banner-head">
-        <span class="icon-chip season-banner-icon" style="width:34px; height:34px;"><svg width="22" height="22"><use href="#i-sparkle"/></svg></span>
+        <span class="icon-chip season-banner-icon" style="width:34px; height:34px;"><svg class="inline-icon" width="22" height="22"><use href="#i-sparkle"/></svg></span>
         <div>
           <div class="season-banner-eyebrow">${en ? 'Current Season' : '開催中の季節'}</div>
           <div class="season-banner-title">${escapeHtml(seasonName)}</div>
@@ -174,7 +174,7 @@ function renderShell() {
 
       <p class="sec-label">${en ? 'Music Sheet Completion' : '楽譜コンプリート管理'}</p>
       <a href="#/item/${MUSIC_SHEET_CAT ? MUSIC_SHEET_CAT.key : 'music_sheet'}" class="feature-btn">
-        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg width="25" height="25"><use href="#i-sheet-music"/></svg></span>
+        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg class="inline-icon" width="25" height="25"><use href="#i-sheet-music"/></svg></span>
         <span>
           <span class="feature-label">${en ? 'Music Sheet Completion Tracker' : '楽譜コンプリート率'}</span>
           <span class="feature-desc">${en
@@ -185,7 +185,7 @@ function renderShell() {
 
       <p class="sec-label">${en ? 'Cost Management' : 'コスト管理'}</p>
       <a href="#/item/cost" class="feature-btn">
-        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg width="25" height="25"><use href="#i-candle"/></svg></span>
+        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg class="inline-icon" width="25" height="25"><use href="#i-candle"/></svg></span>
         <span>
           <span class="feature-label">${en ? 'Item Cost Breakdown' : 'アイテム別コスト'}</span>
           <span class="feature-desc">${en
@@ -197,7 +197,7 @@ function renderShell() {
       <p class="sec-label">${en ? 'Item Search' : 'アイテム検索'}</p>
       <div class="card dash-search-card">
         <div class="dash-search-box">
-          <span class="icon-chip dash-search-icon" style="width:18px; height:18px;"><svg width="15" height="15"><use href="#i-search"/></svg></span>
+          <span class="icon-chip dash-search-icon" style="width:18px; height:18px;"><svg class="inline-icon" width="15" height="15"><use href="#i-search"/></svg></span>
           <input type="text" id="dashItemSearchInput" class="dash-search-input"
                  placeholder="${en ? 'Search item name across all categories...' : '全カテゴリのアイテム名で検索...'}" autocomplete="off">
         </div>

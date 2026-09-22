@@ -194,7 +194,7 @@ function renderShell() {
         <div class="sc-one-year-ago-banner" id="scOneYearAgoBanner">
           <span class="sc-one-year-ago-icon" aria-hidden="true"><svg class="inline-icon" width="18" height="18"><use href="#i-sparkle"/></svg></span>
           <span class="sc-one-year-ago-text" id="scOneYearAgoText"></span>
-          <button type="button" class="sc-one-year-ago-close" id="scOneYearAgoCloseBtn" aria-label="${t('oneYearAgo.closeAriaLabel')}"><svg width="16" height="16"><use href="#i-close"/></svg></button>
+          <button type="button" class="sc-one-year-ago-close" id="scOneYearAgoCloseBtn" aria-label="${t('oneYearAgo.closeAriaLabel')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
         </div>
 
         <section class="sc-card">

@@ -118,7 +118,7 @@ function renderShell(cfg) {
   const catName = en ? cfg.nameEn : cfg.name;
   const iconHtml = cfg.img
     ? `<img src="${cfg.img}" alt="${escapeHtml(catName)}" loading="lazy" referrerpolicy="no-referrer">`
-    : `<svg width="22" height="22"><use href="#i-wing"/></svg>`;
+    : `<svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg>`;
 
   return `
     <div class="item-view">
@@ -139,7 +139,7 @@ function renderShell(cfg) {
         <div class="cv-control-panel">
           <div class="cv-control-row">
             <span class="cv-control-label">${en ? 'Name Search' : '名前検索'}</span>
-            <svg width="16" height="16"><use href="#i-search"/></svg>
+            <svg class="inline-icon" width="16" height="16"><use href="#i-search"/></svg>
             <input type="text" class="cv-select-box cv-search-input" id="searchName" placeholder="${en ? 'Filter by item name...' : 'アイテム名で絞り込み...'}" oninput="window.__catViewFilterAndRender()">
           </div>
           <div class="cv-control-row">
@@ -191,7 +191,7 @@ function renderShell(cfg) {
           </div>
           <div class="cv-control-row cv-control-reset-row">
             <button type="button" class="cv-control-reset-btn" onclick="window.__catViewResetFilters()">
-              <svg width="16" height="16"><use href="#i-close"/></svg> <span>${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</span>
+              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</span>
             </button>
           </div>
         </div>
@@ -213,7 +213,7 @@ function renderShell(cfg) {
                 <span>${en ? 'Grid' : 'グリッド'}</span>
               </button>
               <button type="button" class="cv-view-toggle-btn" id="viewBtnList" onclick="window.__catViewSetViewMode('list')" aria-pressed="false">
-                <svg width="14" height="14"><use href="#i-menu"/></svg>
+                <svg class="inline-icon" width="14" height="14"><use href="#i-menu"/></svg>
                 <span>${en ? 'List' : 'リスト'}</span>
               </button>
             </div>
@@ -302,8 +302,8 @@ function handleToggleFav(id, btn) {
 
   btn.classList.toggle('is-fav', userStates.fav[id]);
   btn.innerHTML = userStates.fav[id]
-    ? '<svg width="16" height="16" style="stroke:currentColor;fill:currentColor;stroke-width:1.6"><use href="#i-star"/></svg>'
-    : '<svg width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.6"><use href="#i-star"/></svg>';
+    ? '<svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:currentColor;stroke-width:1.6"><use href="#i-star"/></svg>'
+    : '<svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.6"><use href="#i-star"/></svg>';
 }
 
 function handleToggleWish(id, btn) {
@@ -434,13 +434,13 @@ function filterAndRender() {
         <div class="cv-item-tile-frame ${isOwned ? 'is-owned' : ''}" id="card_${item.id}" title="${escapeHtml(tip)}" onclick="window.__catViewToggleOwned('${item.id}')" tabindex="0" role="button" aria-pressed="${isOwned}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.__catViewToggleOwned('${item.id}');}">
           ${item.cost === 'premium' ? '<span class="cv-tile-cost-dot" aria-hidden="true"></span>' : ''}
           ${item.noReprint ? '<span class="cv-tile-nr-badge">NR</span>' : ''}
-          <button class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__catViewToggleFav('${item.id}', this)" aria-label="${en ? 'Favorite' : 'お気に入り'}"><svg width="14" height="14" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
-          <button class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__catViewToggleWish('${item.id}', this)" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}"><svg width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
+          <button class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__catViewToggleFav('${item.id}', this)" aria-label="${en ? 'Favorite' : 'お気に入り'}"><svg class="inline-icon" width="14" height="14" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
+          <button class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__catViewToggleWish('${item.id}', this)" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
           <div class="cv-item-tile-img-wrap">
             <img src="${imgSrc}" alt="${escapeHtml(trItem(item))}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('cv-img-fallback')">
-            <span class="cv-item-tile-fallback"><svg width="22" height="22"><use href="#i-wing"/></svg></span>
+            <span class="cv-item-tile-fallback"><svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg></span>
           </div>
-          <span class="cv-tile-owned-check"><svg width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
+          <span class="cv-tile-owned-check"><svg class="inline-icon" width="11" height="11" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
         </div>
         <a href="${wikiUrl}" target="_blank" rel="noopener noreferrer" class="cv-item-tile-name">${trItem(item)}</a>
       </div>
@@ -455,8 +455,8 @@ function filterAndRender() {
         <div class="cv-item-left" onclick="window.__catViewToggleOwned('${item.id}')" tabindex="0" role="button" aria-pressed="${isOwned}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.__catViewToggleOwned('${item.id}');}">
           <div class="cv-item-thumb">
             <img src="${imgSrc}" alt="${escapeHtml(trItem(item))}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('cv-img-fallback')">
-            <span class="cv-item-thumb-fallback"><svg width="18" height="18"><use href="#i-wing"/></svg></span>
-            <span class="cv-item-thumb-check"><svg width="10" height="10" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
+            <span class="cv-item-thumb-fallback"><svg class="inline-icon" width="18" height="18"><use href="#i-wing"/></svg></span>
+            <span class="cv-item-thumb-check"><svg class="inline-icon" width="10" height="10" style="stroke:currentColor;fill:none;stroke-width:2.2"><use href="#i-check"/></svg></span>
           </div>
           <div class="cv-item-details">
             <a href="${wikiUrl}" target="_blank" rel="noopener noreferrer" class="cv-item-name-link" onclick="event.stopPropagation();">
@@ -465,17 +465,17 @@ function filterAndRender() {
             <div class="cv-item-meta-row">
               <span class="cv-badge">${trEvent(item.event)}</span>
               <span class="cv-badge ${item.cost === 'premium' ? 'cv-badge-premium' : 'cv-badge-free'}">${item.cost === 'premium' ? (en ? 'Paid' : '課金') : (en ? 'Free' : '無課金')}</span>
-              <span class="cv-badge ${item.dye ? 'cv-badge-dye-o' : ''}">${en ? 'Dye' : '染色'} ${item.dye ? '<svg width="14" height="14" style="vertical-align:-2px"><use href="#i-check"/></svg>' : '<svg width="14" height="14" style="vertical-align:-2px"><use href="#i-close"/></svg>'}</span>
+              <span class="cv-badge ${item.dye ? 'cv-badge-dye-o' : ''}">${en ? 'Dye' : '染色'} ${item.dye ? '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-check"/></svg>' : '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-close"/></svg>'}</span>
               ${item.noReprint ? `<span class="cv-badge cv-badge-no-reprint">${en ? 'No Re-release' : '復刻なし'}</span>` : ''}
               ${item.color ? `<span class="cv-badge cv-badge-color">${item.color}</span>` : ''}
             </div>
           </div>
         </div>
         <button class="cv-fav-btn ${isFav ? 'is-fav' : ''}" onclick="window.__catViewToggleFav('${item.id}', this)">
-          <svg width="18" height="18" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg>
+          <svg class="inline-icon" width="18" height="18" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg>
         </button>
         <button class="cv-wish-btn ${isWish ? 'is-wish' : ''}" onclick="window.__catViewToggleWish('${item.id}', this)" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}">
-          <svg width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg>
+          <svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg>
         </button>
       </div>
     `;
@@ -492,7 +492,7 @@ function filterAndRender() {
 
   if (onesieItems.length > 0) {
     if (outfitItems.length > 0) {
-      html += `<div class="cv-onesie-divider"><span><svg width="15" height="15"><use href="#i-hanger"/></svg> ワンジー</span></div>`;
+      html += `<div class="cv-onesie-divider"><span><svg class="inline-icon" width="15" height="15"><use href="#i-hanger"/></svg> ワンジー</span></div>`;
     }
     html += onesieItems.map(renderItem).join('');
   }

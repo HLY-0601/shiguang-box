@@ -219,9 +219,9 @@ function computeAllItems() {
 function costHtml(cost) {
   const en = CURRENT_LANG === 'en';
   if (!cost) return en ? 'Unknown' : '不明';
-  if (cost.type === 'candle') return `<svg width="15" height="15"><use href="#i-candle"/></svg> ${cost.value}${en ? '' : '本'}`;
-  if (cost.type === 'starCandle') return `<svg width="15" height="15"><use href="#i-star"/></svg> ${cost.value}${en ? '' : '本'}`;
-  if (cost.type === 'heart') return `<svg width="15" height="15"><use href="#i-heart"/></svg> ${cost.value}${en ? '' : '個'}`;
+  if (cost.type === 'candle') return `<svg class="inline-icon" width="15" height="15"><use href="#i-candle"/></svg> ${cost.value}${en ? '' : '本'}`;
+  if (cost.type === 'starCandle') return `<svg class="inline-icon" width="15" height="15"><use href="#i-star"/></svg> ${cost.value}${en ? '' : '本'}`;
+  if (cost.type === 'heart') return `<svg class="inline-icon" width="15" height="15"><use href="#i-heart"/></svg> ${cost.value}${en ? '' : '個'}`;
   if (cost.type === 'money') return `¥${cost.value.toLocaleString()}`;
   if (cost.type === 'na') return en ? 'N/A' : '対象外';
   if (cost.type === 'ticket') return en ? 'Ticket Exchange' : 'チケット交換';
@@ -250,7 +250,7 @@ function renderItemCard(item) {
     acquireToggleHtml = `
       <div class="cost-acquire-toggle">
         <button type="button" class="cost-acquire-btn ${!useRevisit ? 'active free' : ''}" onclick="window.__costViewSetSeasonAcquire('${item.id}', 'ticket')">${ICON_TICKET} ${t('チケットで入手（0扱い）', 'Obtained via ticket (counts as 0)')}</button>
-        <button type="button" class="cost-acquire-btn ${useRevisit ? 'active' : ''}" onclick="window.__costViewSetSeasonAcquire('${item.id}', 'revisit')"><svg width="14" height="14"><use href="#i-sync"/></svg> ${t('復刻で入手（復刻の価格）', 'Obtained via revisit (revisit price)')}</button>
+        <button type="button" class="cost-acquire-btn ${useRevisit ? 'active' : ''}" onclick="window.__costViewSetSeasonAcquire('${item.id}', 'revisit')"><svg class="inline-icon" width="14" height="14"><use href="#i-sync"/></svg> ${t('復刻で入手（復刻の価格）', 'Obtained via revisit (revisit price)')}</button>
       </div>`;
   } else {
     costClass = item.cost.type === 'money' ? 'money' : (['unknown', 'na', 'ticket'].includes(item.cost.type) ? 'unknown' : '');
@@ -273,7 +273,7 @@ function renderItemCard(item) {
   const isPaidCandle = item.candleMoneyMode === 'paidCandle';
   const candleMoneyToggleHtml = showCandleMoneyToggle ? `
     <div class="cost-acquire-toggle">
-      <button type="button" class="cost-acquire-btn ${!isPaidCandle ? 'active' : ''}" onclick="window.__costViewSetCandleMoneyMode('${item.id}', 'normal')"><svg width="14" height="14"><use href="#i-candle"/></svg> ${t('キャンドルで入手', 'Obtained with candles')}</button>
+      <button type="button" class="cost-acquire-btn ${!isPaidCandle ? 'active' : ''}" onclick="window.__costViewSetCandleMoneyMode('${item.id}', 'normal')"><svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg> ${t('キャンドルで入手', 'Obtained with candles')}</button>
       <button type="button" class="cost-acquire-btn ${isPaidCandle ? 'active free' : ''}" onclick="window.__costViewSetCandleMoneyMode('${item.id}', 'paidCandle')">${ICON_WALLET} ${t('課金で買ったキャンドルで入手', 'Obtained with paid candles')}</button>
     </div>
     ${isPaidCandle ? `
@@ -287,7 +287,7 @@ function renderItemCard(item) {
       <div class="cost-item-head">
         <div class="cost-item-thumb ${item.img ? '' : 'img-fallback'}">
           ${item.img ? `<img src="${item.img}" alt="${escapeHtml(trItem(item))}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('img-fallback')">` : ''}
-          <span class="cost-item-thumb-fallback"><svg width="18" height="18"><use href="#i-wing"/></svg></span>
+          <span class="cost-item-thumb-fallback"><svg class="inline-icon" width="18" height="18"><use href="#i-wing"/></svg></span>
         </div>
         <div class="cost-item-info">
           <a href="${searchUrl}" target="_blank" rel="noopener noreferrer" class="cost-item-name">${escapeHtml(trItem(item))}</a>
@@ -297,7 +297,7 @@ function renderItemCard(item) {
         <button type="button" class="cost-item-wish-btn ${isWishItem(item.catKey, item.id) ? 'is-wish' : ''}"
           onclick="window.__costViewToggleWish('${item.catKey}','${item.id}', this)"
           title="${t('ウィッシュリストに追加', 'Add to wishlist')}"
-          aria-label="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg width="15" height="15"><use href="#i-cart"/></svg></button>
+          aria-label="${t('ウィッシュリストに追加', 'Add to wishlist')}"><svg class="inline-icon" width="15" height="15"><use href="#i-cart"/></svg></button>
       </div>
       ${badges.length ? `<div class="cost-item-badges">${badges.join('')}</div>` : ''}
       ${(() => {
@@ -350,21 +350,21 @@ function renderItems() {
   SEASON_ORDER.forEach(season => {
     if (!seasonGroups[season]) return;
     const gid = `costGrp-${groupIndex++}`;
-    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg width="15" height="15"><use href="#i-sparkle"/></svg> ${escapeHtml(trEvent(season))}</span><span class="cost-season-group-count">${seasonGroups[season].length}${itemUnit}</span></div>`;
+    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg class="inline-icon" width="15" height="15"><use href="#i-sparkle"/></svg> ${escapeHtml(trEvent(season))}</span><span class="cost-season-group-count">${seasonGroups[season].length}${itemUnit}</span></div>`;
     html += seasonGroups[season].map(renderItemCard).join('');
     seasonOptions += `<option value="${gid}">${escapeHtml(trEvent(season))}（${seasonGroups[season].length}）</option>`;
   });
   DAY_ORDER.forEach(day => {
     if (!dayGroups[day]) return;
     const gid = `costGrp-${groupIndex++}`;
-    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg width="14" height="14"><use href="#i-sun"/></svg> ${escapeHtml(trEvent(day))}</span><span class="cost-season-group-count">${dayGroups[day].length}${itemUnit}</span></div>`;
+    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg class="inline-icon" width="14" height="14"><use href="#i-sun"/></svg> ${escapeHtml(trEvent(day))}</span><span class="cost-season-group-count">${dayGroups[day].length}${itemUnit}</span></div>`;
     html += dayGroups[day].map(renderItemCard).join('');
     dayOptions += `<option value="${gid}">${escapeHtml(trEvent(day))}（${dayGroups[day].length}）</option>`;
   });
   if (otherItems.length) {
     const gid = `costGrp-${groupIndex++}`;
     const otherLabel = t('その他（パック・恒常精霊・ショップなど）', 'Other (Packs, Realm Spirits, Shops, etc.)');
-    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg width="14" height="14"><use href="#i-sparkle"/></svg> ${otherLabel}</span><span class="cost-season-group-count">${otherItems.length}${itemUnit}</span></div>`;
+    html += `<div class="cost-season-group-header" id="${gid}"><span class="cost-season-group-name"><svg class="inline-icon" width="14" height="14"><use href="#i-sparkle"/></svg> ${otherLabel}</span><span class="cost-season-group-count">${otherItems.length}${itemUnit}</span></div>`;
     html += otherItems.map(renderItemCard).join('');
     otherOptions = `<option value="${gid}">${t('その他', 'Other')}（${otherItems.length}）</option>`;
   }
@@ -674,7 +674,7 @@ function renderGiftHistoryList() {
           <input type="checkbox" ${g.include ? 'checked' : ''} onchange="window.__costViewToggleGiftInclude('${g.id}', this.checked)">
           ${t('実額に含める', 'Include in total')}
         </label>
-        <button type="button" class="cost-gift-remove-btn" onclick="window.__costViewRemoveGiftRecord('${g.id}')" aria-label="${t('削除', 'Remove')}"><svg width="16" height="16"><use href="#i-close"/></svg></button>
+        <button type="button" class="cost-gift-remove-btn" onclick="window.__costViewRemoveGiftRecord('${g.id}')" aria-label="${t('削除', 'Remove')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
       </div>`;
   }).join('');
 }
@@ -703,7 +703,7 @@ function renderCandlePackGrid() {
   el.innerHTML = CANDLE_PACKS.map(p => `
     <button type="button" class="cost-candle-pack-btn" onclick="window.__costViewAddCandlePurchase('${p.key}')">
       <span class="cost-candle-pack-price">¥${p.price.toLocaleString()}</span>
-      <span class="cost-candle-pack-amount"><svg width="14" height="14"><use href="#i-candle"/></svg>${p.candles}${t('本', '')}</span>
+      <span class="cost-candle-pack-amount"><svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg>${p.candles}${t('本', '')}</span>
       <span class="cost-candle-pack-add">${t('+ 購入を記録', '+ Record purchase')}</span>
     </button>`).join('');
 }
@@ -751,7 +751,7 @@ function renderCandlePurchaseList() {
       const totalYen = list.reduce((sum, p) => sum + ((candlePackByKey(p.packKey) || {}).price || 0), 0);
       const totalCandles = list.reduce((sum, p) => sum + ((candlePackByKey(p.packKey) || {}).candles || 0), 0);
       summaryEl.style.display = 'flex';
-      summaryEl.innerHTML = `<span>${t(`${list.length}回購入`, `${list.length} purchases`)}</span><span>¥${totalYen.toLocaleString()} → <svg width="14" height="14"><use href="#i-candle"/></svg>${totalCandles.toLocaleString()}${t('本', '')}</span>`;
+      summaryEl.innerHTML = `<span>${t(`${list.length}回購入`, `${list.length} purchases`)}</span><span>¥${totalYen.toLocaleString()} → <svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg>${totalCandles.toLocaleString()}${t('本', '')}</span>`;
     }
   }
 
@@ -766,14 +766,14 @@ function renderCandlePurchaseList() {
     return `
       <div class="cost-gift-record">
         <div class="cost-gift-record-info">
-          <b>¥${pack.price.toLocaleString()}</b>（<svg width="14" height="14"><use href="#i-candle"/></svg>${pack.candles}${t('本', '')}）
+          <b>¥${pack.price.toLocaleString()}</b>（<svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg>${pack.candles}${t('本', '')}）
           <div class="cost-gift-record-sub">${escapeHtml(p.date || '')}</div>
         </div>
         <label class="cost-gift-include-toggle">
           <input type="checkbox" ${p.include !== false ? 'checked' : ''} onchange="window.__costViewToggleCandleInclude('${p.id}', this.checked)">
           ${t('実額に含める', 'Include in total')}
         </label>
-        <button type="button" class="cost-gift-remove-btn" onclick="window.__costViewRemoveCandlePurchase('${p.id}')" aria-label="${t('削除', 'Remove')}"><svg width="16" height="16"><use href="#i-close"/></svg></button>
+        <button type="button" class="cost-gift-remove-btn" onclick="window.__costViewRemoveCandlePurchase('${p.id}')" aria-label="${t('削除', 'Remove')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
       </div>`;
   }).join('');
 }
@@ -837,7 +837,7 @@ function renderShell() {
             <span>${ICON_GIFT} ${t('プレゼント分（実額とは別）', 'Gift purchases (shown separately)')}</span><b id="costSummaryGiftMoney">¥0</b>
           </div>
           <div class="cost-summary-gift-row" id="costSummaryCandleRow" style="display:none;">
-            <span><svg width="14" height="14"><use href="#i-candle"/></svg> ${t('キャンドル課金分（実額とは別）', 'Candle purchases (shown separately)')}</span><b id="costSummaryCandleMoney">¥0</b>
+            <span><svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg> ${t('キャンドル課金分（実額とは別）', 'Candle purchases (shown separately)')}</span><b id="costSummaryCandleMoney">¥0</b>
           </div>
           <div class="cost-summary-hint" id="costSummaryHint">${t('読み込み中…', 'Loading…')}</div>
         </div>
@@ -887,7 +887,7 @@ function renderShell() {
 
         <div class="cost-gift-card">
           <div class="cost-summary-title-row" onclick="window.__costViewToggleCandleCard()">
-            <span><svg width="20" height="20"><use href="#i-candle"/></svg> ${t('キャンドル課金', 'Candle Purchases')}</span>
+            <span><svg class="inline-icon" width="20" height="20"><use href="#i-candle"/></svg> ${t('キャンドル課金', 'Candle Purchases')}</span>
             <span class="cost-summary-toggle-icon" id="costCandleToggleIcon">${ICON_CHEVRON}</span>
           </div>
           <div id="costCandleBody" style="display:none;">
@@ -907,7 +907,7 @@ function renderShell() {
 
         <div class="cost-jump-bar">
           <div class="cost-jump-bar-row">
-            <svg width="14" height="14"><use href="#i-folder"/></svg>
+            <svg class="inline-icon" width="14" height="14"><use href="#i-folder"/></svg>
             <label for="costOwnFilter" class="cost-jump-label">${t('所持状況', 'Ownership')}</label>
             <select id="costOwnFilter" class="cost-jump-select" onchange="window.__costViewRenderItems()">
               <option value="all">${t('すべて表示', 'Show all')}</option>
@@ -916,7 +916,7 @@ function renderShell() {
             </select>
           </div>
           <div class="cost-jump-bar-row">
-            <svg width="14" height="14"><use href="#i-candle"/></svg>
+            <svg class="inline-icon" width="14" height="14"><use href="#i-candle"/></svg>
             <label for="costTypeFilter" class="cost-jump-label">${t('通貨', 'Currency')}</label>
             <select id="costTypeFilter" class="cost-jump-select" onchange="window.__costViewRenderItems()">
               <option value="all">${t('すべて表示', 'Show all')}</option>
@@ -927,7 +927,7 @@ function renderShell() {
             </select>
           </div>
           <div class="cost-jump-bar-row">
-            <svg width="14" height="14"><use href="#i-sparkle"/></svg>
+            <svg class="inline-icon" width="14" height="14"><use href="#i-sparkle"/></svg>
             <label for="costJumpSelect" class="cost-jump-label">${t('ジャンプ', 'Jump to')}</label>
             <select id="costJumpSelect" class="cost-jump-select" onchange="window.__costViewJumpToGroup(this.value)">
               <option value="">${t('季節・日々を選択してジャンプ', 'Select a season/day to jump to')}</option>

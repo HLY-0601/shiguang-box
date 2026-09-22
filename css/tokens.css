@@ -1,0 +1,35 @@
+/* ================================================================
+   ハブchrome専用の新規デザイントークン（ドック・モーダル・引き出し・
+   プレースホルダー等）。移植したitem機能自身の見た目には適用しない
+   （item.css側の元トークンをそのまま使う——見た目は元のものをほぼ
+   維持する、という今回のスコープ判断）。
+   ================================================================ */
+:root {
+  --hub-bg: #F4F3F8;
+  --hub-card: #FFFFFF;
+  --hub-sep: rgba(60, 60, 67, 0.12);
+  --hub-accent: #6C63D8;
+  --hub-accent-bg: rgba(108, 99, 216, 0.10);
+  --hub-text: #1C1C1E;
+  --hub-text-2: #8E8E93;
+  --hub-text-3: #C7C7CC;
+  --hub-r: 16px;
+  --hub-r-sm: 10px;
+}
+
+[data-theme="dark"] {
+  --hub-bg: #0F0E14;
+  --hub-card: #1C1B22;
+  --hub-sep: rgba(255, 255, 255, 0.14);
+  --hub-accent: #9B93FF;
+  --hub-accent-bg: rgba(155, 147, 255, 0.16);
+  --hub-text: #F2F2F7;
+  --hub-text-2: #98989D;
+  --hub-text-3: #636366;
+}
+
+body {
+  background: var(--hub-bg);
+  color: var(--hub-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP", Roboto, sans-serif;
+}

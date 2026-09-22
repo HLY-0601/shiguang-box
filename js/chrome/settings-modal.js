@@ -4,7 +4,7 @@
    /dmConfirmWipe を移植。
    ================================================================ */
 import { CURRENT_LANG, setLang } from '../i18n.js';
-import { getSkyThemeMode, toggleTheme, exportAllData, parseImportFile, importAllData, wipeAllData } from '../state.js';
+import { getSkyThemeMode, toggleTheme, exportAllData, parseImportFile, importAllData, wipeAllData, getShortcutsEnabled, setShortcutsEnabled } from '../state.js';
 
 function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
 
@@ -37,6 +37,12 @@ export function open() {
           <button type="button" class="settings-btn${CURRENT_LANG === 'en' ? ' active' : ''}" id="settingsLangEnBtn">English</button>
         </div>
       </div>
+      <div class="settings-row">
+        <span>${t('キーボードショートカット', 'Keyboard shortcuts')}</span>
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+          <input type="checkbox" id="settingsShortcutsCheckbox"${getShortcutsEnabled() ? ' checked' : ''}>
+        </label>
+      </div>
       <div class="settings-row" style="flex-direction:column;align-items:stretch;gap:8px;">
         <span>${t('データのバックアップ', 'Data Backup')}</span>
         <div style="display:flex;gap:8px;">
@@ -55,6 +61,7 @@ export function open() {
   document.getElementById('settingsThemeBtn').addEventListener('click', () => { toggleTheme(); syncThemeBtn(); });
   document.getElementById('settingsLangJaBtn').addEventListener('click', () => setLang('ja'));
   document.getElementById('settingsLangEnBtn').addEventListener('click', () => setLang('en'));
+  document.getElementById('settingsShortcutsCheckbox').addEventListener('change', e => setShortcutsEnabled(e.target.checked));
   document.getElementById('settingsExportBtn').addEventListener('click', () => {
     const count = exportAllData();
     document.getElementById('settingsStatus').textContent = t(`書き出しました（${count}件のキー）。`, `Exported (${count} keys).`);

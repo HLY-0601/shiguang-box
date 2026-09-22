@@ -11,7 +11,7 @@
 import { CURRENT_LANG } from '../i18n.js';
 import {
   ensureProfilesInit, getActiveProfileId, pfDisplayName,
-  createProfile, renameProfile, deleteProfile, switchProfile,
+  createProfile, renameProfile, deleteProfile, switchProfile, duplicateProfile,
   loadTitleStore, DEFAULT_PROFILE_ID,
 } from '../state.js';
 import { refreshProfileLabel } from './site-dock.js';
@@ -76,6 +76,7 @@ function renderList() {
           <span style="color:var(--hub-text-2);font-weight:400;font-size:12px;"> (${t('実績', 'titles')}: ${titleCount})</span>
         </span>
         <button type="button" class="pf-icon-btn" data-act="rename" data-id="${p.id}" title="${t('名前変更', 'Rename')}"><svg class="inline-icon" width="14" height="14"><use href="#i-edit"/></svg></button>
+        <button type="button" class="pf-icon-btn" data-act="duplicate" data-id="${p.id}" title="${t('複製', 'Duplicate')}"><svg class="inline-icon" width="14" height="14"><use href="#i-copy"/></svg></button>
         ${list.length > 1 ? `<button type="button" class="pf-icon-btn pf-row-btn-danger" data-act="delete" data-id="${p.id}" title="${t('削除', 'Delete')}"><svg class="inline-icon" width="14" height="14"><use href="#i-trash"/></svg></button>` : ''}
       </div>`;
   }).join('');
@@ -87,6 +88,11 @@ function renderList() {
       if (act === 'switch') { switchProfile(id); }
       else if (act === 'rename') { editingId = id; renderList(); }
       else if (act === 'cancel') { editingId = null; renderList(); }
+      else if (act === 'duplicate') {
+        duplicateProfile(id);
+        renderList();
+        refreshProfileLabel(pfDisplayName(ensureProfilesInit().find(p => p.id === getActiveProfileId())));
+      }
       else if (act === 'save-rename') {
         const val = document.getElementById('pfEditInput').value;
         renameProfile(id, val);

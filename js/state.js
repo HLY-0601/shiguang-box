@@ -94,6 +94,42 @@ export function renameProfile(id, name) {
   saveProfiles(list);
 }
 
+// プロフィールを複製する（tai-card移植のために追加——item自身にはこの機能は無い。
+// 複製元プロフィール配下の全nsKey化キー（__p_<id>サフィックス、デフォルト
+// プロフィールなら接尾辞なし）を新しいプロフィールIDの下へコピーする）
+export function duplicateProfile(id) {
+  const list = ensureProfilesInit();
+  const src = list.find(p => p.id === id);
+  if (!src) return;
+  const newId = 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const baseName = pfDisplayName(src);
+  const newName = CURRENT_LANG === 'en' ? `${baseName} Copy` : `${baseName}のコピー`;
+
+  const suffix = id === DEFAULT_PROFILE_ID ? null : `__p_${id}`;
+  const keysToCopy = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (suffix) {
+      if (key.endsWith(suffix)) keysToCopy.push(key);
+    } else if (!key.includes('__p_')) {
+      // デフォルトプロフィールの複製時は、他プロフィール接尾辞を持たない
+      // 「無印」キーが対象。ただしskyProfiles_v1/skyActiveProfile_v1等の
+      // プロフィール機構自体のキーはコピー対象から除外する
+      if (key === PROFILES_KEY || key === ACTIVE_PROFILE_KEY) continue;
+      keysToCopy.push(key);
+    }
+  }
+  keysToCopy.forEach(key => {
+    const rawKey = suffix ? key.slice(0, -suffix.length) : key;
+    const value = localStorage.getItem(key);
+    if (value !== null) localStorage.setItem(nsKeyFor(rawKey, newId), value);
+  });
+
+  list.push({ id: newId, name: newName });
+  saveProfiles(list);
+  switchProfile(newId);
+}
+
 export function deleteProfile(id) {
   const list = ensureProfilesInit();
   if (list.length <= 1) return;
@@ -282,6 +318,22 @@ export function toggleTheme() {
   applyThemeToDOM(resolveSkyTheme(next) === 'dark');
   try { localStorage.setItem(SKY_THEME_KEY, next); } catch (e) { /* private browsing等 */ }
   return next;
+}
+
+/* ================================================================
+   ⌨️ キーボードショートカット有効/無効。taipak5000.github.io 配下の
+   全ツール共通キー（未設定＝有効扱い。item/profiles.jsのskyShortcutsEnabled
+   と同じ規約）。実際のキー入力ディスパッチはjs/shortcuts.jsが担う。
+   ================================================================ */
+export const SKY_SHORTCUTS_KEY = 'sky_shortcuts_enabled';
+export function getShortcutsEnabled() {
+  try {
+    const v = localStorage.getItem(SKY_SHORTCUTS_KEY);
+    return v === null ? true : v === '1';
+  } catch (e) { return true; }
+}
+export function setShortcutsEnabled(checked) {
+  try { localStorage.setItem(SKY_SHORTCUTS_KEY, checked ? '1' : '0'); } catch (e) { /* private browsing等 */ }
 }
 
 /* ================================================================

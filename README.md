@@ -1,13 +1,13 @@
-# tai-hub（試作・ローカル専用）
+# tai-hub（試作）
 
 Sky: Children of the Light ファンツール群を1つのアプリへ統合する構想
 （[SkyGame-Planner](https://github.com/Silverfeelin/SkyGame-Planner/) 参考）の、
-**本格的なSPA統合を実際に試すための最初の試作リポジトリ**です。
+**本格的なSPA統合を実際に試すための試作リポジトリ**です。
 
 ⚠️ **これは試作です。既存の各ツール（`item`/`emote`/`share`/`tai-nomacan`/
-`star-candle`等）が引き続き正式版・本番環境です。** このリポジトリは今回、
-ローカルのみで動作確認するものとして作成しており、GitHubへのpush・
-デプロイは行っていません。既存リポジトリには一切手を加えていません。
+`star-candle`等）が引き続き正式版・本番環境です。** 動作確認のため仮の
+GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub Pages等
+への公開は行っていません。既存リポジトリには一切手を加えていません。
 
 ## 今回やったこと
 
@@ -17,12 +17,21 @@ Sky: Children of the Light ファンツール群を1つのアプリへ統合す�
   （`skyProfiles_v1`・`nsKey`等、**既存itemサイトと完全に同じ
   localStorageキー名・データ形状**）、共有chrome（下部ドック・
   プロフィール切替モーダル・設定モーダル・ツール引き出し）を実装。
-- **5ツールのうち`item`（アイテム所持管理）を最初に完全移植**：
-  ダッシュボード（シーズン/イベント表示・12カテゴリのグリッド・
-  横断検索）、12カテゴリすべての所持/お気に入りチェックページ、
-  コスト集計ページ。
-- 残り4ツール（emote/share/tai-nomacan/star-candle）はナビ項目と
-  「未移植」のプレースホルダーのみ。
+- **5ツール全てを完全移植**：
+  - `item`（アイテム所持管理）：ダッシュボード（シーズン/イベント表示・
+    12カテゴリのグリッド・横断検索）、12カテゴリすべての所持/お気に入り
+    チェックページ、コスト集計ページ。
+  - `emote`（エモート所持率管理）：エモート一覧（レベルごとの個別所持
+    トグル）・称号・入手履歴・「1年前の今日」バナー。
+  - `tai-nomacan`（ノマキャン計算機）：複数目標管理・ペース計算・獲得
+    履歴（ストリーク＋推移グラフ）・デイリークエスト記録・称号。
+  - `star-candle`（星のキャンドル計算機）：目標計算・赤闇の自動予測
+    エンジン＋月表示カレンダー・獲得履歴・通知設定・称号。
+  - `share`（創作物管理ツール）：唯一Vue 3（CDN読み込み・ビルドレス）で
+    書かれているツールのため、**ユーザーの明示的な指示によりこのツール
+    だけVueのまま移植**（他はすべてバニラJS）。カレンダー表示・作品の
+    CRUD・一括操作・称号。ルート遷移のたびにVueアプリをmount/unmountし、
+    多重マウントが起きないことを確認済み。
 
 ## 動作確認方法
 
@@ -69,6 +78,21 @@ Sky: Children of the Light ファンツール群を1つのアプリへ統合す�
   機能（tai-card等、別ツールにのみある機能と混同しないよう明記）。
 - **言語切替**：`location.reload()`で切り替える既存挙動のまま
   （リアクティブな再描画は今回作っていない）。
+- **emote**：X（Twitter）への画像共有・カスタマイズ機能（Canvas 2Dで
+  達成率カード画像を1から描画する専用コード）とホーム画面アイコンの
+  カスタマイズ機能（単独PWA向けの機能でハブでは意味を持たない）は未移植。
+- **tai-nomacan / star-candle**：各ツール独自の「🔄最新の状態に更新」
+  ボタンと言語切替ボタンは未移植（前者はツールごとのService Worker
+  キャッシュ回避策で、tai-hubはService Worker自体を持たないため不要。
+  後者はハブの表示設定モーダルに同機能あり）。目標管理モーダルの
+  ドラッグ物理演算つきボトムシートは、ハブ共通のシンプルなモーダルに
+  簡略化。
+- **share**：サイドバー開閉・フォーカストラップ・テーマ/言語のIIFE側
+  ブリッジ呼び出しは、ハブの共有chrome（`js/chrome/*.js`）が全ルート
+  共通で肩代わりするため除去。詳細は`features/share/share-view.js`
+  冒頭のコメント参照。
+- 各ツールの正確な簡略化・アダプテーション内容は、それぞれの
+  `features/<tool>/*-view.js`冒頭のコメントに詳しく記載しています。
 
 ## ディレクトリ構成
 
@@ -76,8 +100,12 @@ Sky: Children of the Light ファンツール群を1つのアプリへ統合す�
 
 ```
 index.html          シェル本体
-css/                 tokens.css(ハブ共通) / chrome.css(ドック・モーダル) / item.css(item専用・元配色維持)
-js/                  router.js / state.js / i18n.js / icon-sprite.js / app.js / chrome/*.js
-features/item/       dashboard-view.js / category-view.js / cost-view.js / data/
-features/placeholder/ 未移植4ツール共通のプレースホルダービュー
+css/                 tokens.css(ハブ共通) / chrome.css(ドック・モーダル) / <tool>.css(各ツール専用・元配色維持)
+js/                  router.js / router-registry.js / state.js / i18n.js / icon-sprite.js / app.js / chrome/*.js
+features/item/        dashboard-view.js / category-view.js / cost-view.js / data/
+features/emote/        emote-view.js / emote-state.js / data/
+features/tai-nomacan/  nomacan-view.js / nomacan-history.js / nomacan-state.js / data/
+features/star-candle/  star-candle-view.js / star-candle-forecast.js / date-utils.js / data/
+features/share/        share-view.js（Vue 3をCDN読み込みしてマウント）
+features/placeholder/  music_sheetのみ未移植（データ形状が異なるため）
 ```

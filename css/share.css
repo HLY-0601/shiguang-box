@@ -1,0 +1,282 @@
+/* ================================================================
+   share（創作物管理ツール／Creation Manager）機能専用のデザイントークン・
+   スタイル。
+
+   移植元: share/index.html の <style> のうち、このツール自身のUI
+   （現在の状態カード・消滅カレンダーカード・称号チップ行/獲得トースト・
+   設置した創作物一覧カード＝ツールバー/検索/絞り込みピル/一括操作バー/
+   個別カード）に関わる部分だけを抽出し、tai-hubの他ポート済み機能
+   （item.css の .item-view）と同じ「クラスをスコープ専用のプレフィックス
+   （ここでは sv-）に付け替えて再構成する」方式で書き直したもの。
+   site-dock/pf-modal/dash-modal/tools-drawer/サイドバー/プロフィールバー/
+   ナビゲーションバー等の「共有chrome」に relatedなスタイルは、tai-hubの
+   css/chrome.css に既に同等のものがあるため意図的に移植していない。
+
+   色・角丸・余白の実測値は、元CSSの「基本レイヤー」＋「🍎 iOS Human
+   Interface Guidelines デザイン層（後勝ちオーバーライド）」を合成した
+   最終的な計算結果をそのまま書き起こしている（2層をそのまま重ねて
+   移植するとCLAUDE.mdの層構造の意図が失われるため）。
+
+   スコープは #app-root 配下の .share-view のみ（item.css の .item-view と
+   同じ考え方）。このファイルは js/app.js 側の index.html には <link> して
+   いない ── share-view.js の mount() が初回描画時に <link rel="stylesheet">
+   を動的に1回だけ挿入する（index.html を編集せずに済ませるため。
+   tai-nomacan/star-candle の各 *-view.js と同じ方式）。
+   ================================================================ */
+
+.share-view {
+  --card: #FFFFFF;
+  --bg2: #F2F2F7;
+  --fill: rgba(118, 118, 128, 0.12);
+  --fill-2: rgba(120, 120, 128, 0.16);
+  --sep: #E5E5EA;
+  --text: #000000;
+  --text-2: #8E8E93;
+
+  --blue: #007AFF;
+  --blue-solid: #0071EC;
+  --orange: #FF9500;
+  --green: #34C759;
+  --red: #FF3B30;
+  --indigo-text: #5E5CE6;
+
+  --badge-red-text: #C40A00;
+  --badge-yellow-text: #965600;
+  --badge-green-text: #1C7332;
+  --badge-gray-text: #636368;
+
+  --r: 16px;
+  --r-sm: 10px;
+
+  color: var(--text);
+  min-height: 100%;
+  padding: 16px 16px 24px;
+}
+
+[data-theme="dark"] .share-view {
+  --card: #1C1C1E;
+  --bg2: #2C2C2E;
+  --fill: rgba(118, 118, 128, 0.24);
+  --fill-2: rgba(120, 120, 128, 0.32);
+  --sep: rgba(84, 84, 88, 0.65);
+  --text: #FFFFFF;
+  --text-2: #8E8E93;
+
+  --badge-red-text: #FF6259;
+  --badge-yellow-text: var(--orange);
+  --badge-green-text: var(--green);
+  --badge-gray-text: var(--text-2);
+  --indigo-text: #8482EE;
+}
+
+.share-view * { box-sizing: border-box; }
+.share-view *:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* ── 称号獲得トースト（🎉 新規獲得した瞬間だけ画面上部に出るお祝い演出。
+     通常のsave系フィードバックはこのツールに存在しないため、他ツールの
+     汎用トースト機構とは別枠のまま = このファイルだけの独立実装） ── */
+.sv-toast-wrap {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 2000; width: 100%; max-width: 380px; padding: 0 14px; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 8px; pointer-events: none;
+}
+.sv-toast {
+  pointer-events: auto; background: var(--card); border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18); border-radius: 16px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px; animation: svToastIn 0.25s ease;
+}
+.sv-toast-icon { font-size: 24px; line-height: 1; }
+.sv-toast-label { font-size: 11px; color: var(--text-2); font-weight: 600; }
+.sv-toast-name { font-size: 14px; color: var(--badge-yellow-text); font-weight: 700; }
+@keyframes svToastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── カード共通（Inset Grouped List） ── */
+.sv-card { background: var(--card); border-radius: var(--r); padding: 16px; margin-bottom: 18px; }
+.sv-card-header {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.03em; color: var(--text-2);
+  margin-bottom: 12px; text-transform: uppercase;
+}
+.sv-card-header-row { display: flex; align-items: center; justify-content: space-between; }
+
+/* ── 現在の状態（統計） ── */
+.sv-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+@media (max-width: 400px) { .sv-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+.sv-stat-box {
+  background: var(--bg2); border: 0; border-radius: 12px; padding: 12px 8px; text-align: center;
+  font-family: inherit; width: 100%; margin: 0; color: var(--text);
+}
+.sv-stat-box:disabled { cursor: default; opacity: 1; }
+.sv-stat-box-label { font-size: 11px; color: var(--text-2); }
+.sv-stat-val { font-size: 22px; font-weight: 700; margin-top: 4px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.sv-stat-box-clickable { cursor: pointer; transition: background 0.15s ease, transform 0.18s cubic-bezier(0.25, 1, 0.5, 1); }
+.sv-stat-box-clickable:hover { background: var(--fill); }
+.sv-stat-box-clickable:active { transform: scale(0.96); }
+
+/* ── 消滅カレンダー ── */
+.sv-cal-header-row { display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
+.sv-cal-caret { font-size: 11px; color: var(--text-2); display: inline-flex; align-items: center; }
+.sv-cal-caret .inline-icon { transition: transform 0.15s ease; }
+.sv-cal-caret.is-expanded .inline-icon { transform: rotate(90deg); }
+.sv-cal-empty { text-align: center; color: var(--text-2); padding: 20px 0; font-size: 13px; }
+.sv-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.sv-cal-nav-btn {
+  border: 0; background: none; border-radius: 50%; width: 34px; height: 34px; padding: 0;
+  font-size: 20px; color: var(--blue); display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.sv-cal-nav-btn:active { transform: scale(0.9); }
+.sv-cal-month-label { font-size: 14px; font-weight: 700; color: var(--text); }
+.sv-cal-today-row { text-align: center; margin-bottom: 10px; }
+.sv-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 10px; }
+.sv-cal-weekday { text-align: center; font-size: 11px; font-weight: 700; color: var(--text-2); padding-bottom: 4px; }
+.sv-cal-day {
+  aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px; background: transparent; border: 2px solid transparent; border-radius: 50%;
+  font-size: 13px; color: var(--text); font-family: inherit; padding: 0; cursor: default;
+}
+.sv-cal-day:disabled { opacity: 1; cursor: default; }
+.sv-cal-day-empty { background: transparent; }
+.sv-cal-day.has-events {
+  cursor: pointer; font-weight: 700; background: var(--bg2);
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.15s ease;
+}
+.sv-cal-day.has-events:hover { border-color: rgba(0, 122, 255, 0.4); }
+.sv-cal-day.has-events:active { transform: scale(0.9); }
+.sv-cal-day.is-today { color: var(--blue); font-weight: 700; }
+.sv-cal-day.is-selected { background: var(--blue-solid); color: #fff; }
+.sv-cal-day.is-selected .sv-cal-day-dot { background: #fff !important; }
+.sv-cal-day-num { line-height: 1; }
+.sv-cal-day-dot { width: 6px; height: 6px; border-radius: 50%; }
+.sv-cal-legend { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; font-size: 11.5px; color: var(--text-2); margin-bottom: 8px; }
+.sv-cal-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.sv-cal-hint { text-align: center; font-size: 12px; color: var(--text-2); }
+.sv-cal-detail { background: var(--bg2); border-radius: 12px; padding: 10px 12px; }
+.sv-cal-detail-header { font-size: 12.5px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.sv-cal-detail-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); padding: 3px 0; flex-wrap: wrap; }
+.sv-cal-detail-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: var(--blue-solid); }
+.sv-cal-detail-memo { flex: 1; min-width: 0; }
+
+/* ── エリア(マップ)行（カレンダー・一覧・個別カードで共用） ── */
+.sv-area-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; color: var(--text-2); }
+.sv-area-row-label { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; }
+.sv-area-select {
+  flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid transparent; border-radius: var(--r-sm);
+  font-size: 13px; background: var(--fill); color: var(--text); font-family: inherit;
+}
+.sv-item-card .sv-area-select { background: var(--card); }
+
+/* ── 称号チップ ── */
+.sv-titles-count { font-size: 12px; font-weight: 700; color: var(--text-2); letter-spacing: 0.03em; }
+.sv-title-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.sv-title-chip {
+  display: inline-flex; align-items: center; gap: 4px; background: rgba(255, 149, 0, 0.15);
+  color: var(--badge-yellow-text); font-size: 12.5px; font-weight: 700; padding: 6px 12px;
+  border-radius: 20px; white-space: nowrap; letter-spacing: 0.03em;
+}
+.sv-title-chip.locked { background: var(--fill); color: var(--badge-gray-text); }
+
+/* ── 一覧ツールバー・検索・一括操作バー ── */
+.sv-list-toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.sv-btn {
+  border: 0; cursor: pointer; font-family: inherit;
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease, background 0.2s ease;
+}
+.sv-btn:active { transform: scale(0.96); }
+.sv-btn-outline { background: rgba(0, 122, 255, 0.12); color: var(--blue); border-radius: var(--r-sm); padding: 8px 14px; font-size: 13px; font-weight: 600; }
+[data-theme="dark"] .sv-btn-outline { background: rgba(10, 132, 255, 0.22); color: #409cff; }
+.sv-btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+.sv-btn-outline.active { background: var(--blue-solid); color: #fff; }
+.sv-btn-fill { background: var(--fill-2); color: var(--text); border-radius: var(--r-sm); padding: 7px 12px; font-size: 13px; font-weight: 600; }
+.sv-btn-fill:disabled { opacity: 0.5; cursor: not-allowed; }
+.sv-btn-primary { background: var(--blue-solid); color: #fff; border-radius: var(--r-sm); padding: 9px 16px; font-size: 13px; font-weight: 700; }
+.sv-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.sv-btn-primary:active { opacity: 0.85; }
+.sv-btn-danger { background: var(--red); color: #fff; border-radius: var(--r-sm); padding: 7px 12px; font-size: 13px; font-weight: 600; }
+.sv-btn-cta {
+  display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%;
+  background: var(--blue-solid); color: #fff; border: none; padding: 15px; border-radius: 14px;
+  font-size: 17px; font-weight: 600; cursor: pointer; margin-top: 8px; font-family: inherit;
+  transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease;
+}
+.sv-btn-cta:active { transform: scale(0.98); opacity: 0.85; }
+
+.sv-search-input { margin-bottom: 10px; }
+
+.sv-bulk-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+  background: var(--fill); border-radius: 12px; padding: 10px 12px; margin-bottom: 10px;
+  font-size: 13px; color: var(--text);
+}
+.sv-bulk-bar.sv-quick-filter { background: rgba(255, 149, 0, 0.12); }
+.sv-bulk-checkbox { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; }
+.sv-confirm-text { flex: 1; font-size: 12.5px; color: var(--text); line-height: 1.4; }
+
+/* ── ジャンル絞り込み・ジャンル選択ピル ── */
+.sv-filter-row, .sv-genre-selector { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.sv-filter-row { margin-bottom: 14px; }
+.sv-genre-selector { margin-bottom: 10px; }
+.sv-pill {
+  background: var(--fill); border: 1px solid transparent; color: var(--text); cursor: pointer;
+  border-radius: 20px; font-weight: 600; white-space: nowrap; font-family: inherit;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.sv-pill:active { transform: scale(0.94); }
+.sv-pill:not(.active):hover { background: var(--fill-2); }
+.sv-pill.active { border-color: transparent; color: #fff; }
+.sv-filter-pill { padding: 6px 12px; font-size: 12.5px; }
+.sv-genre-pill { padding: 4px 10px; font-size: 11.5px; }
+
+.sv-empty { text-align: center; color: var(--text-2); padding: 30px 0; font-size: 13px; }
+
+/* ── 入力欄（一覧内の検索・個別カード内のメモ／日付） ── */
+.share-view input[type="text"], .share-view input[type="date"] {
+  background: var(--fill); border: 1px solid transparent; border-radius: var(--r-sm);
+  padding: 9px 12px; font-size: 15px; color: var(--text); font-family: inherit; box-sizing: border-box;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.share-view input[type="text"] { width: 100%; }
+.share-view input[type="date"] { width: 100%; text-align: left; margin-top: 4px; }
+.share-view input[type="text"]:focus, .share-view input[type="date"]:focus, .share-view .sv-area-select:focus {
+  outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
+}
+.sv-item-card input[type="text"], .sv-item-card input[type="date"] { background: var(--card); }
+
+/* ── 個別の設置物カード ── */
+.sv-item-card { background: var(--bg2); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.sv-item-card.is-highlighted { box-shadow: 0 0 0 2px var(--blue); }
+.sv-row-flex { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
+.sv-row-flex input[type="text"] { flex: 1; min-width: 0; }
+
+.sv-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.03em; }
+.sv-badge-red { background: rgba(255, 59, 48, 0.15); color: var(--badge-red-text); }
+.sv-badge-yellow { background: rgba(255, 149, 0, 0.15); color: var(--badge-yellow-text); }
+.sv-badge-green { background: rgba(52, 199, 89, 0.15); color: var(--badge-green-text); }
+.sv-badge-gray { background: rgba(142, 142, 147, 0.15); color: var(--badge-gray-text); }
+
+.sv-thumb-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.sv-thumb { width: 64px; height: 64px; object-fit: cover; border-radius: var(--r-sm); background: var(--fill); }
+.sv-thumb-remove {
+  background: var(--fill-2); border: 0; color: var(--text-2); width: 24px; height: 24px; border-radius: 50%;
+  cursor: pointer; font-size: 12px; line-height: 1; flex-shrink: 0; display: inline-flex; align-items: center;
+  justify-content: center; transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.sv-thumb-remove:active { transform: scale(0.9); }
+
+.sv-date-inputs { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); gap: 10px; }
+.sv-date-box { flex: 1; }
+.sv-date-box-end { text-align: right; }
+.sv-date-val { font-weight: bold; margin-top: 8px; color: var(--text); font-size: 14px; }
+
+.sv-action-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; border-top: 1px dashed var(--sep); padding-top: 8px; justify-content: flex-end; }
+.sv-action-btn {
+  background: transparent; border: 0; font-size: 12.5px; font-weight: 600; cursor: pointer;
+  padding: 6px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px;
+  font-family: inherit; transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.sv-action-btn:active { transform: scale(0.96); }
+.sv-action-del { background: rgba(255, 59, 48, 0.12); color: var(--red); }
+.sv-action-renew { background: rgba(0, 122, 255, 0.12); color: var(--blue); }
+.sv-action-susp { background: var(--fill-2); color: var(--text); }
+.sv-action-ics { background: rgba(94, 92, 230, 0.12); color: var(--indigo-text); }
+.sv-action-photo { background: rgba(52, 199, 89, 0.14); color: var(--badge-green-text); }
+.sv-action-jump { background: rgba(0, 122, 255, 0.12); color: var(--blue); }

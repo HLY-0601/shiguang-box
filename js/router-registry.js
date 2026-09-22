@@ -6,6 +6,10 @@ import * as dashboardView from '../features/item/dashboard-view.js';
 import * as categoryView from '../features/item/category-view.js';
 import * as costView from '../features/item/cost-view.js';
 import * as placeholderView from '../features/placeholder/placeholder-view.js';
+import * as emoteView from '../features/emote/emote-view.js';
+import * as nomacanView from '../features/tai-nomacan/nomacan-view.js';
+import * as starCandleView from '../features/star-candle/star-candle-view.js';
+import * as shareView from '../features/share/share-view.js';
 import { CATEGORY_REGISTRY } from '../features/item/data/categories.js';
 import { CURRENT_LANG } from './i18n.js';
 
@@ -50,10 +54,19 @@ function placeholderEntry(toolKey, nameJa, nameEn, icon) {
   };
 }
 
+// サブルートを持たない単一ページ系ツール（emote/tai-nomacan/star-candle/share）共通のROUTESエントリ
+function simpleToolEntry(viewModule, nameJa, nameEn) {
+  return {
+    mount(container) { viewModule.mount(container); },
+    unmount() { viewModule.unmount(); },
+    title() { return `${CURRENT_LANG === 'en' ? nameEn : nameJa} - tai-hub`; },
+  };
+}
+
 export const ROUTES = {
   item: itemEntry,
-  emote: placeholderEntry('emote', 'エモート所持率管理', 'Emote Collection Tracker', 'i-masks'),
-  share: placeholderEntry('share', '創作物管理ツール', 'Creation Manager', 'i-pin'),
-  'tai-nomacan': placeholderEntry('tai-nomacan', 'ノマキャン計算機', 'Candle Calculator', 'i-candle'),
-  'star-candle': placeholderEntry('star-candle', '星のキャンドル計算機', 'Star Candle Calculator', 'i-star-candle'),
+  emote: simpleToolEntry(emoteView, 'エモート所持率管理', 'Emote Collection Tracker'),
+  share: simpleToolEntry(shareView, '創作物管理ツール', 'Creation Manager'),
+  'tai-nomacan': simpleToolEntry(nomacanView, 'ノマキャン計算機', 'Candle Calculator'),
+  'star-candle': simpleToolEntry(starCandleView, '星のキャンドル計算機', 'Star Candle Calculator'),
 };

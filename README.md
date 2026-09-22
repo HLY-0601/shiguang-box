@@ -19,10 +19,13 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
   プロフィール切替モーダル・設定モーダル・ツール引き出し）を実装。
 - **5ツール全てを完全移植**：
   - `item`（アイテム所持管理）：ダッシュボード（シーズン/イベント表示・
-    13カテゴリのグリッド・横断検索）、12の装着アイテムカテゴリ＋楽譜
-    コンプリート管理（`MUSIC_SHEETS`という別形状のデータのため専用の
-    `music-sheet-view.js`として移植）の所持/お気に入りチェックページ、
-    コスト集計ページ。
+    全体達成率ゲージ・称号パネル・13カテゴリのグリッド）、12の装着
+    アイテムカテゴリ＋楽譜コンプリート管理（`MUSIC_SHEETS`という別形状の
+    データのため専用の`music-sheet-view.js`として移植）の所持/お気に入り
+    チェックページ、コスト集計ページ、本格的な横断検索モーダル、
+    ウィッシュリスト・必要コスト計算、アイテム獲得ログ、コーデ機能
+    （ランダムコーデ・マイコーデ・クローゼットコラージュ）、達成率/
+    お気に入りのX画像シェアまで、本家サイトの機能をほぼ完全に移植。
   - `emote`（エモート所持率管理）：エモート一覧（レベルごとの個別所持
     トグル）・称号・入手履歴・「1年前の今日」バナー。
   - `tai-nomacan`（ノマキャン計算機）：複数目標管理・ペース計算・獲得
@@ -59,19 +62,22 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
   需要が無く、旧実装の「index.htmlだけnetwork-first」という特別扱いは、
   今回廃止した自己fetch問題への対処だったため、そのまま移植する意味が
   無い。デプロイが視野に入った段階で改めて設計する。
-- **称号・実績パネル**：保存レイヤー（`itemTitles_v1`・他ツールの
-  実績を読む`CROSS_TOOL_TITLE_CATALOG`）は完全に移植済みだが、UIは
-  プロフィール切替モーダル内の実績「件数」表示のみの軽量版に簡略化。
-  元実装のフル展開パネルは未実装。
 - **ダッシュボードモーダル（ドックの「ダッシュボード」ボタン）**：
   元の「今日/今週/今月」の3分割レイアウトではなく、現在のシーズン・
   開催中イベント・次回アップデート・再訪精霊の状態を1つのリストに
-  まとめた軽量版。
-- **横断検索**：元実装の多項目フィルター検索ではなく、アイテム名（日/英）
-  だけで全カテゴリを串刺し検索する簡易版。
-- **コスト集計ページの一部サブ機能**：課金アイテムプレゼント履歴等、
-  個別編集が複雑な機能は簡略化している場合がある（詳細は
-  `features/item/cost-view.js`のコメント参照）。
+  まとめた軽量版（※itemダッシュボード本体の全体達成率ゲージ・称号
+  パネルとは別物）。
+- **横断検索モーダル**：現在開催中の季節/日々サブフィルター、恒常精霊限定
+  エリア/大精霊フィルター、結果を一括所持済みにする操作は未移植（詳細は
+  `features/item/search-modal.js`のコメント参照）。
+- **コスト集計・ウィッシュリストページの一部サブ機能**：課金アイテム
+  プレゼント履歴等、個別編集が複雑な機能は簡略化している場合がある
+  （詳細は`features/item/cost-view.js`・`wishlist-cost-modal.js`の
+  コメント参照）。
+- **コーデ機能・シェア機能**：X/Twitterへの実際の投稿フロー自体は
+  移植済みだが、共有時のカスタマイズ項目の一部・写真の詳細なクロップ
+  UI等は簡略化している場合がある（詳細は`features/item/coord/`・
+  `features/item/share/`各ファイルのコメント参照）。
 - **楽譜コンプリート管理**：難易度（旋律/管楽器/低音/打楽器）の表示のみ
   ドット表示に変更（フィルター・並び替えロジックは元実装と同一）。
   旧保存キー（`musicSheets`）からの移行読み込みは維持。
@@ -103,7 +109,10 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
 index.html          シェル本体
 css/                 tokens.css(ハブ共通) / chrome.css(ドック・モーダル) / <tool>.css(各ツール専用・元配色維持)
 js/                  router.js / router-registry.js / state.js / i18n.js / icon-sprite.js / app.js / chrome/*.js
-features/item/        dashboard-view.js / category-view.js / cost-view.js / music-sheet-view.js / data/
+features/item/        dashboard-view.js / category-view.js / cost-view.js / music-sheet-view.js /
+                       titles-panel.js / search-modal.js / wishlist-cost-modal.js / acquire-log-modal.js /
+                       coord/（random-coord.js・my-coord.js・closet-collage.js・coord-data.js）/
+                       share/（achievement-share.js・favorites-share.js・share-data.js）/ data/
 features/emote/        emote-view.js / emote-state.js / data/
 features/tai-nomacan/  nomacan-view.js / nomacan-history.js / nomacan-state.js / data/
 features/star-candle/  star-candle-view.js / star-candle-forecast.js / date-utils.js / data/

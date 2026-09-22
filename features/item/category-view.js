@@ -25,6 +25,7 @@ import {
   recordItemAcquire, removeItemAcquireRecord,
 } from '../../js/state.js';
 import { CURRENT_LANG, trEvent, trItem, escapeHtml, resetFilterPanel } from '../../js/i18n.js';
+import { checkAndUnlockTitles } from './titles-panel.js';
 
 /* 季節・日々の登場順（イベント名順ソート／絞り込みセレクトの並び順）。
    item/cape.html他、全カテゴリページで完全に同一の定数として定義されて
@@ -278,6 +279,7 @@ function handleToggleOwned(id) {
   saveCategoryState(categoryConfig.key, userStates.owned, userStates.fav, categoryItems);
   if (userStates.owned[id]) recordItemAcquire(categoryConfig.key, id);
   else removeItemAcquireRecord(id);
+  notifyTitlesCheck();
 
   const card = containerEl.querySelector(`#card_${id}`);
   if (card) {
@@ -503,6 +505,19 @@ function filterAndRender() {
     categoryItems.filter(item => userStates.owned[item.id]).length,
     categoryItems.length
   );
+}
+
+// 所持状態の変更のたびに称号の新規解禁が無いか確認し、あればトースト通知する
+// （item/profiles.jsのrefreshTitlesUI()と同じ役割。ダッシュボード自身のパネル
+// 再描画は次にダッシュボードを開いた時にtitlesPanel.mount()が行う）
+function notifyTitlesCheck() {
+  checkAndUnlockTitles().then(newlyEarned => {
+    if (!newlyEarned || !newlyEarned.length) return;
+    const msg = newlyEarned.length === 1
+      ? (CURRENT_LANG === 'en' ? `Title unlocked: ${newlyEarned[0].nameEn}` : `称号解禁「${newlyEarned[0].name}」`)
+      : (CURRENT_LANG === 'en' ? `${newlyEarned.length} titles unlocked!` : `称号を${newlyEarned.length}個解禁！`);
+    showCatViewToast(msg);
+  }).catch(e => console.error('[item category] title check failed', e));
 }
 
 /* ================================================================

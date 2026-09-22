@@ -24,6 +24,7 @@ import { CURRENT_LANG, trEvent, trSource, trCat, trItem, escapeHtml } from '../.
 import { getCategoryState, isWishItem, toggleWishItem, nsKey } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { ITEM_COST_DATA } from './data/cost-data.js';
+import { checkAndUnlockTitles } from './titles-panel.js';
 
 const STYLE_ID = 'item-cost-view-styles';
 
@@ -500,9 +501,20 @@ function renderSummary(items) {
   const hintEl = hostEl.querySelector('#costSummaryHint');
   if (hintEl) hintEl.innerHTML = hint;
 
-  // 🏆 称号システム（item/profiles.js）が読むハイウォーターマーク用の生値だけ、
-  // 互換のため引き続き書いておく（判定・UI自体はtai-hub未移植）
+  // 🏆 称号システム（titles-panel.js）が読むハイウォーターマーク用の生値を書く
   try { localStorage.setItem(moneySpentKey(), String(moneySum)); } catch (e) { /* private browsing等 */ }
+  notifyTitlesCheck();
+}
+
+// 実額合計の更新のたびに称号の新規解禁が無いか確認し、あればトースト通知する
+function notifyTitlesCheck() {
+  checkAndUnlockTitles().then(newlyEarned => {
+    if (!newlyEarned || !newlyEarned.length) return;
+    const msg = newlyEarned.length === 1
+      ? t(`称号解禁「${newlyEarned[0].name}」`, `Title unlocked: ${newlyEarned[0].nameEn}`)
+      : t(`称号を${newlyEarned.length}個解禁！`, `${newlyEarned.length} titles unlocked!`);
+    showToast(msg);
+  }).catch(e => console.error('[item cost] title check failed', e));
 }
 
 function renderRemainingSummary(items) {

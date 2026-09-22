@@ -1,24 +1,35 @@
 /* ================================================================
    item（アイテム所持管理）ダッシュボード（ホーム画面）。
    item/index.html のうち、カテゴリグリッド・楽譜/コスト管理への導線・
-   横断アイテム検索の3機能を移植したもの（全体達成率バナー・称号・
-   コーデ機能・シェア機能・ウィッシュリスト等、他の大きな独立機能は
-   このビューの移植スコープ外——tai-hubプランに従い今回は含めない）。
+   横断アイテム検索・全体達成率＋称号パネル・ウィッシュリスト/獲得ログ・
+   コーデ機能・シェア機能を移植したもの。各サブ機能自体の実装は
+   features/item/配下の専用ファイルに分かれており、このファイルは
+   それらをダッシュボードへ配線する役割。
 
    元実装はカテゴリ横断検索のために各カテゴリページ本体をfetchして
    HTMLから正規表現でITEMS_DATAを抜き出していたが（item/index.htmlの
    loadAllItemsOnce）、SPA化に伴いこの自己fetch+スクレイプは廃止し、
    各カテゴリの data/items/<catKey>.js を直接dynamic importする方式に
    置き換えている（元のCLAUDE.md方針とは無関係の、tai-hub移植時の
-   意図的なアーキテクチャ改善）。
+   意図的なアーキテクチャ改善）。横断検索自体は search-modal.js に
+   分離済みのため、このファイル自身の検索インデックス構築ロジックは
+   カテゴリグリッドの所持数集計にのみ使う。
    ================================================================ */
-import { CURRENT_LANG, trEvent, trCat, trItem, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trEvent, trCat, escapeHtml } from '../../js/i18n.js';
 import { getCategoryState } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { CURRENT_SEASON, getCurrentEventNames, isRevisitSpiritCurrentlyActive } from './data/season-data.js';
+import * as titlesPanel from './titles-panel.js';
+import * as searchModal from './search-modal.js';
+import * as wishlistCostModal from './wishlist-cost-modal.js';
+import * as acquireLogModal from './acquire-log-modal.js';
+import * as randomCoord from './coord/random-coord.js';
+import * as myCoord from './coord/my-coord.js';
+import * as closetCollage from './coord/closet-collage.js';
+import * as achievementShare from './share/achievement-share.js';
+import * as favoritesShare from './share/favorites-share.js';
 
 const STYLE_ID = 'item-dashboard-view-styles';
-const SEARCH_RESULT_LIMIT = 80;
 
 // 12種のウェアラブルカテゴリのみ（section:'special' の music_sheet は今回のダッシュボード
 // 移植スコープ外——別枠の単独リンクとしてのみ扱う。categories.js からの動的取得のため、
@@ -28,8 +39,6 @@ const MUSIC_SHEET_CAT = CATEGORY_REGISTRY.find(c => c.key === 'music_sheet');
 
 let hostEl = null;
 let mountToken = 0; // 再マウント/アンマウント後に古い非同期処理の描画を捨てるためのトークン
-let searchInputEl = null;
-let onSearchInput = null;
 
 // 各カテゴリの data/items/<catKey>.js は静的アイテム配列なので、一度読み込んだ
 // Promiseをキャッシュして再利用する（タブを行き来するたびに読み直さない）
@@ -39,29 +48,6 @@ function loadCategoryItems(catKey) {
     itemModuleCache.set(catKey, import(`./data/items/${catKey}.js`));
   }
   return itemModuleCache.get(catKey);
-}
-
-let searchIndexPromise = null;
-function loadSearchIndex() {
-  if (!searchIndexPromise) {
-    searchIndexPromise = Promise.all(GRID_CATEGORIES.map(async cat => {
-      try {
-        const mod = await loadCategoryItems(cat.key);
-        const items = Array.isArray(mod.ITEMS) ? mod.ITEMS : [];
-        return items.map(item => ({ ...item, catKey: cat.key }));
-      } catch (e) {
-        console.error(`[item dashboard] failed to load item data for search: ${cat.key}`, e);
-        return [];
-      }
-    })).then(lists => lists.flat());
-  }
-  return searchIndexPromise;
-}
-
-// 検索用にひらがなをカタカナへ正規化する（item/index.htmlのnormalizeSearchTextを移植。
-// ひらがな入力でもカタカナ表記のアイテム名にヒットさせるため）
-function normalizeSearchText(str) {
-  return String(str).toLowerCase().replace(/[ぁ-ゖ]/g, c => String.fromCharCode(c.charCodeAt(0) + 0x60));
 }
 
 function injectStyles() {
@@ -90,35 +76,7 @@ function injectStyles() {
 
     .item-view .cat-tile img { border-radius: 6px; }
 
-    .item-view .dash-search-card { margin-top: 4px; }
-    .item-view .dash-search-box {
-      display: flex; align-items: center; gap: 8px; background: var(--bg);
-      border-radius: var(--r-sm); padding: 8px 12px;
-    }
-    .item-view .dash-search-icon { color: var(--text-2); flex-shrink: 0; }
-    .item-view .dash-search-input {
-      border: 0; background: none; outline: none; flex: 1 1 auto;
-      font-size: 14px; color: var(--text); font-family: inherit;
-    }
-    .item-view .dash-search-input::placeholder { color: var(--text-3); }
-    .item-view .dash-search-results { margin-top: 4px; }
-    .item-view .dash-search-status,
-    .item-view .dash-search-empty { font-size: 12.5px; color: var(--text-2); padding: 12px 2px; }
-    .item-view .dash-search-count { font-size: 11.5px; color: var(--text-2); padding: 10px 2px 4px; }
-    .item-view .dash-search-row {
-      display: flex; align-items: center; gap: 10px; padding: 8px 2px;
-      border-top: 0.5px solid var(--sep); text-decoration: none; color: var(--text);
-    }
-    .item-view .dash-search-row:first-of-type { border-top: 0; }
-    .item-view .dash-search-icon-img {
-      width: 34px; height: 34px; object-fit: contain; flex-shrink: 0;
-      background: var(--bg); border-radius: 8px; padding: 4px; box-sizing: border-box;
-    }
-    .item-view .dash-search-info { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-    .item-view .dash-search-cat { font-size: 10.5px; color: var(--text-2); }
-    .item-view .dash-search-name {
-      font-size: 13.5px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
+    .item-view .dash-feature-row { display: flex; flex-direction: column; gap: 10px; }
   `;
   document.head.appendChild(style);
 }
@@ -159,6 +117,19 @@ function renderSeasonBanner() {
     </div>`;
 }
 
+function featureBtnHtml({ id, href, icon, label, desc }) {
+  const tag = href ? 'a' : 'button';
+  const attrs = href ? `href="${href}"` : `type="button" id="${id}"`;
+  return `
+    <${tag} class="feature-btn" ${attrs}>
+      <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg class="inline-icon" width="25" height="25"><use href="#${icon}"/></svg></span>
+      <span>
+        <span class="feature-label">${label}</span>
+        <span class="feature-desc">${desc}</span>
+      </span>
+    </${tag}>`;
+}
+
 function renderShell() {
   const en = CURRENT_LANG === 'en';
   return `
@@ -167,42 +138,92 @@ function renderShell() {
       <p class="sec-label">${en ? 'Season &amp; Events' : '季節・イベント'}</p>
       ${renderSeasonBanner()}
 
+      <div id="dashTitlesPanel"></div>
+
       <p class="sec-label" id="dashCatLabel">${en ? 'Categories' : 'カテゴリ一覧'}</p>
       <div class="cat-grid" id="dashCatGrid">
         ${GRID_CATEGORIES.map(cat => catTileHtml(cat, null, null)).join('')}
       </div>
 
       <p class="sec-label">${en ? 'Music Sheet Completion' : '楽譜コンプリート管理'}</p>
-      <a href="#/item/${MUSIC_SHEET_CAT ? MUSIC_SHEET_CAT.key : 'music_sheet'}" class="feature-btn">
-        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg class="inline-icon" width="25" height="25"><use href="#i-sheet-music"/></svg></span>
-        <span>
-          <span class="feature-label">${en ? 'Music Sheet Completion Tracker' : '楽譜コンプリート率'}</span>
-          <span class="feature-desc">${en
-            ? "Track which of the in-game Music Sheets you've collected, by acquisition method and candle cost"
-            : 'ゲーム内の楽譜の入手状況とコンプリート率を管理できます'}</span>
-        </span>
-      </a>
-
-      <p class="sec-label">${en ? 'Cost Management' : 'コスト管理'}</p>
-      <a href="#/item/cost" class="feature-btn">
-        <span class="feature-icon icon-chip" style="width:32px; height:32px;"><svg class="inline-icon" width="25" height="25"><use href="#i-candle"/></svg></span>
-        <span>
-          <span class="feature-label">${en ? 'Item Cost Breakdown' : 'アイテム別コスト'}</span>
-          <span class="feature-desc">${en
-            ? 'Check the actual acquisition cost of owned items (Candles, Wax, Hearts, real currency)'
-            : '所持アイテムの実際の入手コスト（キャンドル・星のキャンドル・ハート・実額）を確認できます'}</span>
-        </span>
-      </a>
+      ${featureBtnHtml({
+        href: `#/item/${MUSIC_SHEET_CAT ? MUSIC_SHEET_CAT.key : 'music_sheet'}`, icon: 'i-sheet-music',
+        label: en ? 'Music Sheet Completion Tracker' : '楽譜コンプリート率',
+        desc: en ? "Track which of the in-game Music Sheets you've collected, by acquisition method and candle cost"
+                 : 'ゲーム内の楽譜の入手状況とコンプリート率を管理できます',
+      })}
 
       <p class="sec-label">${en ? 'Item Search' : 'アイテム検索'}</p>
-      <div class="card dash-search-card">
-        <div class="dash-search-box">
-          <span class="icon-chip dash-search-icon" style="width:18px; height:18px;"><svg class="inline-icon" width="15" height="15"><use href="#i-search"/></svg></span>
-          <input type="text" id="dashItemSearchInput" class="dash-search-input"
-                 placeholder="${en ? 'Search item name across all categories...' : '全カテゴリのアイテム名で検索...'}" autocomplete="off">
-        </div>
-        <div id="dashItemSearchResults" class="dash-search-results"></div>
+      ${featureBtnHtml({
+        id: 'dashOpenSearchBtn', icon: 'i-search',
+        label: en ? 'Search Items by Season / Event' : '季節・イベントでアイテムを検索',
+        desc: en ? 'Search items across all categories by season, day event, category, favorite, and ownership status'
+                 : '全カテゴリのアイテムを季節・日々・カテゴリ・お気に入り・所持状況で横断検索できます',
+      })}
+
+      <p class="sec-label">${en ? 'Cost Management' : 'コスト管理'}</p>
+      <div class="dash-feature-row">
+        ${featureBtnHtml({
+          href: '#/item/cost', icon: 'i-candle',
+          label: en ? 'Item Cost Breakdown' : 'アイテム別コスト',
+          desc: en ? 'Check the actual acquisition cost of owned items (Candles, Wax, Hearts, real currency)'
+                   : '所持アイテムの実際の入手コスト（キャンドル・星のキャンドル・ハート・実額）を確認できます',
+        })}
+        ${featureBtnHtml({
+          id: 'dashOpenWishlistBtn', icon: 'i-cart',
+          label: en ? 'Wishlist & Unlock Calculator' : 'ウィッシュリスト・必要コスト計算',
+          desc: en ? 'Register items you want, and it automatically totals the candles/hearts/money needed and the shortfall'
+                   : '欲しいアイテムを登録すると、必要なキャンドル・ハート・課金額の合計と不足数を自動計算します',
+        })}
+        ${featureBtnHtml({
+          id: 'dashOpenAcquireLogBtn', icon: 'i-calendar',
+          label: en ? 'Acquisition Log' : 'アイテム獲得ログ',
+          desc: en ? 'View a chronological list of when you marked each item as owned' : '所持チェックを入れた日時の一覧を確認できます',
+        })}
       </div>
+
+      <p class="sec-label">${en ? 'Coord Features' : 'コーデ機能'}</p>
+      <div class="dash-feature-row">
+        ${featureBtnHtml({
+          id: 'dashOpenRandomCoordBtn', icon: 'i-dice',
+          label: en ? 'Random Coord' : 'ランダムコーデ',
+          desc: en ? 'Suggest a random outfit combination from your owned items' : '所持アイテムからランダムにコーデを提案',
+        })}
+        ${featureBtnHtml({
+          id: 'dashOpenMyCoordBtn', icon: 'i-hanger',
+          label: en ? 'My Coord' : 'マイコーデ',
+          desc: en ? 'Save and manage your favorite outfit sets' : 'お気に入りのコーデセットを保存・管理',
+        })}
+        ${featureBtnHtml({
+          id: 'dashOpenClosetCollageBtn', icon: 'i-image',
+          label: en ? 'Closet Collage' : 'クローゼットコラージュ',
+          desc: en ? 'Arrange owned items and your own photos into a grid to create and share a cute collage image'
+                   : '所持アイテムや自分の写真をマス目に並べて、かわいいコラージュ画像を作成・共有できます',
+        })}
+      </div>
+
+      <p class="sec-label">${en ? 'Share Achievement Rate' : '達成率をシェア'}</p>
+      <div class="dash-feature-row">
+        ${featureBtnHtml({
+          id: 'dashShareOnXBtn', icon: 'i-upload',
+          label: en ? 'Share Image to X' : 'Xで画像を共有',
+          desc: en ? 'Turn your achievement rate into an image and post it to X (also saves the image)'
+                   : '達成率を画像にしてXへ投稿できます（画像の保存も同時にできます）',
+        })}
+        ${featureBtnHtml({
+          id: 'dashCustomizeShareBtn', icon: 'i-palette',
+          label: en ? 'Customize & Share' : 'カスタマイズして共有',
+          desc: en ? 'Choose which categories to show, a background theme, and a comment before saving/sharing'
+                   : '表示するカテゴリ・背景テーマ・コメントを自分好みに設定してから保存/共有できます',
+        })}
+      </div>
+
+      <p class="sec-label">${en ? 'Share Your Favorites' : 'お気に入りをシェア'}</p>
+      ${featureBtnHtml({
+        id: 'dashFavShareBtn', icon: 'i-heart',
+        label: en ? 'Share Favorite Items' : 'お気に入りアイテムを共有',
+        desc: en ? 'Save and share your favorited items as an image with a comment' : 'お気に入り登録したアイテムをコメント付きの画像で保存・共有できます',
+      })}
     </div>
     </div>`;
 }
@@ -235,53 +256,40 @@ async function renderCategoryGrid(token) {
   }
 }
 
-function searchResultRowHtml(item) {
-  const cat = GRID_CATEGORIES.find(c => c.key === item.catKey);
-  if (!cat) return '';
-  return `
-    <a class="dash-search-row" href="#/item/${cat.key}">
-      <img class="dash-search-icon-img" src="${item.img || ''}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
-      <span class="dash-search-info">
-        <span class="dash-search-cat">${escapeHtml(trCat(cat.name))}</span>
-        <span class="dash-search-name">${escapeHtml(trItem(item))}</span>
-      </span>
-    </a>`;
+// ダッシュボード上の各「開く」ボタンとサブ機能モジュールの対応表。
+// mount()でこの表を元にリスナーを配線し、unmount()で同じ表を使って
+// 開きっぱなしのモーダルを閉じる（ルート離脱時に後片付けする）。
+const FEATURE_TRIGGERS = [
+  { btnId: 'dashOpenSearchBtn', mod: searchModal, action: 'open' },
+  { btnId: 'dashOpenWishlistBtn', mod: wishlistCostModal, action: 'open' },
+  { btnId: 'dashOpenAcquireLogBtn', mod: acquireLogModal, action: 'open' },
+  { btnId: 'dashOpenRandomCoordBtn', mod: randomCoord, action: 'open' },
+  { btnId: 'dashOpenMyCoordBtn', mod: myCoord, action: 'open' },
+  { btnId: 'dashOpenClosetCollageBtn', mod: closetCollage, action: 'open' },
+  { btnId: 'dashShareOnXBtn', mod: achievementShare, action: 'shareOnX' },
+  { btnId: 'dashCustomizeShareBtn', mod: achievementShare, action: 'open' },
+  { btnId: 'dashFavShareBtn', mod: favoritesShare, action: 'open' },
+];
+
+let triggerListeners = []; // [{el, handler}] unmount時にremoveEventListenerするため保持
+
+function setupFeatureTriggers() {
+  triggerListeners = FEATURE_TRIGGERS.map(({ btnId, mod, action }) => {
+    const el = hostEl.querySelector(`#${btnId}`);
+    if (!el) return null;
+    const handler = () => { mod[action](); };
+    el.addEventListener('click', handler);
+    return { el, handler };
+  }).filter(Boolean);
 }
 
-function renderSearchResults(resultsEl, matches) {
-  const en = CURRENT_LANG === 'en';
-  if (matches.length === 0) {
-    resultsEl.innerHTML = `<div class="dash-search-empty">${en ? 'No items match.' : '条件に一致するアイテムが見つかりません。'}</div>`;
-    return;
-  }
-  const shown = matches.slice(0, SEARCH_RESULT_LIMIT);
-  const countLabel = matches.length > shown.length
-    ? (en ? `${matches.length} items (showing first ${shown.length})` : `${matches.length}件（先頭${shown.length}件を表示）`)
-    : (en ? `${matches.length} item(s)` : `${matches.length}件`);
-  resultsEl.innerHTML = `<div class="dash-search-count">${countLabel}</div>${shown.map(searchResultRowHtml).join('')}`;
-}
-
-function setupSearch(token) {
-  searchInputEl = hostEl.querySelector('#dashItemSearchInput');
-  const resultsEl = hostEl.querySelector('#dashItemSearchResults');
-  if (!searchInputEl || !resultsEl) return;
-
-  onSearchInput = () => {
-    const q = normalizeSearchText(searchInputEl.value.trim());
-    if (!q) { resultsEl.innerHTML = ''; return; }
-    resultsEl.innerHTML = `<div class="dash-search-status">${CURRENT_LANG === 'en' ? 'Searching…' : '検索中…'}</div>`;
-    loadSearchIndex().then(allItems => {
-      if (token !== mountToken || !hostEl) return; // アンマウント/再マウント後の古い結果は破棄
-      const currentQ = normalizeSearchText(searchInputEl.value.trim());
-      if (!currentQ) { resultsEl.innerHTML = ''; return; }
-      const matches = allItems.filter(item =>
-        normalizeSearchText(item.name).includes(currentQ) ||
-        (item.nameEn && normalizeSearchText(item.nameEn).includes(currentQ))
-      );
-      renderSearchResults(resultsEl, matches);
-    });
-  };
-  searchInputEl.addEventListener('input', onSearchInput);
+function teardownFeatureTriggers() {
+  triggerListeners.forEach(({ el, handler }) => el.removeEventListener('click', handler));
+  triggerListeners = [];
+  // 離脱時、開きっぱなしのモーダルがあれば閉じる（close()はどのモーダルも
+  // 「開いていなければ何もしない」実装のため、常時呼んでも安全）
+  [searchModal, wishlistCostModal, acquireLogModal, randomCoord, myCoord, closetCollage, achievementShare, favoritesShare]
+    .forEach(mod => { try { mod.close(); } catch (e) { /* no-op */ } });
 }
 
 export function mount(container) {
@@ -291,15 +299,12 @@ export function mount(container) {
 
   hostEl.innerHTML = renderShell();
   renderCategoryGrid(token);
-  setupSearch(token);
+  setupFeatureTriggers();
+  titlesPanel.mount(hostEl.querySelector('#dashTitlesPanel'));
 }
 
 export function unmount() {
-  mountToken++; // 進行中の非同期描画（カテゴリ件数取得・検索）を無効化する
-  if (searchInputEl && onSearchInput) {
-    searchInputEl.removeEventListener('input', onSearchInput);
-  }
-  searchInputEl = null;
-  onSearchInput = null;
+  mountToken++; // 進行中の非同期描画（カテゴリ件数取得）を無効化する
+  teardownFeatureTriggers();
   hostEl = null;
 }

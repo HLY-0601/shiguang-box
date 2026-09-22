@@ -623,18 +623,18 @@ function injectStyles() {
 }
 .item-view .cv-tile-fav-btn {
   position: absolute; top: 3px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(255,255,255,0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.15); display: flex; align-items: center;
-  justify-content: center; font-size: 13px; color: var(--text-3); transition: transform 0.1s; cursor: pointer;
+  background: var(--tile-btn-bg); display: flex; align-items: center;
+  justify-content: center; font-size: 13px; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .cv-tile-fav-btn:active { transform: scale(1.15); }
-.item-view .cv-tile-fav-btn.is-fav { color: #FF9500; }
+.item-view .cv-tile-fav-btn.is-fav { color: #FF9500; background: rgba(255,149,0,0.16); }
 .item-view .cv-tile-wish-btn {
   position: absolute; top: 29px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(255,255,255,0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.15); display: flex; align-items: center;
-  justify-content: center; font-size: 12px; color: var(--text-3); transition: transform 0.1s; cursor: pointer;
+  background: var(--tile-btn-bg); display: flex; align-items: center;
+  justify-content: center; font-size: 12px; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .cv-tile-wish-btn:active { transform: scale(1.15); }
-.item-view .cv-tile-wish-btn.is-wish { color: var(--blue); background: rgba(0,122,255,0.15); }
+.item-view .cv-tile-wish-btn.is-wish { color: var(--blue); background: rgba(0,122,255,0.18); }
 .item-view .cv-tile-owned-check {
   position: absolute; bottom: 4px; right: 4px; z-index: 2; width: 19px; height: 19px; border-radius: 50%;
   background: var(--green); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center;

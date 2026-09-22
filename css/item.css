@@ -22,6 +22,14 @@
   --text-3: #C7C7CC;
   --r: 16px;
   --r-sm: 10px;
+  /* 🎨 アイテムタイルに重ねるお気に入り/ウィッシュリストボタンの背景。
+     元実装は不透明に近いrgba(255,255,255,0.9)＋くっきりした影で、
+     グレースケール処理された未所持アイテム画像の上では白い丸だけが
+     強く浮いて「ギラギラして見える」というフィードバックを受けたため、
+     半透明度を落とし影も無くして馴染むようにした（ダークモードでも
+     白丸のまま浮かないよう、テーマごとに別の値を持たせている）。
+  */
+  --tile-btn-bg: rgba(255, 255, 255, 0.6);
   font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
   background: var(--bg);
   color: var(--text);
@@ -43,6 +51,7 @@
   --text: #F2F2F7;
   --text-2: #98989D;
   --text-3: #636366;
+  --tile-btn-bg: rgba(60, 60, 60, 0.55);
 }
 
 .item-view * { box-sizing: border-box; }

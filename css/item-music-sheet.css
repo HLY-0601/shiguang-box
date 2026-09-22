@@ -117,18 +117,18 @@
 
 .item-view .ms-tile-fav-btn {
   position: absolute; top: 3px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(255,255,255,0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.15); display: flex; align-items: center;
-  justify-content: center; color: var(--text-3); transition: transform 0.1s; cursor: pointer;
+  background: var(--tile-btn-bg); display: flex; align-items: center;
+  justify-content: center; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .ms-tile-fav-btn:active { transform: scale(1.15); }
-.item-view .ms-tile-fav-btn.is-fav { color: #FF9500; }
+.item-view .ms-tile-fav-btn.is-fav { color: #FF9500; background: rgba(255,149,0,0.16); }
 .item-view .ms-tile-wish-btn {
   position: absolute; top: 29px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: rgba(255,255,255,0.9); box-shadow: 0 1px 3px rgba(0,0,0,0.15); display: flex; align-items: center;
-  justify-content: center; color: var(--text-3); transition: transform 0.1s; cursor: pointer;
+  background: var(--tile-btn-bg); display: flex; align-items: center;
+  justify-content: center; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .ms-tile-wish-btn:active { transform: scale(1.15); }
-.item-view .ms-tile-wish-btn.is-wish { color: var(--blue); background: rgba(0,122,255,0.15); }
+.item-view .ms-tile-wish-btn.is-wish { color: var(--blue); background: rgba(0,122,255,0.18); }
 
 .item-view .ms-item-tile-name {
   font-size: 10.5px; line-height: 1.3; text-align: center; color: var(--text-2); display: -webkit-box;

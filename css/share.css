@@ -51,7 +51,10 @@
   color: var(--text);
   min-height: 100%;
   padding: 16px 16px 24px;
+  max-width: 720px;
+  margin: 0 auto;
 }
+@media (min-width: 850px) { .share-view { max-width: 960px; } }
 
 [data-theme="dark"] .share-view {
   --card: #1C1C1E;

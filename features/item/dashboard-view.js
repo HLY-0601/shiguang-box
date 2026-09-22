@@ -69,6 +69,9 @@ function injectStyles() {
   const style = document.createElement('style');
   style.id = STYLE_ID;
   style.textContent = `
+    .item-view .dash-wrap { max-width: 720px; margin: 0 auto; }
+    @media (min-width: 850px) { .item-view .dash-wrap { max-width: 960px; } }
+
     .item-view .season-banner {
       background: linear-gradient(135deg, var(--orange-d) 0%, var(--orange) 55%, #FFBB00 100%);
       border-radius: var(--r); padding: 16px 18px; color: #fff;
@@ -160,6 +163,7 @@ function renderShell() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="item-view">
+    <div class="dash-wrap">
       <p class="sec-label">${en ? 'Season &amp; Events' : '季節・イベント'}</p>
       ${renderSeasonBanner()}
 
@@ -199,6 +203,7 @@ function renderShell() {
         </div>
         <div id="dashItemSearchResults" class="dash-search-results"></div>
       </div>
+    </div>
     </div>`;
 }
 

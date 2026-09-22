@@ -5,6 +5,7 @@
 import * as dashboardView from '../features/item/dashboard-view.js';
 import * as categoryView from '../features/item/category-view.js';
 import * as costView from '../features/item/cost-view.js';
+import * as musicSheetView from '../features/item/music-sheet-view.js';
 import * as placeholderView from '../features/placeholder/placeholder-view.js';
 import * as emoteView from '../features/emote/emote-view.js';
 import * as nomacanView from '../features/tai-nomacan/nomacan-view.js';
@@ -22,10 +23,9 @@ const itemEntry = {
     const cat = CATEGORY_REGISTRY.find(c => c.key === sub);
     if (cat && cat.section === 'special') {
       // music_sheet は MUSIC_SHEETS という別形状のデータ（曲ごとの入手方法・
-      // キャンドルコスト管理）を持ち、汎用category-view.jsの前提（ITEMS_DATA型の
-      // 所持/お気に入りトグル）に合わないため、今回のプロトタイプでは
-      // 明示的に未移植（emote等の4ツールと同じプレースホルダー扱い）とする。
-      placeholderView.mount(container, { toolKey: 'item', nameJa: cat.name, nameEn: cat.nameEn, icon: cat.icon || 'i-sheet-music' });
+      // 難易度・音楽キー等）を持ち、汎用category-view.jsの前提（ITEMS_DATA型の
+      // フィールド）に合わないため、item_cost.html同様に専用ビューとして移植した。
+      musicSheetView.mount(container);
       return;
     }
     if (cat) { categoryView.mount(container, cat); return; }
@@ -36,6 +36,7 @@ const itemEntry = {
     dashboardView.unmount();
     categoryView.unmount();
     costView.unmount();
+    musicSheetView.unmount();
   },
   title(sub) {
     if (!sub) return CURRENT_LANG === 'en' ? 'Item Collection Tracker - tai-hub' : 'アイテム所持管理 - tai-hub';

@@ -19,8 +19,10 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
   プロフィール切替モーダル・設定モーダル・ツール引き出し）を実装。
 - **5ツール全てを完全移植**：
   - `item`（アイテム所持管理）：ダッシュボード（シーズン/イベント表示・
-    12カテゴリのグリッド・横断検索）、12カテゴリすべての所持/お気に入り
-    チェックページ、コスト集計ページ。
+    13カテゴリのグリッド・横断検索）、12の装着アイテムカテゴリ＋楽譜
+    コンプリート管理（`MUSIC_SHEETS`という別形状のデータのため専用の
+    `music-sheet-view.js`として移植）の所持/お気に入りチェックページ、
+    コスト集計ページ。
   - `emote`（エモート所持率管理）：エモート一覧（レベルごとの個別所持
     トグル）・称号・入手履歴・「1年前の今日」バナー。
   - `tai-nomacan`（ノマキャン計算機）：複数目標管理・ペース計算・獲得
@@ -57,10 +59,6 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
   需要が無く、旧実装の「index.htmlだけnetwork-first」という特別扱いは、
   今回廃止した自己fetch問題への対処だったため、そのまま移植する意味が
   無い。デプロイが視野に入った段階で改めて設計する。
-- **楽譜コンプリート管理（music_sheet）**：他の12カテゴリと違い
-  `MUSIC_SHEETS`という別形状のデータ（曲ごとの入手方法・キャンドル
-  コスト管理）を持つため、汎用カテゴリビューの前提に合わず、他4ツール
-  と同じ「未移植」プレースホルダー扱いにしている。
 - **称号・実績パネル**：保存レイヤー（`itemTitles_v1`・他ツールの
   実績を読む`CROSS_TOOL_TITLE_CATALOG`）は完全に移植済みだが、UIは
   プロフィール切替モーダル内の実績「件数」表示のみの軽量版に簡略化。
@@ -74,6 +72,9 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
 - **コスト集計ページの一部サブ機能**：課金アイテムプレゼント履歴等、
   個別編集が複雑な機能は簡略化している場合がある（詳細は
   `features/item/cost-view.js`のコメント参照）。
+- **楽譜コンプリート管理**：難易度（旋律/管楽器/低音/打楽器）の表示のみ
+  ドット表示に変更（フィルター・並び替えロジックは元実装と同一）。
+  旧保存キー（`musicSheets`）からの移行読み込みは維持。
 - **プロフィールの複製機能**：既存の`item`サイトにはそもそも存在しない
   機能（tai-card等、別ツールにのみある機能と混同しないよう明記）。
 - **言語切替**：`location.reload()`で切り替える既存挙動のまま
@@ -102,10 +103,10 @@ GitHubリポジトリ（`taipak5000/tsts`）にpushしていますが、GitHub P
 index.html          シェル本体
 css/                 tokens.css(ハブ共通) / chrome.css(ドック・モーダル) / <tool>.css(各ツール専用・元配色維持)
 js/                  router.js / router-registry.js / state.js / i18n.js / icon-sprite.js / app.js / chrome/*.js
-features/item/        dashboard-view.js / category-view.js / cost-view.js / data/
+features/item/        dashboard-view.js / category-view.js / cost-view.js / music-sheet-view.js / data/
 features/emote/        emote-view.js / emote-state.js / data/
 features/tai-nomacan/  nomacan-view.js / nomacan-history.js / nomacan-state.js / data/
 features/star-candle/  star-candle-view.js / star-candle-forecast.js / date-utils.js / data/
 features/share/        share-view.js（Vue 3をCDN読み込みしてマウント）
-features/placeholder/  music_sheetのみ未移植（データ形状が異なるため）
+features/placeholder/  現在は5ツールすべて移植済みのため未使用（新ツール追加時用に残置）
 ```

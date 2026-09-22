@@ -3,6 +3,10 @@
    廃止——SPAではファイルではなくルートで遷移する）。楽譜（music_sheet）は
    元のダッシュボードでも独立した「楽譜コンプリート管理」セクション扱い
    だったため section:'special' を付けている（他12件は section:'grid'）。
+   MUSIC_SHEETSはITEMS_DATAと異なるフィールド（入手方法・難易度・音楽キー等）
+   を持つため、router-registry.jsはsection:'special'のとき汎用category-view.js
+   ではなく専用のmusic-sheet-view.jsへルーティングする（item_cost.htmlの
+   cost-view.jsと同じ「関連するが別モジュール」という扱い）。
    iconのSVGフォールバックは元実装でも実質未使用（全カテゴリがimgを
    持つため）だったので、img（Wikia画像URL）だけを採用している。
    ================================================================ */

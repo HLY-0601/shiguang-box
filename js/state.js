@@ -1,0 +1,353 @@
+/* ================================================================
+   状態・ストレージ層。item/profiles.js の核（プロフィールCRUD・
+   nsKey/nsKeyFor・カテゴリ所持状態・wishlist・入手ログ・テーマ・
+   エクスポート/インポート）を、キー名・データ形状を完全一致させて
+   移植したもの。
+
+   既存の item サイト（taipak5000.github.io/tai-item/）と同一オリジンで
+   共有される localStorage を読み書きするため、ここで形状を変えると
+   既存ユーザーのデータ互換性が壊れる。値の意味を変える変更はしないこと。
+   ================================================================ */
+
+import { CURRENT_LANG } from './i18n.js';
+
+export const PROFILES_KEY = 'skyProfiles_v1';
+export const ACTIVE_PROFILE_KEY = 'skyActiveProfile_v1';
+export const DEFAULT_PROFILE_ID = 'default';
+
+export function pfDefaultName() {
+  return CURRENT_LANG === 'en' ? 'Main' : 'メイン';
+}
+
+export function pfDisplayName(p) {
+  return p.isDefaultName ? pfDefaultName() : p.name;
+}
+
+export function pfIsSafeId(id) {
+  return typeof id === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(id);
+}
+
+export function loadProfiles() {
+  try {
+    let list = JSON.parse(localStorage.getItem(PROFILES_KEY));
+    if (!Array.isArray(list)) return null;
+    list = list.filter(p => p && pfIsSafeId(p.id) && typeof p.name === 'string');
+    list = list.map(p => (
+      p.id === DEFAULT_PROFILE_ID && p.isDefaultName === undefined && (p.name === 'メイン' || p.name === 'Main')
+        ? { ...p, isDefaultName: true }
+        : p
+    ));
+    if (list.length > 0) return list;
+  } catch (_) { /* 破損データは初期状態として扱う */ }
+  return null;
+}
+
+export function saveProfiles(list) {
+  localStorage.setItem(PROFILES_KEY, JSON.stringify(list));
+}
+
+export function ensureProfilesInit() {
+  let list = loadProfiles();
+  if (!list) {
+    list = [{ id: DEFAULT_PROFILE_ID, name: '', isDefaultName: true }];
+    saveProfiles(list);
+  }
+  if (!localStorage.getItem(ACTIVE_PROFILE_KEY)) {
+    localStorage.setItem(ACTIVE_PROFILE_KEY, DEFAULT_PROFILE_ID);
+  }
+  return list;
+}
+
+export function getActiveProfileId() {
+  return localStorage.getItem(ACTIVE_PROFILE_KEY) || DEFAULT_PROFILE_ID;
+}
+
+export function getActiveProfile() {
+  const list = ensureProfilesInit();
+  return list.find(p => p.id === getActiveProfileId()) || list[0];
+}
+
+export function switchProfile(id) {
+  if (id === getActiveProfileId()) return;
+  localStorage.setItem(ACTIVE_PROFILE_KEY, id);
+  location.reload();
+}
+
+export function createProfile(name) {
+  const trimmed = (name || '').trim();
+  if (!trimmed) return;
+  const list = ensureProfilesInit();
+  const id = 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  list.push({ id, name: trimmed });
+  saveProfiles(list);
+  switchProfile(id);
+}
+
+export function renameProfile(id, name) {
+  const trimmed = (name || '').trim();
+  if (!trimmed) return;
+  const list = ensureProfilesInit();
+  const p = list.find(pr => pr.id === id);
+  if (!p) return;
+  p.name = trimmed;
+  p.isDefaultName = false;
+  saveProfiles(list);
+}
+
+export function deleteProfile(id) {
+  const list = ensureProfilesInit();
+  if (list.length <= 1) return;
+  const remaining = list.filter(p => p.id !== id);
+  saveProfiles(remaining);
+  if (getActiveProfileId() === id) {
+    localStorage.setItem(ACTIVE_PROFILE_KEY, remaining[0].id);
+    location.reload();
+  }
+}
+
+/* ── 保存キーの名前空間化 ── */
+export function nsKeyFor(rawKey, profileId) {
+  return profileId === DEFAULT_PROFILE_ID ? rawKey : `${rawKey}__p_${profileId}`;
+}
+export function nsKey(rawKey) {
+  return nsKeyFor(rawKey, getActiveProfileId());
+}
+
+/* ================================================================
+   🗂️ カテゴリ所持状態
+   localStorage キー: gameItems_<catKey>
+   形状: { total, owned, itemOwned:{id:bool}, itemFav:{id:bool}, ownedItems:[{id,name,nameEn,img}] }
+   （item/cape.html の saveUserData() と完全に同じ形状。total/owned/ownedItems は
+   　書き込みのたびに items 配列から再計算する派生値で、他機能から参照されるため必須）
+   ================================================================ */
+export function getCategoryState(catKey) {
+  try {
+    const saved = localStorage.getItem(nsKey('gameItems_' + catKey));
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return { owned: parsed.itemOwned || {}, fav: parsed.itemFav || {} };
+    }
+  } catch (e) { console.error('カテゴリ状態の読み込み失敗:', catKey, e); }
+  return { owned: {}, fav: {} };
+}
+
+export function saveCategoryState(catKey, itemOwned, itemFav, itemsArray) {
+  const total = itemsArray.length;
+  const owned = itemsArray.filter(item => itemOwned[item.id]).length;
+  const ownedItems = itemsArray
+    .filter(item => itemOwned[item.id])
+    .map(item => ({ id: item.id, name: item.name, nameEn: item.nameEn, img: item.img }));
+  const dataToSave = { total, owned, itemOwned, itemFav, ownedItems };
+  localStorage.setItem(nsKey('gameItems_' + catKey), JSON.stringify(dataToSave));
+}
+
+export function isItemOwned(catKey, itemId) {
+  return !!getCategoryState(catKey).owned[itemId];
+}
+export function isItemFav(catKey, itemId) {
+  return !!getCategoryState(catKey).fav[itemId];
+}
+
+/* ── 表示設定（非名前空間化・プロフィール共通） ── */
+export const VIEW_MODE_KEY = 'gameItems_viewMode';
+export const GRID_COLS_KEY = 'gameItems_gridCols';
+export function getViewMode() { return localStorage.getItem(VIEW_MODE_KEY) || 'grid'; }
+export function setViewMode(mode) { localStorage.setItem(VIEW_MODE_KEY, mode); }
+export function getGridCols() { return localStorage.getItem(GRID_COLS_KEY) || 'auto'; }
+export function setGridCols(cols) { localStorage.setItem(GRID_COLS_KEY, cols); }
+
+/* ================================================================
+   🛒 ウィッシュリスト。localStorage キー: wish_<catKey> = JSON array of item IDs
+   ================================================================ */
+export function getWishIds(catKey) {
+  try { return JSON.parse(localStorage.getItem(nsKey('wish_' + catKey))) || []; }
+  catch { return []; }
+}
+export function isWishItem(catKey, itemId) {
+  return getWishIds(catKey).includes(String(itemId));
+}
+export function removeWishItem(catKey, itemId) {
+  const id = String(itemId);
+  const wishes = getWishIds(catKey);
+  const idx = wishes.indexOf(id);
+  if (idx === -1) return;
+  wishes.splice(idx, 1);
+  localStorage.setItem(nsKey('wish_' + catKey), JSON.stringify(wishes));
+}
+export function toggleWishItem(catKey, itemId) {
+  const id = String(itemId);
+  const wishes = getWishIds(catKey);
+  const idx = wishes.indexOf(id);
+  const isAdding = idx === -1;
+  if (isAdding && isItemOwned(catKey, id)) return null;
+  if (isAdding) wishes.push(id); else wishes.splice(idx, 1);
+  localStorage.setItem(nsKey('wish_' + catKey), JSON.stringify(wishes));
+  return isAdding;
+}
+
+/* ================================================================
+   📅 アイテム獲得（所持登録）ログ
+   localStorage キー: itemAcquireLog_v1 = { [itemId]: { catKey, at: ISO日時 } }
+   ================================================================ */
+export function recordItemAcquire(catKey, itemId) {
+  const key = nsKey('itemAcquireLog_v1');
+  let log;
+  try { log = JSON.parse(localStorage.getItem(key)) || {}; } catch { log = {}; }
+  log[itemId] = { catKey, at: new Date().toISOString() };
+  localStorage.setItem(key, JSON.stringify(log));
+  removeWishItem(catKey, itemId);
+}
+export function removeItemAcquireRecord(itemId) {
+  const key = nsKey('itemAcquireLog_v1');
+  let log;
+  try { log = JSON.parse(localStorage.getItem(key)) || {}; } catch { log = {}; }
+  if (log[itemId]) {
+    delete log[itemId];
+    localStorage.setItem(key, JSON.stringify(log));
+  }
+}
+export function getItemAcquireLog() {
+  try { return JSON.parse(localStorage.getItem(nsKey('itemAcquireLog_v1'))) || {}; }
+  catch { return {}; }
+}
+
+/* ================================================================
+   🎖️ 称号（itemTitles_v1）。今回のプロトタイプでは称号カタログUI全体の
+   完全移植までは行わず、保存レイヤーだけ互換維持する（README参照）。
+   ================================================================ */
+export const TITLES_KEY = 'itemTitles_v1';
+export function loadTitleStore() {
+  try {
+    const d = JSON.parse(localStorage.getItem(nsKey(TITLES_KEY)));
+    if (d && typeof d === 'object') {
+      return {
+        earned: d.earned || {},
+        hwm: {
+          perCat: (d.hwm && d.hwm.perCat) || {},
+          overallPct: (d.hwm && d.hwm.overallPct) || 0,
+          masteredCount: (d.hwm && d.hwm.masteredCount) || 0,
+          moneySpentMax: (d.hwm && d.hwm.moneySpentMax) || 0,
+        },
+      };
+    }
+  } catch (e) { /* 破損データは初期状態として扱う */ }
+  return { earned: {}, hwm: { perCat: {}, overallPct: 0, masteredCount: 0, moneySpentMax: 0 } };
+}
+export function saveTitleStore(store) {
+  localStorage.setItem(nsKey(TITLES_KEY), JSON.stringify(store));
+}
+
+// 他ツールの実績（*Titles_v1）を読み取り専用で参照するためのカタログ。
+// 各サイトは別デプロイのため共有できず、item/profiles.js のCROSS_TOOL_TITLE_CATALOGを
+// そのまま複製している（storageKeyとnamespacedの対応はそちらと1対1）。
+export const CROSS_TOOL_TITLE_CATALOG = {
+  emote: { storageKey: 'emoteTitles_v1', namespaced: true, source: 'エモート所持率管理', sourceEn: 'Emote Ownership Tracker', extract: d => Object.keys(d || {}) },
+  wings: { storageKey: 'wingsTitles_v1', namespaced: true, source: '羽トラッカー', sourceEn: 'Wings Tracker', extract: d => Object.keys(d || {}) },
+  spirit: { storageKey: 'spiritCatalogTitles_v1', namespaced: true, source: '精霊ツリー管理', sourceEn: 'Spirit Tree Catalog', extract: d => Object.keys(d || {}) },
+  score: { storageKey: 'taiScoreTitles_v1', namespaced: false, source: '楽譜づくり', sourceEn: 'Sheet Music Maker', extract: d => ((d && d.earned) || []).map(e => e.id) },
+  share: { storageKey: 'shareTitles_v1', namespaced: true, source: '創作物管理ツール', sourceEn: 'Creation Manager', extract: d => ((d && d.earned) || []).map(e => e.id) },
+  nomacan: { storageKey: 'skyNomacanTitles_v1', namespaced: true, source: 'ノマキャン計算機', sourceEn: 'Candle Calculator', extract: d => Object.keys((d && d.earned) || {}) },
+  starcandle: { storageKey: 'skyStarCandleCalc_titles_v1', namespaced: true, source: '星のキャンドル計算機', sourceEn: 'Star Candle Calculator', extract: d => Object.keys((d && d.earned) || {}) },
+};
+export function getCrossToolTitleCount(toolKey, profileId) {
+  const tool = CROSS_TOOL_TITLE_CATALOG[toolKey];
+  if (!tool) return 0;
+  const key = tool.namespaced ? nsKeyFor(tool.storageKey, profileId) : tool.storageKey;
+  try {
+    const d = JSON.parse(localStorage.getItem(key));
+    return tool.extract(d).length;
+  } catch { return 0; }
+}
+
+/* ================================================================
+   🌓 表示設定（ダークモード）。taipak5000.github.io 配下の全ツール共通キー。
+   ================================================================ */
+export const SKY_THEME_KEY = 'sky_app_theme';
+export function applyThemeToDOM(isDark) {
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+}
+export function resolveSkyTheme(stored) {
+  if (stored === 'light' || stored === 'dark') return stored;
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+export function getSkyThemeMode() {
+  try {
+    const v = localStorage.getItem(SKY_THEME_KEY);
+    return (v === 'light' || v === 'dark') ? v : 'system';
+  } catch (e) { return 'system'; }
+}
+export function toggleTheme() {
+  const current = getSkyThemeMode();
+  const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
+  applyThemeToDOM(resolveSkyTheme(next) === 'dark');
+  try { localStorage.setItem(SKY_THEME_KEY, next); } catch (e) { /* private browsing等 */ }
+  return next;
+}
+
+/* ================================================================
+   💾 データのエクスポート/インポート/全削除
+   localStorage は taipak5000.github.io 配下の全ツールで共有されているため、
+   ここで書き出す/読み込む/消す内容はこのサイトだけでなく item・wings・
+   companion 等すべてのデータが対象になる（item/profiles.js の dmExport等と同一挙動）。
+   ================================================================ */
+export function exportAllData() {
+  const dump = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    dump[key] = localStorage.getItem(key);
+  }
+  const payload = { exportedFrom: 'taipak5000.github.io', exportedAt: new Date().toISOString(), data: dump };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `sky-tools-backup_${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  return Object.keys(dump).length;
+}
+
+export function parseImportFile(jsonText) {
+  const parsed = JSON.parse(jsonText);
+  const data = parsed && parsed.data && typeof parsed.data === 'object' ? parsed.data : null;
+  return data;
+}
+
+export function importAllData(data) {
+  let okCount = 0;
+  const failedKeys = [];
+  Object.keys(data).forEach(key => {
+    try { localStorage.setItem(key, data[key]); okCount++; }
+    catch (e) { failedKeys.push(key); }
+  });
+  return { okCount, failedKeys };
+}
+
+export function wipeAllData() {
+  localStorage.clear();
+}
+
+/* ================================================================
+   🌐 他ツールへのリンク一覧（引き出し用）。ハブに内蔵した5ツールは
+   ハッシュリンクに、残りは既存の外部URLのまま（item/profiles.js の
+   SITE_LINKSを踏襲。tai-hub版だけ current/hubRoute を追加）。
+   ================================================================ */
+export const SITE_LINKS = [
+  { icon: 'i-folder', ja: 'アイテム所持管理', en: 'Item Collection Tracker', hubRoute: '#/item', current: true },
+  { icon: 'i-masks', ja: 'エモート所持率管理', en: 'Emote Collection Tracker', hubRoute: '#/emote' },
+  { icon: 'i-pin', ja: '創作物管理ツール', en: 'Creation Manager', hubRoute: '#/share' },
+  { icon: 'i-candle', ja: 'ノマキャン計算機', en: 'Candle Calculator', hubRoute: '#/tai-nomacan' },
+  { icon: 'i-star-candle', ja: '星のキャンドル計算機', en: 'Star Candle Calculator', hubRoute: '#/star-candle' },
+  { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', href: 'https://taipak5000.github.io/companion/' },
+  { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', href: 'https://taipak5000.github.io/wings/' },
+  { icon: 'i-tree', ja: '精霊ツリー管理', en: 'Spirit Tree Catalog', href: 'https://taipak5000.github.io/tai-catalog/', badgeTest: true },
+  { icon: 'i-wing', ja: '再訪精霊データベース', en: 'Revisit Spirit Database', href: 'https://taipak5000.github.io/tai-revisit/' },
+  { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', href: 'https://taipak5000.github.io/tai-score/', badgeTest: true },
+  { icon: 'i-card', ja: '星紡ぎカード', en: 'Self-Intro Card Maker', href: 'https://taipak5000.github.io/tai-card/' },
+  { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', href: 'https://taipak5000.github.io/tai-transfer/' },
+  { icon: 'i-settings', ja: '設定・更新情報', en: 'Settings & Updates', href: 'https://taipak5000.github.io/tai-info/' },
+  { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', href: 'https://taipak5000.github.io/skyzztai-profile/' },
+];

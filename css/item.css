@@ -1,0 +1,72 @@
+/* ================================================================
+   item（アイテム所持管理）機能専用のデザイントークン・共通スタイル。
+   item/index.htmlの:root定義をそのまま移植（配色は元のものを維持する
+   という今回のスコープ判断——ハブchrome用のtokens.cssとは完全分離）。
+   このファイルのスコープは #app-root 配下の item ビューのみ。
+   ================================================================ */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Yomogi&display=swap');
+
+.item-view {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --sep: rgba(60, 60, 67, 0.12);
+  --orange: #FF9500;
+  --orange-d: #FF6200;
+  --orange-bg: rgba(255, 149, 0, 0.10);
+  --blue: #007AFF;
+  --blue-bg: rgba(0, 122, 255, 0.08);
+  --green: #34C759;
+  --green-bg: rgba(52, 199, 89, 0.10);
+  --text: #1C1C1E;
+  --text-2: #8E8E93;
+  --text-3: #C7C7CC;
+  --r: 16px;
+  --r-sm: 10px;
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+  padding: 16px 16px 24px;
+}
+
+[data-theme="dark"] .item-view {
+  --bg: #000000;
+  --card: #1C1C1E;
+  --sep: rgba(255, 255, 255, 0.14);
+  --orange: #FF9F0A;
+  --orange-d: #FF8A00;
+  --orange-bg: rgba(255, 159, 10, 0.16);
+  --blue: #0A84FF;
+  --blue-bg: rgba(10, 132, 255, 0.16);
+  --green: #30D158;
+  --green-bg: rgba(48, 209, 88, 0.16);
+  --text: #F2F2F7;
+  --text-2: #98989D;
+  --text-3: #636366;
+}
+
+.item-view * { box-sizing: border-box; }
+.item-view h1, .item-view h2, .item-view h3 { margin: 0 0 12px; }
+.item-view .sec-label { font-size: 13px; font-weight: 700; color: var(--text-2); margin: 20px 0 8px; text-transform: uppercase; letter-spacing: 0.02em; }
+.item-view .card { background: var(--card); border-radius: var(--r); padding: 14px; }
+.item-view a { color: inherit; text-decoration: none; }
+
+.item-view .feature-btn {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  background: var(--card); border: 0; border-radius: var(--r); padding: 14px;
+  margin-bottom: 10px; cursor: pointer; color: var(--text); font-family: inherit;
+}
+.item-view .feature-icon { flex-shrink: 0; background: var(--orange-bg); color: var(--orange-d); border-radius: 10px; }
+.item-view .feature-label { display: block; font-weight: 700; font-size: 14px; }
+.item-view .feature-desc { display: block; font-size: 12px; color: var(--text-2); margin-top: 2px; }
+
+.item-view .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
+.item-view .cat-tile {
+  display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--card);
+  border-radius: var(--r-sm); padding: 12px 6px; cursor: pointer; border: 0; color: var(--text); font-family: inherit;
+}
+.item-view .cat-tile img { width: 40px; height: 40px; object-fit: contain; }
+.item-view .cat-tile-name { font-size: 11px; font-weight: 600; text-align: center; }
+.item-view .cat-tile-pct { font-size: 10px; color: var(--text-2); }
+
+.item-view .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 14px; cursor: pointer; }

@@ -40,9 +40,16 @@
 .site-dock {
   display: flex; position: fixed; top: auto; left: 0; right: 0; bottom: 0; z-index: 1001;
   padding: 6px 10px calc(8px + env(safe-area-inset-bottom));
-  background: var(--hub-card); border-top: 0.5px solid var(--hub-sep);
-  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  /* 🍎 半透明カード(--hub-card-glass)+blur+saturateのガラス素材。
+     以前は不透明な--hub-cardにbackdrop-filterを重ねていたため、blurが
+     視覚的に何の効果も生んでいなかった（下のコンテンツが常時99%以上
+     不透明な色で覆われるため透けようがない）——tai-hub/CLAUDE.md参照。 */
+  background: var(--hub-card-glass); border-top: 0.5px solid var(--hub-sep);
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
   justify-content: space-around; align-items: stretch; gap: 4px;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .site-dock { background: var(--hub-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 .site-dock button {
   flex: 1 1 0; max-width: 110px; border: 0; background: none; cursor: pointer;

@@ -7,6 +7,10 @@
 :root {
   --hub-bg: #F4F3F8;
   --hub-card: #FFFFFF;
+  /* 🍎 半透明マテリアル用トークン。backdrop-filterと必ずセットで使う
+     （不透明な--hub-cardにbackdrop-filterを重ねてもガラス効果が出ない
+     ——tai-hub/CLAUDE.md「UIの設計方針」参照）。 */
+  --hub-card-glass: rgba(255, 255, 255, 0.72);
   --hub-sep: rgba(60, 60, 67, 0.12);
   --hub-accent: #6C63D8;
   --hub-accent-bg: rgba(108, 99, 216, 0.10);
@@ -20,6 +24,7 @@
 [data-theme="dark"] {
   --hub-bg: #0F0E14;
   --hub-card: #1C1B22;
+  --hub-card-glass: rgba(28, 27, 34, 0.68);
   --hub-sep: rgba(255, 255, 255, 0.14);
   --hub-accent: #9B93FF;
   --hub-accent-bg: rgba(155, 147, 255, 0.16);

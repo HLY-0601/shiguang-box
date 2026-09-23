@@ -15,6 +15,139 @@ tai-hubで新しくモーダル/シートを書く場合にも同様に適用さ
 新しくツールを移植する時、既存の移植済みツールを直す時は、必ずこのページを
 確認すること。
 
+## 🍎 UIの設計方針: Apple Design (Fluid Interfaces)
+
+**tai-hubで新しくUIを作る時、既存のUIを触る時は、
+[emilkowalski/skills — apple-design](https://github.com/emilkowalski/skills/blob/main/skills/apple-design/SKILL.md)
+（Appleの"Designing Fluid Interfaces"(WWDC 2018)をWeb向けに翻訳した設計原則集）
+を参照すること。** ユーザー指定のハウススタイル(2026-09-23)。
+
+核心は一文で言うと：**動きは「今画面に出ている値」から始まり、ユーザーの
+指の速度を引き継ぎ、慣性を先まで投影し、いつでも掴んで反転できる時に
+「生きている」と感じられる。** 固定durationの`@keyframes`/`transition`は
+中断できない＝この核心と根本的に相性が悪い。タッチ可能な要素（モーダル・
+ドロワー・ドラッグ操作）にはバネ物理を使う。
+
+### 現状の棚卸し(2026-09-23、6並列エージェントによる実地監査済み)
+
+すでに良い状態のもの(そのまま踏襲する)：
+- `:active`によるpointerdown起点のタップフィードバック（`transform:scale()`)は
+  複数ツールに広く根付いている。
+- `features/tai-card/tai-card-view.js`のアバター/背景クロップドラッグ・
+  時計ハンドルドラッグは`setPointerCapture`による正しい1:1直接操作の実例。
+- `@keyframes`の中身はほぼ全てtransform/opacityのみでコンポジタ最適。
+- `tokens.css`のbody fontは`-apple-system, BlinkMacSystemFont, ...`と
+  システムフォント優先（`tai-nomacan`/`star-candle`/`tai-card`/`profile`の
+  4ツールは意図的な装飾フォントでブランディング差別化しており、これは
+  「直すべきバグ」ではなくスコープ外——全ツール一律システムフォント化は
+  しないこと）。
+
+まだギャップがあるもの(新規/修正時に意識する。全面的な一括リトロフィットは
+していない——気付いた範囲から直す)：
+- **開閉の非対称性**: `js/chrome/*.js`のモーダル/ドロワーは「開く」時だけ
+  `@keyframes`(`sheetSlideUp`/`iosFade`)で演出され、「閉じる」時は
+  `classList.remove('open')`一発で`display:none`へ即座にスナップする
+  (`close()`にアニメーションが無い)。入口と出口は同じ経路を辿るべき、
+  というApple原則に反する。新しく閉じる処理を書く/直す時は、閉じる用の
+  `@keyframes`を追加するか、下記`js/motion.js`の`animateSpring`で
+  transformをフェードアウトさせてから`display:none`にする。
+- **バネ物理が0件**: `js/chrome/*.js`にはドラッグでの開閉ジェスチャーが
+  一切無い(タップでの開閉のみ)。新しくドラッグ可能なシート/ドロワーを
+  作る時は、下記`js/motion.js`を使うこと。
+- **マテリアル階層が未整備**: `backdrop-filter`は7箇所のみで、うち3箇所
+  (旧`.site-dock`含む)は不透明な背景色に掛けていたため視覚的に無効化
+  していた(`--hub-card-glass`トークンを追加し`.site-dock`は修正済み——
+  下記参照)。`blur`の強さでマテリアルの「重み」を意図的に表現する設計は
+  まだ無い。
+- **タイポグラフィが未トークン化**: 大きい見出しには負のtracking、小さい
+  ラベルには正のtrackingという方向性は複数ツールに実例があるが、
+  `tokens.css`/`chrome.css`に共有トークンが無く、ファイルごとに符号が
+  割れている箇所もある。新しく`chrome.css`/`tokens.css`に見出し・数値
+  表示を追加する時は、大きい文字(20px+)は`letter-spacing`を負に
+  (`-0.02em`前後)、小さいラベル(13px-)は正に(`0.02〜0.06em`前後)、
+  行間は見出しほどタイト(`line-height:1〜1.15`)・本文ほどゆったり
+  (`1.6〜1.9`)、という既存の暗黙の作法を明示的に踏襲すること。
+- **アクセシビリティ3種のうち1種のみ対応**: `prefers-reduced-motion`は
+  6ファイルにあるが大半が「全アニメーションを0.01msに潰す」力技(唯一
+  `companion.css`だけがスライドをクロスフェードに置き換える正しい実装)。
+  `prefers-reduced-transparency`と`prefers-contrast`は全CSS中0件だった
+  (`.site-dock`にのみ`prefers-reduced-transparency`を追加済み——下記参照)。
+  半透明面や凝ったアニメーションを新しく追加する時は、この3つの
+  メディアクエリすべてを最初からセットで書くこと(テンプレは下記)。
+
+### `js/motion.js` — 依存追加なしの最小バネユーティリティ
+
+npm依存(Motion/Framer Motion等)はビルドツール不要という設計と相性が悪いため
+追加せず、`js/motion.js`に自前実装した(`animateSpring`/`rubberband`/
+`project`/`velocityFromHistory`)。ダンピング比(`damping`)とレスポンス秒数
+(`response`)というApple準拠の2パラメータで指定する。使う時の指針：
+
+```js
+import { animateSpring, rubberband, project, velocityFromHistory } from '../../js/motion.js';
+
+// 既定は減衰比1.0(オーバーシュート無し)。メニュー・シートのフェードイン等、
+// ジェスチャーの勢いを伴わない演出はこれを使う。
+animateSpring(() => currentX, v => { el.style.transform = `translateX(${v}px)`; }, targetX);
+
+// フリック・ドラッグ解放などモメンタムのある操作だけ、わずかに弾む
+// damping ~0.8 を使う(理由なくオーバーシュートさせない)。
+animateSpring(() => currentY, v => { sheet.style.transform = `translateY(${v}px)`; }, target, {
+  damping: 0.8, response: 0.3, velocity: releaseVelocity,
+});
+
+// ドラッグ境界はMath.max/minのハードクランプではなくrubberband()で
+// 弾性抵抗を掛ける。
+const overshoot = rawValue - bound;
+const value = overshoot > 0 ? bound + rubberband(overshoot, dimension) : rawValue;
+
+// pointerup時、pointermove履歴から離脱速度を求めてから慣性の着地点を予測する。
+const v = velocityFromHistory(moveHistory);
+const landingPoint = currentY + project(v);
+```
+
+途中で再度呼び出したい(=ジェスチャーが再開/反転した)時は、`animateSpring`が
+返すハンドルの`.redirect(newTarget, newVelocity)`を使う——その時点の
+現在値・速度から継ぎ目なく繋がる(中断可能性の核心。最初からアニメーションを
+やり直さない)。
+
+### マテリアル(半透明)を書く時のテンプレート
+
+```css
+.your-translucent-chrome {
+  /* 🍎 不透明色にbackdrop-filterを重ねても無効。半透明トークンとセットで使う */
+  background: var(--hub-card-glass); /* rgba(255,255,255,0.72) / rgba(28,27,34,0.68) */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .your-translucent-chrome { background: var(--hub-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+```
+
+モーダルタスク(操作を止めて注意を要求する)は不透明カード+`rgba(0,0,0,0.4〜0.45)`
+の暗いスクリム(既存の`.modal-overlay`と同じ、これは変更不要)。並行して見える
+非ブロッキングなパネル(トースト・ポップオーバー等)は逆に、スクリムなし+
+上記の半透明トークンを使う——`css/share.css`の`.sv-toast`
+(`blur(25px) saturate(180%)`)が良い実例。
+
+### アクセシビリティ3種のテンプレート(半透明・凝ったアニメーションを追加する時は必ずセットで)
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  /* 🩹 全称セレクタでduration:0.01msに潰すのではなく、該当セレクタを
+     列挙してスライド/バネ/オーバーシュートをクロスフェードに置き換える
+     (companion.css:1402-1403が正しい実例) */
+  .your-sheet-overlay { animation: iosFade 200ms ease !important; }
+  .your-sheet-card { animation: none !important; transform: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .your-translucent-chrome { background: var(--hub-card); backdrop-filter: none; }
+}
+@media (prefers-contrast: more) {
+  .your-translucent-chrome { background: var(--hub-card); border: 1px solid var(--hub-text-2); backdrop-filter: none; }
+}
+```
+
 ## 🩹 コメント内でクラス名を`/`区切りで列挙すると、CSSコメントが途中で終わる
 
 **日本語のdocコメント内で「このクラス群は使われなくなった」のような説明を

@@ -23,6 +23,19 @@
 
 #app-root { padding-bottom: 84px; min-height: 100vh; }
 
+/* 🩹 ルート遷移で各ツールのビューモジュールを初回だけ動的import()する
+   （router-registry.js参照）ようになったことに伴う、読み込み中の
+   プレースホルダー。読み込み自体はローカル/同一オリジンなのでほぼ瞬時だが、
+   「一瞬UIの無い画面が表示される」体感を無くすため、#app-rootが空になる
+   タイミングでは必ずこれが挟まるようにしている。 */
+.rt-loading { display: flex; align-items: center; justify-content: center; min-height: 60vh; }
+.rt-spinner {
+  width: 28px; height: 28px; border-radius: 50%;
+  border: 3px solid var(--hub-sep); border-top-color: var(--hub-accent);
+  animation: rt-spin 0.7s linear infinite;
+}
+@keyframes rt-spin { to { transform: rotate(360deg); } }
+
 /* ── サイトドック ── */
 .site-dock {
   display: flex; position: fixed; top: auto; left: 0; right: 0; bottom: 0; z-index: 1001;

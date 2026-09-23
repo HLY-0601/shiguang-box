@@ -330,7 +330,7 @@ function injectStyles() {
   style.id = STYLE_ID;
   style.textContent = `
 /* my-coord.js固有の追加スタイルは今のところ無く、coord-data.jsの
-   共有スタイル（.cd-card/.cd-pick-*/.cd-action-btn等）だけで構成できて
+   共有スタイル（.cd-card・.cd-pick-*・.cd-action-btn等）だけで構成できて
    いる。将来的な拡張に備えてこのファイル専用のSTYLE_IDだけ確保しておく。 */
 `;
   document.head.appendChild(style);

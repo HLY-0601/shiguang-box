@@ -785,12 +785,12 @@ function reminderSectionHtml() {
     <div class="dash-section">
       <p class="dash-section-label"><svg class="inline-icon edb-i" width="15" height="15"><use href="#edb-i-bell"/></svg> ${t('通知リマインダー', 'Reminder Notifications')}</p>
       <div class="dash-row edb-reminder-row">
-        <span class="dash-row-icon icon-chip" style="width:22px; height:22px;"><svg width="17" height="17"><use href="#edb-i-bell"/></svg></span>
+        <span class="dash-row-icon icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="17" height="17"><use href="#edb-i-bell"/></svg></span>
         <span class="dash-row-text">${t('季節・イベントの終了やリセットが近づいたら通知する', 'Notify me when a season, event, or reset is about to end')}</span>
         <input type="checkbox" id="edbReminderCheckbox">
       </div>
       <div class="dash-row edb-reminder-row">
-        <span class="dash-row-icon icon-chip" style="width:22px; height:22px;"><svg width="17" height="17"><use href="#edb-i-clock"/></svg></span>
+        <span class="dash-row-icon icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="17" height="17"><use href="#edb-i-clock"/></svg></span>
         <span class="dash-row-text">${t('通知するタイミング', 'Remind me')}</span>
         <select id="edbReminderMinutes" class="pf-icon-btn">
           <option value="10">${t('10分前', '10 min before')}</option>

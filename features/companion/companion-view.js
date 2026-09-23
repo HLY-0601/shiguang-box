@@ -559,7 +559,7 @@ const TEMPLATE = `
   <!-- 🎉 「1年前の今日」通知バナー -->
   <div v-if="showOneYearAgoBanner" class="oneyear-banner">
     <span class="oneyear-banner-text">{{ t('oneyear_banner_pre') }}<b>{{ oneYearAgoSpiritName }}</b>{{ t('oneyear_banner_post') }}</span>
-    <button type="button" class="oneyear-banner-close" :title="t('oneyear_dismiss_title')" :aria-label="t('oneyear_dismiss_title')" @click="dismissOneYearAgoBanner"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+    <button type="button" class="oneyear-banner-close" :title="t('oneyear_dismiss_title')" :aria-label="t('oneyear_dismiss_title')" @click="dismissOneYearAgoBanner"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
   </div>
 
   <!-- 📅 今日・今週・今月ダッシュボードを開くボタン -->
@@ -657,19 +657,19 @@ const TEMPLATE = `
 
     <template v-if="showForecast">
     <div class="forecast-legend">
-      <span><img v-if="TYPE_IMAGES.magic" class="fl-icon" :src="TYPE_IMAGES.magic" alt="" referrerpolicy="no-referrer"><svg v-else class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-magic"></use></svg>{{ t('fc_legend_magic') }}</span>
-      <span><img v-if="TYPE_IMAGES.walk" class="fl-icon" :src="TYPE_IMAGES.walk" alt="" referrerpolicy="no-referrer"><svg v-else class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-emote"></use></svg>{{ t('fc_legend_walk') }}</span>
-      <span><img v-if="TYPE_IMAGES.seasonal" class="fl-icon" :src="TYPE_IMAGES.seasonal" alt="" referrerpolicy="no-referrer"><svg v-else class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-bloom"></use></svg>{{ t('fc_legend_seasonal') }}</span>
-      <span><svg class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-dye"></use></svg>{{ t('fc_legend_dye') }}</span>
-      <span><img v-if="TYPE_IMAGES.adpass" class="fl-icon" :src="TYPE_IMAGES.adpass" alt="" referrerpolicy="no-referrer"><svg v-else class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-sparkle"></use></svg>{{ t('fc_legend_adpass') }}</span>
-      <span><svg class="fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg>{{ t('fc_legend_heart') }}</span>
+      <span><img v-if="TYPE_IMAGES.magic" class="fl-icon" :src="TYPE_IMAGES.magic" alt="" referrerpolicy="no-referrer"><svg v-else class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-magic"></use></svg>{{ t('fc_legend_magic') }}</span>
+      <span><img v-if="TYPE_IMAGES.walk" class="fl-icon" :src="TYPE_IMAGES.walk" alt="" referrerpolicy="no-referrer"><svg v-else class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-emote"></use></svg>{{ t('fc_legend_walk') }}</span>
+      <span><img v-if="TYPE_IMAGES.seasonal" class="fl-icon" :src="TYPE_IMAGES.seasonal" alt="" referrerpolicy="no-referrer"><svg v-else class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-bloom"></use></svg>{{ t('fc_legend_seasonal') }}</span>
+      <span><svg class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-dye"></use></svg>{{ t('fc_legend_dye') }}</span>
+      <span><img v-if="TYPE_IMAGES.adpass" class="fl-icon" :src="TYPE_IMAGES.adpass" alt="" referrerpolicy="no-referrer"><svg v-else class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-sparkle"></use></svg>{{ t('fc_legend_adpass') }}</span>
+      <span><svg class="inline-icon fl-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg>{{ t('fc_legend_heart') }}</span>
     </div>
 
     <div class="forecast-grid">
       <div v-for="sf in spiritForecasts" :key="sf.spirit.id" class="forecast-column" :class="'forecast-theme-' + sf.themeIndex">
         <div class="forecast-col-head">
           <span class="forecast-spirit-name">{{ spiritName(sf.spirit) }}</span>
-          <span class="forecast-total"><svg class="forecast-total-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-candle"></use></svg>{{ sf.total }}</span>
+          <span class="forecast-total"><svg class="inline-icon forecast-total-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-candle"></use></svg>{{ sf.total }}</span>
           <span class="forecast-eta" :class="{ 'forecast-eta-done': sf.heartPlan && (sf.heartPlan.alreadyDone || sf.heartPlan.day === 0) }">{{ forecastEtaText(sf.heartPlan) }}</span>
         </div>
         <div class="forecast-tree">
@@ -692,7 +692,7 @@ const TEMPLATE = `
             <div class="game-node-wrapper">
               <div class="game-node-btn heart-node" :title="translateItemName(sf.heartItem.name)">
                 <div class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ sf.heartItem.candles || 0 }}</div>
-                <div class="node-icon"><svg class="node-svg-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg></div>
+                <div class="node-icon"><svg class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg></div>
                 <div class="node-name">{{ cleanName(translateItemName(sf.heartItem.name)) }}</div>
               </div>
             </div>
@@ -704,7 +704,7 @@ const TEMPLATE = `
 
     <div class="forecast-total-bar">
       <span><svg class="inline-icon" width="12" height="12"><use href="#i-candle"/></svg> {{ t('fc_grand_total') }}</span>
-      <span class="forecast-grand-total"><svg class="forecast-total-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-candle"></use></svg>{{ grandTotalCandles }}</span>
+      <span class="forecast-grand-total"><svg class="inline-icon forecast-total-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-candle"></use></svg>{{ grandTotalCandles }}</span>
     </div>
   </div>
 
@@ -1132,7 +1132,7 @@ const TEMPLATE = `
                  :title="(!hasSeasonPass && !activeSpirit.treeData.tier4[2].checked) ? t('tree_pass_required') : null" @click="toggleTreeItem(activeSpirit.treeData.tier4[2], activeTier4Total)">
               <div class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ activeSpirit.treeData.tier4[2].candles || 0 }}</div>
               <div class="node-level" style="color: #ff2d55;">MAX</div>
-              <div class="node-icon"><svg class="node-svg-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg></div>
+              <div class="node-icon"><svg class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use href="#cp-i-tree-heart"></use></svg></div>
               <div class="node-name" style="font-size: 10px; color: inherit; opacity: 0.8;">{{ t('heart_node_name') }}</div>
               <div class="node-cost" style="color: #ff5e7e;">{{ activeSpirit.treeData.tier4[2].checked ? t('heart_node_got') : (activeTier4Total + 'p') }}</div>
             </div>

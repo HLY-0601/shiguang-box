@@ -258,7 +258,7 @@ function renderShareModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="shareModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="shareModalTitle">${escapeHtml(t('shareModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-modal" data-modal="shareModal"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-modal" data-modal="shareModal"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${escapeHtml(t('shareHint1'))}</div>
       <button type="button" class="action-btn primary" data-act="generate-share-code">${escapeHtml(t('createShareCodeBtn'))}</button>
@@ -281,7 +281,7 @@ function renderImportModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="importModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="importModalTitle">${escapeHtml(t('importModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-modal" data-modal="importModal"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-modal" data-modal="importModal"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${escapeHtml(t('importHint'))}</div>
       <textarea class="code-box" id="importCodeInput" placeholder="${escapeHtml(t('importCodePlaceholder'))}"></textarea>
@@ -298,7 +298,7 @@ function renderAudioImportModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="audioImportModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="audioImportModalTitle">${escapeHtml(t('audioImportModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-audio-import"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-audio-import"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${escapeHtml(t('audioImportHint'))}</div>
       <div id="audioImportStep1">
@@ -332,7 +332,7 @@ function renderImageImportModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="imageImportModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="imageImportModalTitle">${escapeHtml(t('imageImportModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-image-import"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-image-import"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${t('imageImportHint')}</div>
       <div id="imageImportStep1">
@@ -356,7 +356,7 @@ function renderMidiImportModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="midiImportModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="midiImportModalTitle">${escapeHtml(t('midiImportModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-midi-import"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-midi-import"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${escapeHtml(t('midiImportHint'))}</div>
       <input type="file" id="midiFileInput" accept=".mid,.midi,audio/midi,audio/x-midi">
@@ -370,7 +370,7 @@ function renderConfirmModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="confirmModalTitle">${escapeHtml(t('confirmModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-confirm"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-confirm"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint" id="confirmModalMessage"></div>
       <button type="button" class="action-btn secondary" id="confirmModalOkBtn" data-act="confirm-ok" style="background:var(--red-btn); color:#fff; border-color:var(--red-btn);"></button>
@@ -384,7 +384,7 @@ function renderKeyBindModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="keyBindModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="keyBindModalTitle">${escapeHtml(t('keyBindModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-key-bind-modal"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-key-bind-modal"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
       <div class="hint">${escapeHtml(t('keyBindHint'))}</div>
       <div class="keybind-list" id="keyBindList"></div>
@@ -492,7 +492,7 @@ function renderComposeToolsModal() {
     <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="composeToolsModalTitle" tabindex="-1">
       <div class="modal-header">
         <span class="modal-title" id="composeToolsModalTitle">${escapeHtml(t('composeToolsModalTitle'))}</span>
-        <button type="button" class="modal-close" data-act="close-modal" data-modal="composeToolsModal" aria-label="${escapeHtml(t('cancelBtn'))}"><span class="icon-chip" style="width:22px; height:22px;"><svg width="16" height="16"><use href="#i-close"/></svg></span></button>
+        <button type="button" class="modal-close" data-act="close-modal" data-modal="composeToolsModal" aria-label="${escapeHtml(t('cancelBtn'))}"><span class="icon-chip" style="width:22px; height:22px;"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></span></button>
       </div>
 
       <div class="compose-tools-section">

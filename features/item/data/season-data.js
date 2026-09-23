@@ -31,13 +31,16 @@ export const NEXT_UPDATE = {
 
 export const REVISIT_SPIRIT_SCHEDULES = [
   {
+    // 2週間おきに4日間だけ来る旅の精霊の再訪周期。来訪ごとに違う精霊が来るため、
+    // 入れ替わるたびにitemsとanchorStart/anchorEndを直近の実際の来訪に合わせて更新する
+    // （intervalDaysは周期そのものなので変更不要）。
+    // 直近の来訪(2026-09-24〜09-28)は「うなずく壁画師」(mask_026, hairstyle_052)。
     items: [
-      { catKey: 'mask', id: 'mask_018' },
-      { catKey: 'cape', id: 'cape_031' },
-      { catKey: 'small_placeable', id: 'small_placeable_001' },
+      { catKey: 'mask', id: 'mask_026' },
+      { catKey: 'hairstyle', id: 'hairstyle_052' },
     ],
-    anchorStart: '2026-09-10T16:00:00+09:00',
-    anchorEnd: '2026-09-14T15:59:59+09:00',
+    anchorStart: '2026-09-24T16:00:00+09:00',
+    anchorEnd: '2026-09-28T15:59:59+09:00',
     intervalDays: 14,
   },
   {

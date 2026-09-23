@@ -2,13 +2,17 @@
    data-transfer（データ引継ぎ）のツール固有i18n辞書。
 
    移植元: tai-transfer/index.html の `const I18N = {...}` のうち、
-   tools.*・sidebar.*・dock.*・settings.*・footer.*（「他のツール」ドロワーの
-   ラベル・表示設定モーダル・フッターのクレジット行等）は、tai-hub側の
-   共有chrome（js/chrome/*.js）が既に自分自身の翻訳を持っているため
-   意図的に移植していない（footer.disclaimerのみ、他の移植済みツール
-   ［nomacan/star-candle/share等］と同じくビュー側で直書きする）。
-   残した page.* / dyn.* の文言・テンプレート（{n}等のプレースホルダー・
-   英語の単数/複数バリアント関数）は元の値を一切変更していない。
+   tools.*・sidebar.*・dock.*・settings.*（「他のツール」ドロワーのラベル・
+   表示設定モーダル等）は、tai-hub側の共有chrome（js/chrome/*.js）が既に
+   自分自身の翻訳を持っているため意図的に移植していない。
+   footer.*（フッターの免責事項・クレジット行・tai-infoリンク）は、
+   tai-hub側の共有chromeにはこれを描画する仕組みが存在しない（各ツールが
+   ビュー側で直書きする設計）ため、他の移植済みツール
+   ［companion/tai-score/tai-revisit等］と同じく footer セクションとして
+   このファイルに残し、ビュー側（data-transfer-view.js）で直書きする。
+   残した page.* / dyn.* / footer.* の文言・テンプレート（{n}等の
+   プレースホルダー・英語の単数/複数バリアント関数）は元の値を一切
+   変更していない。
 
    t(key, vars) は nomacan/star-candle等、他の移植済みツールと同じ
    '.'区切りキー方式だが、値が文字列ではなく関数（vars => string）の
@@ -99,6 +103,11 @@ const DT_I18N = {
     historyNoSites: { ja: '（サイトなし）', en: '(no sites)' },
     historyExportRowLabel: { ja: '書き出し：{date}・{sites}', en: 'Export: {date} · {sites}' },
     historyImportRowLabel: { ja: '読込：{date}・{sites}', en: 'Import: {date} · {sites}' },
+  },
+  footer: {
+    creditLabel: { ja: '作成・ご意見:', en: 'Created by / feedback:' },
+    requestForm: { ja: 'リクエストフォーム', en: 'Request form' },
+    infoLink: { ja: '設定・更新情報・クレジット・プライバシーポリシー', en: "Settings / What's New / Credits / Privacy Policy" },
   },
 };
 

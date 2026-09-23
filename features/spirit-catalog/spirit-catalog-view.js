@@ -131,6 +131,7 @@ const LOCAL_SPRITE_HTML = `<svg id="${ICON_SPRITE_ID}" style="position:absolute;
 <symbol id="sc-i-leaf" viewBox="0 0 24 24"><path d="M12 3c-5 2-8 6-8 11a8 8 0 0 0 8 7c5-2 8-6 8-11a8 8 0 0 0-8-7Z"/><path d="M12 21V9"/></symbol>
 <symbol id="sc-i-lock" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.094) translate(-12 -12)"><path d="M6.5 11h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></g></symbol>
 <symbol id="sc-i-ticket" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.094) translate(-12 -12)"><path d="M4 9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1.3a1.5 1.5 0 0 0 0 3.4V15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-1.3a1.5 1.5 0 0 0 0-3.4Z"/><path d="M12 7v10" stroke-dasharray="1.5 2"/></g></symbol>
+<symbol id="sc-i-tree" viewBox="0 0 24 24"><path d="M12 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12Z"/><path d="M12 16v5"/></symbol>
 </defs></svg>`;
 function injectLocalIconSprite() {
   if (document.getElementById(ICON_SPRITE_ID)) return;
@@ -156,7 +157,7 @@ function renderShell() {
     <div class="spirit-catalog-view">
       <div class="sc-wrap">
         <header class="sc-head">
-          <h1>${icon('i-tree', 18)} ${escapeHtml(tt('精霊ツリー管理', 'Spirit Tree Catalog'))}</h1>
+          <h1>${icon('sc-i-tree', 18)} ${escapeHtml(tt('精霊ツリー管理', 'Spirit Tree Catalog'))}</h1>
         </header>
 
         <div class="revisit-badge" id="scRevisitBadge"></div>
@@ -202,6 +203,7 @@ function renderShell() {
           <div class="bulk-catchup-row" id="scBulkHeartCatchupFilteredRow"></div>
           <div class="sc-cost-toggle-row">
             <label><input type="checkbox" id="scCostToggle"> ${escapeHtml(t('filter.costDisplayLabel'))} <span class="sc-test-tag">${escapeHtml(t('filter.costDisplayTestTag'))}</span></label>
+            <div class="sc-cost-toggle-hint">${escapeHtml(t('filter.costDisplayHint'))}</div>
           </div>
         </div>
 
@@ -537,7 +539,7 @@ function renderGroupedView(mode, list) {
           <div class="area-group-head-row">
             <div>
               <div class="area-group-title">${groupIcon} ${escapeHtml(label)}</div>
-              <div class="area-group-badge">${icon('i-tree', 11)} ${escapeHtml(t('browse.treesCompleteTemplate', { done: completeTrees, total: g.spirits.length }))} ・ ${escapeHtml(t('browse.nodesPctTemplate', { pct }))}</div>
+              <div class="area-group-badge">${icon('sc-i-tree', 11)} ${escapeHtml(t('browse.treesCompleteTemplate', { done: completeTrees, total: g.spirits.length }))} ・ ${escapeHtml(t('browse.nodesPctTemplate', { pct }))}</div>
               <div class="area-group-remaining-cost"><b>${escapeHtml(t('browse.groupRemainingCostLabel'))}</b>${escapeHtml(t('common.labelSep'))}${costChips || escapeHtml(t('filter.remainingCostZero'))}</div>
             </div>
             ${bulkCatchUpControlHtml(scopeId)}
@@ -615,6 +617,11 @@ function renderGrid() {
 /* ================================================================
    統計サマリー・称号
    ================================================================ */
+function formatPct(pct) {
+  if (pct <= 0) return '0%';
+  if (pct >= 100) return '100%';
+  return pct.toFixed(1) + '%';
+}
 function renderStats() {
   const rawUnlocked = S.getUnlockedMap();
   let totalNodes = 0, doneNodes = 0, completeSpirits = 0;
@@ -638,7 +645,7 @@ function renderStats() {
   S.saveStatsSnapshot(totalNodes, doneNodes);
 
   els.overallPctCard.innerHTML = `
-    <div class="overall-pct-num">${totalNodes > 0 ? overallPct.toFixed(1) + '%' : '--%'}</div>
+    <div class="overall-pct-num">${totalNodes > 0 ? formatPct(overallPct) : '--%'}</div>
     <div class="overall-pct-label">${escapeHtml(t('stats.overallPctLabel'))}</div>`;
   els.statsRow.innerHTML = `
     <div class="stat-box"><div class="stat-num">${doneNodes} / ${totalNodes}</div><div class="stat-label">${escapeHtml(t('stats.unlockedNodes'))}</div></div>

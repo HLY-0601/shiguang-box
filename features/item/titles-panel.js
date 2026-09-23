@@ -67,6 +67,9 @@ const ICON_PATHS = {
   gift: '<g transform="translate(12 12) scale(1.094) translate(-12 -12.5)"><path d="M4 9h16v3H4Z"/><path d="M5 12h14v8H5Z"/><path d="M12 9v11"/><path d="M9 9c-1.3 0-2.3-.9-2.3-2S7.7 5 9 5c1.3 0 3 1.7 3 4M15 9c1.3 0 2.3-.9 2.3-2S16.3 5 15 5c-1.3 0-3 1.7-3 4"/></g>',
   gem: '<path d="M6.5 9L12 3l5.5 6L12 20Z"/><path d="M6.5 9h11"/>',
   star: '<path d="M12 3.5l2.5 5.6 6.1.6-4.6 4.1 1.3 6-5.3-3.2-5.3 3.2 1.3-6-4.6-4.1 6.1-.6Z"/>',
+  // item/profiles.js の #i-lightbulb シンボルと同一パスデータ（達成率ゼロ時のヒント表示用。
+  // tai-hub共有js/icon-sprite.jsには無いため、他アイコン同様このファイル内で完結させている）
+  lightbulb: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-6 6c0 2.5 1.5 4 2.5 5.5.5.7.5 1 .5 1.5h6c0-.5 0-.8.5-1.5C16.5 13 18 11.5 18 9a6 6 0 0 0-6-6Z"/>',
   lock: '<g transform="translate(12 12) scale(1.094) translate(-12 -12)"><path d="M6.5 11h11a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1Z"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></g>',
 };
 function iconHtml(name) {
@@ -213,7 +216,15 @@ async function renderPanel(container) {
   const store = loadTitleStore();
   const { sumOwned, sumTotal } = await computeCategoryTotals();
   if (!document.body.contains(container)) return; // await中に別ルートへ遷移済みなら描画しない
-  const pct = sumTotal > 0 ? Math.round((sumOwned / sumTotal) * 100) : null;
+  // 🩹 元実装（item/index.html）はsumTotalが「訪問済みカテゴリのみの合計」だったため、
+  // 未訪問（=データ未登録）の状態ではsumTotal===0となり自然に'--'表示になっていた。
+  // tai-hubはdata/items/<catKey>.jsの静的配列から常に全カテゴリの総数が分かるため
+  // sumTotalは実質常に>0になり、この判定のままだと「フレッシュなプロフィールでも
+  // 0%と表示され、'--'のプレースホルダーもヒントも出ない」という表示差分が生まれる。
+  // 総数を都度知れるtai-hubの前提を維持しつつ元のUXに近づけるため、判定を
+  // 「何か1つでも所持しているか」に置き換える（達成率の計算式自体は変更しない）。
+  const hasAnyOwned = sumOwned > 0;
+  const pct = hasAnyOwned ? Math.round((sumOwned / sumTotal) * 100) : null;
   const earnedCount = TITLES.filter(t => store.earned[t.id]).length;
 
   container.innerHTML = `
@@ -233,16 +244,21 @@ async function renderPanel(container) {
         <div class="titp-gauge-title">${en ? 'Collection Completion Rate' : 'コレクション達成率'}</div>
         <div class="titp-gauge-nums">
           <div>
-            <div class="titp-gauge-num">${sumTotal > 0 ? sumOwned : '--'}</div>
+            <div class="titp-gauge-num">${hasAnyOwned ? sumOwned : '--'}</div>
             <div class="titp-gauge-num-lbl">${en ? 'Owned' : '所持中'}</div>
           </div>
           <div>
-            <div class="titp-gauge-num" style="opacity:.72">${sumTotal > 0 ? sumTotal : '--'}</div>
+            <div class="titp-gauge-num" style="opacity:.72">${hasAnyOwned ? sumTotal : '--'}</div>
             <div class="titp-gauge-num-lbl">${en ? 'Total Items' : '総アイテム数'}</div>
           </div>
         </div>
       </div>
     </div>
+    ${!hasAnyOwned ? `
+    <div class="titp-hint">
+      <span class="titp-hint-icon">${iconHtml('lightbulb')}</span>
+      <span>${en ? 'Register items on each category page and your completion rate will automatically appear here' : '各カテゴリページでアイテムを登録すると、ここに所持率が自動で反映されます'}</span>
+    </div>` : ''}
 
     <p class="sec-label">${en ? 'Titles' : '称号'}<span class="titp-titles-count">${en ? `${earnedCount} / ${TITLES.length} unlocked` : `${earnedCount} / ${TITLES.length} 個解除`}</span></p>
     <div class="titp-panel">${TITLES.map(t => chipHtml(t, store)).join('')}</div>
@@ -322,6 +338,14 @@ function injectStyles() {
 .item-view .titp-gauge-nums { display: flex; gap: 24px; }
 .item-view .titp-gauge-num { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; line-height: 1; color: #fff; }
 .item-view .titp-gauge-num-lbl { font-size: 11px; opacity: 0.8; margin-top: 4px; }
+
+/* 達成率ゼロ（所持アイテム0件）時のヒント。item/index.htmlの.hintと同じ見た目 */
+.item-view .titp-hint {
+  margin-top: 10px; background: var(--blue-bg); border-radius: var(--r-sm);
+  padding: 12px 14px; font-size: 12px; color: var(--blue); line-height: 1.65;
+  display: flex; gap: 6px;
+}
+.item-view .titp-hint-icon { display: flex; flex-shrink: 0; }
 
 /* .sec-label（親要素）の text-transform:uppercase / letter-spacing がこのカウント表示にも
    継承されてしまう（英語表示時に UNLOCKED と大文字化される等）ため、明示的に打ち消す

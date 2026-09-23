@@ -44,7 +44,7 @@
   color: var(--sc-text);
   background: var(--sc-bg);
   min-height: 100%;
-  padding: 14px 16px 30px;
+  padding: 14px 0 30px;
   box-sizing: border-box;
 }
 .spirit-catalog-view * { box-sizing: border-box; }
@@ -64,7 +64,7 @@
   --sc-text-3:    #636366;
 }
 .spirit-catalog-view .sc-inline-icon { stroke: var(--sc-green-d); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; color: var(--sc-green-d); }
-.spirit-catalog-view .sc-wrap { max-width: 720px; margin: 0 auto; }
+.spirit-catalog-view .sc-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; box-sizing: border-box; }
 @media (min-width: 850px) { .spirit-catalog-view .sc-wrap { max-width: 960px; } }
 
 .spirit-catalog-view .sc-head { text-align: center; margin-bottom: 16px; }
@@ -123,9 +123,10 @@
 .spirit-catalog-view .bulk-catchup-row:empty { display: none; }
 .spirit-catalog-view .bulk-catchup-row { padding: 8px 2px 0; }
 .spirit-catalog-view .bulk-catchup-row .sc-block-btn { width: 100%; box-sizing: border-box; padding: 8px; }
-.spirit-catalog-view .sc-cost-toggle-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--sc-sep); font-size: 12.5px; color: var(--sc-text-2); }
+.spirit-catalog-view .sc-cost-toggle-row { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--sc-sep); font-size: 12.5px; color: var(--sc-text-2); }
 .spirit-catalog-view .sc-cost-toggle-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .spirit-catalog-view .sc-test-tag { display: inline-block; font-size: 9.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px; background: var(--sc-bg); border: 1px solid var(--sc-sep); color: var(--sc-text-2); }
+.spirit-catalog-view .sc-cost-toggle-hint { font-size: 11px; color: var(--sc-text-3); line-height: 1.5; }
 
 /* 汎用のブロックボタン（一括操作等。chrome.cssの.pf-icon-btnと違い自ツールの緑パレット） */
 .spirit-catalog-view .sc-block-btn {

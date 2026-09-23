@@ -833,8 +833,14 @@ function renderShell() {
 
         <div class="cost-notice-card">
           ${en
-            ? `Costs are compiled from the <a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki (English)</a>'s &quot;Source&quot;/&quot;Cost&quot; tables for each item (12 wearable categories; Music Sheets are managed separately). There are four currencies: <b>Candles</b>, <b>Season Candles</b>, <b>Hearts</b>, and <b>Real Money (JPY)</b>. Some real-money items are priced as a bundle with another item &mdash; owning multiple items in the same bundle only adds that bundle&rsquo;s price once.<br><b>The costs listed here are approximate estimates only.</b> Please use this as a reference only.`
-            : `<a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki（英語版）</a>の「入手方法(Source)」「コスト(Cost)」の一覧表を基にまとめています（対応ウェアラブル12カテゴリ。楽譜は別枠で管理）。通貨は<b>キャンドル</b>・<b>星のキャンドル</b>・<b>ハート</b>・<b>実額（円）</b>の4種類です。実額のアイテムは、他のアイテムとのセット価格になっている場合があります（セット内の複数アイテムを所持済みにしても、合計額にはセット価格が1回分のみ加算されます）。<br><b>ここに記載しているコストはあくまで目安・概算です。</b>参考程度にご利用ください。`}
+            ? `Costs are compiled from the <a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki (English)</a>'s "Source" and "Cost" tables for each item.<br>
+          There are four currencies: <b>Candles</b> (the basic currency for most items), <b>Season Candles</b> (a special currency used for Nesting Workshop furniture and some permanent items), <b>Hearts</b>, and <b>Real Money (JPY)</b>. Real-money amounts are converted to Japanese App Store price tiers (the wiki lists USD, so tier prices are converted to their real JPY equivalents). Some real-money items are priced as a bundle with another item (noted where applicable) &mdash; owning multiple items in the same bundle only adds that bundle's price once to the total.<br>
+          Covers all 12 categories (Shoes, Necklace, Large Placeable Items, Outfit, Hairstyle, Face Accessory, Head Accessory, Hair Accessory, Props, Mask, Small Placeable Items, Cape). Music Sheets are tracked separately and are not merged into the totals below.<br>
+          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> The costs listed here are approximate estimates only.</b> Actual amounts may differ due to how wiki data, bundle pricing, and currency rounding are interpreted. No accuracy is guaranteed &mdash; please use this as a reference only.`
+            : `<a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki（英語版）</a>の「入手方法(Source)」「コスト(Cost)」の一覧表を基に、各アイテムの実際の入手コストをまとめています。<br>
+          通貨は<b>キャンドル</b>（通常アイテムの基本通貨）・<b>星のキャンドル</b>（巣づくり工房の家具や一部の恒常アイテムで使う特別な通貨）・<b>ハート</b>・<b>実額（円）</b>の4種類があります。実額は日本のAppストア価格帯を基にした円換算です（Wikiは米ドル表記のため、Tierごとの実際の円価格に置き換えています）。実額のアイテムは、他のアイテムとのセット価格になっている場合があります（その場合は注記しています）。セット内の複数アイテムを所持済みにしても、合計額にはセット価格が1回分のみ加算されます。<br>
+          全12カテゴリ（シューズ・ネックレス・大きい設置アイテム・アウトフィット・ヘアスタイル・フェイスアクセサリー・ヘッドアクセサリー・ヘアアクセサリー・持ち物アイテム・マスク・小さい設置アイテム・ケープ）に対応しています。楽譜は別枠で管理しており、以下の合計には含まれません。<br>
+          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> ここに記載しているコストはあくまで目安・概算です。</b>Wikiの情報やセット価格の解釈、円換算の丸めなどにより、実際の金額と差が生じる場合があります。正確な金額の保証はできませんので、参考程度にご利用ください。`}
         </div>
 
         <div class="cost-summary-card">
@@ -1207,7 +1213,9 @@ export function unmount() {
       装飾アイコン（i-sparkle/i-sun）に簡略化した。表示上の違いのみで、
       集計ロジックには影響しない。
 
-   6. 通知カード（notice-card）の説明文を要約した（対応カテゴリ数の
-      列挙などの詳細を省略）。内容の正確性（4通貨・Wiki出典・概算の
-      注意書き）は保持している。
+   （通知カード(notice-card)の説明文は元実装の文面をverbatim移植済み。
+    ⚠アイコン・星のキャンドルの説明・実額の円換算根拠・12カテゴリの
+    全列挙・目安表記の中間節を含む。ただし「楽譜は別枠で管理」の一文は
+    上の2.の通りtai-hubでは実際に合流させていないため、意図的に元実装の
+    文面と差し替えている）
    ================================================================ */

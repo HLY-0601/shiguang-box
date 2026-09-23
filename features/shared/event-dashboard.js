@@ -22,12 +22,14 @@
    埋め込むかは自由。wings-view.jsは元のUXに合わせてモーダルの中身として使う）。
 
    ── 公開API ────────────────────────────────────────────────
-     export function mount(container)   … containerの中身をこのパネルで
+     export function mount(container, opts?)   … containerの中身をこのパネルで
        置き換え、1秒ごとのカウントダウン再描画タイマーを開始する。
        同じcontainerに対して何度呼んでもよい（前回のタイマーは自動停止
        してから作り直す）。初回呼び出し時に一度だけ、通知リマインダーの
        バックグラウンドチェック（オプトイン済み・許可済みの場合のみ）も
        開始する（原実装のpfReminderInit()と同じタイミング・条件）。
+       opts.icsExport: true を渡すと「カレンダーへの登録」.icsエクスポート
+       ボタンを追加表示する（下記参照。既定はfalse＝非表示）。
      export function unmount()          … 1秒ごとの再描画タイマーを止め、
        container参照を破棄する。通知リマインダーのタイマーはここでは
        止めない（原実装がページを開いている間ずっと動き続けるのと同じ
@@ -63,11 +65,20 @@
      等)がいずれもこの水準のフォーカストラップを実装していない方針に
      合わせ、同じ水準（背景タップ・Escキー(shortcuts.js)での閉じるのみ）
      にしている。
-   - .ics カレンダーエクスポート: タスク説明にはこのサブシステムの一部として
-     言及されていたが、移植元のwings/index.htmlには実装が存在しなかった
-     （grep調査で確認済み）。将来必要になった場合のために、月次カレンダーの
-     計算関数(pfDashOccurrencesInRange相当)は流用しやすい形にしてあるが、
-     .ics生成・ダウンロードのコード自体は追加していない。
+
+   ── .icsカレンダーエクスポート（オプトイン制）────────────────────
+   移植元のwings/index.htmlにはこの機能が存在しなかった（grep調査で
+   確認済み）ため当初は移植していなかったが、4サイトのうちcompanion/
+   index.htmlだけはpfDashExportIcs()として実装を持っていることが判明した
+   （spirit-catalog/profileの原実装にも存在しないことを再確認済み）。
+   ホストツールごとに機能の有無が割れるため、全ホスト共通の既定では
+   出さず、mount(container, {icsExport: true}) を明示的に渡したホストだけに
+   「カレンダーへの登録」ボタンを表示する形にした（現状companion-view.js
+   のみが有効化している）。実装（icsBuildEvent/icsEscape/icsDate/exportIcs）は
+   companion/index.htmlのpfIcsBuildEvent/pfIcsEscape/pfIcsDate/
+   pfDashExportIcsを、このモジュール既存のshardInfoForOffset()/
+   nextPacificMidnight()/nextEdenResetTarget()等の共通計算関数を再利用する
+   形で移植した。
    ================================================================ */
 
 import { CURRENT_LANG } from '../../js/i18n.js';
@@ -145,10 +156,13 @@ const SHARD_GROUPS = [
   { noShardWkDay: [2, 3], intervalH: 6, offsetH: 2, offsetM: 20 },
   { noShardWkDay: [3, 4], intervalH: 6, offsetH: 3, offsetM: 30 },
 ];
-function shardInfo() {
+// dayOffset=0が「今日」。.icsエクスポートが向こう14日分をまとめて計算する
+// ために日付をずらせるよう一般化した（shardInfo()自体はdayOffset=0の呼び出し）。
+function shardInfoForOffset(dayOffset) {
   const pacNow = pacificNow();
   const today = new Date(pacNow);
   today.setHours(0, 0, 0, 0);
+  today.setDate(today.getDate() + dayOffset);
   const dayOfMth = today.getDate();
   const dayOfWk = today.getDay();
   const isRed = dayOfMth % 2 === 1;
@@ -165,6 +179,7 @@ function shardInfo() {
   const occurrences = [0, 1, 2].map(i => new Date(firstStartFake.getTime() + intervalMs * i + realOffsetMs));
   return { isRed, hasShard, realm, location, occurrences };
 }
+function shardInfo() { return shardInfoForOffset(0); }
 function nextShardTime() {
   const pacNow = pacificNow();
   const realOffsetMs = Date.now() - pacNow.getTime();
@@ -775,10 +790,140 @@ function injectStyles() {
 }
 
 /* ================================================================
+   📅 .icsカレンダーエクスポート（companion/index.html の pfDashExportIcs()
+   一式を移植。移植元4サイトのうちcompanionだけが持つ機能のため、
+   mount(container, {icsExport:true}) を渡したホストツールだけに表示する
+   （wings/spirit-catalog/profileの各originalにはこの機能自体が存在しない
+   ことをgrep調査で確認済み——デフォルトでは出さない）。
+   ================================================================ */
+function icsDate(d) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}${pad(d.getUTCMonth() + 1)}${pad(d.getUTCDate())}T${pad(d.getUTCHours())}${pad(d.getUTCMinutes())}${pad(d.getUTCSeconds())}Z`;
+}
+function icsEscape(s) { return String(s == null ? '' : s).replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n'); }
+function icsBuildEvent({ uid, start, end, summary, description, rrule, alarmTrigger }) {
+  const lines = ['BEGIN:VEVENT', `UID:${uid}`, `DTSTAMP:${icsDate(new Date())}`, `DTSTART:${icsDate(start)}`, `DTEND:${icsDate(end)}`];
+  if (rrule) lines.push(`RRULE:${rrule}`);
+  lines.push(`SUMMARY:${icsEscape(summary)}`);
+  if (description) lines.push(`DESCRIPTION:${icsEscape(description)}`);
+  if (alarmTrigger) lines.push('BEGIN:VALARM', 'ACTION:DISPLAY', `DESCRIPTION:${icsEscape(summary)}`, `TRIGGER:${alarmTrigger}`, 'END:VALARM');
+  lines.push('END:VEVENT');
+  return lines;
+}
+function icsLocalDateStr(d) {
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+}
+function exportIcs(statusEl) {
+  try {
+    const now = new Date();
+    const uidHost = 'taipak5000.github.io';
+    const events = [];
+
+    // シーズン終了（コンプリート期限）
+    let seasonEnd = null;
+    if (CURRENT_SEASON && CURRENT_SEASON.endDate) {
+      seasonEnd = new Date(CURRENT_SEASON.endDate);
+      if (!isNaN(seasonEnd.getTime())) {
+        events.push(...icsBuildEvent({
+          uid: `edb-season-end-${seasonEnd.getTime()}@${uidHost}`,
+          start: seasonEnd,
+          end: new Date(seasonEnd.getTime() + 30 * 60000),
+          summary: t(`${dashEventName(CURRENT_SEASON.name)}：終了`, `${dashEventName(CURRENT_SEASON.name)}: Ends`),
+          description: t('シーズンの完了期限です', 'Season completion deadline'),
+          alarmTrigger: '-P1D',
+        }));
+      } else {
+        seasonEnd = null;
+      }
+    }
+    // 繰り返し予定を打ち切る上限日時（季節終了が取れない場合は90日先を仮の上限にする）
+    const recurUntil = seasonEnd || new Date(now.getTime() + 90 * 86400000);
+
+    // 大キャンドル・クエストキャンドルの切替（太平洋時間0時・毎日）
+    const dailyStart = nextPacificMidnight();
+    events.push(...icsBuildEvent({
+      uid: `edb-daily-candle@${uidHost}`,
+      start: dailyStart,
+      end: new Date(dailyStart.getTime() + 5 * 60000),
+      summary: t('大キャンドル・クエストキャンドルの切替', 'Grand/Quest Candle rotation'),
+      description: t('日替わりで訪れるエリアが変わります', 'Today\'s Grand/Quest Candle locations rotate'),
+      rrule: `FREQ=DAILY;UNTIL=${icsDate(recurUntil)}`,
+      alarmTrigger: '-PT10M',
+    }));
+
+    // 週間リセット（原罪など・毎週日曜0時＝太平洋時間）
+    const weeklyStart = nextEdenResetTarget();
+    events.push(...icsBuildEvent({
+      uid: `edb-weekly-eden@${uidHost}`,
+      start: weeklyStart,
+      end: new Date(weeklyStart.getTime() + 5 * 60000),
+      summary: t('原罪：週間リセット', 'Eye of Eden: weekly reset'),
+      rrule: `FREQ=WEEKLY;BYDAY=SU;UNTIL=${icsDate(recurUntil)}`,
+      alarmTrigger: '-PT30M',
+    }));
+
+    // 闇の破片（赤闇・黒闇）出現ウィンドウ：直近14日分（季節終了がそれより早ければ短縮する）
+    const daysUntilEnd = seasonEnd ? Math.ceil((seasonEnd - now) / 86400000) : 14;
+    const shardHorizon = Math.max(0, Math.min(14, daysUntilEnd));
+    for (let offset = 0; offset <= shardHorizon; offset++) {
+      const info = shardInfoForOffset(offset);
+      if (!info.hasShard) continue;
+      info.occurrences.forEach((occ) => {
+        if (occ.getTime() <= now.getTime()) return; // 過去の出現分は含めない
+        const label = `${srLabel(info.realm)}・${t(info.location.ja, info.location.en)}`;
+        events.push(...icsBuildEvent({
+          uid: `edb-shard-${occ.getTime()}@${uidHost}`,
+          start: occ,
+          end: new Date(occ.getTime() + 20 * 60000),
+          summary: `${info.isRed ? t('赤闇', 'Red Shard') : t('黒闇', 'Black Shard')}${t('の出現', ' Eruption')}`,
+          description: label,
+          alarmTrigger: '-PT10M',
+        }));
+      });
+    }
+
+    const body = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      `PRODID:-//${uidHost}//tai-hub//${CURRENT_LANG.toUpperCase()}`,
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      ...events,
+      'END:VCALENDAR',
+    ].join('\r\n');
+
+    const blob = new Blob([body], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sky-schedule_${icsLocalDateStr(now)}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    if (statusEl) statusEl.textContent = t('カレンダーファイルを書き出しました', 'Downloaded the calendar file');
+  } catch (e) {
+    console.error('event-dashboard exportIcs', e);
+    if (statusEl) statusEl.textContent = t('書き出しに失敗しました', 'Failed to export');
+  }
+}
+function icsExportSectionHtml() {
+  return `
+    <div class="dash-section">
+      <p class="dash-section-label">${t('カレンダーへの登録', 'Add to Calendar')}</p>
+      <button type="button" class="pf-add-btn" id="edbIcsExportBtn" style="width:100%; box-sizing:border-box;">${t('予定をエクスポート（.icsファイル）', 'Export schedule (.ics file)')}</button>
+      <div class="pf-hint" style="margin-top:8px;">${t('シーズン終了・日替わり大キャンドル/クエストキャンドルの切替・週間リセット・闇の破片の出現（直近14日分）の予定をまとめたカレンダーファイルです。お使いのカレンダーアプリに取り込むと、通知を受け取れます。', 'A calendar file covering the season-end deadline, the daily Grand/Quest Candle change, the weekly reset, and shard eruptions for the next 14 days. Import it into your calendar app to get native notifications.')}</div>
+      <div class="pf-hint" id="edbIcsStatus"></div>
+    </div>`;
+}
+
+/* ================================================================
    🎛️ マウント/アンマウント
    ================================================================ */
 let containerEl = null;
 let tickTimer = null;
+let icsExportEnabled = false;
 
 function reminderSectionHtml() {
   return `
@@ -845,20 +990,24 @@ function rerenderBody(body, html) {
  * 同じ/別のcontainerに対して繰り返し呼んでもよい（内部の1秒タイマーは
  * 毎回停止してから作り直すため、多重起動しない）。
  */
-export function mount(container) {
+export function mount(container, opts) {
   injectStyles();
   injectLocalIconSprite();
   if (tickTimer) { clearInterval(tickTimer); tickTimer = null; }
 
+  icsExportEnabled = !!(opts && opts.icsExport);
   containerEl = container;
   const data = getData();
-  containerEl.innerHTML = `<div id="edbBody">${buildHtml(data)}</div>${reminderSectionHtml()}`;
+  containerEl.innerHTML = `<div id="edbBody">${buildHtml(data)}</div>${icsExportEnabled ? icsExportSectionHtml() : ''}${reminderSectionHtml()}`;
 
   const cb = containerEl.querySelector('#edbReminderCheckbox');
   const sel = containerEl.querySelector('#edbReminderMinutes');
   cb.addEventListener('change', e => reminderToggle(e.target.checked, syncReminderUI));
   sel.addEventListener('change', e => reminderSaveMinutes(e.target.value));
   syncReminderUI();
+
+  const icsBtn = containerEl.querySelector('#edbIcsExportBtn');
+  if (icsBtn) icsBtn.addEventListener('click', () => exportIcs(containerEl.querySelector('#edbIcsStatus')));
 
   tickTimer = setInterval(() => {
     if (!containerEl) return;

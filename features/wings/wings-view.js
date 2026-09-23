@@ -123,6 +123,7 @@ function injectLocalIconSprite() {
 function renderShell() {
   return `
   <div class="wings-view">
+   <div class="wg-wrap">
     <div class="wg-dash-trigger-row">
       <button type="button" class="wg-dash-trigger-btn" id="wgOpenDashBtn">
         <svg class="inline-icon" width="15" height="15"><use href="#i-calendar"/></svg>
@@ -248,6 +249,7 @@ function renderShell() {
         <div id="wgLightChildrenList"></div>
       </div>
     </div>
+   </div>
   </div>`;
 }
 

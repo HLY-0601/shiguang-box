@@ -366,6 +366,12 @@ function renderShell() {
           </section>
         </div>
       </div>
+
+      <footer>
+        <p>${escapeHtml(t('footerDisclaimer'))}</p>
+        <p style="margin-top:10px;"><span>${escapeHtml(t('footerCreditLabel'))}</span><a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer" style="font-weight:bold;">@Skyzztai</a>　／　<a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer" style="font-weight:bold;">${escapeHtml(t('footerRequestForm'))}</a></p>
+        <p style="margin-top:10px;"><a href="https://taipak5000.github.io/tai-info/">${escapeHtml(t('footerInfoLink'))}</a></p>
+      </footer>
     </div>
     <div class="tc-toast" id="tcToast"></div>`;
 }

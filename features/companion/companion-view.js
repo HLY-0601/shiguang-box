@@ -573,6 +573,8 @@ const TEMPLATE = `
       <button type="button" class="modal-close-btn" @click="closeDashboardModal"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
       <div class="modal-title">{{ t('dash_title') }}</div>
 
+      <div ref="edbBodyEl"></div>
+
       <div class="dash-section">
         <p class="dash-section-label">{{ t('dash_walk_label') }}</p>
         <div class="dash-row" v-if="hasLoggedWalkToday" style="background:rgba(52,197,89,0.08); color:var(--success-text);">
@@ -625,8 +627,6 @@ const TEMPLATE = `
           </div>
         </div>
       </div>
-
-      <div ref="edbBodyEl"></div>
     </div>
   </div>
 
@@ -681,7 +681,7 @@ const TEMPLATE = `
                 <div v-if="getLevel(getItemLabelForSpirit(item, sf.spirit))" class="node-level">{{ getLevel(getItemLabelForSpirit(item, sf.spirit)) }}</div>
                 <div class="node-icon">
                   <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabelForSpirit(item, sf.spirit))" referrerpolicy="no-referrer">
-                  <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                 </div>
                 <div class="node-name">{{ cleanName(getItemLabelForSpirit(item, sf.spirit)) }}</div>
               </div>
@@ -869,7 +869,7 @@ const TEMPLATE = `
                     <div class="priority-step-num">{{ idx + 1 }}</div>
                     <div class="priority-step-icon">
                       <img v-if="step.imageUrl" :src="step.imageUrl" :alt="step.name" style="width: 17px; height: 17px; object-fit: contain; vertical-align: middle;" referrerpolicy="no-referrer">
-                      <svg v-else class="priority-step-svg-icon" viewBox="0 0 100 100"><use :href="'#' + step.icon"></use></svg>
+                      <svg v-else class="inline-icon priority-step-svg-icon" viewBox="0 0 100 100"><use :href="'#' + step.icon"></use></svg>
                     </div>
                     <div class="priority-step-name">{{ step.name }}</div>
                     <div class="priority-step-cost"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ step.candles }}</div>
@@ -1021,7 +1021,7 @@ const TEMPLATE = `
                 <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                 <div class="node-icon">
                   <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                  <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                 </div>
                 <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                 <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1043,7 +1043,7 @@ const TEMPLATE = `
                 <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                 <div class="node-icon">
                   <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                  <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                 </div>
                 <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                 <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1060,7 +1060,7 @@ const TEMPLATE = `
                   <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                   <div class="node-icon">
                     <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                    <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                    <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                   </div>
                   <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                   <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1080,7 +1080,7 @@ const TEMPLATE = `
                 <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                 <div class="node-icon">
                   <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                  <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                 </div>
                 <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                 <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1100,7 +1100,7 @@ const TEMPLATE = `
                 <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                 <div class="node-icon">
                   <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                  <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                 </div>
                 <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                 <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1116,7 +1116,7 @@ const TEMPLATE = `
                   <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
                   <div class="node-icon">
                     <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
-                    <svg v-else class="node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
+                    <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
                   </div>
                   <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
                   <div class="node-cost" :class="{'no-points-cost': item.noPoints}"><template v-if="item.noPoints">{{ t('tree_no_points') }}</template><template v-else><svg class="inline-icon" width="11" height="11"><use href="#cp-i-footprint"/></svg> +{{ Math.round(item.points) }}p</template></div>
@@ -1930,7 +1930,7 @@ function buildSetup(Vue) {
        ================================================================ */
     const openDashboardModal = () => {
       if (dashOverlayEl.value) dashOverlayEl.value.classList.add('open');
-      nextTick(() => { if (edbBodyEl.value) eventDashboard.mount(edbBodyEl.value); });
+      nextTick(() => { if (edbBodyEl.value) eventDashboard.mount(edbBodyEl.value, { icsExport: true }); });
     };
     const closeDashboardModal = () => {
       if (dashOverlayEl.value) dashOverlayEl.value.classList.remove('open');

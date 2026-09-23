@@ -56,15 +56,32 @@ const STYLE_LINK_ID = 'tai-info-view-styles';
 const ICON_SPRITE_ID = 'tai-info-icon-sprite';
 const TABS = ['settings', 'changelog', 'credits', 'privacy', 'references'];
 
-// 🔑 tai-hub内での5ツールのハブ内ルート（tools-drawer.js のSITE_LINKS.hubRouteと
+// 🔑 tai-hub内での全14ツールのハブ内ルート（tools-drawer.js のSITE_LINKS.hubRouteと
 // 同じ値。ここではjs/state.jsのSITE_LINKS配列自体は編集しない方針のため、
 // このファイル内に同じ値を直接持つ）。
+// 🩹 以前はitem/emote/share/nomacan/starCandleの5件だけがこのマップに入っており、
+// 残り9件（wings/companion/spirit-catalog/tai-revisit/tai-score/tai-card/
+// data-transfer/tai-info自身/profile）はhrefで外部github.ioへ直接リンクして
+// いたが、それらも9ツール移植バッチで全てtai-hub内蔵済みになったため、
+// 外部リンクのまま放置するとタップした瞬間にSPAを離脱してしまっていた
+// （tools-drawer.jsは既に全14件を内部ルート化済みで、この不整合だけが
+// 残っていた）。全14ツール分を揃え、下のTOOL_GUIDE_ITEMS/COMPAT_TABLE_ROWS
+// 側もhref→routeへ切り替えた。
 const HUB_ROUTE = {
   item: '#/item',
   emote: '#/emote',
   share: '#/share',
   nomacan: '#/tai-nomacan',
   starCandle: '#/star-candle',
+  wings: '#/wings',
+  companion: '#/companion',
+  spiritCatalog: '#/spirit-catalog',
+  taiRevisit: '#/tai-revisit',
+  taiScore: '#/tai-score',
+  taiCard: '#/tai-card',
+  dataTransfer: '#/data-transfer',
+  taiInfo: '#/tai-info',
+  profile: '#/profile',
 };
 
 // taipak5000.github.io系は同一オリジンでlocalStorageを共有しているため、
@@ -306,23 +323,23 @@ const TOOL_GUIDE_ITEMS = [
       { ja: '星のキャンドル計算機', en: 'Star Candle Calculator', route: HUB_ROUTE.starCandle },
     ] },
   { icon: 'i-wing', textJa: '翼・光の子（ウィングバフ）を集めたい', textEn: 'Want to collect wings (Wing Buff) from Children of Light',
-    links: [{ ja: '羽トラッカー', en: 'Wing Tracker', href: 'https://taipak5000.github.io/wings/' }] },
+    links: [{ ja: '羽トラッカー', en: 'Wing Tracker', route: HUB_ROUTE.wings }] },
   { icon: 'i-folder', textJa: 'アイテムの所持状況を管理したい', textEn: 'Want to track which items you own',
     links: [{ ja: 'アイテム所持管理', en: 'Item Tracker', route: HUB_ROUTE.item }] },
   { icon: 'i-masks', textJa: 'エモートの所持状況を管理したい', textEn: 'Want to track which emotes you own',
     links: [{ ja: 'エモート所持率管理', en: 'Emote Tracker', route: HUB_ROUTE.emote }] },
   { icon: 'i-sparkle', textJa: '精霊と一緒に過ごしたい・精霊友情やシーズンツリーを進めたい', textEn: 'Want to hang out with a spirit companion, or progress friendship/season trees',
-    links: [{ ja: '精霊同行ツール', en: 'Spirit Companion Tool', href: 'https://taipak5000.github.io/companion/' }] },
+    links: [{ ja: '精霊同行ツール', en: 'Spirit Companion Tool', route: HUB_ROUTE.companion }] },
   { icon: 'i-pin', textJa: '自分のコーデ・創作物を紹介したい', textEn: 'Want to showcase your outfits or creations',
     links: [{ ja: '創作物管理ツール', en: 'Creation Manager', route: HUB_ROUTE.share }] },
   { icon: 'i-music-note', textJa: '楽譜を演奏・作成したい', textEn: 'Want to play or create sheet music',
-    links: [{ ja: '楽譜づくり', en: 'Sheet Music Maker', href: 'https://taipak5000.github.io/tai-score/', badgeTest: true }] },
+    links: [{ ja: '楽譜づくり', en: 'Sheet Music Maker', route: HUB_ROUTE.taiScore, badgeTest: true }] },
   { icon: 'i-sync', textJa: '別の端末にデータを引き継ぎたい', textEn: 'Want to move your data to another device',
-    links: [{ ja: 'データ引継ぎ', en: 'Data Transfer', href: 'https://taipak5000.github.io/tai-transfer/' }] },
+    links: [{ ja: 'データ引継ぎ', en: 'Data Transfer', route: HUB_ROUTE.dataTransfer }] },
   { icon: 'i-settings', textJa: '使い方や共通設定について知りたい', textEn: 'Want to learn how things work or find shared settings',
     links: [{ ja: '設定について', en: 'About Settings', tabSwitch: 'settings' }], suffixJa: 'タブ', suffixEn: ' tab' },
   { icon: 'i-person', textJa: '制作者について知りたい・リクエストを送りたい', textEn: 'Want to learn about the creator or send a request',
-    links: [{ ja: '作者プロフィール', en: 'Creator Profile', href: 'https://taipak5000.github.io/skyzztai-profile/' }] },
+    links: [{ ja: '作者プロフィール', en: 'Creator Profile', route: HUB_ROUTE.profile }] },
 ];
 
 function renderLink(link) {
@@ -352,12 +369,12 @@ const COMPAT_TABLE_ROWS = [
   { icon: 'i-pin', ja: '創作物管理ツール', en: 'Creation Manager', route: HUB_ROUTE.share, profile: true, lang: 2 },
   { icon: 'i-candle', ja: 'ノマキャン計算機', en: 'Nomacan Calculator', route: HUB_ROUTE.nomacan, profile: true, lang: 2 },
   { icon: 'i-star-candle', ja: '星のキャンドル計算機', en: 'Star Candle Calculator', route: HUB_ROUTE.starCandle, profile: true, lang: 2 },
-  { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', href: 'https://taipak5000.github.io/companion/', profile: true, lang: 4 },
-  { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', href: 'https://taipak5000.github.io/wings/', profile: true, lang: 2 },
-  { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', href: 'https://taipak5000.github.io/tai-transfer/', profile: true, lang: 2 },
+  { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', route: HUB_ROUTE.companion, profile: true, lang: 4 },
+  { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', route: HUB_ROUTE.wings, profile: true, lang: 2 },
+  { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', route: HUB_ROUTE.dataTransfer, profile: true, lang: 2 },
   { icon: 'i-settings', ja: '設定・更新情報', en: 'Settings & Updates', tabSwitch: 'settings', profile: false, lang: 2 },
-  { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', href: 'https://taipak5000.github.io/tai-score/', profile: false, lang: 2, badgeTest: true },
-  { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', href: 'https://taipak5000.github.io/skyzztai-profile/', profile: false, lang: 2 },
+  { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', route: HUB_ROUTE.taiScore, profile: false, lang: 2, badgeTest: true },
+  { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', route: HUB_ROUTE.profile, profile: false, lang: 2 },
 ];
 
 function renderCompatTableRows() {

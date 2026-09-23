@@ -40,7 +40,7 @@ export const INFO_I18N = {
     },
     backup: {
       title: { ja: `データのバックアップ・復元・削除`, en: `Data Backup, Restore & Deletion` },
-      body: { ja: `プロフィール切替メニュー内の「データのバックアップ・復元・削除」から、このブラウザに保存されているデータ全体をファイルに書き出し・読み込み・削除できます。別の端末へ引き継ぎたい場合は<a href="https://taipak5000.github.io/tai-transfer/"><svg class="inline-icon" width="14" height="14"><use href="#i-sync"/></svg> データ引継ぎ</a>で、サイトを選んでコードの形で引き継ぐこともできます。`, en: `From "Data Backup, Restore & Deletion" inside the Profile Switch menu, you can export, import, or delete all of the data stored in this browser. To move your data to another device, you can also use <a href="https://taipak5000.github.io/tai-transfer/"><svg class="inline-icon" width="14" height="14"><use href="#i-sync"/></svg> Data Transfer</a> to choose which sites' data to carry over as a code.` },
+      body: { ja: `プロフィール切替メニュー内の「データのバックアップ・復元・削除」から、このブラウザに保存されているデータ全体をファイルに書き出し・読み込み・削除できます。別の端末へ引き継ぎたい場合は<a href="#/data-transfer"><svg class="inline-icon" width="14" height="14"><use href="#i-sync"/></svg> データ引継ぎ</a>で、サイトを選んでコードの形で引き継ぐこともできます。`, en: `From "Data Backup, Restore & Deletion" inside the Profile Switch menu, you can export, import, or delete all of the data stored in this browser. To move your data to another device, you can also use <a href="#/data-transfer"><svg class="inline-icon" width="14" height="14"><use href="#i-sync"/></svg> Data Transfer</a> to choose which sites' data to carry over as a code.` },
     },
     lang: {
       title: { ja: `言語切替（EN/JA）`, en: `Language Toggle (EN/JA)` },

@@ -36,8 +36,10 @@
      移植していない。
    - 表示設定モーダル・「他のツール」ドロワー・ヘッダーの言語切替ボタン・
      ダークモード切替・キーボードショートカット設定は、tai-hubの共有chrome
-     に同等の機能が既にあるため移植していない（フッターの免責事項の1行
-     だけは、他の移植済みツールと同じくこのビュー内に直書きしている）。
+     に同等の機能が既にあるため移植していない（フッターの免責事項・
+     クレジット行・tai-infoリンクは、他の移植済みツール［companion/
+     tai-score/tai-revisit等］と同じくこのビュー内に直書きしている——
+     tai-hubの共有chromeにはフッターを描画する仕組み自体が存在しない）。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { pfDisplayName } from '../../js/state.js';
@@ -177,7 +179,10 @@ function renderShell() {
         </div>
 
         <footer>
-          <span>${escapeHtml(tt('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.'))}</span>
+          <span>${escapeHtml(tt('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.'))}</span><br>
+          <span>${escapeHtml(t('footer.creditLabel'))}</span> <a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer">@Skyzztai</a>　／
+          <a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footer.requestForm'))}</a><br>
+          <a href="https://taipak5000.github.io/tai-info/" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footer.infoLink'))}</a>
         </footer>
       </div>
     </div>

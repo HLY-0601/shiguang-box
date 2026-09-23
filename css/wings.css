@@ -43,6 +43,8 @@
   min-height: 100%;
   padding: 4px 0 8px;
 }
+.wings-view .wg-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 850px) { .wings-view .wg-wrap { max-width: 960px; } }
 [data-theme="dark"] .wings-view {
   --bg:        #000000;
   --card:      #1C1C1E;

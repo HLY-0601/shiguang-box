@@ -136,6 +136,10 @@ const DICT = {
     imageGenerationFailedMsg: '画像の生成に失敗しました',
     makePublicAriaLabelTemplate: '{label}を公開する',
     reflectInProfileAriaLabelTemplate: '{label}をプロフィールに反映する',
+    footerDisclaimer: 'このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。',
+    footerCreditLabel: '作成・ご意見: ',
+    footerRequestForm: 'リクエストフォーム',
+    footerInfoLink: '設定・更新情報・クレジット・プライバシーポリシー',
   },
   en: {
     pageHeading: 'Star-Spun Card',
@@ -255,6 +259,10 @@ const DICT = {
     imageGenerationFailedMsg: 'Failed to generate the image',
     makePublicAriaLabelTemplate: 'Show {label} on the card',
     reflectInProfileAriaLabelTemplate: 'Reflect {label} on the card',
+    footerDisclaimer: 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.',
+    footerCreditLabel: 'Made by / feedback: ',
+    footerRequestForm: 'Request Form',
+    footerInfoLink: 'Settings, Updates, Credits & Privacy Policy',
   },
 };
 

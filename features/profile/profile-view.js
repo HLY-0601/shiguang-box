@@ -39,9 +39,19 @@
      SPA化の具体的な改善点）。闇の破片バッジ（アバター横の常時表示の
      小さいバッジ）はダッシュボードとは別物として元々存在するため、
      従来通り profile-shard.js の独立した予測ロジックで表示する。
+     このダッシュボードを開く入口として、カード上部に `.pv-dash-trigger-row`
+     （`#pvOpenDashBtn`）を新設している。原本の profile/index.html 自体には
+     この位置にボタンは無く、site-dock の「ダッシュボード」ボタン
+     （`pfDashOpen()`）だけが入口だったが、tai-hub の site-dock 側
+     「ダッシュボード」タブ（js/chrome/dash-modal.js）は全ツール共通の
+     軽量版（今日/今週/今月の3分割やカレンダーを持たない簡易リスト）で
+     あり、原本の site-dock ボタンが開いていたフル機能版とは別物になる。
+     そのため、原本と同じフル機能ダッシュボードへ到達できる入口を維持する
+     目的で、このツール固有の入口ボタンを意図的に追加している（オーバー
+     サイトではなく意図的なアダプテーション）。
    - ダッシュボードモーダル・カードの登場演出は元のドラッグ物理演算つき
      ボトムシートではなく、tai-hubの他のモーダル（js/chrome/pf-modal.js
-     等）と同じ「.modal-overlay/.modal-card + open クラスでのフェード/
+     等）と同じ「.modal-overlay・.modal-card + open クラスでのフェード/
      スライド」方式に統一した（nomacan-view.js等、既存移植と同じ
      簡略化。ドラッグでの開閉自体は元々「見た目の演出」の話で、
      背景タップ/×ボタンでの閉じる操作自体は変わらず機能する）。
@@ -50,6 +60,7 @@ import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { PROFILE, LINKS } from './data/profile-data.js';
 import { findShardStatus, realmName, SHARD_REALMS } from './profile-shard.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
+import { navigate } from '../../js/router.js';
 
 const STYLE_LINK_ID = 'profile-view-styles';
 const ICON_SPRITE_ID = 'profile-icon-sprite';
@@ -214,11 +225,19 @@ function renderShell() {
   `;
 }
 
+// 🩹 LINKS配列のうち姉妹ツールの11件は、以前は常に外部URL+target="_blank"で
+// 開いていたが、tools-drawer.js/tai-info-view.jsと同じくtai-hub内蔵済みの
+// ツールは内部ルートへ遷移するのが site全体の規約になったため、hubRouteが
+// 設定されている項目（profile-data.js参照）はSPA内遷移に切り替えた。
+// X(Twitter)・お題箱の2件はhubRouteを持たないため、従来通り外部リンクのまま。
 function renderLinksHtml() {
   return LINKS.map(link => {
     const titleHtml = link.badgeTest ? `<span class="tool-badge-test">test</span>${escapeHtml(localizedField(link, 'title'))}` : escapeHtml(localizedField(link, 'title'));
+    const attrs = link.hubRoute
+      ? `href="${link.hubRoute}" data-hub-route="${link.hubRoute}"`
+      : `href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"`;
     return `
-      <a class="link-row" href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer">
+      <a class="link-row" ${attrs}>
         <span class="link-icon" aria-hidden="true">${link.icon || '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>'}</span>
         <span class="link-text">
           <span class="link-title">${titleHtml}</span>
@@ -260,6 +279,17 @@ function wireEvents() {
 
   els.copyLinkBtn.addEventListener('click', copyProfileLink);
   els.openDashBtn.addEventListener('click', openDashboardModal);
+
+  // hubRoute付きのLinksエントリ（tai-hub内蔵済みの姉妹ツール）はSPA内遷移に
+  // する（tai-info-view.js/tools-drawer.jsと同じ方式。通常の<a href>による
+  // フルリロードを避ける）
+  containerEl.addEventListener('click', (e) => {
+    const hubLinkEl = e.target.closest('[data-hub-route]');
+    if (hubLinkEl) {
+      e.preventDefault();
+      navigate(hubLinkEl.dataset.hubRoute.replace(/^#\//, ''), '');
+    }
+  });
 }
 
 /* ================================================================

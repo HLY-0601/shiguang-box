@@ -280,6 +280,20 @@ function buildShell() {
 
         <div class="em-grid" id="emGrid"></div>
         <div class="em-list" id="emList"></div>
+
+        <footer style="text-align:center; padding:24px 16px; color:var(--text-2); font-size:13px; border-top:1px solid var(--sep); margin-top:40px; line-height:1.6;">
+          ${t('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This site is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.')}<br>
+          ${t('作成・ご意見:', 'Made by / feedback:')} <a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline; font-weight:bold;">@Skyzztai</a>　／　<a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline; font-weight:bold;">${t('リクエストフォーム', 'Request Form')}</a><br>
+          <span style="color:var(--text-2); font-size:12px; margin-top:4px; display:inline-block;">
+            ${t('参考・画像引用元:', 'References & image sources:')}
+            <a href="https://sky-children-of-the-light.fandom.com/ja/wiki/%E6%84%9F%E6%83%85%E8%A1%A8%E7%8F%BE" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline;">${t('感情表現 (Sky Wiki 日本語)', 'Expressions (Sky Wiki Japanese)')}</a>
+            ／
+            <a href="https://sky-children-of-the-light.fandom.com/wiki/Expressions" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline;">${t('Expressions (Sky Wiki 英語)', 'Expressions (Sky Wiki English)')}</a>
+          </span><br>
+          <span style="color:var(--text-2); font-size:12px; margin-top:4px; display:inline-block;">
+            <a href="https://taipak5000.github.io/tai-info/" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline;">${t('設定・更新情報・クレジット・プライバシーポリシー', 'Settings, Updates, Credits & Privacy Policy')}</a>
+          </span>
+        </footer>
       </div>
     </div>`;
 }
@@ -626,7 +640,7 @@ function buildAcquireLogModal() {
   overlay.id = 'emAcquireLogModalOverlay';
   overlay.addEventListener('click', e => { if (e.target === overlay) closeAcquireLog(); });
   overlay.innerHTML = `
-    <div class="modal-card">
+    <div class="modal-card em-acquire-log-card">
       <button type="button" class="modal-close-btn" id="emAcquireLogCloseBtn"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
       <div class="modal-title">${t('入手履歴', 'Acquisition History')}</div>
       <div class="em-log-hint">${t('所持レベルにチェックを入れた日時を自動で記録します。チェックを外すと記録も消えます。', 'Records the date and time you checked off each level as owned. Unchecking a level removes its record.')}</div>
@@ -704,6 +718,12 @@ function injectStyles() {
   --green: #34C759; --green-bg: rgba(52,199,89,0.10); --red: #FF3B30;
   --text: #1C1C1E; --text-2: #8E8E93; --text-3: #C7C7CC;
   --r: 16px; --r-sm: 10px;
+  /* 🩹 このルート要素自身に必ずbackgroundを持たせる。#app-root/bodyは
+     ハブ共通の--hub-bgトークンなので、ここで明示しないとカード間の
+     余白・ページ上下の隙間からハブのダーク配色（濃紺寄り）が透けて見え、
+     元実装の純黒(#000)と食い違う。 */
+  background: var(--bg);
+  min-height: 100vh;
 }
 [data-theme="dark"] .emote-view {
   --bg: #000000; --card: #1C1C1E; --sep: rgba(255,255,255,0.14);
@@ -713,12 +733,24 @@ function injectStyles() {
   --green: #30D158; --green-bg: rgba(48,209,88,0.16); --red: #FF453A;
   --text: #F2F2F7; --text-2: #98989D; --text-3: #636366;
 }
+/* 🩹 入手履歴モーダルはjs/chrome/dash-modal.jsと同じ方針でdocument.body直下へ
+   直接appendされ、.emote-viewの子孫にならない（コンテナがmount/unmountで
+   入れ替わってもモーダルの開閉状態を保てるようにするための設計）。この
+   結果、カスタムプロパティ(--orange/--orange-bg)は.emote-view配下にしか
+   継承されず、モーダル側では未定義のまま(var()が解決できずスタイル無視)
+   になる。star-candle.cssの.sc-shard-cal-cardと同じ対処として、モーダル
+   カード自身(.em-acquire-log-card)にも同じトークンを再定義し、閉じる
+   ボタンを元実装のicon-chip配色(オレンジ)に合わせる
+   （共有chrome.cssの.modal-close-btn自体は他ツールと共通のため変更しない）。 */
+.em-acquire-log-card { --orange: #FF9500; --orange-bg: rgba(255,149,0,0.10); }
+[data-theme="dark"] .em-acquire-log-card { --orange: #FF9F0A; --orange-bg: rgba(255,159,10,0.18); }
+.em-acquire-log-card .modal-close-btn { background: var(--orange-bg); color: var(--orange); }
 .emote-view * { box-sizing: border-box; }
-.emote-view .em-wrap { max-width: 720px; margin: 0 auto; }
+.emote-view .em-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
 @media (min-width: 850px) { .emote-view .em-wrap { max-width: 960px; } }
 
 /* このビュー内での.inline-icon既定色（共有chrome.cssのcurrentColor継承ではなく、
-   元実装通り既定オレンジ＋.ok/.warn修飾を使う。詳細度で共有ルールに勝つ） */
+   元実装通り既定オレンジ＋.ok・.warn修飾を使う。詳細度で共有ルールに勝つ） */
 .emote-view .inline-icon { stroke: var(--orange); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; color: var(--orange); }
 .emote-view .inline-icon.ok { stroke: var(--green); color: var(--green); }
 .emote-view .em-stat-num { color: var(--text); font-weight: 700; }
@@ -844,7 +876,7 @@ function injectStyles() {
 
 .emote-view .em-empty-message { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-2); font-size: 14px; background: var(--card); border-radius: var(--r); }
 
-/* ── 入手履歴モーダルの内容（オーバーレイ自体は共有chrome.cssの.modal-overlay/.modal-card） ── */
+/* ── 入手履歴モーダルの内容（オーバーレイ自体は共有chrome.cssの.modal-overlay・.modal-card） ── */
 .em-log-hint { font-size: 12.5px; color: var(--hub-text-2); line-height: 1.5; margin-top: -4px; }
 .em-log-row-list { display: flex; flex-direction: column; margin-top: 10px; }
 .em-log-row { display: flex; align-items: center; gap: 10px; padding: 10px 2px; border-bottom: 0.5px solid var(--hub-sep); }

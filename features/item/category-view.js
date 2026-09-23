@@ -120,6 +120,11 @@ function renderShell(cfg) {
   const iconHtml = cfg.img
     ? `<img src="${cfg.img}" alt="${escapeHtml(catName)}" loading="lazy" referrerpolicy="no-referrer">`
     : `<svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg>`;
+  // 元実装（item/cape.html）では「色」絞り込み・並び替えはケープカテゴリだけに
+  // あるオプション（cape.htmlのitem.colorはケープの色そのもの）で、他の11カテゴリの
+  // ページには存在しない。ここでは静的にハードコードせず、そのカテゴリのアイテムに
+  // 実際にcolorフィールドがあるかどうかで自動判定する（データが増減しても追従する）。
+  const hasColorData = categoryItems.some(item => item.color);
 
   return `
     <div class="item-view">
@@ -172,6 +177,7 @@ function renderShell(cfg) {
               <option value="noReprint">${en ? 'No re-release' : '復刻なし'}</option>
             </select>
           </div>
+          ${hasColorData ? `
           <div class="cv-control-row">
             <span class="cv-control-label">${en ? 'Other' : 'その他'}</span>
             <select class="cv-select-box" id="filterEvent" onchange="window.__catViewFilterAndRender()">
@@ -189,7 +195,18 @@ function renderShell(cfg) {
               <option value="event">${en ? 'By Event Name' : 'イベント名順'}</option>
               <option value="color">${en ? 'By Color' : '色順'}</option>
             </select>
-          </div>
+          </div>` : `
+          <div class="cv-control-row">
+            <span class="cv-control-label">${en ? 'Other' : 'その他'}</span>
+            <select class="cv-select-box" id="filterEvent" onchange="window.__catViewFilterAndRender()">
+              <option value="all">${en ? 'All events/sources' : 'すべてのイベント・登場元'}</option>
+            </select>
+            <select class="cv-select-box" id="sortOrder" onchange="window.__catViewFilterAndRender()">
+              <option value="default">${en ? 'Sort: Default' : '並び替え: 標準'}</option>
+              <option value="nameAsc">${en ? 'Item Name (A-Z)' : 'アイテム名（昇順）'}</option>
+              <option value="event">${en ? 'By Event Name' : 'イベント名順'}</option>
+            </select>
+          </div>`}
           <div class="cv-control-row cv-control-reset-row">
             <button type="button" class="cv-control-reset-btn" onclick="window.__catViewResetFilters()">
               <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</span>
@@ -260,9 +277,13 @@ function buildEventFilter() {
   });
 }
 
+// #filterColorは、そのカテゴリのアイテムにcolorフィールドがある場合のみ
+// renderShell()が描画する（元のitem/cape.htmlだけが持つオプション）ため、
+// 無い場合は何もしない
 function buildColorFilter() {
-  const colors = [...new Set(categoryItems.map(item => item.color).filter(Boolean))];
   const select = containerEl.querySelector('#filterColor');
+  if (!select) return;
+  const colors = [...new Set(categoryItems.map(item => item.color).filter(Boolean))];
   colors.forEach(color => {
     const opt = document.createElement('option');
     opt.value = color;
@@ -368,7 +389,8 @@ function filterAndRender() {
   const fDye = containerEl.querySelector('#filterDye').value;
   const fReprint = containerEl.querySelector('#filterReprint').value;
   const fEvent = containerEl.querySelector('#filterEvent').value;
-  const fColor = containerEl.querySelector('#filterColor').value;
+  // #filterColorはcolorデータを持つカテゴリ（現状はcapeのみ）だけに存在する
+  const fColor = containerEl.querySelector('#filterColor')?.value ?? 'all';
   const sOrder = containerEl.querySelector('#sortOrder').value;
   const fName = containerEl.querySelector('#searchName').value.trim().toLowerCase();
 

@@ -60,6 +60,7 @@ export const REVISIT_I18N = {
     footerIconCredit: '© Sky: Children of the Light Icons by contributors of the Sky: Children of the Light wiki',
     footerCreditLabel: '作成・ご意見: ',
     footerRequestForm: 'リクエストフォーム',
+    footerInfoLink: '設定・更新情報・クレジット・プライバシーポリシー',
   },
   en: {
     introPart1: 'A read-only reference database for looking up the visit history of Traveling Spirits and Returning Spirits. There is no ownership-tracking feature here. Data is based on the',
@@ -106,6 +107,7 @@ export const REVISIT_I18N = {
     footerIconCredit: '© Sky: Children of the Light Icons by contributors of the Sky: Children of the Light wiki',
     footerCreditLabel: 'Created by / feedback: ',
     footerRequestForm: 'Request form',
+    footerInfoLink: "Settings / What's New / Credits / Privacy Policy",
   },
 };
 

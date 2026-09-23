@@ -3,14 +3,16 @@
 
    移植元: tai-nomacan/index.html の `var I18N = {...}`（~行1608-1975）。
    元の辞書は page/sidebar/dock/tools/header/profile/currency/dashboard/
-   realm/backup/iconCustom/settings/footer 等、taipak5000.github.io系
-   ツール共通の「共有chrome」文言もまとめて持っていたが、tai-hub側の
-   共有chrome（js/chrome/*.js）が既に自分自身の翻訳を持っているため、
-   それらは意図的に移植せず（そのまま複製すると死んだコードになる）、
-   このツール自身の機能（目標/ペース/結果/称号/獲得履歴/デイリークエスト
-   記録）に関わるセクションだけを残している：
+   realm/backup/iconCustom/settings 等、taipak5000.github.io系ツール共通の
+   「共有chrome」文言もまとめて持っていたが、tai-hub側の共有chrome
+   （js/chrome/*.js）が既に自分自身の翻訳を持っているため、それらは意図的に
+   移植せず（そのまま複製すると死んだコードになる）、このツール自身の機能
+   （目標/ペース/結果/称号/獲得履歴/デイリークエスト記録）に関わる
+   セクションと、他の移植済みツールと同様にページ末尾に表示するfooter
+   （disclaimer/creditLabel/requestForm/infoLink、全ツール共通の固定文言）
+   だけを残している：
      goal / goalMulti / pace / result / history / streak / dailyQuest /
-     oneYearAgo / titles
+     oneYearAgo / titles / footer
    各キーの ja/en 文言・テンプレート({n}等のプレースホルダー・単数/複数の
    …One版バリアント)は元の値を一切変更していない。
 
@@ -184,6 +186,12 @@ export const NOMA_I18N = {
     unlockedToastTemplate: { ja: '称号「{icon} {name}」を獲得しました！', en: 'Title unlocked: {icon} {name}!' },
     lockedName: { ja: '？？？', en: '？？？' },
     lockedHint: { ja: '称号は条件を満たすと明らかになります', en: 'Unlocks when you meet its condition' },
+  },
+  footer: {
+    disclaimer: { ja: 'このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', en: 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.' },
+    creditLabel: { ja: '作成・ご意見:', en: 'Created by / feedback:' },
+    requestForm: { ja: 'リクエストフォーム', en: 'Request form' },
+    infoLink: { ja: '設定・更新情報・クレジット・プライバシーポリシー', en: "Settings / What's New / Credits / Privacy Policy" },
   },
 };
 

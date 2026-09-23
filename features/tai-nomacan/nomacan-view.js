@@ -350,7 +350,9 @@ function renderShell() {
         </section>
 
         <footer>
-          <span>${CURRENT_LANG === 'en' ? 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.' : 'このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。'}</span>
+          <span>${escapeHtml(t('footer.disclaimer'))}</span><br>
+          <span>${escapeHtml(t('footer.creditLabel'))}</span> <a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer">@Skyzztai</a>　／　<a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footer.requestForm'))}</a><br>
+          <a href="https://taipak5000.github.io/tai-info/" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footer.infoLink'))}</a>
         </footer>
       </div>
       <div class="noma-toast" id="nmNomaToast" role="status" aria-live="polite"></div>
@@ -828,7 +830,7 @@ function renderTitles(store) {
   if (els.titlesCount) els.titlesCount.textContent = t('titles.countTemplate', { earned: earnedCount, total: TITLES.length });
   els.titlesChips.innerHTML = TITLES.map((ti) => {
     if (store.earned[ti.id]) {
-      return '<span class="title-chip" title="' + escapeHtml(L(ti.desc)) + '">' + ti.icon.replace('#i-', '#nm-i-') + ' ' + escapeHtml(L(ti.name)) + '</span>';
+      return '<span class="title-chip" title="' + escapeHtml(L(ti.desc)) + '">' + ti.icon + ' ' + escapeHtml(L(ti.name)) + '</span>';
     }
     return '<span class="title-chip locked" title="' + escapeHtml(t('titles.lockedHint')) + '"><svg class="inline-icon" width="13" height="13"><use href="#nm-i-lock"/></svg> ' + escapeHtml(t('titles.lockedName')) + '</span>';
   }).join('');
@@ -839,7 +841,7 @@ function refreshTitlesUI() {
   const { store, newlyEarned } = S.checkAndUnlockTitles(current, longestStreak);
   renderTitles(store);
   newlyEarned.forEach((ti) => {
-    queueNomaToast(t('titles.unlockedToastTemplate', { icon: ti.icon.replace('#i-', '#nm-i-'), name: L(ti.name) }));
+    queueNomaToast(t('titles.unlockedToastTemplate', { icon: ti.icon, name: L(ti.name) }));
   });
 }
 

@@ -45,6 +45,9 @@
   --badge-green-text: #1C7332;
   --badge-gray-text: #636368;
 
+  --glass-bg: rgba(249, 249, 249, 0.72);
+  --input-bg: #FAFAFA;
+
   --r: 16px;
   --r-sm: 10px;
 
@@ -70,6 +73,9 @@
   --badge-green-text: var(--green);
   --badge-gray-text: var(--text-2);
   --indigo-text: #8482EE;
+
+  --glass-bg: rgba(28, 28, 30, 0.68);
+  --input-bg: #2C2C2E;
 }
 
 .share-view * { box-sizing: border-box; }
@@ -84,7 +90,8 @@
   display: flex; flex-direction: column; gap: 8px; pointer-events: none;
 }
 .sv-toast {
-  pointer-events: auto; background: var(--card); border: none;
+  pointer-events: auto; background: var(--glass-bg); border: none;
+  -webkit-backdrop-filter: blur(25px) saturate(180%); backdrop-filter: blur(25px) saturate(180%);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18); border-radius: 16px; padding: 10px 14px;
   display: flex; align-items: center; gap: 10px; animation: svToastIn 0.25s ease;
 }
@@ -92,6 +99,11 @@
 .sv-toast-label { font-size: 11px; color: var(--text-2); font-weight: 600; }
 .sv-toast-name { font-size: 14px; color: var(--badge-yellow-text); font-weight: 700; }
 @keyframes svToastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── ページ見出し（元の.large-title相当。tai-hubではナビバー/スクロール連動の
+     iOSラージタイトル演出はchrome側に無いため、他の移植済みツールと同じ
+     単純な静的h1に簡略化してある） ── */
+.sv-page-title { text-align: center; margin: 0 0 16px; font-size: 19px; font-weight: 700; letter-spacing: -0.3px; color: var(--text); }
 
 /* ── カード共通（Inset Grouped List） ── */
 .sv-card { background: var(--card); border-radius: var(--r); padding: 16px; margin-bottom: 18px; }
@@ -112,7 +124,7 @@
 .sv-stat-box-label { font-size: 11px; color: var(--text-2); }
 .sv-stat-val { font-size: 22px; font-weight: 700; margin-top: 4px; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .sv-stat-box-clickable { cursor: pointer; transition: background 0.15s ease, transform 0.18s cubic-bezier(0.25, 1, 0.5, 1); }
-.sv-stat-box-clickable:hover { background: var(--fill); }
+.sv-stat-box-clickable:hover { background: var(--fill-2); }
 .sv-stat-box-clickable:active { transform: scale(0.96); }
 
 /* ── 消滅カレンダー ── */
@@ -123,7 +135,7 @@
 .sv-cal-empty { text-align: center; color: var(--text-2); padding: 20px 0; font-size: 13px; }
 .sv-cal-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .sv-cal-nav-btn {
-  border: 0; background: none; border-radius: 50%; width: 34px; height: 34px; padding: 0;
+  border: 0; background: var(--fill-2); border-radius: 50%; width: 34px; height: 34px; padding: 0;
   font-size: 20px; color: var(--blue); display: inline-flex; align-items: center; justify-content: center;
   cursor: pointer; transition: transform 0.18s cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -164,7 +176,7 @@
 .sv-area-row-label { flex-shrink: 0; display: inline-flex; align-items: center; gap: 4px; }
 .sv-area-select {
   flex: 1; min-width: 0; padding: 9px 12px; border: 1px solid transparent; border-radius: var(--r-sm);
-  font-size: 13px; background: var(--fill); color: var(--text); font-family: inherit;
+  font-size: 15px; background: var(--fill); color: var(--text); font-family: inherit;
 }
 .sv-item-card .sv-area-select { background: var(--card); }
 
@@ -176,7 +188,7 @@
   color: var(--badge-yellow-text); font-size: 12.5px; font-weight: 700; padding: 6px 12px;
   border-radius: 20px; white-space: nowrap; letter-spacing: 0.03em;
 }
-.sv-title-chip.locked { background: var(--fill); color: var(--badge-gray-text); }
+.sv-title-chip.locked { background: rgba(142, 142, 147, 0.15); color: var(--badge-gray-text); }
 
 /* ── 一覧ツールバー・検索・一括操作バー ── */
 .sv-list-toolbar { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -191,7 +203,7 @@
 .sv-btn-outline.active { background: var(--blue-solid); color: #fff; }
 .sv-btn-fill { background: var(--fill-2); color: var(--text); border-radius: var(--r-sm); padding: 7px 12px; font-size: 13px; font-weight: 600; }
 .sv-btn-fill:disabled { opacity: 0.5; cursor: not-allowed; }
-.sv-btn-primary { background: var(--blue-solid); color: #fff; border-radius: var(--r-sm); padding: 9px 16px; font-size: 13px; font-weight: 700; }
+.sv-btn-primary { background: var(--blue-solid); color: #fff; border-radius: var(--r-sm); padding: 9px 16px; font-size: 14px; font-weight: 700; }
 .sv-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 .sv-btn-primary:active { opacity: 0.85; }
 .sv-btn-danger { background: var(--red); color: #fff; border-radius: var(--r-sm); padding: 7px 12px; font-size: 13px; font-weight: 600; }
@@ -250,14 +262,14 @@
 .sv-row-flex { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
 .sv-row-flex input[type="text"] { flex: 1; min-width: 0; }
 
-.sv-badge { font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.03em; }
+.sv-badge { font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.03em; }
 .sv-badge-red { background: rgba(255, 59, 48, 0.15); color: var(--badge-red-text); }
 .sv-badge-yellow { background: rgba(255, 149, 0, 0.15); color: var(--badge-yellow-text); }
 .sv-badge-green { background: rgba(52, 199, 89, 0.15); color: var(--badge-green-text); }
 .sv-badge-gray { background: rgba(142, 142, 147, 0.15); color: var(--badge-gray-text); }
 
 .sv-thumb-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
-.sv-thumb { width: 64px; height: 64px; object-fit: cover; border-radius: var(--r-sm); background: var(--fill); }
+.sv-thumb { width: 64px; height: 64px; object-fit: cover; border-radius: var(--r-sm); background: var(--input-bg); }
 .sv-thumb-remove {
   background: var(--fill-2); border: 0; color: var(--text-2); width: 24px; height: 24px; border-radius: 50%;
   cursor: pointer; font-size: 12px; line-height: 1; flex-shrink: 0; display: inline-flex; align-items: center;
@@ -283,3 +295,9 @@
 .sv-action-ics { background: rgba(94, 92, 230, 0.12); color: var(--indigo-text); }
 .sv-action-photo { background: rgba(52, 199, 89, 0.14); color: var(--badge-green-text); }
 .sv-action-jump { background: rgba(0, 122, 255, 0.12); color: var(--blue); }
+
+/* ── フッター（免責文・クレジット・設定サイトへのリンク） ── */
+.sv-footer { text-align: center; padding: 24px 16px; color: var(--text-2); font-size: 13px; line-height: 1.6; border-top: 1px solid var(--sep); margin-top: 40px; }
+.sv-footer-credit-link { color: var(--blue); text-decoration: underline; font-weight: bold; }
+.sv-footer-sub { color: var(--text-2); font-size: 12px; margin-top: 4px; display: inline-block; }
+.sv-footer-sub a { color: var(--blue); }

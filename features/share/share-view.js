@@ -58,8 +58,13 @@
 
    【意図的な簡略化】
    - TRANSLATIONS辞書は元のsetup()内のもの（217行）から、共有chrome側と
-     重複する項目（header.title、theme.系、sidebar.系、dock.系）を除いた
-     「このツール固有」の項目だけを残している。文言・キー名は元のまま。
+     重複する項目（theme.系、sidebar.系、dock.系）を除いた「このツール
+     固有」の項目だけを残している。文言・キー名は元のまま。ただし
+     header.title（ページ見出し）とfooter.*（フッターの免責文・クレジット・
+     リンク）は、他の姉妹ツール（companion等）と同様にこのツール自身の
+     テンプレートが直接描画する必要があるため残してある（chromeが提供する
+     のはナビバー/サイドバー/プロフィールバー等の「枠」だけで、ページ内の
+     見出しテキストやフッターまでは肩代わりしない）。
    - カレンダー日別詳細の色ドットは元テンプレートでは
      :style="{ background: 'var(--accent-blue-solid)' }" という定数
      バインディングだったため、CSS側の固定値に置き換えた（挙動・見た目は
@@ -82,6 +87,10 @@ const VUE_CDN_URL = 'https://cdn.jsdelivr.net/npm/vue@3/dist/vue.global.prod.js'
    ================================================================ */
 const TRANSLATIONS = {
   ja: {
+    'header.title': '創作物期限管理 (14日間)',
+    'footer.disclaimer': 'このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。',
+    'footer.createdBy': '作成・ご意見:',
+    'footer.settingsLink': '設定・更新情報・クレジット・プライバシーポリシー',
     'stats.header': '現在の状態',
     'stats.active': '設置中',
     'stats.warning': '期限間近',
@@ -165,6 +174,10 @@ const TRANSLATIONS = {
     'calendar.jumpToList': '一覧で見る',
   },
   en: {
+    'header.title': 'Creation Expiry Manager (14-Day)',
+    'footer.disclaimer': 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.',
+    'footer.createdBy': 'Created by / feedback:',
+    'footer.settingsLink': "Settings / What's New / Credits / Privacy Policy",
     'stats.header': 'Current Status',
     'stats.active': 'Active',
     'stats.warning': 'Expiring Soon',
@@ -363,6 +376,8 @@ const TEMPLATE = `
       </div>
     </div>
   </div>
+
+  <h1 class="sv-page-title">{{ t('header.title') }}</h1>
 
   <div class="sv-card">
     <div class="sv-card-header">{{ t('stats.header') }}</div>
@@ -580,6 +595,14 @@ const TEMPLATE = `
 
     <button type="button" class="sv-btn-cta" @click="addItem"><svg class="inline-icon" width="15" height="15"><use href="#sv-i-plus"/></svg> {{ t('actions.addNew') }}</button>
   </div>
+
+  <footer class="sv-footer">
+    {{ t('footer.disclaimer') }}<br>
+    {{ t('footer.createdBy') }} <a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer" class="sv-footer-credit-link">@Skyzztai</a><br>
+    <span class="sv-footer-sub">
+      <a href="https://taipak5000.github.io/tai-info/" target="_blank" rel="noopener noreferrer">{{ t('footer.settingsLink') }}</a>
+    </span>
+  </footer>
 </div>
 `;
 

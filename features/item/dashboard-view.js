@@ -15,10 +15,9 @@
    分離済みのため、このファイル自身の検索インデックス構築ロジックは
    カテゴリグリッドの所持数集計にのみ使う。
    ================================================================ */
-import { CURRENT_LANG, trEvent, trCat, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trCat, escapeHtml } from '../../js/i18n.js';
 import { getCategoryState } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
-import { CURRENT_SEASON, getCurrentEventNames, isRevisitSpiritCurrentlyActive } from './data/season-data.js';
 import * as titlesPanel from './titles-panel.js';
 import * as searchModal from './search-modal.js';
 import * as wishlistCostModal from './wishlist-cost-modal.js';
@@ -58,62 +57,125 @@ function injectStyles() {
     .item-view .dash-wrap { max-width: 720px; margin: 0 auto; }
     @media (min-width: 850px) { .item-view .dash-wrap { max-width: 960px; } }
 
-    .item-view .season-banner {
-      background: linear-gradient(135deg, var(--orange-d) 0%, var(--orange) 55%, #FFBB00 100%);
-      border-radius: var(--r); padding: 16px 18px; color: #fff;
-      box-shadow: 0 4px 14px rgba(255, 149, 0, 0.28);
+    /* 💡 初回訪問ヒントバナー（item/profiles.js の .pf-hint-banner を移植）。
+       元実装は.pf-bar（プロフィール切替バー）の直後に出るが、tai-hubでは
+       プロフィール切替バー自体がsite-dock側のモーダルに集約されているため
+       （wings-view.js等の既存コメント参照）、item機能ページの先頭にそのまま
+       出す。dismissフラグ（sky_first_visit_hint_shown_v1）は元サイトと
+       同一オリジンのlocalStorageを共有する生のキー名のため変更しない。 */
+    .item-view .pf-hint-banner {
+      background: var(--card); border: 1px solid var(--blue); border-radius: var(--r-sm);
+      padding: 9px 12px; font-size: 12.5px; color: var(--text-2);
+      display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
     }
-    .item-view .season-banner-head { display: flex; align-items: center; gap: 12px; }
-    .item-view .season-banner-icon { background: rgba(255, 255, 255, 0.22); color: #fff; border-radius: 10px; flex-shrink: 0; }
-    .item-view .season-banner-eyebrow { font-size: 11px; font-weight: 700; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.04em; }
-    .item-view .season-banner-title { font-size: 16px; font-weight: 700; margin-top: 2px; }
-    .item-view .season-banner-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-    .item-view .season-chip {
-      font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
-      background: rgba(255, 255, 255, 0.22); color: #fff;
+    .item-view .pf-hint-banner-text { flex: 1; min-width: 0; }
+    .item-view .pf-hint-banner-close {
+      background: none; border: 0; color: var(--text-2); cursor: pointer;
+      padding: 2px; flex-shrink: 0; display: flex;
     }
-    .item-view .season-chip-revisit { background: rgba(255, 255, 255, 0.34); }
+    .item-view .pf-hint-banner-close:hover { color: var(--text); }
 
-    .item-view .cat-tile img { border-radius: 6px; }
+    /* ▸ はじめての方へ（紹介文カード。item/index.html の .welcome-card を移植） */
+    .item-view .welcome-card {
+      background: var(--card); border-radius: var(--r); padding: 18px 18px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04);
+    }
+    .item-view .welcome-title {
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+      font-size: 14px; font-weight: 700; color: var(--text); cursor: pointer;
+      background: none; border: 0; width: 100%; padding: 0; font-family: inherit; text-align: left;
+    }
+    .item-view .welcome-title-label { display: flex; align-items: center; gap: 6px; }
+    .item-view .welcome-toggle-icon { display: flex; color: var(--text-2); transition: transform 0.15s; }
+    .item-view .welcome-toggle-icon.expanded { transform: rotate(180deg); }
+    .item-view .welcome-text { font-size: 13px; line-height: 1.75; color: var(--text-2); margin-top: 8px; }
 
     .item-view .dash-feature-row { display: flex; flex-direction: column; gap: 10px; }
   `;
   document.head.appendChild(style);
 }
 
+// 🩹 元実装（item/index.html の cardHTML()）を忠実に移植。以前は
+// アイコン＋名前＋件数だけの小さな正方形タイル（.cat-tile）だったが、
+// 達成率バー・chevronを含む横長カード（.cat-card、css/item.css参照）に
+// 差し替えた（詳細はcss/item.cssの同箇所コメント参照）。
 function catTileHtml(cat, owned, total) {
   const name = trCat(cat.name);
-  const countText = (owned === null || total === null) ? '…' : `${owned} / ${total}`;
+  const loading = owned === null || total === null;
+  const p = loading ? null : (total > 0 ? Math.round(owned / total * 100) : 0);
+  const high = p !== null && p >= 80;
+  const pctCls = p === null ? 'empty' : (high ? 'high' : '');
+  const pctText = p !== null ? `${p}<span class="num-unit">%</span>` : '--';
+  const countText = loading ? '…' : `${owned} / ${total}`;
   return `
-    <a class="cat-tile" href="#/item/${cat.key}">
-      <img src="${cat.img}" alt="${escapeHtml(name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'">
-      <span class="cat-tile-name">${escapeHtml(name)}</span>
-      <span class="cat-tile-pct">${countText}</span>
+    <a class="cat-card" href="#/item/${cat.key}">
+      <div class="cat-top">
+        <div class="cat-icon-wrap">
+          <span class="cat-icon"><img src="${cat.img}" alt="${escapeHtml(name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.visibility='hidden'"></span>
+          <span class="cat-name">${escapeHtml(name)}</span>
+        </div>
+        <span class="cat-pct ${pctCls}">${pctText}</span>
+      </div>
+      <div class="cat-bar"><div class="cat-fill ${high ? 'high' : ''}" style="width:${p ?? 0}%"></div></div>
+      <div class="cat-bottom">
+        <span class="cat-count">${countText}</span>
+        <span class="cat-chevron"><svg class="inline-icon" width="14" height="14">${CHEVRON_RIGHT_PATH}</svg></span>
+      </div>
     </a>`;
 }
 
-function renderSeasonBanner() {
-  const en = CURRENT_LANG === 'en';
-  const events = getCurrentEventNames();
-  const hasRevisit = isRevisitSpiritCurrentlyActive();
-  const seasonName = trEvent(CURRENT_SEASON.name);
-  // getCurrentEventNames() の先頭はCURRENT_SEASON自身なので、チップ側では重複させない
-  const otherEvents = events.filter(name => name !== CURRENT_SEASON.name);
+/* ================================================================
+   💡 初回訪問ヒントバナー＋はじめての方へカード
+   item/profiles.js の pfRenderFirstVisitHint() / item/index.html の
+   .welcome-card を移植したもの。ライブ本家では季節・イベント情報は
+   メインページに常時表示せず、この2つのオンボーディング要素を先頭に
+   置く構成になっているため、tai-hub側の常時表示だった season-banner を
+   撤去してこちらに差し替えている（季節・イベント情報自体は本家同様、
+   ダッシュボードモーダル側の役割）。
 
+   アイコンはi-lightbulb/i-chevron-rightがtai-hub共有js/icon-sprite.js
+   に無く、他パスが並行編集中の共有ファイルを増やしたくないため、
+   titles-panel.jsのICON_PATHSと同じ方針でパスデータをこのファイル内に
+   複製している（item/profiles.jsのsymbol定義から抜粋、見た目は同一）。
+   ================================================================ */
+const LIGHTBULB_PATH = '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-6 6c0 2.5 1.5 4 2.5 5.5.5.7.5 1 .5 1.5h6c0-.5 0-.8.5-1.5C16.5 13 18 11.5 18 9a6 6 0 0 0-6-6Z"/>';
+const CHEVRON_RIGHT_PATH = '<g transform="translate(12 12) scale(1.458) translate(-12 -12)"><path d="M9 6l6 6-6 6"/></g>';
+
+// 生のキー名（nsKey化しない）。元サイトと同一オリジンのlocalStorageを
+// 共有し、item以外のツールを含むサイト全体で「初回のみ」を成立させる
+// ためのフラグなので、値の意味・キー名は変更しないこと。
+const FIRST_VISIT_HINT_KEY = 'sky_first_visit_hint_shown_v1';
+function firstVisitHintShown() {
+  try { return localStorage.getItem(FIRST_VISIT_HINT_KEY) === '1'; }
+  catch (e) { return true; } // 書き込めない環境では、消せないバナーを出し続けないよう表示自体を諦める
+}
+function markFirstVisitHintShown() {
+  try { localStorage.setItem(FIRST_VISIT_HINT_KEY, '1'); } catch (e) { /* private browsing等 */ }
+}
+
+function renderFirstVisitHint() {
+  if (firstVisitHintShown()) return '';
+  const en = CURRENT_LANG === 'en';
   return `
-    <div class="season-banner">
-      <div class="season-banner-head">
-        <span class="icon-chip season-banner-icon" style="width:34px; height:34px;"><svg class="inline-icon" width="22" height="22"><use href="#i-sparkle"/></svg></span>
-        <div>
-          <div class="season-banner-eyebrow">${en ? 'Current Season' : '開催中の季節'}</div>
-          <div class="season-banner-title">${escapeHtml(seasonName)}</div>
-        </div>
-      </div>
-      ${(otherEvents.length > 0 || hasRevisit) ? `
-        <div class="season-banner-chips">
-          ${otherEvents.map(name => `<span class="season-chip">${escapeHtml(trEvent(name))}</span>`).join('')}
-          ${hasRevisit ? `<span class="season-chip season-chip-revisit">${en ? 'Spirit Visiting' : '旅の精霊が来訪中'}</span>` : ''}
-        </div>` : ''}
+    <div class="pf-hint-banner" id="dashFirstVisitHint">
+      <span class="pf-hint-banner-text"><svg class="inline-icon" width="18" height="18">${LIGHTBULB_PATH}</svg> ${en
+        ? 'New here from a shared link? Switch between multiple save-slot profiles, and use Data Transfer to move your data to another device — no cloud account needed.'
+        : '共有リンクから来た方へ：プロフィール切替で複数の保存枠を使い分けたり、データ引継ぎでクラウド不要のまま別端末にデータを移せます。'}</span>
+      <button type="button" class="pf-hint-banner-close" id="dashFirstVisitHintClose" aria-label="${en ? 'Dismiss' : '閉じる'}"><svg class="inline-icon" width="18" height="18"><use href="#i-close"/></svg></button>
+    </div>`;
+}
+
+function renderWelcomeCard() {
+  const en = CURRENT_LANG === 'en';
+  return `
+    <div class="welcome-card">
+      <button type="button" class="welcome-title" id="dashWelcomeToggle" aria-expanded="false">
+        <span class="welcome-title-label">${en ? 'For First-Time Visitors' : 'はじめての方へ'}</span>
+        <span class="welcome-toggle-icon" id="dashWelcomeToggleIcon"><svg class="inline-icon" width="14" height="14">${CHEVRON_RIGHT_PATH}</svg></span>
+      </button>
+      <div class="welcome-text" id="dashWelcomeText" style="display:none;">${en
+        ? 'This tool lets you track your Sky dress-up item collection by category.<br>Use the Random Coord feature to discover new combinations, save favorites with My Coord, and share your completion rate as an image on X.<br>Start by registering items in a category you\'re interested in!<br>Clicking an item\'s name searches for &quot;item name + Sky&quot; automatically, so give it a try!<br>Please report any bugs or issues to @Skyzztai!'
+        : 'このツールでは、Skyのドレスアップアイテムの所持状況をカテゴリ別にチェックできます。<br>ランダムコーデ機能で新しい組み合わせを発見したり、マイコーデでお気に入りを保存したりできるほか、達成率を画像にしてXでシェアすることも可能です。<br>まずは気になるカテゴリからアイテムを登録してみてください！<br>アイテムの名前をクリックすると、「アイテム名+Sky」で自動で検索できますので活用してみてください！<br>不具合やミスは@Skyzztaiまでお知らせください！'}</div>
     </div>`;
 }
 
@@ -135,8 +197,8 @@ function renderShell() {
   return `
     <div class="item-view">
     <div class="dash-wrap">
-      <p class="sec-label">${en ? 'Season &amp; Events' : '季節・イベント'}</p>
-      ${renderSeasonBanner()}
+      <div id="dashFirstVisitHintWrap">${renderFirstVisitHint()}</div>
+      ${renderWelcomeCard()}
 
       <div id="dashTitlesPanel"></div>
 
@@ -271,6 +333,41 @@ const FEATURE_TRIGGERS = [
   { btnId: 'dashFavShareBtn', mod: favoritesShare, action: 'open' },
 ];
 
+// 「はじめての方へ」の開閉・初回訪問ヒントの閉じるボタン配線
+// （FEATURE_TRIGGERSと同じ [{el, handler}] 保持パターンでunmount時に後片付けする）
+let introListeners = [];
+
+function setupIntroCard() {
+  introListeners = [];
+  const toggleBtn = hostEl.querySelector('#dashWelcomeToggle');
+  if (toggleBtn) {
+    const handler = () => {
+      const body = hostEl.querySelector('#dashWelcomeText');
+      const icon = hostEl.querySelector('#dashWelcomeToggleIcon');
+      const expanded = body.style.display !== 'none';
+      body.style.display = expanded ? 'none' : 'block';
+      icon.classList.toggle('expanded', !expanded);
+      toggleBtn.setAttribute('aria-expanded', String(!expanded));
+    };
+    toggleBtn.addEventListener('click', handler);
+    introListeners.push({ el: toggleBtn, handler });
+  }
+  const dismissBtn = hostEl.querySelector('#dashFirstVisitHintClose');
+  if (dismissBtn) {
+    const handler = () => {
+      markFirstVisitHintShown();
+      hostEl.querySelector('#dashFirstVisitHint')?.remove();
+    };
+    dismissBtn.addEventListener('click', handler);
+    introListeners.push({ el: dismissBtn, handler });
+  }
+}
+
+function teardownIntroCard() {
+  introListeners.forEach(({ el, handler }) => el.removeEventListener('click', handler));
+  introListeners = [];
+}
+
 let triggerListeners = []; // [{el, handler}] unmount時にremoveEventListenerするため保持
 
 function setupFeatureTriggers() {
@@ -300,11 +397,13 @@ export function mount(container) {
   hostEl.innerHTML = renderShell();
   renderCategoryGrid(token);
   setupFeatureTriggers();
+  setupIntroCard();
   titlesPanel.mount(hostEl.querySelector('#dashTitlesPanel'));
 }
 
 export function unmount() {
   mountToken++; // 進行中の非同期描画（カテゴリ件数取得）を無効化する
   teardownFeatureTriggers();
+  teardownIntroCard();
   hostEl = null;
 }

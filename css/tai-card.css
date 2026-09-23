@@ -43,8 +43,9 @@
   font-family: "Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
   font-size: 15px; line-height: 1.65;
   padding: 20px 16px 24px;
-  max-width: 960px; margin: 0 auto;
+  max-width: 720px; margin: 0 auto;
 }
+@media (min-width: 850px) { .tai-card-view { max-width: 960px; } }
 [data-theme="dark"] .tai-card-view {
   --tc-surface: #1C1C1E; --tc-surface-2: #232326; --tc-surface-3: #2C2C2E; --tc-border: rgba(255,255,255,0.14);
   --tc-text: #F2F2F7; --tc-text-2: #98989D; --tc-text-3: #636366;
@@ -54,6 +55,11 @@
 }
 .tai-card-view *{ box-sizing: border-box; }
 .tai-card-view h1, .tai-card-view h2, .tai-card-view h3{ font-family:"Fraunces","Zen Old Mincho",serif; margin:0; text-wrap:balance; }
+
+/* 汎用.inline-icon(js/chrome/chrome.css、編集しない)をこのツールのテーマ色で
+   上書きする。元実装のinline-iconはgold-ink専用配色だったため、chrome.css側の
+   汎用stroke:currentColorだけでは見た目が変わってしまうことの対策。 */
+.tai-card-view .inline-icon{ stroke: var(--tc-gold-ink); fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -3px; color: var(--tc-gold-ink); }
 
 .tc-page-head{ margin: 0 0 8px; }
 .tc-page-head h1{ font-size: clamp(24px,4vw,32px); font-weight:600; letter-spacing:0.01em; color: var(--tc-teal-ink); }
@@ -434,6 +440,10 @@
   opacity:0; transition:opacity .2s, transform .2s; z-index:2000; pointer-events:none;
 }
 .tc-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+.tai-card-view footer{ margin-top:44px; padding-top:18px; border-top:1px solid var(--tc-border); color:var(--tc-text-3); font-size:12px; text-align:center; line-height:1.7; }
+.tai-card-view footer p{ margin:0; }
+.tai-card-view footer a{ color:var(--tc-teal-ink); text-decoration:underline; text-underline-offset:2px; }
 
 /* ── 画像保存モーダル（tai-hub共有の .modal-overlay/.modal-card シェルの中身） ── */
 .tc-preview-hint{ display:flex; align-items:flex-start; gap:8px; font-size:12px; color:var(--hub-text-2); background:var(--tc-gold-bg); border:1px solid rgba(201,154,74,0.22); border-radius:var(--tc-r-sm); padding:10px 12px; margin-bottom:12px; line-height:1.6; }

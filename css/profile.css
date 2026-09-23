@@ -7,7 +7,7 @@
    site-nav/sidebar/site-dock/settings-modal/トースト用の土台等、
    「共有chrome」relatedなスタイルは、tai-hubの css/chrome.css に
    既に同等のものがあるため意図的に移植していない
-   （.modal-overlay/.modal-card/.modal-close-btn/.modal-titleなど、
+   （.modal-overlay・.modal-card・.modal-close-btn・.modal-titleなど、
    ダッシュボードモーダルの土台は chrome.css の汎用ルールをそのまま
    流用し、このファイルではこのツール固有の追加分だけを足している）。
 
@@ -300,4 +300,29 @@
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* ---------- 「今日・今週・今月」ダッシュボードモーダルのアクセント色 ----------
+   中身は features/shared/event-dashboard.js（companion/spirit-catalog/wings/
+   profileの4ツール共有モジュール）が注入するが、そちらは共有の
+   --hub-accent（紫系）固定になっている。移植元 profile/index.html の
+   #dashModalCard は一貫して自サイトの --sky（このツールの水色アクセント。
+   ライト #0284C7 / ダーク #38BDF8）を使っていたため、ここではこのツール側
+   から色だけを上書きして本家の見た目に合わせる
+   （event-dashboard.js自体は他ツールと共有中のため編集対象外。今後
+   4ツール共通でこの配色を見直す場合は event-dashboard.js 側の対応が別途
+   必要）。#pvDashModalOverlay は document.body 直下に追加され
+   .profile-view の子孫ではないため、CSS変数の継承には頼らず直接指定する。 */
+#pvDashModalOverlay .dash-row b,
+#pvDashModalOverlay .dash-countdown,
+#pvDashModalOverlay .dash-shard-time:not(.past) {
+  color: #0284C7;
+}
+#pvDashModalOverlay .dash-cal-daynum.is-today span {
+  background: #075985;
+}
+[data-theme="dark"] #pvDashModalOverlay .dash-row b,
+[data-theme="dark"] #pvDashModalOverlay .dash-countdown,
+[data-theme="dark"] #pvDashModalOverlay .dash-shard-time:not(.past) {
+  color: #38BDF8;
 }

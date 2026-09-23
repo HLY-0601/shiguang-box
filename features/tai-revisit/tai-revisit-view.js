@@ -618,7 +618,10 @@ function renderShell() {
         <span>${escapeHtml(t('footerDataLabel'))}</span><a href="https://github.com/Silverfeelin/SkyGame-Data" target="_blank" rel="noopener noreferrer">SkyGame-Data</a><span>${escapeHtml(t('footerDataCredit'))}</span>
         <span>${escapeHtml(t('footerIconLabel'))}</span>${escapeHtml(t('footerIconCredit'))}<br>
         <span>${escapeHtml(t('footerCreditLabel'))}</span><a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer">@Skyzztai</a>　／
-        <a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footerRequestForm'))}</a>
+        <a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footerRequestForm'))}</a><br>
+        <span style="font-size:12px; margin-top:4px; display:inline-block;">
+          <a href="https://taipak5000.github.io/tai-info/" target="_blank" rel="noopener noreferrer">${escapeHtml(t('footerInfoLink'))}</a>
+        </span>
       </footer>
     </div>`;
 }

@@ -69,13 +69,38 @@
 .item-view .feature-label { display: block; font-weight: 700; font-size: 14px; }
 .item-view .feature-desc { display: block; font-size: 12px; color: var(--text-2); margin-top: 2px; }
 
-.item-view .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
-.item-view .cat-tile {
-  display: flex; flex-direction: column; align-items: center; gap: 6px; background: var(--card);
-  border-radius: var(--r-sm); padding: 12px 6px; cursor: pointer; border: 0; color: var(--text); font-family: inherit;
+/* 🩹 元実装（item/index.html）の.cat-grid/.cat-cardをそのまま移植し直した
+   ものに置き換え。以前のtai-hub独自の.cat-tile（auto-fill・小さい正方形
+   タイル）は画面が広いほど列数が際限なく増える実装になっており、画面幅に
+   応じて要素の密度が変わり続ける「幅が画面に合わせて伸びる」不具合の
+   一因だった。元実装は常に2列（600px以上で3列固定・380px未満で1列）と
+   列数の上限を明示しており、進捗バー・達成率・件数・chevronを含む
+   横長カードに差し替えることで見た目も本家に揃えた。 */
+.item-view .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (min-width: 600px) { .item-view .cat-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 380px) { .item-view .cat-grid { grid-template-columns: 1fr; } }
+
+.item-view .cat-card {
+  display: block; background: var(--card); border-radius: var(--r); padding: 14px 14px 12px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 0.5px 1px rgba(0,0,0,0.04);
+  transition: transform 0.12s ease, box-shadow 0.12s ease; cursor: pointer; border: 0; text-align: left;
+  color: var(--text); font-family: inherit; width: 100%;
 }
-.item-view .cat-tile img { width: 40px; height: 40px; object-fit: contain; }
-.item-view .cat-tile-name { font-size: 11px; font-weight: 600; text-align: center; }
-.item-view .cat-tile-pct { font-size: 10px; color: var(--text-2); }
+.item-view .cat-card:active { transform: scale(0.965); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+.item-view .cat-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: 10px; }
+.item-view .cat-icon-wrap { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+.item-view .cat-icon { width: 34px; height: 34px; border-radius: 8px; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; overflow: hidden; }
+.item-view .cat-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; }
+.item-view .cat-name { font-size: 12px; font-weight: 600; line-height: 1.35; color: var(--text); word-break: break-all; }
+.item-view .cat-pct { font-size: 14px; font-weight: 700; color: var(--orange); flex-shrink: 0; white-space: nowrap; }
+.item-view .cat-pct.high { color: var(--green); }
+.item-view .cat-pct.empty { color: var(--text-3); }
+.item-view .cat-bar { height: 5px; border-radius: 3px; background: var(--bg); overflow: hidden; margin-bottom: 7px; }
+.item-view .cat-fill { height: 100%; border-radius: 3px; transition: width 1.2s cubic-bezier(0.22,1,0.36,1); background: linear-gradient(90deg, var(--orange), #FFBB00); }
+.item-view .cat-fill.high { background: linear-gradient(90deg, var(--green), #90EFA8); }
+.item-view .cat-bottom { display: flex; align-items: center; justify-content: space-between; }
+.item-view .cat-count { font-size: 11px; color: var(--text-2); }
+.item-view .cat-chevron { color: var(--text-3); display: flex; }
+.item-view .num-unit { font-weight: 500; font-size: 0.72em; opacity: 0.7; margin-left: 1px; }
 
 .item-view .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: var(--text-2); margin-bottom: 14px; cursor: pointer; }

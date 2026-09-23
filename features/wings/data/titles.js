@@ -30,7 +30,7 @@ export const TITLES = [
   },
   {
     id: 'lc_half',
-    icon: '<svg class="inline-icon" width="16" height="16"><use href="#i-flashlight"/></svg>',
+    icon: '<svg class="inline-icon" width="16" height="16"><use href="#wg-i-flashlight"/></svg>',
     name: { ja: '光を辿る探検家', en: 'Light-Tracing Explorer' },
     desc: { ja: '光の子を62体（半数）発見', en: 'Found 62 Children of Light (half)' },
     condition: stats => stats.lightChildrenGot >= 62,

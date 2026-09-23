@@ -185,7 +185,7 @@ export const TITLES = [
   { id: 'pct1', icon: 'sc-i-leaf', threshold: 1 },
   { id: 'pct10', icon: 'i-candle', threshold: 10 },
   { id: 'pct25', icon: 'sc-i-leaf', threshold: 25 },
-  { id: 'pct50', icon: 'i-tree', threshold: 50 },
+  { id: 'pct50', icon: 'sc-i-tree', threshold: 50 },
   { id: 'pct100', icon: 'i-crown', threshold: 100 },
 ];
 export function loadEarnedTitles() {

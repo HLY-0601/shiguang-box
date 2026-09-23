@@ -23,10 +23,28 @@
     * { box-sizing: border-box; }
     body { margin: 0; }
   </style>
+  <!-- 🩹 js/app.js（ビルドツールなしのネイティブES Modules）は静的importの
+       依存グラフ全体（state.js/icon-sprite.js/router.js/shortcuts.js/
+       site-dock.js…）を取得・解決してからでないと1行も実行されない。
+       この間#app-rootへの書き込みは一切発生しないため、#app-rootを空の
+       まま出すと「一瞬だけ素の状態（背景色だけで中身が無い画面）」が
+       見えてしまう。router-registry.jsがルート切替時に使うのと全く同じ
+       .rt-loadingスピナーを最初からここに静的に書いておくことで、JSの
+       起動を待たずに最初の描画から常に何か（スピナー）が見えている状態
+       にする——router.jsのapplyRoute()がappRoot.innerHTML=''で
+       上書きするため、実際のコンテンツに置き換わる際の追加対応は不要。 -->
+  <link rel="modulepreload" href="js/app.js">
+  <link rel="modulepreload" href="js/state.js">
+  <link rel="modulepreload" href="js/icon-sprite.js">
+  <link rel="modulepreload" href="js/router.js">
+  <link rel="modulepreload" href="js/router-registry.js">
+  <link rel="modulepreload" href="js/shortcuts.js">
+  <link rel="modulepreload" href="js/chrome/site-dock.js">
+  <link rel="modulepreload" href="js/i18n.js">
 </head>
 <body>
   <div id="dock-root"></div>
-  <main id="app-root"></main>
+  <main id="app-root"><div class="rt-loading"><div class="rt-spinner"></div></div></main>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

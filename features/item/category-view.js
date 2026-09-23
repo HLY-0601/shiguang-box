@@ -60,6 +60,13 @@ export async function mount(container, catConfig) {
   const myToken = ++mountToken;
   injectStyles();
 
+  // 🩹 router-registry.jsのlazyToolEntryはツール本体(=このモジュール自身)の
+  // 初回importだけをスピナーで覆う。ここから先のカテゴリ別データファイルの
+  // 動的importは、そのカテゴリを初めて開いた時点で毎回新しく発生するため
+  // (以後はキャッシュされる)、この待ち時間にも同じスピナーを表示しておく
+  // ——無いと「一瞬だけ素の状態」がカテゴリ切替のたびに再発する。
+  container.innerHTML = '<div class="rt-loading"><div class="rt-spinner"></div></div>';
+
   let ITEMS = [];
   try {
     const mod = await import(`./data/items/${catConfig.key}.js`);

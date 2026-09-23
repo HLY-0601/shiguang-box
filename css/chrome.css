@@ -36,6 +36,22 @@
 }
 @keyframes rt-spin { to { transform: rotate(360deg); } }
 
+/* 🩹 #app-rootの静的スピナー(index.html参照)と全く同じ理由で、#dock-root
+   (下部クイックアクセスドック)もJS起動前は空のまま——site-dock.jsのrender()
+   がjs/app.jsの静的importグラフ全体の解決後にしか呼ばれないため。CSSだけで
+   ドックと同じ足場(固定位置・高さ・半透明背景)を先に確保しておき、
+   render()が本物のinnerHTMLを書き込んだ瞬間に:emptyが外れて自動的に
+   消える(JS側の追加対応は不要)。 */
+#dock-root:empty {
+  display: block; position: fixed; left: 0; right: 0; bottom: 0; z-index: 1001;
+  min-height: calc(64px + env(safe-area-inset-bottom));
+  background: var(--hub-card-glass); border-top: 0.5px solid var(--hub-sep);
+  backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+@media (prefers-reduced-transparency: reduce) {
+  #dock-root:empty { background: var(--hub-card); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+
 /* ── サイトドック ── */
 .site-dock {
   display: flex; position: fixed; top: auto; left: 0; right: 0; bottom: 0; z-index: 1001;

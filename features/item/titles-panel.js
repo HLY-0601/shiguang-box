@@ -385,6 +385,13 @@ function injectStyles() {
 // トーストは出さない（初回mount・ルート遷移での毎回の「静かな」更新用）。
 export async function mount(container) {
   injectStyles();
+  // 🩹 checkAndUnlockTitles()→computeCategoryTotals()は全カテゴリ(最大12個)の
+  // data/items/<key>.jsを動的importしてから初めてrenderPanel()がcontainerへ
+  // 書き込む。dashboardはDEFAULT_ROUTEのためほぼ全ての初回起動でこの経路を
+  // 通ることになり、対策が無いとダッシュボード上部の達成率ゲージ部分だけが
+  // 「一瞬だけ素の状態（空欄）」になる——router-registry.jsのルート切替スピナー
+  // と同じ見た目を先に出しておくことで解消する。
+  if (container) container.innerHTML = '<div class="rt-loading"><div class="rt-spinner"></div></div>';
   await checkAndUnlockTitles();
   await renderPanel(container);
 }

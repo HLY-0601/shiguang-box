@@ -585,7 +585,7 @@ function injectStyles() {
 .item-view .cv-view-toggle { display: flex; background: var(--bg); border-radius: 999px; padding: 3px; gap: 2px; flex-shrink: 0; }
 .item-view .cv-view-toggle-btn {
   display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: var(--text-2);
-  padding: 7px 12px; border-radius: 999px; transition: background 0.15s, color 0.15s; cursor: pointer; font-family: inherit;
+  padding: 7px 12px; border-radius: 999px; border: 0; background: none; transition: background 0.15s, color 0.15s; cursor: pointer; font-family: inherit;
 }
 .item-view .cv-view-toggle-btn.active { background: var(--card); color: var(--text); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
 .item-view .cv-grid-cols-select {
@@ -623,14 +623,14 @@ function injectStyles() {
 }
 .item-view .cv-tile-fav-btn {
   position: absolute; top: 3px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--tile-btn-bg); display: flex; align-items: center;
+  background: var(--tile-btn-bg); border: 0; display: flex; align-items: center;
   justify-content: center; font-size: 13px; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .cv-tile-fav-btn:active { transform: scale(1.15); }
 .item-view .cv-tile-fav-btn.is-fav { color: #FF9500; background: rgba(255,149,0,0.16); }
 .item-view .cv-tile-wish-btn {
   position: absolute; top: 29px; right: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 50%;
-  background: var(--tile-btn-bg); display: flex; align-items: center;
+  background: var(--tile-btn-bg); border: 0; display: flex; align-items: center;
   justify-content: center; font-size: 12px; color: var(--text-3); transition: transform 0.1s, background 0.15s, color 0.15s; cursor: pointer;
 }
 .item-view .cv-tile-wish-btn:active { transform: scale(1.15); }

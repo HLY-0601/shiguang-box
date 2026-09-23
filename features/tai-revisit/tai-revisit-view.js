@@ -429,6 +429,8 @@ function render() {
     list = [...list].sort((a, b) => b.visits.length - a.visits.length);
   } else if (sortMode === 'itemCount') {
     list = [...list].sort((a, b) => spiritItemCount(b.nameEn) - spiritItemCount(a.nameEn));
+  } else if (sortMode === 'itemCountAsc') {
+    list = [...list].sort((a, b) => spiritItemCount(a.nameEn) - spiritItemCount(b.nameEn));
   } else if (sortMode === 'daysSince') {
     list = [...list].sort((a, b) => lastVisitEndDate(a).localeCompare(lastVisitEndDate(b)));
   } else if (sortMode === 'ongoingFirst') {
@@ -581,6 +583,7 @@ function renderShell() {
               <option value="name">${escapeHtml(t('sortName'))}</option>
               <option value="count">${escapeHtml(t('sortCount'))}</option>
               <option value="itemCount">${escapeHtml(t('sortItemCount'))}</option>
+              <option value="itemCountAsc">${escapeHtml(t('sortItemCountAsc'))}</option>
             </select>
           </div>
           <div class="filter-legend" role="group" aria-label="${escapeHtml(t('visitTypeLegendLabel'))}">

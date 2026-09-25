@@ -131,6 +131,28 @@
 .pf-add-row { display: flex; gap: 8px; margin-top: 14px; }
 .pf-add-row input { flex: 1 1 auto; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); }
 
+/* ── 所持通貨（プロフィール切替モーダル内、現在アクティブなプロフィールの分） ── */
+.pf-currency-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hub-sep); }
+.pf-currency-header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.pf-currency-title {
+  display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--hub-text-2);
+  text-transform: uppercase; letter-spacing: 0.4px;
+}
+.pf-currency-sub { font-size: 12px; color: var(--hub-text-3); }
+.pf-currency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.pf-currency-card {
+  display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 12px;
+  background: var(--hub-bg); border: 1px solid var(--hub-sep); cursor: text;
+}
+.pf-currency-card-label {
+  display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--hub-text-2);
+}
+.pf-currency-input {
+  border: 0; background: none; color: var(--hub-text); border-radius: 6px; width: 100%;
+  padding: 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: inherit;
+}
+.pf-currency-input:focus { outline: none; color: var(--hub-accent); }
+
 /* ── 設定モーダル ── */
 .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--hub-sep); }
 .settings-row:last-child { border-bottom: 0; }

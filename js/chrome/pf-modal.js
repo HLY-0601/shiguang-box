@@ -12,9 +12,20 @@ import { CURRENT_LANG } from '../i18n.js';
 import {
   ensureProfilesInit, getActiveProfileId, pfDisplayName,
   createProfile, renameProfile, deleteProfile, switchProfile, duplicateProfile,
-  loadTitleStore, DEFAULT_PROFILE_ID,
+  loadTitleStore, DEFAULT_PROFILE_ID, getShowTitlesEnabled,
+  loadOwnedCurrency, saveOwnedCurrencyField,
 } from '../state.js';
 import { refreshProfileLabel } from './site-dock.js';
+
+// 💰 所持通貨欄で扱うフィールド定義（アイコンはjs/icon-sprite.jsの既存
+// シンボルを流用。i-walletはtai-hub共有スプライトに無いため、通貨の
+// アイコンとして意味が通るi-gemをセクション見出しに使う）。
+const CURRENCY_FIELDS = [
+  { key: 'candle', icon: 'i-candle', ja: 'キャンドル', en: 'Candles' },
+  { key: 'heart', icon: 'i-heart', ja: 'ハート', en: 'Hearts' },
+  { key: 'starCandle', icon: 'i-star-candle', ja: '星のキャンドル', en: 'Star Candles' },
+  { key: 'seasonCandle', icon: 'i-candle', ja: 'シーズンキャンドル', en: 'Season Candles' },
+];
 
 let editingId = null;
 
@@ -36,6 +47,13 @@ export function open() {
         <input type="text" id="pfNewNameInput" maxlength="30" placeholder="${t('新しいプロフィール名', 'New profile name')}">
         <button type="button" class="pf-icon-btn pf-row-btn-ok" id="pfAddBtn">${t('追加', 'Add')}</button>
       </div>
+      <div class="pf-currency-section">
+        <div class="pf-currency-header">
+          <span class="pf-currency-title"><svg class="inline-icon" width="14" height="14"><use href="#i-gem"/></svg>${t('所持通貨', 'Owned Currency')}</span>
+          <span class="pf-currency-sub" id="pfCurrencyActiveName"></span>
+        </div>
+        <div class="pf-currency-grid" id="pfCurrencyGrid"></div>
+      </div>
     </div>`;
   document.body.appendChild(overlay);
   document.getElementById('pfModalCloseBtn').addEventListener('click', close);
@@ -46,6 +64,7 @@ export function open() {
   requestAnimationFrame(() => {
     overlay.classList.add('open');
     renderList();
+    renderCurrency();
   });
 }
 
@@ -68,12 +87,14 @@ function renderList() {
           <button type="button" class="pf-icon-btn" data-act="cancel">${t('取消', 'Cancel')}</button>
         </div>`;
     }
-    const titleCount = Object.keys(loadTitleStoreFor(p.id).earned || {}).length;
+    const titleCountHtml = getShowTitlesEnabled()
+      ? `<span style="color:var(--hub-text-2);font-weight:400;font-size:12px;"> (${t('実績', 'titles')}: ${Object.keys(loadTitleStoreFor(p.id).earned || {}).length})</span>`
+      : '';
     return `
       <div class="pf-row">
         <span class="pf-row-name${isActive ? ' is-active' : ''}" data-act="switch" data-id="${p.id}">
           ${isActive ? '<svg class="inline-icon" width="13" height="13"><use href="#i-check"/></svg> ' : ''}${escapeAttr(pfDisplayName(p))}
-          <span style="color:var(--hub-text-2);font-weight:400;font-size:12px;"> (${t('実績', 'titles')}: ${titleCount})</span>
+          ${titleCountHtml}
         </span>
         <button type="button" class="pf-icon-btn" data-act="rename" data-id="${p.id}" title="${t('名前変更', 'Rename')}"><svg class="inline-icon" width="14" height="14"><use href="#i-edit"/></svg></button>
         <button type="button" class="pf-icon-btn" data-act="duplicate" data-id="${p.id}" title="${t('複製', 'Duplicate')}"><svg class="inline-icon" width="14" height="14"><use href="#i-copy"/></svg></button>
@@ -104,6 +125,44 @@ function renderList() {
       }
     });
   });
+}
+
+// 💰 所持通貨欄（現在アクティブなプロフィールの分のみを表示・編集する。
+// 一覧に並ぶ他プロフィールの通貨をここから直接編集することはできない——
+// 編集したい場合はまずそのプロフィールへ切り替えてから、という導線
+// （切替自体がlocation.reload()を伴うため、切替前提でないと値の対応が
+// 分かりにくくなるための意図的な制約）。
+function renderCurrency() {
+  const grid = document.getElementById('pfCurrencyGrid');
+  if (!grid) return;
+  const activeId = getActiveProfileId();
+  const activeProfile = ensureProfilesInit().find(p => p.id === activeId);
+  const nameEl = document.getElementById('pfCurrencyActiveName');
+  if (nameEl && activeProfile) {
+    nameEl.textContent = t(`「${pfDisplayName(activeProfile)}」の分`, `for "${pfDisplayName(activeProfile)}"`);
+  }
+  const values = loadOwnedCurrency(activeId);
+  grid.innerHTML = CURRENCY_FIELDS.map(f => `
+    <label class="pf-currency-card">
+      <span class="pf-currency-card-label"><svg class="inline-icon" width="13" height="13"><use href="#${f.icon}"/></svg>${t(f.ja, f.en)}</span>
+      <input type="text" inputmode="numeric" autocomplete="off" class="pf-currency-input" data-field="${f.key}" value="${formatCurrencyNum(values[f.key])}">
+    </label>`).join('');
+
+  grid.querySelectorAll('.pf-currency-input').forEach(input => {
+    input.addEventListener('focus', () => input.select());
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') input.blur(); });
+    input.addEventListener('change', () => {
+      const saved = saveOwnedCurrencyField(input.dataset.field, input.value, activeId);
+      input.value = formatCurrencyNum(saved);
+    });
+  });
+}
+
+// number inputだとブラウザが桁区切りカンマを受け付けないため、見やすさ
+// 優先でtext+inputmode="numeric"にしている。入力値はsaveOwnedCurrencyField
+// 側でカンマ等の非数字を除去してから解釈するので、カンマ付きのまま渡してよい。
+function formatCurrencyNum(n) {
+  return (Number(n) || 0).toLocaleString('en-US', { maximumFractionDigits: 0 });
 }
 
 function loadTitleStoreFor(profileId) {

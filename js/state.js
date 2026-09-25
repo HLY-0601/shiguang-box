@@ -337,6 +337,67 @@ export function setShortcutsEnabled(checked) {
 }
 
 /* ================================================================
+   🏆 称号表示のオン/オフ設定。taipak5000.github.io 配下の全ツール共通キー
+   （未設定＝オン扱い、SKY_SHORTCUTS_KEYと同じ規約）。プロフィール切替
+   モーダル（js/chrome/pf-modal.js）の実績数バッジ表示に反映する。
+   端末単位（プロフィール非依存）の表示設定なのでnsKey化しない。
+   ================================================================ */
+export const SKY_SHOW_TITLES_KEY = 'sky_pf_show_titles';
+export function getShowTitlesEnabled() {
+  try {
+    const v = localStorage.getItem(SKY_SHOW_TITLES_KEY);
+    return v === null ? true : v === '1';
+  } catch (e) { return true; }
+}
+export function setShowTitlesEnabled(checked) {
+  try { localStorage.setItem(SKY_SHOW_TITLES_KEY, checked ? '1' : '0'); } catch (e) { /* private browsing等 */ }
+}
+
+/* ================================================================
+   💰 プロフィールごとの所持通貨（プロフィール切替モーダルの所持通貨編集）。
+   item/profiles.js の pfLoadCurrency/pfSaveCurrencyField を移植したもの。
+   candle/heart/starCandleはitem/star-candle等が既に読み書きしているキー
+   （wishOwnCurrency）を、seasonCandleはcompanionの保存データ内の
+   ownedCandlesフィールドを直接読み書きし、二重管理を避ける。
+   昇華キャンドル以外の追加通貨（ギフトパス等）は、それを使う機能自体が
+   tai-hubにまだ移植されていないため、このプロトタイプでは含めない。
+   ================================================================ */
+export const CURRENCY_WISH_KEY = 'wishOwnCurrency';
+export const CURRENCY_COMPANION_KEY = 'sky_companion_v4_data';
+export function loadOwnedCurrency(profileId = getActiveProfileId()) {
+  let wish;
+  try { wish = JSON.parse(localStorage.getItem(nsKeyFor(CURRENCY_WISH_KEY, profileId))) || {}; } catch (e) { wish = {}; }
+  let companionData;
+  try { companionData = JSON.parse(localStorage.getItem(nsKeyFor(CURRENCY_COMPANION_KEY, profileId))) || {}; } catch (e) { companionData = {}; }
+  return {
+    candle: wish.candle || 0,
+    heart: wish.heart || 0,
+    starCandle: wish.starCandle || 0,
+    seasonCandle: companionData.ownedCandles || 0,
+  };
+}
+export function saveOwnedCurrencyField(field, rawValue, profileId = getActiveProfileId()) {
+  // pf-modal.js側はnumber inputではなくtext+inputmode="numeric"（桁区切り
+  // カンマを表示するため）を使っているので、カンマ等の非数字を先に除去する。
+  const cleaned = String(rawValue).replace(/[^0-9.-]/g, '');
+  const n = Math.max(0, Math.floor(Number(cleaned)) || 0);
+  if (field === 'seasonCandle') {
+    const key = nsKeyFor(CURRENCY_COMPANION_KEY, profileId);
+    let data;
+    try { data = JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { data = {}; }
+    data.ownedCandles = n;
+    localStorage.setItem(key, JSON.stringify(data));
+  } else {
+    const key = nsKeyFor(CURRENCY_WISH_KEY, profileId);
+    let wish;
+    try { wish = JSON.parse(localStorage.getItem(key)) || {}; } catch (e) { wish = {}; }
+    wish[field] = n;
+    localStorage.setItem(key, JSON.stringify(wish));
+  }
+  return n;
+}
+
+/* ================================================================
    💾 データのエクスポート/インポート/全削除
    localStorage は taipak5000.github.io 配下の全ツールで共有されているため、
    ここで書き出す/読み込む/消す内容はこのサイトだけでなく item・wings・

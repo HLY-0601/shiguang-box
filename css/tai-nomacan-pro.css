@@ -47,6 +47,15 @@
 .nomacan-pro-view input[type="number"] { width: 100px; text-align: right; }
 .nomacan-pro-view input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--npb-blue); cursor: pointer; }
 
+/* 🩹 移植元(tai-nomacan.pro/index.html)は body{padding:16px} + .container{max-width:720px;
+   margin:0 auto}で左右の余白と横幅の上限を確保していたが、tai-hub移植時に
+   .nomacan-pro-view側の水平paddingが0になり、.container相当のラッパーも
+   無いまま(.nmp-rootは現在CSSルール無し)だったため、コンテンツが画面端まで
+   フルワイドに伸びてしまっていた（他の全ツールが持つ.nm-wrap等と同じ
+   役割のラッパーとして.nmp-wrapを新設し、同じ720px/960pxの上限を揃える）。 */
+.nomacan-pro-view .nmp-wrap { max-width: 720px; margin: 0 auto; padding: 0 16px; }
+@media (min-width: 850px) { .nomacan-pro-view .nmp-wrap { max-width: 960px; } }
+
 .nmp-header h1 { font-size: 20px; font-weight: 800; margin: 4px 0 16px; letter-spacing: -0.02em; }
 .nmp-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media (min-width: 860px) { .nmp-grid { grid-template-columns: 1fr 1fr; align-items: start; } }

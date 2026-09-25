@@ -373,33 +373,35 @@ function escHtml(str) { return String(str == null ? '' : str).replace(/[&<>"']/g
 function renderShell() {
   return `
   <div class="nomacan-pro-view nmp-root">
-    <header class="nmp-header"><h1>${t('pageTitle') || (CURRENT_LANG === 'en' ? 'Nomacan Calculator Pro' : 'ノマキャン計算機プロ')}</h1></header>
-    <div class="nmp-grid">
-      <div class="nmp-col">
-        <section class="nmp-card">
-          <div class="nmp-card-header">${escHtml(t('candle.sectionHeader') || (CURRENT_LANG === 'en' ? 'Candle Management' : 'キャンドル管理'))}</div>
-          <div id="nmpCandleBody"></div>
-        </section>
-        <section class="nmp-card">
-          <div class="nmp-card-header">${escHtml(t('optimize.sectionHeader'))}</div>
-          <div class="nmp-row"><div>${escHtml(t('optimize.targetLabel'))}</div><input type="number" value="${targetCandlesForOptimization}" oninput="__nmpTargetInput(this.value)"></div>
-          <button type="button" class="nmp-btn nmp-btn-orange" style="width:100%;" onclick="__nmpOptimizeClick()">${escHtml(t('optimize.autoSelectBtn'))}</button>
-        </section>
+    <div class="nmp-wrap">
+      <header class="nmp-header"><h1>${t('pageTitle') || (CURRENT_LANG === 'en' ? 'Nomacan Calculator Pro' : 'ノマキャン計算機プロ')}</h1></header>
+      <div class="nmp-grid">
+        <div class="nmp-col">
+          <section class="nmp-card">
+            <div class="nmp-card-header">${escHtml(t('candle.sectionHeader') || (CURRENT_LANG === 'en' ? 'Candle Management' : 'キャンドル管理'))}</div>
+            <div id="nmpCandleBody"></div>
+          </section>
+          <section class="nmp-card">
+            <div class="nmp-card-header">${escHtml(t('optimize.sectionHeader'))}</div>
+            <div class="nmp-row"><div>${escHtml(t('optimize.targetLabel'))}</div><input type="number" value="${targetCandlesForOptimization}" oninput="__nmpTargetInput(this.value)"></div>
+            <button type="button" class="nmp-btn nmp-btn-orange" style="width:100%;" onclick="__nmpOptimizeClick()">${escHtml(t('optimize.autoSelectBtn'))}</button>
+          </section>
+        </div>
+        <div class="nmp-col">
+          <section class="nmp-card">
+            <div class="nmp-card-header">${escHtml(t('route.sectionHeader'))}</div>
+            <div id="nmpRoutesBody"></div>
+          </section>
+          <section class="nmp-card">
+            <div class="nmp-card-header">${escHtml(t('area.sectionHeader'))}</div>
+            <div id="nmpAreaBody"></div>
+          </section>
+        </div>
       </div>
-      <div class="nmp-col">
-        <section class="nmp-card">
-          <div class="nmp-card-header">${escHtml(t('route.sectionHeader'))}</div>
-          <div id="nmpRoutesBody"></div>
-        </section>
-        <section class="nmp-card">
-          <div class="nmp-card-header">${escHtml(t('area.sectionHeader'))}</div>
-          <div id="nmpAreaBody"></div>
-        </section>
-      </div>
+      <footer class="nmp-footer">
+        <p>${escHtml(t('footer.copyright'))}</p>
+      </footer>
     </div>
-    <footer class="nmp-footer">
-      <p>${escHtml(t('footer.copyright'))}</p>
-    </footer>
     <div class="nmp-toast-stack" id="nmpToastStack"></div>
   </div>`;
 }

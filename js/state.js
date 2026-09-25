@@ -392,6 +392,7 @@ export const SITE_LINKS = [
   { icon: 'i-masks', ja: 'エモート所持率管理', en: 'Emote Collection Tracker', hubRoute: '#/emote' },
   { icon: 'i-pin', ja: '創作物管理ツール', en: 'Creation Manager', hubRoute: '#/share' },
   { icon: 'i-candle', ja: 'ノマキャン計算機', en: 'Candle Calculator', hubRoute: '#/tai-nomacan' },
+  { icon: 'i-compass', ja: 'ノマキャン計算機プロ', en: 'Candle Calculator Pro', hubRoute: '#/tai-nomacan-pro' },
   { icon: 'i-star-candle', ja: '星のキャンドル計算機', en: 'Star Candle Calculator', hubRoute: '#/star-candle' },
   { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', hubRoute: '#/companion' },
   { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', hubRoute: '#/wings' },

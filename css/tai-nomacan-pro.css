@@ -1,0 +1,169 @@
+/* ================================================================
+   tai-nomacan-pro（ノマキャン計算機プロ）機能専用のデザイントークン・
+   スタイル。移植元: tai-nomacan.pro/index.html の <style> のうち、
+   このツール自身のUI（キャンドル管理・効率自動最適化・エリア管理・
+   マイルート）に関わる部分。プロフィール/環境設定/他のツールドロワー/
+   サイトドック等の「共有chrome」はtai-hub側(css/chrome.css)に既に
+   同等のものがあるため移植していない。
+
+   スコープは #app-root配下の.nomacan-pro-viewのみ（item.css/
+   tai-nomacan.cssと同じ考え方）。nomacan-pro-view.jsのmount()が
+   最初の描画時にこのファイルへの<link>を動的に1回だけ挿入する。
+   ================================================================ */
+.nomacan-pro-view {
+  --npb-bg: #f2f2f7;
+  --npb-card: #ffffff;
+  --npb-text: #1c1c1e;
+  --npb-text-2: #6e6e73;
+  --npb-border: rgba(60,60,67,0.16);
+  --npb-input-bg: #f2f2f7;
+  --npb-stat-bg: #f8f8fa;
+  --npb-blue: #007AFF;
+  --npb-orange: #FF9500;
+  --npb-green: #34C759;
+  --npb-red: #FF3B30;
+  --npb-purple: #AF52DE;
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--npb-text);
+  min-height: 100%;
+  padding: 16px 0 40px;
+  box-sizing: border-box;
+}
+[data-theme="dark"] .nomacan-pro-view {
+  --npb-bg: #0c081a;
+  --npb-card: #1c1730;
+  --npb-text: #f2f2f7;
+  --npb-text-2: #a0a0a8;
+  --npb-border: rgba(255,255,255,0.14);
+  --npb-input-bg: #14102450;
+  --npb-stat-bg: #14102450;
+}
+.nomacan-pro-view * { box-sizing: border-box; }
+.nomacan-pro-view input, .nomacan-pro-view textarea, .nomacan-pro-view select {
+  font-family: inherit; color: var(--npb-text); background: var(--npb-input-bg);
+  border: 1px solid var(--npb-border); border-radius: 8px; padding: 7px 10px; font-size: 14px;
+}
+.nomacan-pro-view input[type="number"] { width: 100px; text-align: right; }
+.nomacan-pro-view input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--npb-blue); cursor: pointer; }
+
+.nmp-header h1 { font-size: 20px; font-weight: 800; margin: 4px 0 16px; letter-spacing: -0.02em; }
+.nmp-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 860px) { .nmp-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
+.nmp-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
+.nmp-card { background: var(--npb-card); border: 1px solid var(--npb-border); border-radius: 14px; padding: 16px; }
+.nmp-card-header { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--npb-blue); }
+.nmp-card-subheader { font-size: 13px; font-weight: 700; color: var(--npb-blue); margin: 16px 0 8px; padding-top: 12px; border-top: 1px dashed var(--npb-border); }
+
+.nmp-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--npb-border); font-size: 14px; }
+.nmp-row:last-of-type { border-bottom: none; }
+.nmp-hint { font-size: 11px; color: var(--npb-text-2); line-height: 1.5; padding: 2px 0 6px; }
+.nmp-stat-row { display: flex; align-items: center; justify-content: space-between; padding: 5px 0; font-size: 13px; color: var(--npb-text-2); }
+.nmp-stat-row b { color: var(--npb-text); font-variant-numeric: tabular-nums; }
+.nmp-stat-row-big { font-size: 15px; }
+.nmp-memo { width: 100%; height: 60px; resize: vertical; margin-top: 4px; }
+
+.nmp-shard-box { background: var(--npb-stat-bg); border: 1px solid var(--npb-border); border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
+.nmp-shard-title { font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.nmp-shard-body { font-size: 13px; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+
+.nmp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; border: 0; border-radius: 10px; padding: 10px 14px; font-size: 14px; font-weight: 700; cursor: pointer; color: #fff; background: var(--npb-blue); }
+.nmp-btn:active { opacity: 0.8; }
+.nmp-btn-blue { background: var(--npb-blue); }
+.nmp-btn-orange { background: var(--npb-orange); }
+.nmp-btn-green { background: var(--npb-green); }
+.nmp-btn-red { background: var(--npb-red); }
+.nmp-btn-purple { background: var(--npb-purple); }
+.nmp-btn-outline { background: var(--npb-input-bg); color: var(--npb-text); border: 1px solid var(--npb-border); }
+.nmp-btn-outline-red { background: var(--npb-input-bg); color: var(--npb-red); border: 1px solid var(--npb-border); }
+.nmp-btn-sm { padding: 6px 10px; font-size: 12px; border-radius: 8px; }
+.nmp-btn-xs { padding: 4px 8px; font-size: 11px; border-radius: 6px; }
+
+.nmp-icon-btn { border: 0; background: var(--npb-input-bg); color: var(--npb-text); border-radius: 8px; width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.nmp-icon-btn-xs { width: 22px; height: 22px; border-radius: 6px; }
+.nmp-icon-btn-danger { color: var(--npb-red); }
+.nmp-icon-btn:disabled { opacity: 0.35; cursor: default; }
+.nmp-dim { color: var(--npb-text-2); font-size: 12px; }
+
+.nmp-empty-state { text-align: center; color: var(--npb-text-2); padding: 20px 0; font-size: 13px; line-height: 1.6; }
+
+/* ── エリア管理 ── */
+.nmp-area-search-row { margin-bottom: 10px; }
+.nmp-area-search-row input { width: 100%; }
+.nmp-checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-bottom: 10px; cursor: pointer; }
+.nmp-preset-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 6px; }
+.nmp-preset-btn { border: 1px solid var(--npb-border); background: var(--npb-stat-bg); color: var(--npb-text); border-radius: 8px; padding: 6px 4px; font-size: 12px; cursor: pointer; text-align: center; line-height: 1.5; }
+.nmp-preset-btn:active { background: var(--npb-border); }
+.nmp-preset-btn small { color: var(--npb-text-2); font-weight: 700; }
+
+.nmp-area-list { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.nmp-main-area-row { border: 1px solid var(--npb-border); border-radius: 10px; padding: 10px; background: var(--npb-stat-bg); }
+.nmp-main-area-head { display: flex; align-items: center; gap: 8px; }
+.nmp-area-icon-badge { width: 26px; height: 26px; border-radius: 8px; background: var(--npb-card); display: inline-flex; align-items: center; justify-content: center; color: var(--npb-blue); flex-shrink: 0; }
+.nmp-main-area-name { flex: 1; min-width: 0; font-weight: 700; font-size: 14px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nmp-main-area-frac { font-size: 11.5px; color: var(--npb-text-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.nmp-pct-slider { width: 100%; margin: 8px 0 2px; accent-color: var(--npb-blue); }
+.nmp-pct-readout { text-align: right; font-size: 11px; color: var(--npb-text-2); font-variant-numeric: tabular-nums; }
+
+.nmp-sub-area-list { margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--npb-border); display: flex; flex-direction: column; gap: 6px; }
+.nmp-sub-area-row-simple { display: flex; justify-content: space-between; font-size: 12.5px; padding: 3px 0; }
+.nmp-sub-area-row { background: var(--npb-card); border: 1px solid var(--npb-border); border-radius: 8px; padding: 8px; }
+.nmp-sub-area-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.nmp-inline-name-input { flex: 1; min-width: 90px; font-size: 12.5px; padding: 4px 6px; }
+.nmp-inline-time-input { width: 56px; font-size: 12px; padding: 4px 6px; }
+.nmp-inline-light-input { width: 56px; font-size: 12px; padding: 4px 6px; }
+.nmp-group-badge { background: var(--npb-purple); color: #fff; border-radius: 5px; padding: 1px 6px; font-size: 10px; }
+
+.nmp-spot-list { margin-top: 6px; padding-left: 8px; border-left: 2px solid var(--npb-border); display: flex; flex-direction: column; gap: 4px; }
+.nmp-spot-row { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.nmp-spot-inactive { opacity: 0.4; }
+
+/* ── トースト ── */
+.nmp-toast-stack { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 6px; z-index: 1200; pointer-events: none; }
+.nmp-toast { padding: 10px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; color: #fff; box-shadow: 0 4px 16px rgba(0,0,0,0.25); animation: nmpToastIn 0.2s ease-out; }
+.nmp-toast-success { background: var(--npb-green); }
+.nmp-toast-error { background: var(--npb-red); }
+@keyframes nmpToastIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── 確認モーダル（tai-hub共有の.modal-overlay/.modal-cardを使用） ── */
+.nmp-confirm-modal { max-width: 340px; padding: 20px; }
+.nmp-confirm-modal-msg { font-size: 14px; line-height: 1.6; white-space: pre-wrap; margin: 0 0 16px; }
+.nmp-confirm-modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+.nmp-confirm-inline { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
+.nmp-confirm-inline-actions { display: flex; gap: 8px; }
+
+/* ── マイルート ── */
+.nmp-spell-import { border: 1px dashed var(--npb-border); border-radius: 10px; padding: 10px; margin: 10px 0; }
+.nmp-spell-import-label { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.nmp-spell-import-row { display: flex; gap: 6px; }
+.nmp-spell-import-row input { flex: 1; min-width: 0; }
+
+.nmp-route-card { background: var(--npb-stat-bg); border: 1px solid var(--npb-border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.nmp-route-card-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.nmp-route-name-input { flex: 1; min-width: 100px; font-weight: 700; font-size: 14px; background: transparent; border: none; padding: 2px 0; }
+.nmp-route-card-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.nmp-route-path { font-size: 12px; color: var(--npb-text-2); margin-top: 6px; }
+.nmp-route-path b { color: var(--npb-text); }
+.nmp-route-spell-out { width: 100%; height: 50px; margin-top: 8px; font-family: monospace; font-size: 11px; resize: vertical; }
+
+.nmp-route-expanded { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--npb-border); }
+.nmp-timer-box { background: var(--npb-card); border-radius: 8px; padding: 10px; text-align: center; }
+.nmp-timer-display { font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.nmp-timer-display.running { color: var(--npb-green); }
+.nmp-timer-actions { display: flex; gap: 8px; justify-content: center; margin-top: 8px; }
+.nmp-hist-stats { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 6px; border-top: 1px dashed var(--npb-border); font-size: 11px; flex-wrap: wrap; gap: 6px; }
+.nmp-hist-clear { color: var(--npb-red); cursor: pointer; font-weight: 600; }
+
+.nmp-reorder-label { font-size: 12px; color: var(--npb-text-2); margin: 10px 0 6px; }
+.nmp-reorder-list { display: flex; flex-direction: column; gap: 4px; max-height: 200px; overflow-y: auto; background: var(--npb-input-bg); border-radius: 8px; padding: 6px; }
+.nmp-reorder-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; background: var(--npb-card); border: 1px solid var(--npb-border); border-radius: 6px; padding: 5px 8px; font-size: 12px; flex-wrap: wrap; }
+.nmp-reorder-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 55%; }
+.nmp-reorder-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.nmp-split-time { font-family: monospace; font-size: 10px; color: var(--npb-green); font-weight: 700; }
+.nmp-route-memo { width: 100%; height: 44px; margin-top: 10px; resize: vertical; }
+.nmp-route-summary { margin-top: 10px; background: var(--npb-input-bg); border-radius: 8px; padding: 8px 10px; }
+.nmp-route-summary-row { display: flex; justify-content: space-between; font-size: 12px; }
+
+.nmp-footer { text-align: center; padding: 24px 16px; margin-top: 24px; font-size: 12px; color: var(--npb-text-2); border-top: 1px solid var(--npb-border); }

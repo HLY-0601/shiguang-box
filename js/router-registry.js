@@ -115,6 +115,7 @@ export const ROUTES = {
   emote: lazyToolEntry(() => import('../features/emote/emote-view.js'), 'エモート所持率管理', 'Emote Collection Tracker'),
   share: lazyToolEntry(() => import('../features/share/share-view.js'), '創作物管理ツール', 'Creation Manager'),
   'tai-nomacan': lazyToolEntry(() => import('../features/tai-nomacan/nomacan-view.js'), 'ノマキャン計算機', 'Candle Calculator'),
+  'tai-nomacan-pro': lazyToolEntry(() => import('../features/tai-nomacan-pro/nomacan-pro-view.js'), 'ノマキャン計算機プロ', 'Candle Calculator Pro'),
   'star-candle': lazyToolEntry(() => import('../features/star-candle/star-candle-view.js'), '星のキャンドル計算機', 'Star Candle Calculator'),
   wings: lazyToolEntry(() => import('../features/wings/wings-view.js'), '羽トラッカー', 'Wing Tracker'),
   companion: lazyToolEntry(() => import('../features/companion/companion-view.js'), '精霊同行ツール', 'Spirit Companion Tool'),

@@ -121,7 +121,7 @@
 .pf-row:last-child { border-bottom: 0; }
 .pf-row-name { flex: 1 1 auto; font-weight: 600; }
 .pf-row-name.is-active { color: var(--hub-accent); }
-.pf-row-input { flex: 1 1 auto; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); }
+.pf-row-input { flex: 1 1 auto; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); font-size: 16px; }
 .pf-icon-btn {
   border: 0; background: var(--hub-sep); color: var(--hub-text); border-radius: 10px;
   padding: 7px 12px; cursor: pointer; font-size: 13px; font-weight: 600; white-space: nowrap;
@@ -129,7 +129,7 @@
 .pf-icon-btn.pf-row-btn-ok { background: var(--hub-accent); color: #fff; }
 .pf-icon-btn.pf-row-btn-danger { background: #ff453a; color: #fff; }
 .pf-add-row { display: flex; gap: 8px; margin-top: 14px; }
-.pf-add-row input { flex: 1 1 auto; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); }
+.pf-add-row input { flex: 1 1 auto; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); font-size: 16px; }
 
 /* ── 所持通貨（プロフィール切替モーダル内、現在アクティブなプロフィールの分） ── */
 .pf-currency-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hub-sep); }

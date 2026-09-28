@@ -343,7 +343,7 @@ export function injectShareSharedStyles() {
 
 .ish-textarea {
   width: 100%; box-sizing: border-box; border: none; border-radius: var(--hub-r-sm); padding: 10px 12px;
-  font-size: 13.5px; font-family: inherit; color: var(--hub-text); resize: vertical; min-height: 60px; background: var(--hub-bg);
+  font-size: 16px; font-family: inherit; color: var(--hub-text); resize: vertical; min-height: 60px; background: var(--hub-bg);
 }
 .ish-textarea:focus { outline: 2px solid var(--hub-accent); outline-offset: -1px; }
 

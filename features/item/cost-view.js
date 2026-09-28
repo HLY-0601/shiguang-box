@@ -1105,7 +1105,7 @@ function injectStyles() {
 .item-view .cost-acquire-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
 .item-view .cost-acquire-btn.active.free { background: var(--green); border-color: var(--green); }
 .item-view .cost-candle-money-input-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11.5px; color: var(--text-2); flex-wrap: wrap; }
-.item-view .cost-candle-money-input { width: 90px; background: var(--bg); border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 5px 8px; font-size: 12.5px; font-family: inherit; color: var(--text); }
+.item-view .cost-candle-money-input { width: 90px; background: var(--bg); border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 5px 8px; font-size: 16px; font-family: inherit; color: var(--text); }
 
 .item-view .cost-gift-card { background: var(--card); border-radius: var(--r); padding: 16px; margin-top: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
 .item-view .cost-gift-card .cost-summary-title-row { color: var(--text); }
@@ -1113,6 +1113,7 @@ function injectStyles() {
 .item-view .cost-note { font-size: 11.5px; color: var(--text-2); line-height: 1.6; margin: 0; }
 .item-view .cost-gift-form { display: flex; flex-direction: column; gap: 8px; margin-top: 4px; }
 .item-view .cost-gift-form select, .item-view .cost-gift-form input { background: var(--bg); border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 9px 12px; font-size: 13.5px; font-family: inherit; color: var(--text); width: 100%; }
+.item-view .cost-gift-form input { font-size: 16px; }
 .item-view .cost-gift-form select:disabled { opacity: 0.5; }
 .item-view .cost-gift-form-row { display: flex; gap: 8px; }
 .item-view .cost-gift-form-row > * { flex: 1; min-width: 0; }

@@ -392,7 +392,7 @@ function injectStyles() {
 
 .wcm-own-inputs { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 0.5px solid var(--hub-sep); }
 .wcm-own-inputs label { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--hub-text); }
-.wcm-own-inputs input { margin-left: auto; width: 100px; background: var(--hub-bg); border: 0; border-radius: var(--hub-r-sm); padding: 8px 10px; font-size: 13.5px; font-family: inherit; color: var(--hub-text); text-align: right; }
+.wcm-own-inputs input { margin-left: auto; width: 100px; background: var(--hub-bg); border: 0; border-radius: var(--hub-r-sm); padding: 8px 10px; font-size: 16px; font-family: inherit; color: var(--hub-text); text-align: right; }
 
 .wcm-total-box { margin-top: 14px; padding: 16px; background: var(--hub-accent-bg); border-radius: var(--hub-r); }
 .wcm-total-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 5px 0; font-size: 13px; color: var(--hub-text); }

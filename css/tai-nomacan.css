@@ -395,7 +395,7 @@
 
 .nomacan-view .quest-log-textarea {
   width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--cream);
-  color: var(--text); font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px; line-height: 1.7; outline: none;
+  color: var(--text); font-family: 'Zen Maru Gothic', sans-serif; font-size: 16px; line-height: 1.7; outline: none;
   resize: vertical; transition: border-color .2s, box-shadow .2s;
 }
 .nomacan-view .quest-log-textarea:focus { border-color: var(--amber); box-shadow: 0 0 0 3px rgba(232,133,10,0.16); }

@@ -332,7 +332,7 @@ export function injectCoordSharedStyles() {
 .cd-form-label { font-size: 12px; font-weight: 600; color: var(--hub-text-2); margin-bottom: 6px; display: block; }
 .cd-form-input {
   width: 100%; background: var(--hub-bg); border: none; border-radius: var(--hub-r-sm); padding: 10px 12px;
-  font-size: 14px; color: var(--hub-text); font-family: inherit; outline: none; box-sizing: border-box;
+  font-size: 16px; color: var(--hub-text); font-family: inherit; outline: none; box-sizing: border-box;
 }
 .cd-form-input::placeholder { color: var(--hub-text-3); }
 

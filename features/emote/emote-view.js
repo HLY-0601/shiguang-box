@@ -792,6 +792,7 @@ function injectStyles() {
 .emote-view .em-control-label { font-size: 12px; font-weight: 600; color: var(--text-2); min-width: 60px; }
 .emote-view .em-select-box { background: var(--bg); border: none; padding: 8px 12px; border-radius: var(--r-sm); font-size: 13px; color: var(--text); font-weight: 500; outline: none; flex: 1; min-width: 120px; font-family: inherit; }
 .emote-view .em-select-box:focus { outline: 2px solid var(--focus-ring); outline-offset: 1px; }
+.emote-view .em-search-input { font-size: 16px; }
 .emote-view .em-search-input::placeholder { color: var(--text-3); }
 .emote-view .em-control-reset-row { justify-content: flex-end; }
 .emote-view .em-clear-filters-btn { background: var(--bg); border: none; color: var(--blue); border-radius: var(--r-sm); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }

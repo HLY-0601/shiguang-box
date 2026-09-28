@@ -246,7 +246,7 @@
 /* ── 入力欄（一覧内の検索・個別カード内のメモ／日付） ── */
 .share-view input[type="text"], .share-view input[type="date"] {
   background: var(--fill); border: 1px solid transparent; border-radius: var(--r-sm);
-  padding: 9px 12px; font-size: 15px; color: var(--text); font-family: inherit; box-sizing: border-box;
+  padding: 9px 12px; font-size: 16px; color: var(--text); font-family: inherit; box-sizing: border-box;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 .share-view input[type="text"] { width: 100%; }

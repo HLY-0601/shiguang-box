@@ -107,7 +107,7 @@
 .wings-view .season-jump-select { flex: 1; min-width: 0; }
 .wings-view .pf-input {
   background: var(--bg); border: 1px solid var(--sep); border-radius: 6px;
-  padding: 8px 10px; font-size: 14px; color: var(--text); font-family: inherit; outline: none; box-sizing: border-box;
+  padding: 8px 10px; font-size: 16px; color: var(--text); font-family: inherit; outline: none; box-sizing: border-box;
 }
 .wings-view .pf-input:focus { border-color: var(--blue); }
 
@@ -306,7 +306,7 @@
 }
 .wg-comment-input {
   width: 100%; box-sizing: border-box; border: 1px solid var(--hub-sep);
-  border-radius: var(--hub-r-sm); padding: 10px 12px; font-size: 13.5px; line-height: 1.5;
+  border-radius: var(--hub-r-sm); padding: 10px 12px; font-size: 16px; line-height: 1.5;
   font-family: inherit; color: var(--hub-text); resize: vertical; min-height: 60px; background: var(--hub-bg);
 }
 .wg-preview-img { width: 100%; border-radius: var(--hub-r-sm); margin: 10px 0; display: block; }

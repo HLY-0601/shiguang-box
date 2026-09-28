@@ -70,6 +70,7 @@
   padding: 10px 12px; font-size: 14px; color: var(--text); box-sizing: border-box; font-family: inherit;
 }
 .tai-revisit-view .filter-search:focus, .tai-revisit-view .filter-select:focus { outline: none; border-color: var(--cyan); }
+.tai-revisit-view .filter-search { font-size: 16px; }
 .tai-revisit-view .filter-select { flex: 1 1 140px; }
 .tai-revisit-view .filter-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-top: 10px; padding-top: 10px; border-top: 0.5px solid var(--sep); }
 .tai-revisit-view .filter-stats-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }

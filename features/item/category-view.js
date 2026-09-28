@@ -600,6 +600,7 @@ function injectStyles() {
   font-size: 13px; color: var(--text); font-weight: 500; outline: none; flex: 1; min-width: 120px;
   font-family: inherit;
 }
+.item-view .cv-search-input { font-size: 16px; }
 .item-view .cv-search-input::placeholder { color: var(--text-3); }
 .item-view .cv-control-reset-row { justify-content: flex-end; }
 .item-view .cv-control-reset-btn {

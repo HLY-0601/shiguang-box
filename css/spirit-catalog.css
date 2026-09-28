@@ -100,7 +100,7 @@
 .spirit-catalog-view .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .spirit-catalog-view .filter-search {
   flex: 1 1 200px; background: var(--sc-bg); border: 1.5px solid var(--sc-sep); border-radius: var(--sc-r-sm);
-  padding: 10px 12px; font-size: 14.5px; color: var(--sc-text); outline: none; font-family: inherit;
+  padding: 10px 12px; font-size: 16px; color: var(--sc-text); outline: none; font-family: inherit;
 }
 .spirit-catalog-view .filter-search:focus { border-color: var(--sc-green); }
 .spirit-catalog-view .filter-select {

@@ -598,7 +598,7 @@ function injectStyles() {
   display: flex; align-items: center; gap: 8px; background: var(--hub-bg);
   border-radius: var(--hub-r-sm); padding: 9px 12px; width: 100%;
 }
-.sm-input { border: 0; background: none; outline: none; flex: 1 1 auto; width: 100%; font-size: 14px; color: var(--hub-text); font-family: inherit; }
+.sm-input { border: 0; background: none; outline: none; flex: 1 1 auto; width: 100%; font-size: 16px; color: var(--hub-text); font-family: inherit; }
 .sm-input::placeholder { color: var(--hub-text-3); }
 
 .sm-toggle { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--hub-text); cursor: pointer; }

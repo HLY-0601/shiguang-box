@@ -42,7 +42,7 @@
 .nomacan-pro-view * { box-sizing: border-box; }
 .nomacan-pro-view input, .nomacan-pro-view textarea, .nomacan-pro-view select {
   font-family: inherit; color: var(--npb-text); background: var(--npb-input-bg);
-  border: 1px solid var(--npb-border); border-radius: 8px; padding: 7px 10px; font-size: 14px;
+  border: 1px solid var(--npb-border); border-radius: 8px; padding: 7px 10px; font-size: 16px;
 }
 .nomacan-pro-view input[type="number"] { width: 100px; text-align: right; }
 .nomacan-pro-view input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--npb-blue); cursor: pointer; }
@@ -120,9 +120,9 @@
 .nmp-sub-area-row-simple { display: flex; justify-content: space-between; font-size: 12.5px; padding: 3px 0; }
 .nmp-sub-area-row { background: var(--npb-card); border: 1px solid var(--npb-border); border-radius: 8px; padding: 8px; }
 .nmp-sub-area-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.nmp-inline-name-input { flex: 1; min-width: 90px; font-size: 12.5px; padding: 4px 6px; }
-.nmp-inline-time-input { width: 56px; font-size: 12px; padding: 4px 6px; }
-.nmp-inline-light-input { width: 56px; font-size: 12px; padding: 4px 6px; }
+.nmp-inline-name-input { flex: 1; min-width: 90px; font-size: 16px; padding: 4px 6px; }
+.nmp-inline-time-input { width: 56px; font-size: 16px; padding: 4px 6px; }
+.nmp-inline-light-input { width: 56px; font-size: 16px; padding: 4px 6px; }
 .nmp-group-badge { background: var(--npb-purple); color: #fff; border-radius: 5px; padding: 1px 6px; font-size: 10px; }
 
 .nmp-spot-list { margin-top: 6px; padding-left: 8px; border-left: 2px solid var(--npb-border); display: flex; flex-direction: column; gap: 4px; }
@@ -151,11 +151,11 @@
 
 .nmp-route-card { background: var(--npb-stat-bg); border: 1px solid var(--npb-border); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
 .nmp-route-card-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.nmp-route-name-input { flex: 1; min-width: 100px; font-weight: 700; font-size: 14px; background: transparent; border: none; padding: 2px 0; }
+.nmp-route-name-input { flex: 1; min-width: 100px; font-weight: 700; font-size: 16px; background: transparent; border: none; padding: 2px 0; }
 .nmp-route-card-actions { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .nmp-route-path { font-size: 12px; color: var(--npb-text-2); margin-top: 6px; }
 .nmp-route-path b { color: var(--npb-text); }
-.nmp-route-spell-out { width: 100%; height: 50px; margin-top: 8px; font-family: monospace; font-size: 11px; resize: vertical; }
+.nmp-route-spell-out { width: 100%; height: 50px; margin-top: 8px; font-family: monospace; font-size: 16px; resize: vertical; }
 
 .nmp-route-expanded { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--npb-border); }
 .nmp-timer-box { background: var(--npb-card); border-radius: 8px; padding: 10px; text-align: center; }

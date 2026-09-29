@@ -98,6 +98,10 @@
   animation: none;
 }
 @media (min-width: 850px) { .pf-modal-card, .modal-card { max-width: 960px; } }
+/* ⚙️ 表示設定モーダルだけは姉妹サイト(item/companion/share/wings等)と同様、
+   意図的に狭いまま据え置く（トグル数個の短いリストは720-960px幅より狭い方が
+   読みやすいため）。姉妹サイト間の幅の表記ゆれ是正の一環。 */
+@media (min-width: 560px) { #settingsModalOverlay .pf-modal-card, #settingsModalOverlay .modal-card { max-width: 360px; } }
 .pf-modal-overlay.open .pf-modal-card, .modal-overlay.open .modal-card {
   animation: sheetSlideUp 0.32s cubic-bezier(0.25, 1, 0.5, 1);
 }

@@ -47,6 +47,8 @@ const SPRITE_HTML = `
 <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20.5c-5-3.5-9-7-9-11.2C3 6 5 4 7.7 4c1.7 0 3.3.9 4.3 2.4C13 4.9 14.6 4 16.3 4 19 4 21 6 21 9.3c0 4.2-4 7.7-9 11.2Z"/></symbol>
 <symbol id="i-copy" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.094) translate(-12 -12)"><path d="M9.5 9.5A1.5 1.5 0 0 1 11 8h6.5A1.5 1.5 0 0 1 19 9.5V16a1.5 1.5 0 0 1-1.5 1.5H11A1.5 1.5 0 0 1 9.5 16Z"/><path d="M6.5 14.5H6A1.5 1.5 0 0 1 4.5 13V6.5A1.5 1.5 0 0 1 6 5h6.5A1.5 1.5 0 0 1 14 6.5v.5"/></g></symbol>
 <symbol id="i-tree" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.094) translate(-12 -12)"><path d="M12 3l4 5.5h-2.6L17 13h-3.2l3.4 5H16v3h-8v-3h2.8l3.4-5H10.6l3.6-4.5H12Z"/><path d="M12 21v-2.5"/></g></symbol>
+<symbol id="i-trophy" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.061) translate(-12 -12.25)"><path d="M8 4h8v6a4 4 0 0 1-8 0V4Z"/><path d="M8 5H5.5A1.5 1.5 0 0 0 4 6.5 3.5 3.5 0 0 0 7.5 10H8"/><path d="M16 5h2.5A1.5 1.5 0 0 1 20 6.5 3.5 3.5 0 0 1 16.5 10H16"/><path d="M12 14v3M9 20.5h6M9.5 17.5h5v3h-5Z"/></g></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><g transform="translate(12 12) scale(1.458) translate(-12 -12)"><path d="M6 9l6 6 6-6"/></g></symbol>
 </defs></svg>`;
 
 let injected = false;

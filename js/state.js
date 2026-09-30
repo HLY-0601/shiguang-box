@@ -27,11 +27,20 @@ export function pfIsSafeId(id) {
   return typeof id === 'string' && /^[A-Za-z0-9_-]{1,64}$/.test(id);
 }
 
+// アカウントカラー（任意）。item/profiles.js の pfIsSafeColor と同じく #RRGGBB 形式のみ許可する。
+export function pfIsSafeColor(c) {
+  return typeof c === 'string' && /^#[0-9A-Fa-f]{6}$/.test(c);
+}
+
 export function loadProfiles() {
   try {
     let list = JSON.parse(localStorage.getItem(PROFILES_KEY));
     if (!Array.isArray(list)) return null;
     list = list.filter(p => p && pfIsSafeId(p.id) && typeof p.name === 'string');
+    list = list.map(p => {
+      if (p.color !== undefined && !pfIsSafeColor(p.color)) { const { color, ...rest } = p; return rest; }
+      return p;
+    });
     list = list.map(p => (
       p.id === DEFAULT_PROFILE_ID && p.isDefaultName === undefined && (p.name === 'メイン' || p.name === 'Main')
         ? { ...p, isDefaultName: true }
@@ -65,6 +74,42 @@ export function getActiveProfileId() {
 export function getActiveProfile() {
   const list = ensureProfilesInit();
   return list.find(p => p.id === getActiveProfileId()) || list[0];
+}
+
+/* ================================================================
+   🎨 プロフィールごとのアカウントカラー（任意）。item/profiles.js の
+   pfApplyThemeColor/pfSetProfileColor/pfClearProfileColorを移植したもの。
+   選んだ色はフォントやボタンではなく、画面背景へのうっすらとした
+   色重ねとして反映する（--pf-tint-rgb をCSS側のbody背景で使う。
+   css/tokens.css のbody { background: ... } 参照）。
+   ================================================================ */
+const PF_TINT_VAR = '--pf-tint-rgb';
+function pfHexToRgb(hex) {
+  const m = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
+  return m ? { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) } : null;
+}
+export function applyProfileTint(hex) {
+  const root = document.documentElement.style;
+  if (!hex || !pfIsSafeColor(hex)) { root.removeProperty(PF_TINT_VAR); return; }
+  const c = pfHexToRgb(hex);
+  root.setProperty(PF_TINT_VAR, `rgba(${c.r}, ${c.g}, ${c.b}, 0.07)`);
+}
+export function setProfileColor(id, color) {
+  if (!pfIsSafeColor(color)) return;
+  const list = ensureProfilesInit();
+  const p = list.find(x => x.id === id);
+  if (!p) return;
+  p.color = color;
+  saveProfiles(list);
+  if (id === getActiveProfileId()) applyProfileTint(color);
+}
+export function clearProfileColor(id) {
+  const list = ensureProfilesInit();
+  const p = list.find(x => x.id === id);
+  if (!p) return;
+  delete p.color;
+  saveProfiles(list);
+  if (id === getActiveProfileId()) applyProfileTint(null);
 }
 
 export function switchProfile(id) {

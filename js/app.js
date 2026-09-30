@@ -2,7 +2,7 @@
    起動処理：テーマ初期化・アイコンスプライト注入・chromeマウント・
    router.start()。
    ================================================================ */
-import { applyThemeToDOM, resolveSkyTheme, getSkyThemeMode, pfDisplayName, ensureProfilesInit, getActiveProfileId } from './state.js';
+import { applyThemeToDOM, resolveSkyTheme, getSkyThemeMode, pfDisplayName, ensureProfilesInit, getActiveProfileId, applyProfileTint } from './state.js';
 import { injectIconSprite } from './icon-sprite.js';
 import { initRouter, startRouter } from './router.js';
 import { initShortcuts } from './shortcuts.js';
@@ -20,6 +20,7 @@ const dockMount = document.getElementById('dock-root');
 siteDock.render(dockMount);
 const activeProfile = ensureProfilesInit().find(p => p.id === getActiveProfileId());
 siteDock.refreshProfileLabel(pfDisplayName(activeProfile));
+applyProfileTint(activeProfile && activeProfile.color); // 🎨 起動時、選択中プロフィールのアカウントカラーを反映
 
 initRouter(document.getElementById('app-root'), {
   onRouteChange(toolKey) { siteDock.setActiveRoute(toolKey); },

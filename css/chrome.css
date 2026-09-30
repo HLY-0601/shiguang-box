@@ -121,7 +121,10 @@
 .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
 
 /* ── プロフィール一覧行 ── */
-.pf-row { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--hub-sep); }
+/* 🩹 flex-wrap:wrap は、行末に付く「獲得称号の展開リスト」(.pf-row-titles,
+   flex-basis:100%)を必ず次の行へ折り返すために必要（item/profiles.jsの
+   .pf-rowと同じ理由）。通常時は各要素が1行に収まる幅を持つため見た目は変わらない。 */
+.pf-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--hub-sep); }
 .pf-row:last-child { border-bottom: 0; }
 .pf-row-name { flex: 1 1 auto; font-weight: 600; }
 .pf-row-name.is-active { color: var(--hub-accent); }
@@ -135,6 +138,38 @@
 .pf-add-row { display: flex; gap: 8px; margin-top: 14px; }
 .pf-add-row input { flex: 1 1 auto; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--hub-sep); background: var(--hub-bg); color: var(--hub-text); font-size: 16px; }
 
+/* ── プロフィールごとのアカウントカラー（任意） ── */
+.pf-color-input {
+  width: 26px; height: 26px; padding: 0; border: 1px solid var(--hub-sep); border-radius: 50%;
+  background: none; cursor: pointer; flex-shrink: 0; overflow: hidden;
+}
+.pf-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.pf-color-input::-webkit-color-swatch { border: none; border-radius: 50%; }
+.pf-color-input::-moz-color-swatch { border: none; border-radius: 50%; }
+.pf-color-clear-btn { font-size: 10px; }
+
+/* ── 獲得称号の展開リスト（プロフィール一覧の各行） ── */
+.pf-row-titles { flex-basis: 100%; width: 100%; }
+.pf-row-titles-empty { margin: 4px 0 0; font-size: 11.5px; color: var(--hub-text-3); }
+.pf-row-titles-toggle {
+  display: flex; align-items: center; gap: 4px; margin: 4px 0 0; padding: 3px 2px;
+  background: none; border: none; color: var(--hub-text-2); font-size: 12.5px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+}
+.pf-row-titles-caret { display: inline-block; transition: transform 0.15s ease; }
+.pf-row-titles-toggle[aria-expanded="true"] .pf-row-titles-caret { transform: rotate(180deg); }
+.pf-row-titles-list {
+  display: flex; flex-direction: column; gap: 7px; margin: 6px 0 2px;
+  padding: 9px 10px; background: var(--hub-bg); border-radius: var(--hub-r-sm);
+}
+.pf-row-title-item { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; color: var(--hub-text-2); line-height: 1.5; }
+.pf-row-title-icon { flex-shrink: 0; font-size: 14px; line-height: 1.5; }
+.pf-row-title-text b { color: var(--hub-text); }
+.pf-row-title-source {
+  display: block; font-size: 10px; font-weight: 700; color: var(--hub-text-3);
+  text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 1px;
+}
+
 /* ── 所持通貨（プロフィール切替モーダル内、現在アクティブなプロフィールの分） ── */
 .pf-currency-section { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hub-sep); }
 .pf-currency-header { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -146,13 +181,23 @@
 .pf-currency-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
 .pf-currency-card {
   display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 12px;
-  background: var(--hub-bg); border: 1px solid var(--hub-sep); cursor: text;
+  background: var(--hub-bg); border: 1px solid var(--hub-sep);
 }
 .pf-currency-card-label {
   display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: var(--hub-text-2);
 }
+/* 🔢 数値入力＋クイック±ボタン。イベント後などに毎回全部打ち直すのではなく
+   1個単位でサッと増減できるようにする（既存の直接入力はまとめての修正用に残す。
+   wings/index.html の pf-currency-step-btn と同じ考え方）。 */
+.pf-currency-input-group { display: flex; align-items: center; gap: 6px; }
+.pf-currency-step-btn {
+  width: 24px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--hub-card); border: 1px solid var(--hub-sep); border-radius: 6px; color: var(--hub-text-2);
+  font-size: 14px; font-weight: 700; line-height: 1; cursor: pointer; font-family: inherit; padding: 0;
+}
+.pf-currency-step-btn:hover { background: var(--hub-sep); color: var(--hub-text); }
 .pf-currency-input {
-  border: 0; background: none; color: var(--hub-text); border-radius: 6px; width: 100%;
+  border: 0; background: none; color: var(--hub-text); border-radius: 6px; width: 100%; min-width: 0;
   padding: 0; font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; font-family: inherit;
 }
 .pf-currency-input:focus { outline: none; color: var(--hub-accent); }

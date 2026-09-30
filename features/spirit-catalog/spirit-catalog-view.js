@@ -19,11 +19,16 @@
 
    【意図的な簡略化・アダプテーション】詳細は各節のコメント、および
    このエージェントの最終報告(deviationsFromSource)を参照。主なもの:
-   - 所持通貨の自動増減・「所持通貨」編集パネルは移植していない
-     （プロフィール管理はtai-hub共通の仕組みに委ねる）。コスト表示
-     機能自体は「残り必要数の目安」表示として残している。
-   - ノードの実機画像（item/emoteの自HTMLをfetchして解決）・共有画像
-     生成（Xシェア/html2canvas）・ホーム画面アイコンカスタマイズは
+   - 所持通貨（キャンドル/ハート）の自動増減・季節のペンダント所持に
+     よる「季節中に入手済み」除外は spirit-catalog-state.js 側に元実装と
+     同じ挙動で移植済み。「所持通貨」編集パネル自体はtai-hub共通の
+     プロフィール切替モーダル（js/chrome/pf-modal.js）に委ねる（同じ
+     保存キーを直接read-modify-writeするため、値はズレなく連動する）。
+   - 共有画像生成（Xシェア/html2canvas）は spirit-catalog-share.js に
+     移植済み（features/wings/wings-share.jsと同じ移植方針）。
+   - ノードの実機画像はspirit-catalog-state.jsのresolveNodeImg()に移植済み
+     （treeNodeIconHtml()がそれを使い、画像が無い/読み込み失敗時は従来の
+     線画アイコンにフォールバックする）。ホーム画面アイコンカスタマイズは
      移植していない。
    - 今日/今週/今月ダッシュボードはwings-view.jsと同じパターンで
      features/shared/event-dashboard.js を自前のモーダルにmountする。
@@ -32,6 +37,7 @@ import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { t, tt } from './data/i18n-catalog.js';
 import * as S from './spirit-catalog-state.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
+import * as scShare from './spirit-catalog-share.js';
 
 const STYLE_LINK_ID = 'spirit-catalog-view-styles';
 const ICON_SPRITE_ID = 'spirit-catalog-icon-sprite';
@@ -85,6 +91,14 @@ export function mount(container, sub) {
   renderRevisitBadge();
   startRevisitBadgeTimer();
 
+  // 🖼️ ノードの実機画像データ（item機能の12カテゴリ）はアイドル時に遅延読み込みし、
+  // 完了したら開いている詳細モーダルだけ再描画してアイコンを差し替える（初期表示を
+  // 邪魔しないため。mount()が既にunmount済みでないことをcontainerElで確認する）。
+  S.ensureNodeImageMapsLoaded(() => {
+    if (!containerEl) return;
+    if (currentDetailGuid) renderDetail(currentDetailGuid);
+  });
+
   if (sub) openDetail(sub);
 }
 
@@ -96,6 +110,9 @@ export function unmount() {
   scToastBusy = false;
   document.getElementById('scDashModalOverlay')?.remove();
   eventDashboard.unmount();
+  document.getElementById('scShareCustomizeOverlay')?.remove();
+  document.getElementById('scSharePreviewOverlay')?.remove();
+  document.querySelectorAll('.sc-share-toast').forEach((el) => el.remove());
   containerEl = null;
   els = {};
 }
@@ -218,6 +235,11 @@ function renderShell() {
           </button>
         </div>
 
+        <div class="share-btn-row">
+          <button type="button" class="share-btn twitter" id="scShareTwitterBtn">${escapeHtml(t('share.twitterBtn'))}</button>
+          <button type="button" class="share-btn customize" id="scShareCustomizeBtn">${escapeHtml(t('share.customizeBtn'))}</button>
+        </div>
+
         <p class="sc-sec-label">${escapeHtml(t('grid.sectionLabel'))}</p>
         <div class="view-mode-row">
           <button type="button" class="view-mode-btn active" id="scViewModeGridBtn">${escapeHtml(t('browse.modeGrid'))}</button>
@@ -263,6 +285,8 @@ function cacheEls() {
     titlesPanel: q('scTitlesPanel'),
     grandRemainingCost: q('scGrandRemainingCost'),
     syncRefreshBtn: q('scSyncRefreshBtn'),
+    shareTwitterBtn: q('scShareTwitterBtn'),
+    shareCustomizeBtn: q('scShareCustomizeBtn'),
     viewModeGridBtn: q('scViewModeGridBtn'),
     viewModeAreaBtn: q('scViewModeAreaBtn'),
     viewModeSeasonBtn: q('scViewModeSeasonBtn'),
@@ -306,6 +330,8 @@ function wireEvents() {
     containerEl.querySelector('.spirit-catalog-view').classList.toggle('sc-cost-on', els.costToggle.checked);
   });
   els.syncRefreshBtn.addEventListener('click', refreshExternalSync);
+  els.shareTwitterBtn.addEventListener('click', () => scShare.shareOnX());
+  els.shareCustomizeBtn.addEventListener('click', () => scShare.openCustomize());
   els.viewModeGridBtn.addEventListener('click', () => setBrowseMode('grid'));
   els.viewModeAreaBtn.addEventListener('click', () => setBrowseMode('area'));
   els.viewModeSeasonBtn.addEventListener('click', () => setBrowseMode('season'));
@@ -626,8 +652,15 @@ function renderStats() {
   const rawUnlocked = S.getUnlockedMap();
   let totalNodes = 0, doneNodes = 0, completeSpirits = 0;
   let candleSpent = 0, heartSpent = 0, seasonCandleSpent = 0, seasonHeartSpent = 0;
+  // 🕊️ 季節のペンダントを所持していて、かつアイテム別コスト（item機能）側で
+  // 「季節中に入手（0扱い）」を選択済みのアイテムに対応するノードは、シーズン
+  // キャンドル/ハートの「使用済み」集計から除外する（元実装のrenderStats()と同じ）。
+  const pendantOwnedSeasons = S.getPendantOwnedSeasons();
+  const seasonAcquireMap = S.loadSeasonAcquireMap();
   S.SPIRIT_TREE_DATA.forEach((s) => {
     let spiritDone = 0, spiritTotal = 0;
+    const seasonJa = s.season ? S.SEASON_JA_MAP[s.season] : null;
+    const pendantOwned = !!(seasonJa && pendantOwnedSeasons && pendantOwnedSeasons.has(seasonJa));
     s.nodes.forEach((n) => {
       if (S.isChecklistExcludedNode(n)) return;
       totalNodes++; spiritTotal++;
@@ -635,8 +668,11 @@ function renderStats() {
       if (rawUnlocked[n.guid] && n.cost) {
         candleSpent += (n.cost.c || 0);
         heartSpent += (n.cost.h || 0);
-        seasonCandleSpent += (n.cost.sc || 0);
-        seasonHeartSpent += (n.cost.sh || 0);
+        const freeViaPendant = pendantOwned && n.itemCatKey && n.itemCostId && seasonAcquireMap[n.itemCostId] === 'inSeason';
+        if (!freeViaPendant) {
+          seasonCandleSpent += (n.cost.sc || 0);
+          seasonHeartSpent += (n.cost.sh || 0);
+        }
       }
     });
     if (spiritDone === spiritTotal && spiritTotal > 0) completeSpirits++;
@@ -734,6 +770,16 @@ function resetTreeArea(spiritGuid, unlockedCount) {
   </div>`;
 }
 
+// ノードアイコン欄のHTML（実機画像があればそれを、無ければ従来の線画アイコンを表示。
+// 画像の読み込みに失敗した場合もこの同じ線画アイコンへフォールバックする——
+// spiritCardHtml()のサムネフォールバックと同じ onerror + iconUnquoted() パターン）。
+function treeNodeIconHtml(n, spirit, isQuest) {
+  const iconId = S.nodeIconId(n, spirit, isQuest);
+  const img = S.resolveNodeImg(n);
+  if (!img) return icon(iconId, 20);
+  return `<img src="${img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('span'),{innerHTML:'${iconUnquoted(iconId, 20)}'}))">`;
+}
+
 function treeNodeHtml(spirit, n, style, prereqSatisfied) {
   const jaName = n.itemNameJa || S.resolveNodeNameJa(n, spirit);
   const name = S.itemDisplayName(n, spirit);
@@ -744,7 +790,7 @@ function treeNodeHtml(spirit, n, style, prereqSatisfied) {
     return `<div class="tree-node-wrap" style="${style || ''}">
       <div class="tree-node-circle-holder">
         <div class="tree-node tree-node-excluded" title="${escapeHtml(t(titleKey, { name }))}">
-          <span class="tree-node-icon">${icon(S.nodeIconId(n, spirit, false), 20)}</span>
+          <span class="tree-node-icon">${treeNodeIconHtml(n, spirit, false)}</span>
         </div>
       </div>
       <div class="tree-node-label no-ja">${escapeHtml(name)}</div>
@@ -769,7 +815,7 @@ function treeNodeHtml(spirit, n, style, prereqSatisfied) {
     <div class="tree-node-wrap" style="${style || ''}">
       <div class="tree-node-circle-holder">
         <button type="button" class="tree-node ${unlocked ? 'checked' : ''} ${nextAvailable ? 'next-available' : ''}" data-sc-toggle-guid="${n.guid}" title="${escapeHtml(name)}" aria-pressed="${unlocked}">
-          <span class="tree-node-icon">${icon(S.nodeIconId(n, spirit, S.isQuestNode(n)), 20)}</span>
+          <span class="tree-node-icon">${treeNodeIconHtml(n, spirit, S.isQuestNode(n))}</span>
         </button>
         ${wingTag}${emoteTag}${tierBadgeHtml}${syncBadge}
       </div>

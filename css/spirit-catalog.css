@@ -164,6 +164,12 @@
 .spirit-catalog-view .sync-refresh-row { display: flex; justify-content: center; margin-top: 10px; }
 .spirit-catalog-view .sync-refresh-btn { display: inline-flex; align-items: center; gap: 5px; }
 
+/* ── 達成率シェア用ボタン ── */
+.spirit-catalog-view .share-btn-row { display: flex; gap: 8px; margin: 14px 0 0; }
+.spirit-catalog-view .share-btn { flex: 1; padding: 12px; border-radius: var(--sc-r-sm); font-size: 13.5px; font-weight: 700; font-family: inherit; cursor: pointer; border: none; color: #fff; }
+.spirit-catalog-view .share-btn.twitter { background: #000; }
+.spirit-catalog-view .share-btn.customize { background: var(--sc-green-fill); }
+
 /* ── 称号 ── */
 .spirit-catalog-view .titles-panel { margin-top: 10px; }
 .spirit-catalog-view .titles-panel-head { display: flex; align-items: center; justify-content: space-between; padding: 0 2px 6px; }
@@ -265,6 +271,7 @@
 .spirit-catalog-view .tree-node-excluded { opacity: 0.45; border-style: dashed; cursor: default; box-shadow: none; }
 .spirit-catalog-view .tree-node-icon { line-height: 1; display: flex; align-items: center; justify-content: center; }
 .spirit-catalog-view .tree-node-icon svg { width: calc(24px * var(--tree-scale, 1)); height: calc(24px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-icon img { width: calc(28px * var(--tree-scale, 1)); height: calc(28px * var(--tree-scale, 1)); object-fit: contain; }
 .spirit-catalog-view .tree-node-wingtag { position: absolute; top: -6px; right: -4px; font-size: calc(13px * var(--tree-scale, 1)); }
 .spirit-catalog-view .tree-node-tier-badge {
   position: absolute; top: -6px; left: -6px; font-size: calc(9px * var(--tree-scale, 1));
@@ -296,3 +303,61 @@
 .spirit-catalog-view .sc-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 .spirit-catalog-view .sc-footer { text-align: center; font-size: 11.5px; color: var(--sc-text-3); padding: 28px 16px 4px; line-height: 1.8; }
+
+/* ================================================================
+   📤 達成率シェア（spirit-catalog-share.js）。カスタマイズ/プレビュー
+   モーダルは document.body 直下に生成する（他の全モーダルと同じ）ため、
+   ここから下は .spirit-catalog-view でスコープしない。features/wings/
+   wings-share.js・css/wings.css の .wg-export-card 系と同じ設計・
+   移植方針で、衝突回避のため sc-export-card/sc-exp-*/sc-share-* の
+   プレフィックスを使う（css/star-candle.cssも「star candle」の略として
+   .sc-* を使っているが、そちらは全て .star-candle-view 配下でスコープ
+   済みのため、ここで追加する非スコープのクラス名とは衝突しない）。
+   ================================================================ */
+.sc-export-card {
+  position: fixed; left: -9999px; top: 0; width: 560px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  padding: 28px; border-radius: 28px; box-sizing: border-box;
+}
+.sc-exp-brand { color: #fff; font-size: 12px; font-weight: 600; opacity: 0.85; letter-spacing: 0.3px; margin-bottom: 6px; }
+.sc-exp-hero { text-align: center; padding: 6px 0 18px; }
+.sc-exp-hero-pct { color: #fff; font-size: 52px; font-weight: 800; letter-spacing: -1px; line-height: 1; }
+.sc-exp-hero-label { color: rgba(255,255,255,0.85); font-size: 12px; margin-top: 6px; letter-spacing: 0.5px; }
+.sc-exp-hero-nums { color: #fff; font-size: 13px; margin-top: 10px; opacity: 0.92; }
+.sc-exp-hero-sub { color: #fff; font-size: 13px; margin-top: 4px; opacity: 0.92; }
+.sc-exp-comment {
+  color: #fff; background: rgba(255,255,255,0.16); border-radius: 14px;
+  padding: 10px 14px; font-size: 13px; line-height: 1.6; text-align: left;
+  margin-bottom: 4px; white-space: pre-wrap; word-break: break-word;
+}
+.sc-exp-date { color: rgba(255,255,255,0.75); font-size: 10.5px; text-align: right; margin-top: 10px; }
+
+/* ── 共有画像カスタマイズモーダル（.modal-card内、chrome.cssのトークンを使う） ── */
+.sc-share-section-label { font-size: 12px; font-weight: 700; color: var(--hub-text-2); margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 0.4px; }
+.sc-share-section-label:first-of-type { margin-top: 0; }
+.sc-theme-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.sc-theme-swatch { width: 36px; height: 36px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; position: relative; }
+.sc-theme-swatch.selected { border-color: var(--hub-text); }
+.sc-theme-swatch.selected::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4.5 12.5l5 5L20 6.5' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: center; background-size: 45%;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+}
+.sc-comment-input {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--hub-sep);
+  border-radius: var(--hub-r-sm); padding: 10px 12px; font-size: 16px; line-height: 1.5;
+  font-family: inherit; color: var(--hub-text); resize: vertical; min-height: 60px; background: var(--hub-bg);
+}
+.sc-share-hint { margin: 12px 0 0; font-size: 11.5px; color: var(--hub-text-2); line-height: 1.5; }
+.sc-preview-img { width: 100%; border-radius: var(--hub-r-sm); margin: 10px 0; display: block; }
+
+/* ── シェア専用トースト（document.body直下。既存の.sc-toastは
+   .spirit-catalog-view配下スコープのためここでは使えない） ── */
+.sc-share-toast {
+  position: fixed; bottom: calc(84px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%) translateY(20px);
+  background: rgba(28,28,30,0.92); color: #fff; padding: 10px 18px; border-radius: 999px;
+  font-size: 13px; font-weight: 500; opacity: 0; transition: opacity 0.2s, transform 0.2s; z-index: 2000;
+  pointer-events: none;
+}
+.sc-share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }

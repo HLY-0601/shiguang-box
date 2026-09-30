@@ -12,14 +12,9 @@
    詳細は emote-state.js 冒頭のコメントを参照）。
 
    ── このtai-hub移植で意図的に省略した機能（元実装にはあったもの） ──
-   1. 「Xで画像を共有」「カスタマイズして共有」ボタンと、それを支える
-      画像生成モーダル群（customizeModal/imagePreviewModal）。元実装の
-      該当ロジックはCanvas 2D APIで達成率カード画像を1から描画する
-      約400行の専用コード（テーマ・アイコン一覧・コメント欄のレイアウトを
-      すべてcanvasに手描きする）で、旧ページの単独HTMLシェルに強く
-      依存していた。tai-hubのSPA構成に移植する価値に対してコード量・
-      複雑度が不釣り合いに大きいため、今回は非移植とした
-      （入手履歴機能は通常のDOM描画のみで完結するため、そのまま移植済み）。
+   1. 「Xで画像を共有」「カスタマイズして共有」は features/emote/emote-share.js
+      に移植済み（html2canvasでDOM→画像化する、item/wingsの同種機能と
+      同じ方式。詳細はemote-share.js冒頭コメント参照）。
    2. ホーム画面アイコンのカスタマイズ機能（iconCustomModal）。これは
       「エモート管理を単独PWAとして追加した場合の、そのアプリ自身の
       アイコン」を変える機能で、tai-hubでは複数ツールが1つのハブに
@@ -47,6 +42,7 @@ import {
   isOneYearAgoBannerDismissedToday, findOneYearAgoAcquisition, dismissOneYearAgoBanner,
   getViewMode, setViewMode, getGridCols, setGridCols,
 } from './emote-state.js';
+import * as Share from './emote-share.js';
 
 function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
 function tpl(str, vars) { return str.replace(/\{(\w+)\}/g, (_, k) => (vars && k in vars) ? vars[k] : ''); }
@@ -138,6 +134,8 @@ export function mount(container) {
   window.__emoteOpenAcquireLog = openAcquireLog;
   window.__emoteRemoveAcquireLogEntry = handleRemoveAcquireLogEntry;
   window.__emoteDismissOneYearAgoBanner = handleDismissOneYearAgoBanner;
+  window.__emoteShareOnX = Share.shareOnX;
+  window.__emoteOpenShareCustomize = Share.openCustomize;
 
   populateLocationFilter();
   applyGridColsToDom();
@@ -149,6 +147,9 @@ export function mount(container) {
 
 export function unmount() {
   removeAcquireLogModal();
+  Share.closeCustomize();
+  document.getElementById('emoteShareCustomizeOverlay')?.remove();
+  document.getElementById('emoteSharePreviewOverlay')?.remove();
   delete window.__emoteToggleLevel;
   delete window.__emoteToggleAllLevels;
   delete window.__emoteFilterAndRender;
@@ -159,6 +160,8 @@ export function unmount() {
   delete window.__emoteOpenAcquireLog;
   delete window.__emoteRemoveAcquireLogEntry;
   delete window.__emoteDismissOneYearAgoBanner;
+  delete window.__emoteShareOnX;
+  delete window.__emoteOpenShareCustomize;
   containerEl = null;
 }
 
@@ -253,6 +256,17 @@ function buildShell() {
           </div>
         </div>
 
+        <p class="em-sec-label" style="padding:22px 4px 8px; margin:0;">${t('達成率をシェア', 'Share your completion rate')}</p>
+        <button type="button" class="em-feature-btn em-feature-btn-twitter" onclick="window.__emoteShareOnX()">
+          <span class="em-feature-icon"><svg class="inline-icon" width="22" height="22"><use href="#i-upload"/></svg></span>
+          <span class="em-feature-label">${t('Xで画像を共有', 'Share image on X')}</span>
+          <span class="em-feature-desc">${t('所持率を画像にしてXへ投稿できます（画像の保存も同時にできます）', 'Turn your completion rate into an image and post it to X (the image is saved automatically too)')}</span>
+        </button>
+        <button type="button" class="em-feature-btn" onclick="window.__emoteOpenShareCustomize()">
+          <span class="em-feature-icon"><svg class="inline-icon" width="22" height="22"><use href="#i-palette"/></svg></span>
+          <span class="em-feature-label">${t('カスタマイズして共有', 'Customize & share')}</span>
+          <span class="em-feature-desc">${t('背景テーマ・コメントを自分好みに設定してから保存/共有できます', 'Set your own background theme and comment before saving or sharing')}</span>
+        </button>
         <button type="button" class="em-feature-btn" onclick="window.__emoteOpenAcquireLog()">
           <span class="em-feature-icon"><svg class="inline-icon" width="22" height="22"><use href="#i-calendar"/></svg></span>
           <span class="em-feature-label">${t('入手履歴', 'Acquisition Log')}</span>
@@ -802,12 +816,16 @@ function injectStyles() {
 .emote-view .em-bulk-own-btn:active { transform: scale(0.98); }
 .emote-view .em-bulk-own-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
-/* ── 入手履歴を開くボタン（feature-btn） ── */
+/* ── 達成率シェア・入手履歴を開くボタン（feature-btn） ── */
 .emote-view .em-feature-btn { width: 100%; box-sizing: border-box; background: var(--card); border: none; border-radius: var(--r); padding: 14px 16px; margin-top: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); text-align: left; display: flex; flex-direction: column; gap: 4px; cursor: pointer; font-family: inherit; }
 .emote-view .em-feature-btn:active { transform: scale(0.985); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .emote-view .em-feature-icon { display: inline-flex; }
 .emote-view .em-feature-label { font-size: 14px; font-weight: 700; color: var(--text); }
 .emote-view .em-feature-desc { font-size: 11px; color: var(--text-2); line-height: 1.5; }
+.emote-view .em-feature-btn-twitter { background: #000; }
+.emote-view .em-feature-btn-twitter .em-feature-label { color: #fff; }
+.emote-view .em-feature-btn-twitter .em-feature-desc { color: rgba(255,255,255,0.68); }
+.emote-view .em-feature-btn-twitter .inline-icon { stroke: #fff; color: #fff; }
 
 /* ── 一覧見出し・表示切替 ── */
 .emote-view .em-list-header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 22px 4px 8px; }

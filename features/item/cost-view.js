@@ -12,8 +12,7 @@
    tai-hub移植時の意図的なアーキテクチャ改善）。
 
    楽譜（music_sheet）はカテゴリ形状が異なり今回のダッシュボード同様に
-   スコープ外（router-registry.js側でplaceholder-view扱い）のため、
-   このコスト集計にも合流させない。
+   スコープ外のため、このコスト集計にも合流させない。
 
    このファイル末尾のコメントに、元実装から意図的に省略・簡略化した
    機能（X/Twitter画像シェア一式、プレゼント履歴・キャンドル課金ログの
@@ -95,6 +94,7 @@ const giftHistoryKey = () => nsKey('giftHistory_v1');
 const giftDisplayModeKey = () => nsKey('giftDisplayMode_v1');
 const candlePurchaseKey = () => nsKey('candlePurchaseLog_v1');
 const candleDisplayModeKey = () => nsKey('candleDisplayMode_v1');
+const itemQuantityKey = () => nsKey('itemQuantity_v1');
 // item/profiles.js 側の称号ハイウォーターマーク集計が読む「直近の実額合計」。
 // 称号UI自体はtai-hubに未移植だが、キー・形状だけは互換のため書き続ける。
 const moneySpentKey = () => nsKey('itemCostMoneySum_v1');
@@ -133,6 +133,15 @@ function loadCandleDisplayMode() {
   const v = localStorage.getItem(candleDisplayModeKey());
   return v === 'separate' ? 'separate' : 'combined';
 }
+
+// 📦 大きい設置アイテム／小さい設置アイテムの所持数（item/item_cost.html の
+// ITEM_QUANTITY_KEY 相当）。同じアイテムを複数個設置できるこの2カテゴリに
+// 限り、所持済みアイテムの個数を任意で記録できるようにする。
+const QUANTITY_ELIGIBLE_CATS = ['large_placeable', 'small_placeable'];
+function loadItemQuantityMap() {
+  try { return JSON.parse(localStorage.getItem(itemQuantityKey())) || {}; } catch (_) { return {}; }
+}
+function saveItemQuantityMap(map) { localStorage.setItem(itemQuantityKey(), JSON.stringify(map)); }
 
 // source文字列（例:「感謝の季節（季節精霊・過去）」）から季節/イベント名部分だけを取り出す
 function extractSource(source) {
@@ -204,6 +213,7 @@ function computeAllItems() {
   const acquireEligibleTypes = ['candle', 'starCandle', 'heart'];
   const moneyAcquireMap = loadMoneyAcquireMap();
   const candleMoneyMap = loadCandleMoneyMap();
+  const quantityMap = loadItemQuantityMap();
   all.forEach(item => {
     item.seasonPendantOwned = !item.revisitOnly && pendantOwnedSeasons.has(extractSource(item.source)) && acquireEligibleTypes.includes(item.cost.type);
     item.isTicketItem = item.cost.type === 'ticket';
@@ -212,18 +222,38 @@ function computeAllItems() {
     const candleEntry = (item.cost.type === 'candle' || item.cost.type === 'starCandle') ? candleMoneyMap[item.id] : null;
     item.candleMoneyMode = candleEntry ? (candleEntry.mode || 'normal') : 'normal';
     item.candleMoneyYen = candleEntry ? (candleEntry.yen || 0) : 0;
+    // 大きい/小さい設置アイテムに限り所持数を扱う（未設定時は1個）
+    item.quantityEligible = QUANTITY_ELIGIBLE_CATS.includes(item.catKey);
+    item.quantity = item.quantityEligible ? (quantityMap[item.id] || 1) : 1;
   });
 
   return all;
 }
 
-function costHtml(cost) {
+// quantity（所持数）はコストが確定しているtype（candle/starCandle/heart/money）にのみ
+// 乗算を反映する。ticket/na/unknownはそもそも確定した数値が無いため、quantityを渡しても
+// 表示は変わらない（個数自体は呼び出し側の所持数入力欄で別途わかる）。
+function costHtml(cost, quantity) {
   const en = CURRENT_LANG === 'en';
   if (!cost) return en ? 'Unknown' : '不明';
-  if (cost.type === 'candle') return `<svg class="inline-icon" width="15" height="15"><use href="#i-candle"/></svg> ${cost.value}${en ? '' : '本'}`;
-  if (cost.type === 'starCandle') return `<svg class="inline-icon" width="15" height="15"><use href="#i-star"/></svg> ${cost.value}${en ? '' : '本'}`;
-  if (cost.type === 'heart') return `<svg class="inline-icon" width="15" height="15"><use href="#i-heart"/></svg> ${cost.value}${en ? '' : '個'}`;
-  if (cost.type === 'money') return `¥${cost.value.toLocaleString()}`;
+  const qty = (quantity && quantity > 1) ? quantity : 1;
+  const withQty = (iconTag, unit) => {
+    if (qty > 1 && cost.value > 0) {
+      const total = cost.value * qty;
+      return `${iconTag} ${total.toLocaleString()}${en ? '' : unit}<span class="cost-qty-note">(${cost.value.toLocaleString()}${en ? '' : unit}×${qty})</span>`;
+    }
+    return `${iconTag} ${cost.value}${en ? '' : unit}`;
+  };
+  if (cost.type === 'candle') return withQty('<svg class="inline-icon" width="15" height="15"><use href="#i-candle"/></svg>', '本');
+  if (cost.type === 'starCandle') return withQty('<svg class="inline-icon" width="15" height="15"><use href="#i-star"/></svg>', '本');
+  if (cost.type === 'heart') return withQty('<svg class="inline-icon" width="15" height="15"><use href="#i-heart"/></svg>', '個');
+  if (cost.type === 'money') {
+    if (qty > 1 && cost.value > 0) {
+      const total = cost.value * qty;
+      return `¥${total.toLocaleString()}<span class="cost-qty-note">(¥${cost.value.toLocaleString()}×${qty})</span>`;
+    }
+    return `¥${cost.value.toLocaleString()}`;
+  }
   if (cost.type === 'na') return en ? 'N/A' : '対象外';
   if (cost.type === 'ticket') return en ? 'Ticket Exchange' : 'チケット交換';
   return en ? 'Unknown' : '不明';
@@ -246,7 +276,7 @@ function renderItemCard(item) {
   if (showTicketToggle) {
     const useRevisit = item.acquireMode === 'revisit';
     const displayCost = useRevisit ? (item.revisitCost || { type: 'unknown' }) : item.cost;
-    costDisplay = costHtml(displayCost);
+    costDisplay = costHtml(displayCost, item.quantity);
     costClass = displayCost.type === 'money' ? 'money' : 'unknown';
     acquireToggleHtml = `
       <div class="cost-acquire-toggle">
@@ -256,7 +286,7 @@ function renderItemCard(item) {
   } else {
     costClass = item.cost.type === 'money' ? 'money' : (['unknown', 'na', 'ticket'].includes(item.cost.type) ? 'unknown' : '');
     const isFree = showPendantToggle && item.acquireMode === 'inSeason';
-    costDisplay = isFree ? costHtml({ ...item.cost, value: 0 }) : costHtml(item.cost);
+    costDisplay = isFree ? costHtml({ ...item.cost, value: 0 }) : costHtml(item.cost, item.quantity);
     acquireToggleHtml = showPendantToggle ? `
       <div class="cost-acquire-toggle">
         <button type="button" class="cost-acquire-btn ${isFree ? 'active free' : ''}" onclick="window.__costViewSetSeasonAcquire('${item.id}', 'inSeason')">${t('季節中に入手（0扱い）', 'Acquired in-season (counts as 0)')}</button>
@@ -282,6 +312,14 @@ function renderItemCard(item) {
       <span>${t('実額に加算する金額：', 'Amount spent (added to real-money total):')}</span>
       <span>¥</span><input type="number" min="0" class="cost-candle-money-input" value="${item.candleMoneyYen || ''}" placeholder="0" onchange="window.__costViewSetCandleMoneyYen('${item.id}', this.value)">
     </div>` : ''}` : '';
+
+  // 大きい/小さい設置アイテムの所持済みアイテムに限り、所持数の入力欄を出す
+  const quantityRowHtml = (owned && item.quantityEligible) ? `
+    <div class="cost-quantity-input-row">
+      <span>${t('所持数：', 'Quantity owned:')}</span>
+      <input type="number" min="1" step="1" class="cost-quantity-input" value="${item.quantity}" onchange="window.__costViewSetItemQuantity('${item.id}', this.value)">
+      ${item.quantity > 1 ? `<span class="cost-quantity-hint">${t('（上のコストに反映済み）', '(reflected in the cost above)')}</span>` : ''}
+    </div>` : '';
 
   return `
     <div class="cost-item-card ${owned ? 'owned' : ''}">
@@ -309,6 +347,7 @@ function renderItemCard(item) {
       ${acquireToggleHtml}
       ${moneyOriginToggleHtml}
       ${candleMoneyToggleHtml}
+      ${quantityRowHtml}
     </div>`;
 }
 
@@ -325,10 +364,12 @@ function renderItems() {
   const allItems = computeAllItems();
   const ownFilter = hostEl.querySelector('#costOwnFilter')?.value || 'all';
   const costTypeFilter = hostEl.querySelector('#costTypeFilter')?.value || 'all';
+  const categoryFilter = hostEl.querySelector('#costCategoryFilter')?.value || 'all';
   const items = allItems.filter(item => {
     if (ownFilter === 'owned' && !item.owned) return false;
     if (ownFilter === 'notOwned' && item.owned) return false;
     if (costTypeFilter !== 'all' && (!item.cost || item.cost.type !== costTypeFilter)) return false;
+    if (categoryFilter !== 'all' && item.catKey !== categoryFilter) return false;
     return true;
   });
 
@@ -410,10 +451,15 @@ function renderSummary(items) {
     if (item.seasonPendantOwned && item.acquireMode === 'inSeason') return; // 季節中入手扱いのためコスト計算から除外
     if (item.isTicketItem && item.acquireMode !== 'revisit') return; // チケットで入手扱い（0）のためコスト計算から除外
     const cost = item.isTicketItem ? (item.revisitCost || {}) : item.cost;
-    if (cost.type === 'candle' && typeof cost.value === 'number') candleSum += cost.value;
-    else if (cost.type === 'starCandle' && typeof cost.value === 'number') starCandleSum += cost.value;
-    else if (cost.type === 'heart' && typeof cost.value === 'number') heartSum += cost.value;
+    // 大きい/小さい設置アイテムは所持数（未設定時は1）をコストに乗算して集計する
+    const qty = item.quantity || 1;
+    if (cost.type === 'candle' && typeof cost.value === 'number') candleSum += cost.value * qty;
+    else if (cost.type === 'starCandle' && typeof cost.value === 'number') starCandleSum += cost.value * qty;
+    else if (cost.type === 'heart' && typeof cost.value === 'number') heartSum += cost.value * qty;
 
+    // 課金で購入したキャンドルで入手したと申告されたアイテムは、キャンドル本数の集計は変えず、
+    // 申告された実額も別途「実額」の集計に加算する（この申告額は自己申告の合計額のため、
+    // 所持数による乗算はしない）
     if ((cost.type === 'candle' || cost.type === 'starCandle') && item.candleMoneyMode === 'paidCandle' && item.candleMoneyYen > 0) {
       paidCandleCount++;
       paidCandleMoneySum += item.candleMoneyYen;
@@ -425,10 +471,10 @@ function renderSummary(items) {
       }
       if (item.moneyAcquireMode === 'gift') {
         giftReceivedCount++;
-        giftReceivedMoneySum += cost.value;
+        giftReceivedMoneySum += cost.value * qty;
         return; // ギフトでもらった分は自分の課金額の集計から除外
       }
-      moneySum += cost.value;
+      moneySum += cost.value * qty;
     }
   });
 
@@ -925,6 +971,14 @@ function renderShell() {
 
         <div class="cost-jump-bar">
           <div class="cost-jump-bar-row">
+            <svg class="inline-icon" width="14" height="14"><use href="#i-hanger"/></svg>
+            <label for="costCategoryFilter" class="cost-jump-label">${t('カテゴリ', 'Category')}</label>
+            <select id="costCategoryFilter" class="cost-jump-select" onchange="window.__costViewRenderItems()">
+              <option value="all">${t('すべて表示', 'Show all')}</option>
+              ${GRID_CATEGORIES.map(c => `<option value="${c.key}">${escapeHtml(trCat(c.name))}</option>`).join('')}
+            </select>
+          </div>
+          <div class="cost-jump-bar-row">
             <svg class="inline-icon" width="14" height="14"><use href="#i-folder"/></svg>
             <label for="costOwnFilter" class="cost-jump-label">${t('所持状況', 'Ownership')}</label>
             <select id="costOwnFilter" class="cost-jump-select" onchange="window.__costViewRenderItems()">
@@ -984,6 +1038,7 @@ const HANDLERS = {
   __costViewSetMoneyAcquire: (itemId, mode) => setMoneyAcquire(itemId, mode),
   __costViewSetCandleMoneyMode: (itemId, mode) => setCandleMoneyMode(itemId, mode),
   __costViewSetCandleMoneyYen: (itemId, rawValue) => setCandleMoneyYen(itemId, rawValue),
+  __costViewSetItemQuantity: (itemId, rawValue) => setItemQuantity(itemId, rawValue),
 };
 function exposeHandlers() { Object.keys(HANDLERS).forEach(k => { window[k] = HANDLERS[k]; }); }
 function removeHandlers() { Object.keys(HANDLERS).forEach(k => { delete window[k]; }); }
@@ -1027,6 +1082,15 @@ function setCandleMoneyYen(itemId, rawValue) {
   entry.yen = Math.max(0, Number(rawValue) || 0);
   map[itemId] = entry;
   saveCandleMoneyMap(map);
+  renderItems();
+}
+
+function setItemQuantity(itemId, rawValue) {
+  const map = loadItemQuantityMap();
+  const n = Math.max(1, Math.floor(Number(rawValue)) || 1);
+  if (n <= 1) delete map[itemId]; // 1個は従来通りの状態のため保存不要
+  else map[itemId] = n;
+  saveItemQuantityMap(map);
   renderItems();
 }
 
@@ -1090,6 +1154,7 @@ function injectStyles() {
 .item-view .cost-item-cost.money { color: #FF3B30; }
 [data-theme="dark"] .item-view .cost-item-cost.money { color: #FF453A; }
 .item-view .cost-item-cost.unknown { color: var(--text-3); font-size: 13px; font-weight: 600; }
+.item-view .cost-qty-note { display: block; font-size: 10.5px; font-weight: 600; color: var(--text-2); white-space: nowrap; margin-top: 2px; }
 .item-view .cost-item-wish-btn { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: 1px solid var(--sep); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-2); }
 .item-view .cost-item-wish-btn.is-wish { background: var(--orange-bg); border-color: var(--orange-d); color: var(--orange-d); }
 .item-view .cost-item-badges { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
@@ -1106,6 +1171,9 @@ function injectStyles() {
 .item-view .cost-acquire-btn.active.free { background: var(--green); border-color: var(--green); }
 .item-view .cost-candle-money-input-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11.5px; color: var(--text-2); flex-wrap: wrap; }
 .item-view .cost-candle-money-input { width: 90px; background: var(--bg); border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 5px 8px; font-size: 16px; font-family: inherit; color: var(--text); }
+.item-view .cost-quantity-input-row { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 11.5px; color: var(--text-2); flex-wrap: wrap; }
+.item-view .cost-quantity-input { width: 64px; background: var(--bg); border: 1px solid var(--sep); border-radius: var(--r-sm); padding: 5px 8px; font-size: 16px; font-family: inherit; color: var(--text); }
+.item-view .cost-quantity-hint { font-size: 11px; color: var(--text-3); }
 
 .item-view .cost-gift-card { background: var(--card); border-radius: var(--r); padding: 16px; margin-top: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
 .item-view .cost-gift-card .cost-summary-title-row { color: var(--text); }

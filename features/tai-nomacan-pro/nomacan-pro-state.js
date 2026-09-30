@@ -306,6 +306,13 @@ export function calcCandlesFromLight(totalLight) {
 
 /* ================================================================
    🌋 闇の破片(黒)の自動判定（非公式のコミュニティ観測ルールに基づく推測）
+   ・レルムは5日周期、時刻と色は12日周期、いずれも毎月1日が起点
+   ・時刻はSkyのサーバー基準とされる米国太平洋時間(PT)で判定する
+   🩹 以前はSHARD_TIME_PATTERNが5エントリ(mod 5)しか無く、実際の12日周期
+   （かつ曜日によって発生しない日＝SHARD_REST_DAYSがある）を反映できて
+   いなかった。黒シャードの直近3回分の発生時刻（predictUpcomingBlackShard）
+   を正しく算出するために、移植元と同じ12エントリ＋休止曜日つきの定義に
+   揃えている。
    ================================================================ */
 export const SHARD_REALMS = ['草原', '雨林', '峡谷', '捨て地', '書庫'];
 export const SHARD_TIME_PATTERN = [
@@ -314,19 +321,112 @@ export const SHARD_TIME_PATTERN = [
   { time: '2:20', color: 'red' },
   { time: '1:50', color: 'black' },
   { time: '3:30', color: 'red' },
+  { time: '2:10', color: 'black' },
+  { time: '7:40', color: 'red' },
+  { time: '1:50', color: 'black' },
+  { time: '2:20', color: 'red' },
+  { time: '2:10', color: 'black' },
+  { time: '3:30', color: 'red' },
+  { time: '1:50', color: 'black' },
 ];
-function ptDateParts(d) {
-  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(d);
+export const SHARD_REST_DAYS = {
+  '1:50': ['Sat', 'Sun'],
+  '2:10': ['Sun', 'Mon'],
+  '7:40': ['Mon', 'Tue'],
+  '2:20': ['Tue', 'Wed'],
+  '3:30': ['Wed', 'Thu'],
+};
+const SHARD_WEEKDAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+function pacificDateParts(d) {
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Los_Angeles', year: 'numeric', month: 'numeric', day: 'numeric', weekday: 'short',
+  }).formatToParts(d);
   const map = {};
   parts.forEach((p) => { map[p.type] = p.value; });
-  return { y: Number(map.year), m: Number(map.month), d: Number(map.day) };
+  return { year: Number(map.year), month: Number(map.month), day: Number(map.day), weekday: map.weekday };
 }
-export function shardPredictionForDate(d) {
-  const { d: day } = ptDateParts(d);
+// 指定したPT暦日のn日後を計算（正午UTC基準で加算するのでDSTの影響を受けない）
+function addDaysToPacificDate(year, month, day, n) {
+  const d = new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
+  d.setUTCDate(d.getUTCDate() + n);
+  return { year: d.getUTCFullYear(), month: d.getUTCMonth() + 1, day: d.getUTCDate(), weekday: SHARD_WEEKDAY_NAMES[d.getUTCDay()] };
+}
+function predictShardForPacificDate(year, month, day, weekday) {
   const realm = SHARD_REALMS[(day - 1) % 5];
-  const pattern = SHARD_TIME_PATTERN[(day - 1) % 5];
-  return { realm, time: pattern.time, color: pattern.color };
+  const pattern = SHARD_TIME_PATTERN[(day - 1) % 12];
+  const restDays = SHARD_REST_DAYS[pattern.time] || [];
+  return { year, month, day, weekday, realm, time: pattern.time, color: pattern.color, occurs: !restDays.includes(weekday) };
 }
+// 今日(PT)の予測（本日の闇の破片有無の自動判定・「予測に合わせる」ボタンに使う）
+export function shardPredictionForDate(d) {
+  const { year, month, day, weekday } = pacificDateParts(d);
+  return predictShardForPacificDate(year, month, day, weekday);
+}
+// 今日(PT)から最大31日先まで探索し、最初に見つかる「発生する黒シャード」の日を返す
+function findTodayOrNextBlackShard() {
+  let cursor = pacificDateParts(new Date());
+  for (let i = 0; i <= 31; i++) {
+    const pred = predictShardForPacificDate(cursor.year, cursor.month, cursor.day, cursor.weekday);
+    if (pred.occurs && pred.color === 'black') return pred;
+    cursor = addDaysToPacificDate(cursor.year, cursor.month, cursor.day, 1);
+  }
+  return null;
+}
+// PTの暦日+時刻(壁時計)に対応するUTCミリ秒を求める（DSTを自動考慮／外部ライブラリ不要）
+function pacificWallClockToUtcMs(year, month, day, hour, minute) {
+  let guessMs = Date.UTC(year, month - 1, day, hour + 8, minute, 0); // 初期推定 PST(-8)
+  for (let i = 0; i < 4; i++) {
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Los_Angeles',
+      year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: false,
+    }).formatToParts(new Date(guessMs));
+    const get = (t) => parseInt(parts.find((p) => p.type === t)?.value, 10);
+    let gotHour = get('hour'); if (gotHour === 24) gotHour = 0;
+    const gotMs = Date.UTC(get('year'), get('month') - 1, get('day'), gotHour, get('minute'), 0);
+    const wantMs = Date.UTC(year, month - 1, day, hour, minute, 0);
+    const diff = wantMs - gotMs;
+    if (diff === 0) break;
+    guessMs += diff;
+  }
+  return guessMs;
+}
+function jstNowParts() {
+  const parts = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Tokyo', year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(new Date());
+  const map = {};
+  parts.forEach((p) => { map[p.type] = p.value; });
+  return { year: Number(map.year), month: Number(map.month), day: Number(map.day) };
+}
+const SHARD_BLACK_REPEAT_HOURS = 8; // 黒シャードは初回発生から同日中8時間おきに再発生（受取は初回のみ）
+// 指定したPT日付+基準時刻から、8時間おきに繰り返す発生時刻をcount回分、JSTの暦日/時刻に
+// 変換して返す（表示用ラベルの組み立てはview側に委ねる。dayDiff: 今日=0, 明日=1, ...）
+function blackShardOccurrencesInJst(hit, count) {
+  const [h, min] = hit.time.split(':').map(Number);
+  const baseUtcMs = pacificWallClockToUtcMs(hit.year, hit.month, hit.day, h, min);
+  const nowJst = jstNowParts();
+  const todayJstMs = Date.UTC(nowJst.year, nowJst.month - 1, nowJst.day);
+  const results = [];
+  for (let i = 0; i < count; i++) {
+    const utcMs = baseUtcMs + i * SHARD_BLACK_REPEAT_HOURS * 3600 * 1000;
+    const jst = new Date(utcMs + 9 * 3600 * 1000);
+    const y = jst.getUTCFullYear(); const m = jst.getUTCMonth() + 1; const dd = jst.getUTCDate();
+    const dayDiff = Math.round((Date.UTC(y, m - 1, dd) - todayJstMs) / 86400000);
+    results.push({ utcMs, year: y, month: m, day: dd, weekday: jst.getUTCDay(), hour: jst.getUTCHours(), minute: jst.getUTCMinutes(), dayDiff });
+  }
+  return results;
+}
+// 直近(count)回分の黒シャード発生予測。見つかったレルムとJST発生時刻の配列を返す
+// （31日以内に見つからなければnull＝実運用ではまず起こらない）
+export function predictUpcomingBlackShard(count) {
+  const hit = findTodayOrNextBlackShard();
+  if (!hit) return null;
+  return { realm: hit.realm, occurrences: blackShardOccurrencesInJst(hit, count) };
+}
+
+/* ================================================================
+   👁️ 表示するカード（ダッシュボードの各セクションの表示/非表示設定）
+   ================================================================ */
+export const DEFAULT_VISIBLE_SECTIONS = { candleManage: true, optimization: true, myRoutes: true };
 
 /* ================================================================
    💾 本体の保存/読込
@@ -346,6 +446,7 @@ export function saveState(state) {
       candleMemo: state.candleMemo,
       dailyBonusArea: state.dailyBonusArea,
       dailyShard: state.dailyShard,
+      visibleSections: state.visibleSections,
       myRoutes: state.myRoutes.map((r) => ({
         id: r.id, name: r.name, memo: r.memo,
         selectedSpotIds: r.selectedSpotIds || [],
@@ -427,6 +528,9 @@ export function loadState() {
     targetCandlesForOptimization: Number(decoded.targetCandlesForOptimization) || 20,
     dailyBonusArea: Number(decoded.dailyBonusArea) || 0,
     dailyShard: decoded.dailyShard || 'none',
+    // 旧保存データ（この設定が無かった頃）・一部キーだけ欠けた保存データのどちらでも
+    // 全カード表示のデフォルトへフォールバックする（移植元のref({...})とwatchのマージと同じ考え方）
+    visibleSections: { ...DEFAULT_VISIBLE_SECTIONS, ...(decoded.visibleSections && typeof decoded.visibleSections === 'object' ? decoded.visibleSections : {}) },
     myRoutes: Array.isArray(decoded.myRoutes) ? decoded.myRoutes.map((r) => ({
       id: r.id || uuid(),
       name: r.name || '',
@@ -461,6 +565,7 @@ export function loadInitialData(timeMult) {
     targetCandlesForOptimization: 20,
     dailyBonusArea: 0,
     dailyShard: 'none',
+    visibleSections: { ...DEFAULT_VISIBLE_SECTIONS },
     myRoutes: [],
   };
 }

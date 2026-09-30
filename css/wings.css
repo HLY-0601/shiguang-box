@@ -226,6 +226,8 @@
 .wings-view .spirit-opt-date { flex-shrink: 0; font-size: 10.5px; color: var(--text-2); white-space: nowrap; display: inline-flex; align-items: center; gap: 2px; }
 .wings-view .spirit-opt.warn { background: var(--red-bg); }
 .wings-view .spirit-opt.warn .spirit-opt-label { color: var(--red); font-weight: 600; }
+/* ⌨️ 矢印キーでの季節精霊/恒常精霊リスト移動時に、今どの行を指しているか示すハイライト */
+.wings-view .spirit-opt.kb-nav-selected { outline: 2px solid var(--blue); outline-offset: -2px; background: var(--blue-bg); }
 
 .wings-view .area-actions { display: flex; gap: 6px; flex-shrink: 0; }
 .wings-view .area-btn {

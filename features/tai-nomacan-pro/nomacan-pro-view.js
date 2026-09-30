@@ -14,10 +14,12 @@
    - プロフィール切替・環境設定（テーマ/言語/ショートカット）・
      「他のツール」ドロワーはtai-hub共有chrome（js/chrome/*.js）が
      既に持つため移植していない（nomacan-view.jsと同じ方針）。
-   - 「表示するカード」のセクション個別表示/非表示トグルは、tai-hub側に
-     対応する先例が無いため移植していない（全カード常時表示に簡略化）。
-   - 黒シャード予測は、直近1回分の実現日時のみを表示する（元実装は
-     直近3回分を計算して表示していたが、中核機能ではないため簡略化）。
+   - 「表示するカード」のセクション個別表示/非表示トグル（visibleSections）は
+     移植済み（下記renderShellの.nmp-visibility-card・applyVisibleSections、
+     nomacan-pro-state.jsのDEFAULT_VISIBLE_SECTIONS）。
+   - 黒シャード予測は、直近3回分の実現日時（JST）を表示する（移植元の
+     shardPrediction/getBlackShardOccurrencesInJst相当。実体は
+     nomacan-pro-state.jsのpredictUpcomingBlackShard）。
    - モーダルはtai-hub共有の.modal-overlay/.modal-cardクラス（chrome.css）
      に統一（nomacan-view.jsの目標管理モーダルと同じ方針）。
    ================================================================ */
@@ -46,6 +48,7 @@ let candleMemo = '';
 let targetDate = '';
 let dailyBonusArea = 0;
 let dailyShard = 'none';
+let visibleSections = { ...S.DEFAULT_VISIBLE_SECTIONS }; // 表示するカード（キャンドル管理/効率自動最適化/マイルート）
 let currentTimeMult = 1.7;
 
 let showDetailedAreaSettings = localStorage.getItem(S.AREA_DETAIL_OPEN_KEY) === '1';
@@ -83,6 +86,7 @@ export function mount(container) {
   targetDate = initial.targetDate || defaultTargetDate();
   dailyBonusArea = initial.dailyBonusArea;
   dailyShard = initial.dailyShard;
+  visibleSections = { ...S.DEFAULT_VISIBLE_SECTIONS, ...(initial.visibleSections || {}) };
 
   container.innerHTML = renderShell();
   toastQueueEl = document.getElementById('nmpToastStack');
@@ -125,6 +129,7 @@ export function mount(container) {
   window.__nmpDailyShardSelect = (val) => { dailyShard = val; persist(); recomputeAndRenderTop(); };
   window.__nmpShardSyncClick = () => { dailyShard = todayShardKey(); persist(); recomputeAndRenderTop(); };
   window.__nmpDailyBonusSelect = (val) => { dailyBonusArea = Math.max(0, Number(val) || 0); persist(); recomputeAndRenderTop(); };
+  window.__nmpVisibleSectionToggle = (key, checked) => { visibleSections[key] = checked; persist(); applyVisibleSections(); };
 
   initRoutes(container, {
     getAreas: () => areas,
@@ -183,7 +188,16 @@ function displayAreaName(jaName) { return displayAreaNameRaw(CURRENT_LANG, jaNam
 function persist(skip) {
   S.saveState({
     areas, myRoutes, carryOverPercent, carryOverGap, targetDate, currentCandles,
-    plannedUsage, heartsToSend, targetCandlesForOptimization, candleMemo, dailyBonusArea, dailyShard,
+    plannedUsage, heartsToSend, targetCandlesForOptimization, candleMemo, dailyBonusArea, dailyShard, visibleSections,
+  });
+}
+// 👁️ 表示するカードのチェックボックスをトグルした直後、シェル全体を作り直さずに
+// 対象セクションのdisplayだけ切り替える（他セクションの入力中の値やスクロール位置を保持するため）
+function applyVisibleSections() {
+  const map = { candleManage: 'nmpSectionCandleManage', optimization: 'nmpSectionOptimization', myRoutes: 'nmpSectionMyRoutes' };
+  Object.keys(map).forEach((key) => {
+    const el = document.getElementById(map[key]);
+    if (el) el.style.display = visibleSections[key] ? '' : 'none';
   });
 }
 function onCurrentCandlesInput(val) {
@@ -327,6 +341,20 @@ function todayShardKey() {
   return `${p.realm}:${p.color}`;
 }
 
+// 🌋 黒シャード予測の表示件数（移植元と同じく直近3回分）
+const SHARD_PREDICTION_COUNT = 3;
+// 移植元のSHARD_JP_WEEKDAYと同じく、表示言語に関わらず常に日本語の曜日一字を使う
+// （元実装のgetBlackShardOccurrencesInJstのラベル組み立てロジックをそのまま踏襲）
+const SHARD_JP_WEEKDAY = ['日', '月', '火', '水', '木', '金', '土'];
+function formatShardOccurrence(occ) {
+  let dayLabel;
+  if (occ.dayDiff === 0) dayLabel = t('date.today');
+  else if (occ.dayDiff === 1) dayLabel = t('date.tomorrow');
+  else dayLabel = `${occ.month}/${occ.day}(${SHARD_JP_WEEKDAY[occ.weekday]})`;
+  const timeLabel = `${occ.hour}:${String(occ.minute).padStart(2, '0')}`;
+  return `${dayLabel} ${timeLabel}`;
+}
+
 /* ================================================================
    🔔 トースト・確認モーダル
    ================================================================ */
@@ -375,20 +403,28 @@ function renderShell() {
   <div class="nomacan-pro-view nmp-root">
     <div class="nmp-wrap">
       <header class="nmp-header"><h1>${t('pageTitle') || (CURRENT_LANG === 'en' ? 'Nomacan Calculator Pro' : 'ノマキャン計算機プロ')}</h1></header>
+      <details class="nmp-card nmp-visibility-card">
+        <summary class="nmp-visibility-summary"><svg class="inline-icon" width="14" height="14"><use href="#i-settings"/></svg> ${escHtml(t('settings.panelHeader'))}</summary>
+        <div class="nmp-visibility-options">
+          <label class="nmp-visibility-opt"><input type="checkbox" ${visibleSections.candleManage ? 'checked' : ''} onchange="__nmpVisibleSectionToggle('candleManage', this.checked)"> ${escHtml(t('settings.candleManage'))}</label>
+          <label class="nmp-visibility-opt"><input type="checkbox" ${visibleSections.optimization ? 'checked' : ''} onchange="__nmpVisibleSectionToggle('optimization', this.checked)"> ${escHtml(t('settings.optimization'))}</label>
+          <label class="nmp-visibility-opt"><input type="checkbox" ${visibleSections.myRoutes ? 'checked' : ''} onchange="__nmpVisibleSectionToggle('myRoutes', this.checked)"> ${escHtml(t('settings.myRoutes'))}</label>
+        </div>
+      </details>
       <div class="nmp-grid">
         <div class="nmp-col">
-          <section class="nmp-card">
+          <section class="nmp-card" id="nmpSectionCandleManage" style="${visibleSections.candleManage ? '' : 'display:none;'}">
             <div class="nmp-card-header">${escHtml(t('candle.sectionHeader') || (CURRENT_LANG === 'en' ? 'Candle Management' : 'キャンドル管理'))}</div>
             <div id="nmpCandleBody"></div>
           </section>
-          <section class="nmp-card">
+          <section class="nmp-card" id="nmpSectionOptimization" style="${visibleSections.optimization ? '' : 'display:none;'}">
             <div class="nmp-card-header">${escHtml(t('optimize.sectionHeader'))}</div>
             <div class="nmp-row"><div>${escHtml(t('optimize.targetLabel'))}</div><input type="number" value="${targetCandlesForOptimization}" oninput="__nmpTargetInput(this.value)"></div>
             <button type="button" class="nmp-btn nmp-btn-orange" style="width:100%;" onclick="__nmpOptimizeClick()">${escHtml(t('optimize.autoSelectBtn'))}</button>
           </section>
         </div>
         <div class="nmp-col">
-          <section class="nmp-card">
+          <section class="nmp-card" id="nmpSectionMyRoutes" style="${visibleSections.myRoutes ? '' : 'display:none;'}">
             <div class="nmp-card-header">${escHtml(t('route.sectionHeader'))}</div>
             <div id="nmpRoutesBody"></div>
           </section>
@@ -419,7 +455,7 @@ function recomputeAndRenderTop() {
   const calculated = S.calcCandlesFromLight(totalLight);
   const nextThresholdGap = calculated < S.THRESHOLDS.length ? (S.THRESHOLDS[calculated] - totalLight) : 0;
   const totalEff = selectedTime > 0 ? (selectedLight / selectedTime) : 0;
-  const shard = S.shardPredictionForDate(new Date());
+  const blackShard = S.predictUpcomingBlackShard(SHARD_PREDICTION_COUNT);
 
   el.innerHTML = `
     <div class="nmp-row"><div>${escHtml(t('refine.dailyBonusLabel'))}</div>
@@ -431,11 +467,13 @@ function recomputeAndRenderTop() {
         <option value="200" ${dailyBonusArea === 200 ? 'selected' : ''}>${escHtml(t('refine.dailyBonus4'))}</option>
       </select>
     </div>
+    ${blackShard ? `
     <div class="nmp-shard-box">
-      <div class="nmp-shard-title"><svg class="inline-icon" width="14" height="14"><use href="#nmp-i-bolt"/></svg> ${escHtml(t('refine.shardPredictionLabel', { realm: displayAreaName(shard.realm) }))}</div>
-      <div class="nmp-shard-body">${shard.time} ・ ${shard.color === 'black' ? (CURRENT_LANG === 'en' ? 'Black' : '黒') : (CURRENT_LANG === 'en' ? 'Red' : '赤')}</div>
-      <button type="button" class="nmp-btn nmp-btn-outline nmp-btn-sm" onclick="__nmpShardSyncClick()">${escHtml(t('refine.syncPrediction'))}</button>
-    </div>
+      <div class="nmp-shard-title"><svg class="inline-icon" width="14" height="14"><use href="#nmp-i-bolt"/></svg> ${escHtml(t('refine.shardPredictionLabel', { realm: displayAreaName(blackShard.realm) }))}</div>
+      <div class="nmp-shard-times">${blackShard.occurrences.map((occ) => `<span class="nmp-shard-time-chip">${escHtml(formatShardOccurrence(occ))}</span>`).join('')}</div>
+      <div class="nmp-hint" style="padding-bottom:0;">${escHtml(t('refine.receiveOnceNote'))}</div>
+      <button type="button" class="nmp-btn nmp-btn-outline nmp-btn-sm" style="margin-top:8px;" onclick="__nmpShardSyncClick()">${escHtml(t('refine.syncPrediction'))}</button>
+    </div>` : ''}
     <div class="nmp-stat-row"><span>${escHtml(t('refine.expectedCandles'))}</span><span><b>${calculated}</b> ${escHtml(t('refine.candlesUnit'))}</span></div>
     <div class="nmp-stat-row"><span>${escHtml(t('refine.totalLight'))}</span><span><b>${totalLight}</b></span></div>
     <div class="nmp-stat-row"><span>${escHtml(t('refine.totalEfficiency'))}</span><span><b>${totalEff.toFixed(2)}</b>/s</span></div>

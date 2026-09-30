@@ -27,11 +27,12 @@
      ドラッグ物理演算つきボトムシートではなく、tai-hubの他のモーダルと
      同じ「.modal-overlay/.modal-card + open クラスでのフェード/スライド」
      方式に統一した（nomacan-view.js等の既存移植と同じ簡略化）。
-   - ライトの「光の子」タイルの矢印キーでのグリッドナビゲーション
-     （kbNavMove、季節精霊/恒常精霊リストの↑↓ナビゲーション含む）は
-     移植していない（アクセシビリティ向上のための付加機能で、他の
-     移植済みツールにも同等の実装が無いため、今回のスコープでは見送り。
-     Tab/Enter/Spaceでのキーボード操作自体は通常通り機能する）。
+   - 季節精霊/恒常精霊リスト（.spirit-opt）の↑↓キーでのハイライト移動
+     （kbNavMove相当）は移植済み（後述のkbNavGetTargets/kbNavMove）。
+     一方、光の子タイルの矢印キーでのグリッドナビゲーション（←→での
+     移動）は移植していない（他の移植済みツールにも同等の実装が無く、
+     今回のスコープでは見送り。Tab/Enter/Spaceでのキーボード操作自体は
+     onLightChildrenListKeydownにより通常通り機能する）。
    - 確認ダイアログ（showConfirmModal）はポップアップブロック対策の
      カスタムモーダルだったが、tai-hubの他のモーダル(pf-modal.js等)が
      いずれも標準の confirm() で済ませている方針に合わせ、同じ水準にした
@@ -61,6 +62,8 @@ function L(obj) {
 function escapeAttr(s) { return String(s).replace(/'/g, '&#39;'); }
 
 let containerEl = null; // .wings-view ラッパー（mount()のたびに作り直す）
+let boundKbNavKeydown = null; // document直付けの矢印キーリスナー（unmount()で必ず外す）
+let kbNavIndex = -1; // 季節精霊/恒常精霊リストの↑↓ハイライト位置（-1=未選択）
 
 /* ── フィルター/検索/開閉のUI状態（ページを開き直すまで維持。localStorageへは保存しない） ── */
 let seasonFilterUnowned = false;
@@ -81,6 +84,9 @@ export function mount(container /* , sub */) {
   containerEl = container.querySelector('.wings-view');
   wireEvents();
 
+  boundKbNavKeydown = handleKbNavKeydown;
+  document.addEventListener('keydown', boundKbNavKeydown);
+
   S.recordCompletionSnapshotIfNeeded();
   render();
 }
@@ -91,6 +97,8 @@ export function unmount() {
   Share.closeCustomize();
   document.getElementById('wingsShareModalOverlay')?.remove();
   document.getElementById('wingsSharePreviewOverlay')?.remove();
+  if (boundKbNavKeydown) { document.removeEventListener('keydown', boundKbNavKeydown); boundKbNavKeydown = null; }
+  kbNavReset();
   containerEl = null;
 }
 
@@ -296,6 +304,57 @@ function switchMode(mode) {
   containerEl.querySelector('#wgLightChildrenMode').style.display = mode === 'lightChildren' ? 'block' : 'none';
   containerEl.querySelector('#wgTabWings').classList.toggle('active', mode === 'wings');
   containerEl.querySelector('#wgTabLightChildren').classList.toggle('active', mode === 'lightChildren');
+  kbNavReset(); // タブ切替で見えているリストが変わるので、↑↓の選択位置は破棄する
+}
+
+/* ================================================================
+   ⌨️ 季節精霊/恒常精霊リストの↑↓キーでのハイライト移動（移植元 wings/index.html の
+   kbNavMove相当。視覚的なハイライトを移動するだけで、実際のフォーカスや値の変更は
+   行わない）。対象は「精霊の羽」タブ表示中の #wgSeasonList/#wgRealmList にある
+   .spirit-opt のみ（光の子タブの←→グリッドナビゲーションは今回のスコープ外）。
+   ================================================================ */
+function kbNavReset() {
+  kbNavIndex = -1;
+}
+function kbNavGetTargets() {
+  const wingsMode = containerEl && containerEl.querySelector('#wgWingsMode');
+  if (!wingsMode || wingsMode.style.display === 'none') return [];
+  return Array.from(wingsMode.querySelectorAll('.spirit-opt'));
+}
+// 矢印キー1回分の移動を試みる。対象が無い（光の子タブ表示中等）場合は何もせずfalseを返す
+// （呼び出し側はpreventDefaultしない＝ページスクロール等の既定動作を妨げない）
+function kbNavMove(key) {
+  const els = kbNavGetTargets();
+  if (!els.length) return false;
+
+  const delta = key === 'ArrowUp' ? -1 : 1;
+  if (kbNavIndex < 0 || kbNavIndex >= els.length) kbNavIndex = 0; // 初回操作時は先頭行から
+  else kbNavIndex = Math.max(0, Math.min(els.length - 1, kbNavIndex + delta));
+
+  els.forEach(el => el.classList.remove('kb-nav-selected'));
+  const el = els[kbNavIndex];
+  el.classList.add('kb-nav-selected');
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+  return true;
+}
+// input/textarea/select/contenteditableへの入力中はショートカット扱いにしない
+// （checkbox/radio等の非テキスト系inputは対象外＝矢印キーナビを妨げない）
+const WG_NON_TEXT_INPUT_TYPES = ['checkbox', 'radio', 'range', 'color', 'button', 'submit', 'reset', 'file', 'image', 'hidden'];
+function handleKbNavKeydown(e) {
+  if (e.repeat) return;
+  if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!containerEl) return; // このビューがunmount済み
+
+  const tgt = e.target;
+  const isTextInput = tgt && tgt.tagName === 'INPUT' && WG_NON_TEXT_INPUT_TYPES.indexOf((tgt.type || '').toLowerCase()) === -1;
+  const isTyping = tgt && (isTextInput || tgt.tagName === 'TEXTAREA' || tgt.tagName === 'SELECT' || tgt.isContentEditable);
+  if (isTyping) return;
+
+  // モーダル（ダッシュボード・共有カスタマイズ・画像プレビュー）表示中はリストが隠れているため無効化
+  if (document.querySelector('.modal-overlay.open')) return;
+
+  if (kbNavMove(e.key)) e.preventDefault();
 }
 
 /* ================================================================

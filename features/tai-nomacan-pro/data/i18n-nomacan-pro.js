@@ -200,6 +200,15 @@ export const NOMA_PRO_I18N = {
         via: { ja: "経由:", en: "Via:" },
         viaNone: { ja: "選択なし", en: "Nothing selected" },
     },
+    // 🩹 移植元のsettings.*のうち、表示するカードの切替（visibleSections）で使う
+    // 5キーのみ追加。テーマ/言語/ショートカット等はtai-hub共有chromeが持つため含めない
+    settings: {
+        panelHeader: { ja: "各窓の表示・非表示設定", en: "Show/Hide Each Panel" },
+        candleManage: { ja: "キャンドル管理", en: "Candle Management" },
+        optimization: { ja: "効率自動最適化", en: "Auto-Optimize Efficiency" },
+        myRoutes: { ja: "マイルート管理", en: "My Routes" },
+        resetInputBtn: { ja: "入力数値をリセット", en: "Reset Entered Values" },
+    },
     storage: {
         loadFailedWarning: { ja: "保存データの読み込みに失敗したため、初期状態から開始します（エリア構成・ルートなどの保存内容が失われた可能性があります）。", en: "Your saved data could not be loaded, so this is starting fresh (your area layout, routes, and other saved content may have been lost)." },
     },

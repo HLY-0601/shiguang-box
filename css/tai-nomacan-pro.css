@@ -57,6 +57,14 @@
 @media (min-width: 850px) { .nomacan-pro-view .nmp-wrap { max-width: 960px; } }
 
 .nmp-header h1 { font-size: 20px; font-weight: 800; margin: 4px 0 16px; letter-spacing: -0.02em; }
+
+/* 👁️ 表示するカードの切替パネル（詳細/折りたたみはネイティブの<details>に任せる） */
+.nmp-visibility-card { padding: 10px 16px; margin-bottom: 16px; }
+.nmp-visibility-summary { font-size: 13px; font-weight: 700; color: var(--npb-text-2); cursor: pointer; display: flex; align-items: center; gap: 6px; list-style: none; }
+.nmp-visibility-summary::-webkit-details-marker { display: none; }
+.nmp-visibility-options { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--npb-border); }
+.nmp-visibility-opt { display: flex; align-items: center; gap: 8px; font-size: 14px; cursor: pointer; }
+
 .nmp-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
 @media (min-width: 860px) { .nmp-grid { grid-template-columns: 1fr 1fr; align-items: start; } }
 .nmp-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
@@ -76,6 +84,8 @@
 .nmp-shard-box { background: var(--npb-stat-bg); border: 1px solid var(--npb-border); border-radius: 10px; padding: 10px 12px; margin: 8px 0; }
 .nmp-shard-title { font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .nmp-shard-body { font-size: 13px; margin: 4px 0 8px; font-variant-numeric: tabular-nums; }
+.nmp-shard-times { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
+.nmp-shard-time-chip { background: var(--npb-card); border: 1px solid var(--npb-border); border-radius: 8px; padding: 8px 12px; font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .nmp-btn { display: inline-flex; align-items: center; justify-content: center; gap: 5px; border: 0; border-radius: 10px; padding: 10px 14px; font-size: 14px; font-weight: 700; cursor: pointer; color: #fff; background: var(--npb-blue); }
 .nmp-btn:active { opacity: 0.8; }

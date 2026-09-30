@@ -24,12 +24,11 @@
      固定を回避するための専用ボタンだったが、tai-hubはツールごとの
      Service Worker自体を持たないため意味を持たない
      （他の移植済みツールと同じ扱い）。
-   - プロフィールモーダルの「所持通貨」編集パネル(pfCurrencyBody等)は
-     tai-hub側のjs/chrome/pf-modal.jsが現時点でまだ持っていない
-     （プロフィール切替モーダル自体は簡略化版として先に移植済み）。
-     このツールが読み書きする共有通貨キー(wishOwnCurrency.starCandle等、
-     nsKey経由)自体は元の実装と完全互換の形で読み書きしており、
-     プロフィールモーダル側に編集UIが増えれば自動的に連動する。
+   - プロフィールモーダルの「所持通貨」編集パネル(.pf-currency-section等)は
+     tai-hub側のjs/chrome/pf-modal.jsが既に持っている（starCandleフィールド
+     込み）。このツールが読み書きする共有通貨キー(wishOwnCurrency.starCandle等、
+     nsKey経由)は元の実装と完全互換の形で読み書きしており、プロフィール
+     モーダル側の編集と自動的に連動する。
    - 通知カード(Notification API)は実装した。着地10分前/達成予定日前日の
      通知は、実際にNotification.requestPermission()を呼ぶ「オプトイン」
      方式を含め元の挙動のまま移植している（チェックをONにした操作

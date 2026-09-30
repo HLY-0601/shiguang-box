@@ -20,17 +20,19 @@
    【意図的な簡略化（元の挙動を変えない範囲のスコープ調整。詳細は
    spirit-catalog-view.jsの冒頭コメント・最終報告のdeviationsFromSourceに
    まとめる）】
-   - 所持通貨（キャンドル/ハート等）の自動増減（adjustOwnCurrency /
-     wishOwnCurrency）は移植していない。ノード解放・解除・一括操作は
-     コスト消費を伴わない（＝コスト表示はあくまで「残り必要数の目安」の
-     まま、実際の所持通貨とは連動しない）。
-   - 季節のペンダント所持による「シーズン中に入手済み（0扱い）」除外
-     （getPendantOwnedSeasons/seasonAcquireMode_v1）は移植していない
-     （item側のnecklaceカタログへの追加の依存を避けるため）。
-   - ノードの実機画像解決（item/emoteの自HTMLをfetchして名前/ID照合する
-     Stage1〜4のロジック）は移植していない。ツリーノードは常に種別ごとの
-     線画アイコン（元実装でも画像読み込み失敗時のフォールバックとして
-     使われているものと同じアイコン群）で表示する。
+   - 所持通貨（キャンドル・ハート）の自動増減（adjustOwnCurrency）・
+     季節のペンダント所持による「シーズン中に入手済み（0扱い）」除外
+     （getPendantOwnedSeasons/seasonAcquireMode_v1）は元実装と同じ挙動で
+     下記に移植済み。元実装と同じく、シーズンキャンドル/ハート・昇華
+     キャンドル・イベント通貨（cost.sc/sh/ac/ec）は自動増減の対象外の
+     まま（コスト表示はあくまで「残り必要数の目安」）。
+   - ノードの実機画像解決（item/emoteの実データをfetchして名前/ID照合する
+     Stage1〜4のロジック）は下記のresolveNodeImg()に元実装と同じ優先順位
+     （itemCatKey+itemCostId直接参照 → emoteId直接参照 → 汎用報酬名辞書
+     node-image-map.js → 名前照合 → Warp/Quest固定画像）で移植済み。
+     元実装はitem/emote側の自HTMLをfetch+正規表現で読んでいたが、tai-hub版は
+     item/emote機能が既にモジュール化されたデータファイルを持つため、それを
+     直接dynamic importする（fetchより軽量・確実。挙動は同じ）。
    ================================================================ */
 import { nsKey, nsKeyFor, getActiveProfileId, removeWishItem } from '../../js/state.js';
 import { CURRENT_LANG } from '../../js/i18n.js';
@@ -38,6 +40,9 @@ import { t } from './data/i18n-catalog.js';
 import { SPIRIT_TREE_DATA } from './data/spirit-tree-data.js';
 import { SPIRIT_YOMI } from './data/spirit-yomi-data.js';
 import { REVISIT_SPIRIT_SCHEDULES } from '../item/data/season-data.js';
+import { ITEM_COST_DATA } from '../item/data/cost-data.js';
+import { GENERIC_ITEM_IMG } from './data/node-image-map.js';
+import { EMOTES } from '../emote/data/emotes.js';
 
 /* ================================================================
    季節名・種別のJA/EN対応表
@@ -258,7 +263,46 @@ export function getExternalOwnCache() {
   externalOwnCache = { itemOwnedByCat, emoteOwned, wingUnlockedGuids };
   return externalOwnCache;
 }
-export function invalidateExternalOwnCache() { externalOwnCache = null; }
+export function invalidateExternalOwnCache() { externalOwnCache = null; pendantOwnedSeasonsCache = null; }
+
+/* ================================================================
+   🕊️ 季節のペンダント所持による「季節中に入手済み（0扱い）」除外
+   （元実装のgetPendantOwnedSeasons/seasonAcquireMode_v1を移植）
+
+   item側のnecklaceカタログ（features/item/data/cost-data.jsの
+   ITEM_COST_DATA.necklace。id/name/sourceを持つ一次データ）のうち、
+   名前に「ペンダント」を含み、かつ所持済み（getExternalOwnCache()の
+   itemOwnedByCat.necklace）のものから、そのペンダントの季節名
+   （sourceの先頭「〇〇の季節」部分。features/item/cost-view.jsの
+   extractSource()と同じ抽出ロジック）を集める。
+   item_cost.html（アイテム別コスト。tai-hub版はfeatures/item/
+   cost-view.js）側で選ぶ「季節中に入手（0扱い）」の選択
+   （seasonAcquireMode_v1、itemId→'inSeason'等）と組み合わせ、季節
+   キャンドル/ハートの「使用済み」集計（renderStats()）からそのノード分を
+   除外できるようにする（renderStats()側で実際に使う。isNodeUnlocked()
+   自体や残りコスト集計には影響しない——元実装と同じ適用範囲）。
+   ================================================================ */
+function extractSeasonFromSource(source) {
+  const m = /^([^（(]+)/.exec(source || '');
+  return m ? m[1].trim() : source;
+}
+let pendantOwnedSeasonsCache = null;
+export function getPendantOwnedSeasons() {
+  if (pendantOwnedSeasonsCache) return pendantOwnedSeasonsCache;
+  const necklaceOwned = getExternalOwnCache().itemOwnedByCat.necklace || {};
+  const seasons = new Set();
+  (ITEM_COST_DATA.necklace || []).forEach((it) => {
+    if (it.name && it.name.includes('ペンダント') && it.source && necklaceOwned[it.id]) {
+      seasons.add(extractSeasonFromSource(it.source));
+    }
+  });
+  pendantOwnedSeasonsCache = seasons;
+  return seasons;
+}
+export function loadSeasonAcquireMap() {
+  try { return JSON.parse(localStorage.getItem(nsKey('seasonAcquireMode_v1'))) || {}; }
+  catch (_) { return {}; }
+}
 
 /* ================================================================
    ツリーレイアウト（非段階ツリーの枝分かれ座標計算。nw/n/neから算出）
@@ -371,6 +415,36 @@ export function syncWingBuff(spirit, node, nowUnlocked) {
 }
 
 /* ================================================================
+   💰 所持キャンドル/ハートの自動増減（元実装のadjustOwnCurrencyを移植）
+
+   js/state.js の loadOwnedCurrency/saveOwnedCurrencyField と同じキー
+   （nsKey('wishOwnCurrency')、フィールド名candle/heart）を直接
+   read-modify-writeする。プロフィール切替モーダル（js/chrome/pf-modal.js）
+   の所持通貨欄と完全に同じ保存先のため、そちらで編集した値ともここで
+   増減した値ともズレなく同期する。
+   元実装と同じくキャンドル・ハート（cost.c/cost.h）のみを対象とし、
+   シーズンキャンドル/ハート・昇華キャンドル・イベント通貨（sc/sh/ac/ec）
+   は対象外（コスト表示はあくまで「残り必要数の目安」のまま）。
+   戻り値は実際に反映された増減額（Math.max(0, ...)によるクランプ後の
+   実額）。所持通貨が不足している状態で消費（負のdelta）すると、要求額
+   より少ない額しか実際には引かれないことがあるため、呼び出し側が
+   「実際に何が起きたか」を追跡できるようにする（toggleNode()の解放/解除
+   の往復での通貨水増し防止に使う）。
+   ================================================================ */
+function adjustOwnCurrency(deltaCandle, deltaHeart) {
+  if (!deltaCandle && !deltaHeart) return { candle: 0, heart: 0 };
+  const key = nsKey('wishOwnCurrency');
+  let cur;
+  try { cur = JSON.parse(localStorage.getItem(key)) || { candle: 0, heart: 0 }; }
+  catch (_) { cur = { candle: 0, heart: 0 }; }
+  const beforeCandle = cur.candle || 0, beforeHeart = cur.heart || 0;
+  cur.candle = Math.max(0, beforeCandle + (deltaCandle || 0));
+  cur.heart = Math.max(0, beforeHeart + (deltaHeart || 0));
+  localStorage.setItem(key, JSON.stringify(cur));
+  return { candle: cur.candle - beforeCandle, heart: cur.heart - beforeHeart };
+}
+
+/* ================================================================
    item（アイテム所持管理）の所持アイテムと自動同期
    ================================================================ */
 export function syncItemOwned(node, nowUnlocked) {
@@ -414,7 +488,7 @@ export function spiritNodesRemaining(spirit, predicate) {
 }
 
 /* ================================================================
-   ノード単体のトグル（コスト消費なし版）
+   ノード単体のトグル（コスト消費あり: キャンドル/ハートのみ自動増減）
    ================================================================ */
 export function toggleNode(spiritGuid, nodeGuid) {
   const spirit = spiritByGuid[spiritGuid];
@@ -426,7 +500,33 @@ export function toggleNode(spiritGuid, nodeGuid) {
   const nowUnlocked = !wasDisplayedUnlocked;
 
   const unlocked = getUnlockedMap();
-  if (nowUnlocked) { unlocked[nodeGuid] = true; } else { delete unlocked[nodeGuid]; }
+  const prevEntry = unlocked[nodeGuid];
+  const wasInOwnMap = !!prevEntry; // spirit-catalog自身の解放記録での状態（コスト計算用）
+
+  // 解放でコスト分を消費、解除で払い戻す（キャンドル・ハートのみitemと同期）。
+  // item/emote側の所持だけで表示上「解放済み」になっていたノード（＝spirit-catalog
+  // 自身ではコストを払っていない）は、この増減の対象外にする。
+  //
+  // 🪙 所持通貨が不足していても解放操作自体は許可しており、adjustOwnCurrency()は
+  // Math.max(0, ...)で0未満を自動クランプする。そのため「解放時に実際に引かれた額」が
+  // ノードの名目コストを下回ることがあり、解除時に名目コストをそのまま払い戻すと、
+  // 実際には払っていない分の通貨が生成されてしまう（解放→解除の往復で通貨が増える）。
+  // これを防ぐため、解放時はadjustOwnCurrency()が実際に適用した額をunlocked[guid]に
+  // 記録しておき、解除時はその記録された実額のみを払い戻す。記録の無い旧データ
+  // （boolean trueのみ）の場合に限り、従来通り名目コストで払い戻す。
+  if (nowUnlocked) {
+    const cost = node.cost || {};
+    const applied = adjustOwnCurrency(-(cost.c || 0), -(cost.h || 0));
+    unlocked[nodeGuid] = { spentC: -applied.candle, spentH: -applied.heart };
+  } else if (wasInOwnMap) {
+    const spent = (prevEntry && typeof prevEntry === 'object')
+      ? { c: prevEntry.spentC || 0, h: prevEntry.spentH || 0 }
+      : { c: node.cost?.c || 0, h: node.cost?.h || 0 };
+    adjustOwnCurrency(spent.c, spent.h);
+    delete unlocked[nodeGuid];
+  } else {
+    delete unlocked[nodeGuid];
+  }
   saveUnlockedMap(unlocked);
 
   if (node.itemType === 'WingBuff') syncWingBuff(spirit, node, nowUnlocked);
@@ -436,8 +536,19 @@ export function toggleNode(spiritGuid, nodeGuid) {
   return { spirit, node, nowUnlocked };
 }
 
+// markTreeCompleteCore()（ツリー全体一括解放）とmarkNodesByPredicateCore()
+// （種別を絞った一括解放：クエスト一括完了・ハート一括獲得）が共有する
+// 1ノード分の「解放済みにする」処理本体。toggleNode()と同じ通貨計算
+// ロジック（実際に適用された額をunlocked[guid]へ記録する）を1箇所に保つ。
 function unlockNodeForBulk(spirit, unlocked, node) {
-  unlocked[node.guid] = true;
+  const wasInOwnMap = !!unlocked[node.guid];
+  if (wasInOwnMap) {
+    unlocked[node.guid] = { spentC: 0, spentH: 0 };
+  } else {
+    const cost = node.cost || {};
+    const applied = adjustOwnCurrency(-(cost.c || 0), -(cost.h || 0));
+    unlocked[node.guid] = { spentC: -applied.candle, spentH: -applied.heart };
+  }
   syncItemOwned(node, true);
   syncEmoteOwned(node, true);
   if (node.itemType === 'WingBuff') syncWingBuff(spirit, node, true);
@@ -484,7 +595,14 @@ export function resetTreeToLocked(spiritGuid) {
   spirit.nodes.forEach((node) => {
     if (isChecklistExcludedNode(node)) return;
     if (!isNodeUnlocked(node)) return;
-    if (unlocked[node.guid]) {
+    const prevEntry = unlocked[node.guid];
+    if (prevEntry) {
+      // toggleNode()の単体解除と同じく、実際に適用された額（記録が無い旧データは名目コスト）
+      // のみを払い戻す（通貨不足でクランプされていた場合の水増し防止。詳細はtoggleNode()参照）。
+      const spent = (typeof prevEntry === 'object')
+        ? { c: prevEntry.spentC || 0, h: prevEntry.spentH || 0 }
+        : { c: node.cost?.c || 0, h: node.cost?.h || 0 };
+      adjustOwnCurrency(spent.c, spent.h);
       delete unlocked[node.guid];
     } else if (node.itemNameJa === '祝福') {
       return; // 羽ロックの解放状況から動的導出されるのみ。次の再描画で自動的に未解放へ戻る
@@ -570,9 +688,10 @@ export function itemDisplayName(n, spirit) {
 }
 
 /* ================================================================
-   ノード種別アイコン（実機画像は使わず線画アイコンで統一。
-   i-*** は共有スプライト(js/icon-sprite.js)、sc-i-*** はこのツール
-   固有のローカルスプライト(spirit-catalog-view.jsが注入)を指す）
+   ノード種別アイコン（resolveNodeImg()が実機画像を解決できなかった場合の
+   フォールバックとして使う線画アイコン。i-*** は共有スプライト
+   (js/icon-sprite.js)、sc-i-*** はこのツール固有のローカルスプライト
+   (spirit-catalog-view.jsが注入)を指す）
    ================================================================ */
 export const NODE_TYPE_ICON = {
   Call: 'sc-i-bell', Cape: 'i-hanger', Emote: 'i-person', FaceAccessory: 'sc-i-glasses',
@@ -588,6 +707,114 @@ export const NODE_NAME_ICON_OVERRIDE = {
 export function nodeIconId(node, spirit, isQuest) {
   const name = itemDisplayName(node, spirit);
   return NODE_NAME_ICON_OVERRIDE[name] || (isQuest ? NODE_TYPE_ICON.Quest : NODE_TYPE_ICON[node.itemType]) || 'i-sparkle';
+}
+
+/* ================================================================
+   🖼️ ノードの実機画像解決（元実装のresolveNodeImg/resolveNodeImgByNameを
+   移植。優先順位は元実装と同じ）:
+     1. itemCatKey+itemCostId直接参照 — item機能の各カテゴリデータ
+        （features/item/data/items/<cat>.js のITEMS配列、img/id）
+     2. emoteId直接参照 — emote機能のデータ（features/emote/data/emotes.js
+        のEMOTES配列、img/id）
+     3. 汎用報酬名辞書（node-image-map.js のGENERIC_ITEM_IMG。itemNameJa優先、
+        無ければitemNameの英語）
+     4. 名前照合（Stage3相当）— 直接ID参照が無いノードを、itemTypeから
+        推定した該当カテゴリ（TYPE_TO_CATKEYS）に対して名前で照合する
+     5. Warp/Questの固定画像（精霊ごとに名前は違うが実機アイコンは共通）
+     どれにも一致しなければnull（呼び出し側はnodeIconId()の線画アイコンに
+     フォールバックする）。
+
+   1・4に使うitem機能側のカテゴリデータ（12ファイル計数百KB）は初期表示の
+   重さに影響しないよう、features/item/cost-view.jsのloadAllItemImages()と
+   同じ考え方でmount()後に遅延読み込みする（ensureNodeImageMapsLoaded()）。
+   2・3は軽量（emotes.jsは1ファイル、node-image-map.jsは静的定数）なため
+   通常のstatic importで即時利用できる。
+   ================================================================ */
+const emoteImgMap = {};
+const emoteByNameJa = {};
+const emoteByNameEn = {};
+EMOTES.forEach((e) => {
+  if (e.img) emoteImgMap[e.id] = e.img;
+  if (e.name) emoteByNameJa[e.name] = e;
+  if (e.nameEn) emoteByNameEn[e.nameEn] = e;
+});
+
+// itemCatKeyが無いノード向け: itemTypeからitemの該当カテゴリキー（複数の
+// 可能性がある場合は候補リスト）を推定する（元実装のTYPE_TO_CATKEYSを移植）
+const TYPE_TO_CATKEYS = {
+  Cape: ['cape'], Mask: ['mask'], Necklace: ['necklace'], Hair: ['hairstyle'],
+  HairAccessory: ['hair_accessory'], HeadAccessory: ['head_accessory'], Outfit: ['outfit'],
+  OutfitShoes: ['outfit', 'shoes'], Shoes: ['shoes'], FaceAccessory: ['face_accessory'],
+  Held: ['portable_item'], Furniture: ['large_placeable', 'small_placeable'],
+  Prop: ['portable_item', 'large_placeable', 'small_placeable'],
+};
+
+let itemImgMapByCat = null; // {catKey: {itemId: img}}（直接ID参照用）
+let itemListByCatForImg = null; // {catKey: [{id,name,nameEn,img}, ...]}（名前照合用）
+let itemImgMapLoadingPromise = null;
+function loadItemImgMapForTree() {
+  if (itemImgMapByCat) return Promise.resolve(itemImgMapByCat);
+  if (itemImgMapLoadingPromise) return itemImgMapLoadingPromise;
+  itemImgMapLoadingPromise = Promise.all(ITEM_CATS_FOR_TREE.map(async (catKey) => {
+    try {
+      const mod = await import(`../item/data/items/${catKey}.js`);
+      return [catKey, mod.ITEMS || []];
+    } catch (e) {
+      console.error('[spirit-catalog] failed to load item image data', catKey, e);
+      return [catKey, []];
+    }
+  })).then((entries) => {
+    itemImgMapByCat = {};
+    itemListByCatForImg = {};
+    entries.forEach(([catKey, list]) => {
+      const idMap = {};
+      list.forEach((it) => { if (it.img) idMap[it.id] = it.img; });
+      itemImgMapByCat[catKey] = idMap;
+      itemListByCatForImg[catKey] = list;
+    });
+    itemImgMapLoadingPromise = null;
+    return itemImgMapByCat;
+  });
+  return itemImgMapLoadingPromise;
+}
+// view.js のmount()から一度だけ呼ぶ。読み込み完了後にonReadyを呼び、開いている
+// 詳細モーダルがあれば再描画してノード画像を反映させる（元実装のloadItemEmoteMapsDeferredと
+// 同じ「初期表示を邪魔しないアイドル時読み込み→完了後に開いている画面だけ更新」方針）。
+export function ensureNodeImageMapsLoaded(onReady) {
+  const run = () => loadItemImgMapForTree().then(() => { if (onReady) onReady(); });
+  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 3000 });
+  else setTimeout(run, 1500);
+}
+
+function resolveNodeImgByName(n) {
+  if (n.itemType === 'Emote') {
+    const found = (n.itemNameJa && emoteByNameJa[n.itemNameJa]) || (n.itemName && emoteByNameEn[n.itemName]);
+    if (found?.img) return found.img;
+  }
+  const catKeys = TYPE_TO_CATKEYS[n.itemType];
+  if (catKeys && itemListByCatForImg) {
+    for (const catKey of catKeys) {
+      const list = itemListByCatForImg[catKey] || [];
+      const found = list.find((it) => (n.itemNameJa && it.name === n.itemNameJa) || (n.itemName && it.nameEn === n.itemName));
+      if (found?.img) return found.img;
+    }
+  }
+  return null;
+}
+const QUEST_IMG = 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/8/8b/Exclamation-mark-Ray.png/revision/latest/scale-to-width-down/51';
+export function resolveNodeImg(n) {
+  if (n.itemCatKey && n.itemCostId && itemImgMapByCat) {
+    const img = itemImgMapByCat[n.itemCatKey]?.[n.itemCostId];
+    if (img) return img;
+  }
+  if (n.emoteId && emoteImgMap[n.emoteId]) return emoteImgMap[n.emoteId];
+  if (n.itemNameJa && GENERIC_ITEM_IMG[n.itemNameJa]) return GENERIC_ITEM_IMG[n.itemNameJa];
+  if (n.itemName && GENERIC_ITEM_IMG[n.itemName]) return GENERIC_ITEM_IMG[n.itemName];
+  const byName = resolveNodeImgByName(n);
+  if (byName) return byName;
+  if (isWarpNode(n)) return GENERIC_ITEM_IMG['Warp'];
+  if (isQuestNode(n)) return QUEST_IMG;
+  return null;
 }
 
 function nodeCostSum(n) {
@@ -697,6 +924,53 @@ export function computeGroups(mode, list) {
     list.forEach((s) => { const k = spiritSeasonKey(s); pushKey(k); bucket.get(k).push(s); });
   }
   return order.filter((k) => bucket.get(k).length > 0).map((k) => ({ key: k, spirits: bucket.get(k) }));
+}
+
+/* ================================================================
+   📊 精霊ツリー全体の達成状況（spirit-catalog-share.jsの画像共有カード用。
+   renderStats()と同じ考え方だが、通貨集計を含まない軽量版。元実装の
+   getSpiritStats()を移植）
+   ================================================================ */
+export function getSpiritStats() {
+  let totalNodes = 0, doneNodes = 0, completeSpirits = 0;
+  SPIRIT_TREE_DATA.forEach((s) => {
+    let spiritDone = 0, spiritTotal = 0;
+    s.nodes.forEach((n) => {
+      if (isChecklistExcludedNode(n)) return;
+      totalNodes++; spiritTotal++;
+      if (isNodeUnlocked(n)) { doneNodes++; spiritDone++; }
+    });
+    if (spiritDone === spiritTotal && spiritTotal > 0) completeSpirits++;
+  });
+  const pct = totalNodes > 0 ? (doneNodes / totalNodes) * 100 : 0;
+  return { doneNodes, totalNodes, completeSpirits, totalSpirits: SPIRIT_TREE_DATA.length, pct };
+}
+
+/* ================================================================
+   📤 達成率シェア画像のカスタマイズ設定 — catalogShareCustomize_v1
+   （非namespace化。元実装もnsKey()を通さず端末単位のプレーンキーとして
+   保存している。features/wings/wings-state.jsのSHARE_THEMES/
+   loadShareCustomize/saveShareCustomizeと同じ設計・移植方針）
+   ================================================================ */
+const SHARE_CUSTOMIZE_KEY = 'catalogShareCustomize_v1';
+export const SHARE_THEMES = {
+  green: { grad: 'linear-gradient(135deg, #248A3D 0%, #34C759 55%, #8BE28B 100%)' },
+  orange: { grad: 'linear-gradient(135deg, #C56E06 0%, #FF9500 55%, #FFBB00 100%)' },
+  blue: { grad: 'linear-gradient(135deg, #0051A8 0%, #007AFF 55%, #5AC8FA 100%)' },
+  purple: { grad: 'linear-gradient(135deg, #4B2E83 0%, #7B4FCB 55%, #B98CFF 100%)' },
+  pink: { grad: 'linear-gradient(135deg, #B0184D 0%, #FF2D78 55%, #FF8FB3 100%)' },
+  dark: { grad: 'linear-gradient(135deg, #05070d 0%, #1b2333 100%)' },
+};
+export function loadShareCustomize() {
+  try {
+    const d = JSON.parse(localStorage.getItem(SHARE_CUSTOMIZE_KEY));
+    return { theme: (d && d.theme && SHARE_THEMES[d.theme]) ? d.theme : 'green' };
+  } catch (_) {
+    return { theme: 'green' };
+  }
+}
+export function saveShareCustomize(theme) {
+  localStorage.setItem(SHARE_CUSTOMIZE_KEY, JSON.stringify({ theme }));
 }
 
 /* nsKeyFor/getActiveProfileId を再exportしておく（view側で直接使うことがあるため） */

@@ -41,6 +41,10 @@ export const I18N = {
     costDisplayTestTag: { ja: 'テスト機能', en: 'Experimental' },
     costDisplayHint: { ja: '残りコスト・ツリー内の必要コストの数値は正確性を保証できないため、試験的な機能として提供しています。既定ではオフです。', en: 'Remaining-cost and in-tree cost figures are not guaranteed to be accurate, so this is provided as an experimental feature. It is off by default.' },
   },
+  share: {
+    twitterBtn: { ja: 'Xで画像を共有', en: 'Share image on X' },
+    customizeBtn: { ja: 'カスタマイズして共有', en: 'Customize & share' },
+  },
   grid: {
     sectionLabel: { ja: '精霊一覧', en: 'Spirit List' },
     emptyNote: { ja: '条件に一致する精霊が見つかりません', en: 'No spirits match the current filter.' },
@@ -126,6 +130,48 @@ export const I18N = {
   },
   toast: {
     syncRefreshed: { ja: '同期を更新しました', en: 'Sync refreshed' },
+    generating: { ja: '画像を生成中…', en: 'Generating image…' },
+    saved: { ja: '画像を保存しました！', en: 'Image saved!' },
+    shared: { ja: '共有しました！', en: 'Shared!' },
+    saveFailed: { ja: '画像の保存に失敗しました', en: 'Failed to save the image' },
+    dataLoading: { ja: 'データを読み込み中です', en: 'Data is still loading' },
+  },
+  theme: {
+    green: { ja: 'グリーン', en: 'Green' },
+    orange: { ja: 'オレンジ', en: 'Orange' },
+    blue: { ja: 'ブルー', en: 'Blue' },
+    purple: { ja: 'パープル', en: 'Purple' },
+    pink: { ja: 'ピンク', en: 'Pink' },
+    dark: { ja: 'ダーク', en: 'Dark' },
+  },
+  customize: {
+    modalTitle: { ja: '画像をカスタマイズ', en: 'Customize Image' },
+    themeLabel: { ja: '背景テーマ', en: 'Background Theme' },
+    commentLabel: { ja: 'コメント（任意）', en: 'Comment (optional)' },
+    commentPlaceholder: { ja: '例）プレイヤーネーム：〇〇（未入力の場合は通常の文言になります）', en: 'e.g. Player name: XX (leave blank to use the default text)' },
+    shareBtn: { ja: 'この設定でXへ画像を共有', en: 'Share image on X with these settings' },
+  },
+  preview: {
+    titleSave: { ja: '画像を保存', en: 'Save Image' },
+    titleSaveShare: { ja: '画像を保存してXへ投稿', en: 'Save Image & Post to X' },
+    hintSave: { ja: '画像を長押し（PCの場合は右クリック）して「画像を保存」を選んでください', en: 'Press and hold the image (or right-click on PC) and choose "Save Image"' },
+    hintSaveShare: { ja: '① 下の「ダウンロード」で画像を保存 → ② 「Xの投稿画面を開く」を押して、保存した画像を添付して投稿してください', en: '① Save the image with "Download" below → ② Tap "Open X post screen" and attach the saved image to your post' },
+    downloadBtn: { ja: 'ダウンロード', en: 'Download' },
+    twitterBtn: { ja: 'Xの投稿画面を開く', en: 'Open X post screen' },
+    imgAlt: { ja: '保存用の画像', en: 'Image to save' },
+  },
+  exportCard: {
+    brand: { ja: '精霊ツリー管理', en: 'Spirit Tree Catalog' },
+    heroLabel: { ja: '精霊ツリー解放率', en: 'Spirit Tree Unlock Rate' },
+    numsTemplate: { ja: '解放済み {done} ／ 総ノード数 {total}', en: 'Unlocked {done} / Total Nodes {total}' },
+    subTemplate: { ja: 'コンプリート済み {complete} / {totalSpirits} 精霊', en: 'Completed {complete} / {totalSpirits} Spirits' },
+    dateTemplate: { ja: '{y}年{m}月{d}日作成', en: 'Created {m}/{d}/{y}' },
+  },
+  tweet: {
+    template: {
+      ja: '精霊ツリー解放率は{pct}でした！\n（解放済み {done} ／ 総ノード数 {total}）\nあなたは何%解放してる？✨\n\n{url}\n{hashtag}',
+      en: "I've unlocked {pct} of my Spirit Tree! (Unlocked {done} / Total Nodes {total})\nHow much have you unlocked? ✨\n\n{url}\n{hashtag}",
+    },
   },
   cancelBtn: { ja: '取消', en: 'Cancel' },
 };

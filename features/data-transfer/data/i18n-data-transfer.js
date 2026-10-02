@@ -107,7 +107,7 @@ const DT_I18N = {
   footer: {
     creditLabel: { ja: '作成・ご意見:', en: 'Created by / feedback:' },
     requestForm: { ja: 'リクエストフォーム', en: 'Request form' },
-    infoLink: { ja: '設定・更新情報・クレジット・プライバシーポリシー', en: "Settings / What's New / Credits / Privacy Policy" },
+    infoLink: { ja: '設定・クレジット・プライバシーポリシー', en: "Settings / Credits / Privacy Policy" },
   },
 };
 

@@ -1,5 +1,5 @@
 /* ================================================================
-   tai-info（設定・更新情報）のツール固有i18n辞書。
+   tai-info（設定・クレジット）のツール固有i18n辞書。
 
    移植元: tai-info/index.html の `const I18N = {...}`（~行1079-1312）。
    元の辞書は nav/sidebar/tools/iconCustom/dispSettings/dock/footer等、
@@ -7,7 +7,7 @@
    持っていたが、tai-hub側の共有chrome（js/chrome/*.js）が既に自分自身の
    翻訳を持っているため、それらは意図的に移植せず（そのまま複製すると
    死んだコードになる）、このツール自身のタブコンテンツ（設定について/
-   更新情報/クレジット/プライバシーポリシー/参考文献）に関わる文言だけを
+   クレジット/プライバシーポリシー/参考文献）に関わる文言だけを
    残している。「ホーム画面アイコンをカスタマイズ」機能（iconCustomModal）
    は tai-hub では概念が成立しない（emote-view.jsと同じ理由。同コメント
    参照）ため未移植で、settings.icon.customizeBtn キーも同様に省いている。
@@ -20,11 +20,9 @@ import { CURRENT_LANG } from '../../../js/i18n.js';
 export const INFO_I18N = {
   tabs: {
     settings: { ja: `設定について`, en: `About Settings` },
-    changelog: { ja: `更新情報`, en: `Updates` },
     credits: { ja: `クレジット`, en: `Credits` },
     privacy: { ja: `プライバシーポリシー`, en: `Privacy Policy` },
     references: { ja: `参考文献・画像引用元`, en: `References & Image Credits` },
-    changelogUnreadAria: { ja: `更新情報（未読の更新あり）`, en: `Updates (unread updates available)` },
   },
 
   settings: {
@@ -50,17 +48,6 @@ export const INFO_I18N = {
       title: { ja: `ホーム画面アイコンのカスタマイズ`, en: `Customizing the Home Screen Icon` },
       body: { ja: `各サイトの「表示設定」内の「表示のカスタマイズ」から、「ホーム画面に追加」時のアイコンを絵文字＋背景色、または好きな画像に変更できます。この端末・ブラウザごとの設定で、プロフィール（保存枠）の切替には影響されません。<b>「ホーム画面に追加」をする前に設定してください</b>（追加した後に変更しても、既に追加済みのアイコンは自動更新されません）。`, en: `From "Display Customization" inside "Display Settings" on each site, you can change the icon used for "Add to Home Screen" — either an emoji plus background color, or an image of your choice. This is a per-device, per-browser setting and is not affected by switching profiles (save slots). <b>Please set this up before adding to your home screen</b> (changing it afterward won't update an icon you've already added).` },
     },
-  },
-
-  changelog: {
-    label: { ja: `更新情報`, en: `Updates` },
-    sub1: { ja: `大きな機能追加・変更があったときに、ここに手動で追記しています。細かな不具合修正まではすべて載せていません。`, en: `Major feature additions and changes are logged here by hand as they happen. Minor bug fixes are not all listed.` },
-    sub2: { ja: `日付は各リポジトリのgitコミット履歴に基づく実際の日付です。`, en: `Dates reflect the actual git commit history of each repository.` },
-    filterAriaLabel: { ja: `更新の種類で絞り込み`, en: `Filter by update type` },
-    filterAll: { ja: `すべて`, en: `All` },
-    sinceLastVisitDivider: { ja: `ここから下は前回までにご覧いただいた内容です`, en: `Everything below this line, you've already seen` },
-    filterEmpty: { ja: `このフィルタに該当する更新はまだありません。`, en: `There are no updates matching this filter yet.` },
-    relevantTag: { ja: `<svg class="inline-icon" width="13" height="13"><use href="#i-sparkle"/></svg> あなた向け`, en: `<svg class="inline-icon" width="13" height="13"><use href="#i-sparkle"/></svg> For You` },
   },
 
   credits: {
@@ -170,7 +157,7 @@ export const INFO_I18N = {
       colProfile: { ja: `複数プロフィール`, en: `Multi-Profile` },
       colLang: { ja: `言語数`, en: `Languages` },
       colTest: { ja: `注記`, en: `Note` },
-      footnote: { ja: `※「複数プロフィール」欄が「—」の3サイト（設定・更新情報／楽譜づくり／作者プロフィール）は、所持アイテムなどのセーブデータそのものを扱わないため、姉妹サイト共通のプロフィール切替システムの対象外です。「言語数」は日本語・英語の2言語が基本で、精霊同行ツールのみ日本語・英語・繁體中文・한국어の4言語に対応しています。`, en: `*The three sites showing "—" under "Multi-Profile" (Settings &amp; Updates, Sheet Music Maker, Creator Profile) don't manage any owned-item save data of their own, so they fall outside the shared profile-switching system. "Languages" is 2 (Japanese/English) by default; only Spirit Companion Tool supports 4 (Japanese, English, Traditional Chinese, Korean).` },
+      footnote: { ja: `※「複数プロフィール」欄が「—」の3サイト（設定・クレジット／楽譜づくり／作者プロフィール）は、所持アイテムなどのセーブデータそのものを扱わないため、姉妹サイト共通のプロフィール切替システムの対象外です。「言語数」は日本語・英語の2言語が基本で、精霊同行ツールのみ日本語・英語・繁體中文・한국어の4言語に対応しています。`, en: `*The three sites showing "—" under "Multi-Profile" (Settings &amp; Credits, Sheet Music Maker, Creator Profile) don't manage any owned-item save data of their own, so they fall outside the shared profile-switching system. "Languages" is 2 (Japanese/English) by default; only Spirit Companion Tool supports 4 (Japanese, English, Traditional Chinese, Korean).` },
     },
   },
 };

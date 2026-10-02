@@ -1,11 +1,11 @@
 /* ================================================================
-   tai-info（設定・更新情報）機能専用のデザイントークン・スタイル。
+   tai-info（設定・クレジット）機能専用のデザイントークン・スタイル。
 
-   移植元: tai-info/index.html の <style> のうち、5つのページ内タブ
-   （設定について/更新情報/クレジット/プライバシーポリシー/参考文献・
-   画像引用元）自身の見た目に関わる部分（ページ内タブ・カード・更新情報
-   タイムライン・フィルタチップ・参考文献グループ・サイト別機能対応表・
-   ディープリンクのハイライト演出）だけを抽出したもの。site-dock/
+   移植元: tai-info/index.html の <style> のうち、4つのページ内タブ
+   （設定について/クレジット/プライバシーポリシー/参考文献・
+   画像引用元）自身の見た目に関わる部分（ページ内タブ・カード・
+   参考文献グループ・サイト別機能対応表・ディープリンクのハイライト
+   演出）だけを抽出したもの。site-dock/
    modal-overlay/sidebar等の「共有chrome」に関わるスタイルは、tai-hubの
    css/chrome.css に既に同等のものがあるため意図的に移植していない
    （原文の設定モーダル・アイコンカスタマイズモーダル・流体ボトムシート
@@ -70,10 +70,6 @@
   background: var(--card); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap;
 }
 .tai-info-view .page-tab.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
-.tai-info-view .page-tab.has-unread::after {
-  content: ''; position: absolute; top: 5px; right: 7px;
-  width: 7px; height: 7px; border-radius: 50%; background: #FF3B30;
-}
 
 /* 🔗 ディープリンクで飛んできたカード/参考文献グループを一時的に強調表示する */
 .tai-info-view .anchor-highlight { animation: tiAnchorPulse 1.6s ease-out; border-radius: var(--r); }
@@ -89,34 +85,6 @@
 .tai-info-view .card p, .tai-info-view .card li { font-size: 13px; line-height: 1.8; color: var(--text); }
 .tai-info-view .card ul { padding-left: 18px; }
 .tai-info-view .card a { color: var(--indigo-d); text-decoration: underline; text-underline-offset: 2px; }
-
-/* 更新情報タイムライン */
-.tai-info-view .log-entry { display: flex; gap: 12px; padding: 12px 0; border-bottom: 0.5px solid var(--sep); }
-.tai-info-view .log-entry:last-child { border-bottom: none; }
-.tai-info-view .log-date { flex-shrink: 0; width: 78px; font-size: 11.5px; font-weight: 700; color: var(--indigo-d); padding-top: 2px; }
-.tai-info-view .log-body { flex: 1; min-width: 0; }
-.tai-info-view .log-title { font-size: 13.5px; font-weight: 600; margin-bottom: 2px; line-height: 1.5; }
-.tai-info-view .log-desc { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
-.tai-info-view .log-tag { display: inline-block; font-size: 10.5px; font-weight: 700; color: var(--indigo-d); background: var(--indigo-bg); border-radius: 5px; padding: 1px 6px; margin-right: 6px; }
-
-/* 🏷️ 更新情報タブの種類別フィルタチップ */
-.tai-info-view .changelog-filters { display: flex; gap: 6px; flex-wrap: wrap; padding: 0 4px 14px; }
-.tai-info-view .filter-chip {
-  flex-shrink: 0; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
-  background: var(--card); color: var(--text-2); border: 1px solid var(--sep); white-space: nowrap;
-}
-.tai-info-view .filter-chip.active { background: var(--indigo); color: #fff; border-color: var(--indigo); }
-
-/* 🆕 「前回訪問以降の新着」区切り線 */
-.tai-info-view .changelog-divider {
-  display: flex; align-items: center; gap: 10px;
-  padding: 4px 0 10px; font-size: 11px; font-weight: 700; color: var(--text-3);
-}
-.tai-info-view .changelog-divider::before, .tai-info-view .changelog-divider::after { content: ''; flex: 1; height: 0.5px; background: var(--sep); }
-
-/* ⭐ 「お使いのツール」に関連する更新情報エントリの控えめな強調 */
-.tai-info-view .log-entry.log-relevant { background: var(--indigo-bg); border-radius: var(--r-sm); padding: 12px 10px; margin: 2px 0; border-bottom: none; }
-.tai-info-view .log-tag.log-tag-relevant { background: var(--indigo); color: #fff; }
 
 /* 参考文献グループ */
 .tai-info-view .ref-group { margin: 0 0 14px; }

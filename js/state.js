@@ -507,6 +507,6 @@ export const SITE_LINKS = [
   { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', hubRoute: '#/tai-score', badgeTest: true },
   { icon: 'i-card', ja: '星紡ぎカード', en: 'Self-Intro Card Maker', hubRoute: '#/tai-card' },
   { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', hubRoute: '#/data-transfer' },
-  { icon: 'i-settings', ja: '設定・更新情報', en: 'Settings & Updates', hubRoute: '#/tai-info' },
+  { icon: 'i-settings', ja: '設定・クレジット', en: 'Settings & Credits', hubRoute: '#/tai-info' },
   { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', hubRoute: '#/profile' },
 ];

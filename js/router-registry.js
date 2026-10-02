@@ -124,6 +124,6 @@ export const ROUTES = {
   'tai-score': lazyToolEntry(() => import('../features/tai-score/tai-score-view.js'), '楽譜づくり', 'Sheet Music Maker'),
   'tai-card': lazyToolEntry(() => import('../features/tai-card/tai-card-view.js'), '星紡ぎカード', 'Self-Intro Card Maker'),
   'data-transfer': lazyToolEntry(() => import('../features/data-transfer/data-transfer-view.js'), 'データ引継ぎ', 'Data Transfer'),
-  'tai-info': lazyToolEntry(() => import('../features/tai-info/tai-info-view.js'), '設定・更新情報', 'Settings & Updates'),
+  'tai-info': lazyToolEntry(() => import('../features/tai-info/tai-info-view.js'), '設定・クレジット', 'Settings & Credits'),
   profile: lazyToolEntry(() => import('../features/profile/profile-view.js'), '作者プロフィール', 'Creator Profile'),
 };

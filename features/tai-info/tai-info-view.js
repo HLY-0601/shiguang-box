@@ -1,15 +1,15 @@
 /* ================================================================
-   tai-info-view.js — 設定・更新情報・クレジット（tai-hub移植版）
+   tai-info-view.js — 設定・クレジット（tai-hub移植版）
 
    移植元: C:\Users\user\Downloads\skyツール\tai-info\index.html
-   （~2499行のスタンドアロンページ）のうち、5つのページ内タブ
-   （設定について/更新情報/クレジット/プライバシーポリシー/参考文献・
-   画像引用元）の中身。CHANGELOG/REFERENCE_SOURCES/TOOL_USAGE_SIGNSは
-   data/ 以下に、UI文言は data/i18n-info.js に分離している。
+   のうち、4つのページ内タブ（設定について/クレジット/
+   プライバシーポリシー/参考文献・画像引用元）の中身。
+   REFERENCE_SOURCESは data/ 以下に、UI文言は data/i18n-info.js に
+   分離している。
 
    ── tai-hubへの移植で意図的に省略・変更した点 ──
    1. ナビバーのEN切替ボタン・ハンバーガーサイドバー（関連ツール）・
-      画面下部ドック（更新情報/クレジット/他のツール/表示設定）・
+      画面下部ドック（クレジット/他のツール/表示設定）・
       表示設定モーダル（テーマ/ショートカット/言語/データ管理）は、
       tai-hubの共有chrome（js/chrome/*.js）が既に同等以上の機能を
       持つため移植していない（他の全ポート済みツールと同じ方針）。
@@ -20,41 +20,28 @@
       同機能を省略しているのと同じ判断で、この「設定について」タブの
       該当カードもボタンを外し説明文のみ残した（他サイトの説明としては
       引き続き正しい内容のため文章自体は残す）。
-   3. 更新情報タブの「更新情報タブに、お使いのツールを自動検出する
-      パーソナライズ表示を追加」エントリの説明文は「更新情報タブの上部に
-      『あなたがお使いのツール』として一覧表示」すると書かれているが、
-      実際のライブサイトの実装（renderChangelog内のDETECTED_TOOLS利用箇所）
-      を確認したところ、そのような一覧表示は存在せず、実際にあるのは
-      各更新エントリへの⭐「あなた向け」タグ+背景強調のみだった
-      （ライブサイト自身のドキュメント記述と実装の不一致）。本移植は
-      実際の挙動（⭐タグ+背景強調のみ）をそのまま再現し、存在しない
-      一覧表示は作っていない。
-   4. 「参考文献・画像引用元」タブの目的別ツール早見表・サイト別機能
+   3. 「参考文献・画像引用元」タブの目的別ツール早見表・サイト別機能
       対応表の各リンクは、tai-hubに移植済みの5ツール
       （item/emote/share/tai-nomacan/star-candle）についてのみ
       外部URLではなくハブ内ルート（#/item 等、router.navigate()経由の
       SPA内遷移）に差し替えている。他の既存ポート（tools-drawer.js）と
       同じ判断で、掲載内容・順序・文言はすべて原文のまま。
-   5. 更新情報タブの未読判定キー（sky_changelog_last_seen__site_tai-info）
-      は、元実装がlocation.pathnameの先頭セグメントから動的に算出していた
-      ものを、tai-hubではpathnameが'tai-info'にならないため文字列
-      リテラルとして固定した。値は既存ユーザーのブラウザに残っている
-      キーと完全に同じ文字列のため、データ互換性は保たれる（このキーは
-      プロフィールに依存しないデバイス単位の設定のため nsKey() は使わない
-      ——sky_app_theme/sky_app_lang と同じ扱い。原文コメント参照）。
+   4. 原文のtai-infoが2026年9月、「更新情報」（changelog）機能を
+      廃止し「設定・クレジット」に改名したため、本移植でも同様に
+      更新情報タブ・未読インジケーター・ツール自動検出による強調表示
+      （CHANGELOG/TOOL_USAGE_SIGNS関連一式）を削除し、ラベルを
+      「設定・クレジット」に追従させた。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { navigate } from '../../js/router.js';
 import { t } from './data/i18n-info.js';
-import { CHANGELOG } from './data/changelog.js';
 import { REFERENCE_SOURCES } from './data/references.js';
-import { TOOL_USAGE_SIGNS } from './data/tool-usage-signs.js';
 
 function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
 
 const STYLE_LINK_ID = 'tai-info-view-styles';
 const ICON_SPRITE_ID = 'tai-info-icon-sprite';
-const TABS = ['settings', 'changelog', 'credits', 'privacy', 'references'];
+const TABS = ['settings', 'credits', 'privacy', 'references'];
 
 // 🔑 tai-hub内での全14ツールのハブ内ルート（tools-drawer.js のSITE_LINKS.hubRouteと
 // 同じ値。ここではjs/state.jsのSITE_LINKS配列自体は編集しない方針のため、
@@ -84,16 +71,8 @@ const HUB_ROUTE = {
   profile: '#/profile',
 };
 
-// taipak5000.github.io系は同一オリジンでlocalStorageを共有しているため、
-// このキーはプロフィール（nsKey）非依存のデバイス単位設定として、
-// 元実装と全く同じ文字列を固定で使う（sky_app_theme等と同じ扱い）。
-const CHANGELOG_LAST_SEEN_KEY = 'sky_changelog_last_seen__site_tai-info';
-
 let containerEl = null;
 let els = {};
-let changelogFilter = 'all';
-let changelogSessionLastSeen = '';
-let detectedTools = [];
 
 /* ================================================================
    公開API
@@ -103,17 +82,12 @@ export function mount(container, sub) {
   injectLocalIconSprite();
 
   containerEl = container;
-  changelogFilter = 'all';
-  changelogSessionLastSeen = getChangelogLastSeen();
-  detectedTools = detectUsedTools();
 
   container.innerHTML = renderShell();
   cacheEls();
   wireEvents();
 
-  renderChangelog();
   renderReferences();
-  updateChangelogUnreadUI();
 
   const [initialTab, initialAnchor] = (sub || '').split(':');
   showTab(TABS.includes(initialTab) ? initialTab : TABS[0], initialAnchor);
@@ -155,12 +129,11 @@ function renderShell() {
       <div class="ti-layout">
         <header class="ti-page-head">
           <svg class="inline-icon" width="19" height="19"><use href="#i-settings"/></svg>
-          <span>${escapeHtml(tt('設定・更新情報', 'Settings & Updates'))}</span>
+          <span>${escapeHtml(tt('設定・クレジット', 'Settings & Credits'))}</span>
         </header>
 
         <div class="page-tabs" id="tiPageTabs" role="tablist">
           <button class="page-tab" id="ti-tab-settings" data-tab="settings" role="tab" aria-selected="false">${escapeHtml(t('tabs.settings'))}</button>
-          <button class="page-tab" id="ti-tab-changelog" data-tab="changelog" role="tab" aria-selected="false">${escapeHtml(t('tabs.changelog'))}</button>
           <button class="page-tab" id="ti-tab-credits" data-tab="credits" role="tab" aria-selected="false">${escapeHtml(t('tabs.credits'))}</button>
           <button class="page-tab" id="ti-tab-privacy" data-tab="privacy" role="tab" aria-selected="false">${escapeHtml(t('tabs.privacy'))}</button>
           <button class="page-tab" id="ti-tab-references" data-tab="references" role="tab" aria-selected="false">${escapeHtml(t('tabs.references'))}</button>
@@ -190,19 +163,6 @@ function renderShell() {
             <h3>${escapeHtml(t('settings.icon.title'))}</h3>
             <p>${t('settings.icon.body')}</p>
           </div>
-        </section>
-
-        <section data-tab="changelog" id="ti-panel-changelog" role="tabpanel" tabindex="0">
-          <p class="sec-label">${escapeHtml(t('changelog.label'))}</p>
-          <p class="sec-sub">${escapeHtml(t('changelog.sub1'))}</p>
-          <p class="sec-sub" style="padding-top:0;">${escapeHtml(t('changelog.sub2'))}</p>
-          <div class="changelog-filters" id="tiChangelogFilters" role="group" aria-label="${escapeHtml(t('changelog.filterAriaLabel'))}">
-            <button type="button" class="filter-chip active" data-filter="all" aria-pressed="true">${escapeHtml(t('changelog.filterAll'))}</button>
-            <button type="button" class="filter-chip" data-filter="NEW" aria-pressed="false">NEW</button>
-            <button type="button" class="filter-chip" data-filter="CHANGE" aria-pressed="false">CHANGE</button>
-            <button type="button" class="filter-chip" data-filter="FIX" aria-pressed="false">FIX</button>
-          </div>
-          <div class="card" id="tiChangelogCard"></div>
         </section>
 
         <section data-tab="credits" id="ti-panel-credits" role="tabpanel" tabindex="0">
@@ -372,7 +332,7 @@ const COMPAT_TABLE_ROWS = [
   { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', route: HUB_ROUTE.companion, profile: true, lang: 4 },
   { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', route: HUB_ROUTE.wings, profile: true, lang: 2 },
   { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', route: HUB_ROUTE.dataTransfer, profile: true, lang: 2 },
-  { icon: 'i-settings', ja: '設定・更新情報', en: 'Settings & Updates', tabSwitch: 'settings', profile: false, lang: 2 },
+  { icon: 'i-settings', ja: '設定・クレジット', en: 'Settings & Credits', tabSwitch: 'settings', profile: false, lang: 2 },
   { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', route: HUB_ROUTE.taiScore, profile: false, lang: 2, badgeTest: true },
   { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', route: HUB_ROUTE.profile, profile: false, lang: 2 },
 ];
@@ -403,8 +363,6 @@ function cacheEls() {
   const q = (id) => containerEl.querySelector('#' + id);
   els = {
     pageTabs: q('tiPageTabs'),
-    changelogFilters: q('tiChangelogFilters'),
-    changelogCard: q('tiChangelogCard'),
     refQuickJump: q('tiRefQuickJump'),
     refCard: q('tiRefCard'),
   };
@@ -429,11 +387,6 @@ function wireEvents() {
     const nextTab = TABS[nextIdx];
     showTab(nextTab);
     containerEl.querySelector(`.page-tab[data-tab="${nextTab}"]`)?.focus();
-  });
-
-  els.changelogFilters.addEventListener('click', (e) => {
-    const btn = e.target.closest('.filter-chip');
-    if (btn) setChangelogFilter(btn.dataset.filter);
   });
 
   // 目的別ツール早見表・サイト別機能対応表・目的別ツール早見表内の「設定について」
@@ -462,7 +415,6 @@ function showTab(tab, anchor) {
     b.setAttribute('aria-selected', isActive ? 'true' : 'false');
     b.tabIndex = isActive ? 0 : -1;
   });
-  if (tab === 'changelog') markChangelogSeen();
   // 🔗 原文はhistory.replaceState()でURLのハッシュだけを書き換え、hashchangeを
   // 発火させずにルーターの再マウントを避けていた。tai-hubでも同じ理由で
   // router.navigate()（location.hash=、hashchangeを発火させる）ではなく
@@ -483,94 +435,6 @@ function scrollToCardAnchor(tab, anchor) {
     setTimeout(() => el.classList.remove('anchor-highlight'), 1700);
     if (typeof el.focus === 'function') el.focus({ preventScroll: true });
   });
-}
-
-/* ================================================================
-   🆕 更新情報の未読インジケーター
-   ================================================================ */
-function changelogLatestDate() {
-  return CHANGELOG.reduce((max, e) => (e.date > max ? e.date : max), CHANGELOG[0].date);
-}
-function getChangelogLastSeen() {
-  try { return localStorage.getItem(CHANGELOG_LAST_SEEN_KEY) || ''; } catch (e) { return ''; }
-}
-function hasUnreadChangelog() {
-  return changelogLatestDate() > getChangelogLastSeen();
-}
-function markChangelogSeen() {
-  try { localStorage.setItem(CHANGELOG_LAST_SEEN_KEY, changelogLatestDate()); } catch (e) { /* noop */ }
-  updateChangelogUnreadUI();
-}
-function updateChangelogUnreadUI() {
-  const unread = hasUnreadChangelog();
-  const tabBtn = containerEl && containerEl.querySelector('#ti-tab-changelog');
-  if (!tabBtn) return;
-  tabBtn.classList.toggle('has-unread', unread);
-  if (unread) tabBtn.setAttribute('aria-label', t('tabs.changelogUnreadAria'));
-  else tabBtn.removeAttribute('aria-label');
-}
-
-/* ================================================================
-   ⭐ 更新情報エントリの「お使いのツール」強調表示
-   ================================================================ */
-function detectUsedTools() {
-  let keys;
-  try { keys = Object.keys(localStorage); } catch (e) { return []; }
-  return TOOL_USAGE_SIGNS.filter(tool =>
-    tool.keyPrefixes.some(prefix => keys.some(k => k.indexOf(prefix) === 0)));
-}
-function changelogEntryMentionsTool(entry, tool) {
-  const text = CURRENT_LANG === 'en'
-    ? ((entry.titleEn || entry.titleJa) + ' ' + (entry.descEn || entry.descJa || ''))
-    : (entry.titleJa + ' ' + (entry.descJa || ''));
-  const needle = CURRENT_LANG === 'en' ? tool.matchEn : tool.matchJa;
-  return text.indexOf(needle) !== -1;
-}
-
-/* ================================================================
-   更新情報タブ
-   ================================================================ */
-function setChangelogFilter(filter) {
-  changelogFilter = filter;
-  containerEl.querySelectorAll('#tiChangelogFilters .filter-chip').forEach(btn => {
-    const isActive = btn.dataset.filter === filter;
-    btn.classList.toggle('active', isActive);
-    btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-  });
-  renderChangelog();
-}
-
-function renderChangelog() {
-  const el = els.changelogCard;
-  if (!el) return;
-  const list = changelogFilter === 'all' ? CHANGELOG : CHANGELOG.filter(e => e.tag === changelogFilter);
-  if (!list.length) {
-    el.innerHTML = `<p class="log-desc">${escapeHtml(t('changelog.filterEmpty'))}</p>`;
-    return;
-  }
-  const hasNew = list.some(e => e.date > changelogSessionLastSeen);
-  const hasSeen = list.some(e => e.date <= changelogSessionLastSeen);
-  const showDivider = !!changelogSessionLastSeen && hasNew && hasSeen;
-  let dividerInserted = false;
-  el.innerHTML = list.map(e => {
-    const title = CURRENT_LANG === 'en' ? (e.titleEn || e.titleJa) : e.titleJa;
-    const desc = CURRENT_LANG === 'en' ? (e.descEn || e.descJa) : e.descJa;
-    let dividerHtml = '';
-    if (showDivider && !dividerInserted && e.date <= changelogSessionLastSeen) {
-      dividerInserted = true;
-      dividerHtml = `<div class="changelog-divider"><span>${escapeHtml(t('changelog.sinceLastVisitDivider'))}</span></div>`;
-    }
-    const isRelevant = detectedTools.some(tool => changelogEntryMentionsTool(e, tool));
-    const relevantTag = isRelevant ? `<span class="log-tag log-tag-relevant">${t('changelog.relevantTag')}</span>` : '';
-    return `${dividerHtml}
-    <div class="log-entry${isRelevant ? ' log-relevant' : ''}">
-      <div class="log-date">${escapeHtml(e.date)}</div>
-      <div class="log-body">
-        <div class="log-title">${relevantTag}<span class="log-tag">${escapeHtml(e.tag)}</span>${escapeHtml(title)}</div>
-        ${desc ? `<div class="log-desc">${escapeHtml(desc)}</div>` : ''}
-      </div>
-    </div>`;
-  }).join('');
 }
 
 /* ================================================================

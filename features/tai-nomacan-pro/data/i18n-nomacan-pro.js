@@ -94,7 +94,7 @@ export const NOMA_PRO_I18N = {
     footer: {
         copyright: { ja: "© 2026 ノマキャン計算機プロ", en: "© 2026 Nomacan Calculator Pro" },
         creditLabel: { ja: "作成・ご意見:", en: "Created by / feedback:" },
-        infoLink: { ja: "設定・更新情報・クレジット・プライバシーポリシー", en: "Settings / What's New / Credits / Privacy Policy" },
+        infoLink: { ja: "設定・クレジット・プライバシーポリシー", en: "Settings / Credits / Privacy Policy" },
         referencesLabel: { ja: "参考文献:", en: "References:" },
     },
     notify: {

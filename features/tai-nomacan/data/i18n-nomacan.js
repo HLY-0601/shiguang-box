@@ -191,7 +191,7 @@ export const NOMA_I18N = {
     disclaimer: { ja: 'このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', en: 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.' },
     creditLabel: { ja: '作成・ご意見:', en: 'Created by / feedback:' },
     requestForm: { ja: 'リクエストフォーム', en: 'Request form' },
-    infoLink: { ja: '設定・更新情報・クレジット・プライバシーポリシー', en: "Settings / What's New / Credits / Privacy Policy" },
+    infoLink: { ja: '設定・クレジット・プライバシーポリシー', en: "Settings / Credits / Privacy Policy" },
   },
 };
 

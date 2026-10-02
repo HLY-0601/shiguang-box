@@ -458,7 +458,8 @@ function render() {
     const chips = s.visits.map((v) => {
       const cls = v.type === 'SV' ? 'sv' : (v.type === 'TS-Error' ? 'err' : '');
       const label = typeLabel(v.type);
-      const dateLabel = v.endDate ? `${formatDate(v.date)}–${formatDate(v.endDate)}` : formatDate(v.date);
+      // 期間表記は特別来訪(SV)だけ。単独の来訪(TS等)は来訪初日のみを表示する。
+      const dateLabel = (v.type === 'SV' && v.endDate) ? `${formatDate(v.date)}–${formatDate(v.endDate)}` : formatDate(v.date);
       const ongoing = isOngoingVisit(v);
       const titleText = ongoing ? t('visitOngoingTitle', { type: label }) : label;
       return `<span class="visit-chip ${cls}" title="${escapeHtml(titleText)}">${dateLabel}${ongoing ? ' <span class="ongoing-dot"></span>' : ''}</span>`;

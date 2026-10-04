@@ -215,6 +215,7 @@ function renderShell() {
             <div class="quick-actions-row">
               <button type="button" class="fill-current-btn" id="nmFillCurrentBtn">${t('goal.fillCurrentBtn')}</button>
               <button type="button" class="survey-btn" id="nmSurveyBtn">${t('goal.surveyBtn')}</button>
+              <button type="button" class="quest-btn" id="nmQuestBtn">${t('goal.questBtn')}</button>
               <button type="button" class="heart-sent-btn" id="nmHeartSentBtn">${t('goal.heartSentBtn')}</button>
             </div>
             <div class="adjust-amount-row">
@@ -372,6 +373,7 @@ function cacheEls() {
     heartsToSend: q('nmHeartsToSend'),
     fillCurrentBtn: q('nmFillCurrentBtn'),
     surveyBtn: q('nmSurveyBtn'),
+    questBtn: q('nmQuestBtn'),
     heartSentBtn: q('nmHeartSentBtn'),
     subtractAmount: q('nmSubtractAmount'),
     subtractAmountBtn: q('nmSubtractAmountBtn'),
@@ -446,6 +448,17 @@ function wireEvents() {
     saveState();
     syncCurrentToSharedCurrency();
     recordHistory('history.entrySurvey', 3);
+    syncCommittedCurrent();
+  });
+  // 「クエスト分＋4」: クエスト報酬の4本をそのまま加算する（アンケート回答ボタンと同じ流れ）。
+  els.questBtn.addEventListener('click', () => {
+    if (currentCommitTimer) clearTimeout(currentCommitTimer);
+    const current = Math.max(0, parseFloat(els.current.value) || 0);
+    els.current.value = Math.round((current + 4) * 100) / 100;
+    update();
+    saveState();
+    syncCurrentToSharedCurrency();
+    recordHistory('history.entryQuest', 4);
     syncCommittedCurrent();
   });
   els.heartSentBtn.addEventListener('click', () => {

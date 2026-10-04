@@ -133,7 +133,7 @@
 .nomacan-view .unit { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 13px; color: var(--text-dim); pointer-events: none; }
 
 .nomacan-view .quick-actions-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-.nomacan-view .fill-current-btn, .nomacan-view .survey-btn, .nomacan-view .heart-sent-btn, .nomacan-view .apply-required-pace-btn {
+.nomacan-view .fill-current-btn, .nomacan-view .survey-btn, .nomacan-view .quest-btn, .nomacan-view .heart-sent-btn, .nomacan-view .apply-required-pace-btn {
   display: inline-flex; align-items: center; gap: 5px; padding: 7px 12px; border: 1px solid var(--border);
   border-radius: 999px; background: var(--cream); color: var(--amber-deep); font-family: inherit; font-size: 12px;
   font-weight: 700; cursor: pointer;
@@ -141,8 +141,8 @@
 .nomacan-view .fill-current-btn:hover { background: var(--cream-deep); border-color: var(--amber-light); }
 .nomacan-view .fill-current-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .nomacan-view .fill-current-btn:disabled:hover { background: var(--cream); border-color: var(--border); }
-.nomacan-view .survey-btn { color: var(--green); border-color: rgba(63,163,92,0.3); }
-.nomacan-view .survey-btn:hover { background: rgba(63,163,92,0.08); border-color: var(--green); }
+.nomacan-view .survey-btn, .nomacan-view .quest-btn { color: var(--green); border-color: rgba(63,163,92,0.3); }
+.nomacan-view .survey-btn:hover, .nomacan-view .quest-btn:hover { background: rgba(63,163,92,0.08); border-color: var(--green); }
 .nomacan-view .heart-sent-btn { color: var(--red); border-color: rgba(184,68,37,0.3); }
 .nomacan-view .heart-sent-btn:hover { background: rgba(184,68,37,0.08); border-color: var(--red); }
 

@@ -450,7 +450,7 @@ function wireEvents() {
     recordHistory('history.entrySurvey', 3);
     syncCommittedCurrent();
   });
-  // 「クエスト分＋4」: クエスト報酬の4本をそのまま加算する（アンケート回答ボタンと同じ流れ）。
+  // 「クエスト分(+4本)」: クエスト報酬の4本をそのまま加算する（アンケート回答ボタンと同じ流れ）。
   els.questBtn.addEventListener('click', () => {
     if (currentCommitTimer) clearTimeout(currentCommitTimer);
     const current = Math.max(0, parseFloat(els.current.value) || 0);

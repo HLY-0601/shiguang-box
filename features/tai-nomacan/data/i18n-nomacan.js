@@ -30,7 +30,7 @@ export const NOMA_I18N = {
     currentLabel: { ja: '所持本数', en: 'Current Amount' },
     fillCurrentBtn: { ja: '所持通貨から反映', en: 'Fill from Owned Currency' },
     surveyBtn: { ja: 'アンケートに回答した(+3本)', en: 'Answered the Survey (+3 candles)' },
-    questBtn: { ja: 'クエスト分＋4', en: 'Quest Reward (+4)' },
+    questBtn: { ja: 'クエスト分(+4本)', en: 'Quest Reward (+4 candles)' },
     heartSentBtn: { ja: 'ハートを送った(-3本)', en: 'Sent a Heart (-3 candles)' },
     subtractAmountPlaceholder: { ja: '例: 10', en: 'e.g. 10' },
     subtractAmountBtn: { ja: 'その分を減らす', en: 'Subtract' },

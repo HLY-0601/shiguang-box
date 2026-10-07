@@ -109,6 +109,7 @@ const DASH_EVENT_NAME_EN = {
   '夏のキャンプ': 'Summer Camp',
   '大キャン２倍・シーズンキャンドル２倍': 'Double Grand & Season Candles',
   '月灯りの日々': 'Days of Moonlight',
+  'いたずらな日々': 'Days of Mischief',
 };
 function dashEventName(name) {
   return CURRENT_LANG === 'en' ? (DASH_EVENT_NAME_EN[name] || name) : name;

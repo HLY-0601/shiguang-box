@@ -383,7 +383,7 @@ function calendarBarItems(data, year, month) {
     });
   }
 
-  if (data.season && data.season.name && data.season.endDate) {
+  if (data.season && data.season.name && data.season.endDate && new Date() < new Date(data.season.endDate)) {
     pushItems({ end: data.season.endDate }, dashEventName(data.season.name));
   }
   (data.eventSchedule || []).forEach(ev => pushItems(ev, dashEventName(ev.name)));
@@ -591,7 +591,10 @@ function buildHtml(data) {
   }
   if (data.season && data.season.endDate) {
     const end = new Date(data.season.endDate);
-    bucketRows[bucketFor(end)].push(row('<svg class="inline-icon" width="16" height="16"><use href="#i-palette"/></svg>', `${t('「', '')}<b>${escapeHtml(dashEventName(data.season.name))}</b>${t('」', '')}${t('終了まで', ' ends in')}<span class="dash-countdown">${countdown(end)}</span>`));
+    // 終了済みの季節はダッシュボードに出さない（終了まで00:00:00のまま残ってしまうため）
+    if (new Date() < end) {
+      bucketRows[bucketFor(end)].push(row('<svg class="inline-icon" width="16" height="16"><use href="#i-palette"/></svg>', `${t('「', '')}<b>${escapeHtml(dashEventName(data.season.name))}</b>${t('」', '')}${t('終了まで', ' ends in')}<span class="dash-countdown">${countdown(end)}</span>`));
+    }
   } else {
     seasonErrored = true;
   }
@@ -824,7 +827,7 @@ function exportIcs(statusEl) {
     let seasonEnd = null;
     if (CURRENT_SEASON && CURRENT_SEASON.endDate) {
       seasonEnd = new Date(CURRENT_SEASON.endDate);
-      if (!isNaN(seasonEnd.getTime())) {
+      if (!isNaN(seasonEnd.getTime()) && seasonEnd.getTime() > now.getTime()) {
         events.push(...icsBuildEvent({
           uid: `edb-season-end-${seasonEnd.getTime()}@${uidHost}`,
           start: seasonEnd,

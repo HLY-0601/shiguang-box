@@ -521,7 +521,7 @@ function wireEvents() {
   els.oneYearAgoBanner.addEventListener('click', (ev) => {
     const btn = ev.target.closest ? ev.target.closest('.one-year-ago-close-btn') : null;
     if (!btn) return;
-    try { localStorage.setItem(S.ONE_YEAR_AGO_DISMISS_KEY(), S.streakDateStr(new Date())); } catch (e) { /* noop */ }
+    try { localStorage.setItem(S.ONE_YEAR_AGO_DISMISS_KEY(), S.gameDayStr(Date.now())); } catch (e) { /* noop */ }
     els.oneYearAgoBanner.classList.remove('is-visible');
     els.oneYearAgoBanner.innerHTML = '';
   });
@@ -885,7 +885,7 @@ function advanceNomaToastQueue() {
 function renderOneYearAgoBanner() {
   const wrap = els.oneYearAgoBanner;
   if (!wrap) return;
-  const today = new Date();
+  const today = S.gameTodayDate();
   const todayStr = S.streakDateStr(today);
   let dismissedDate = null;
   try { dismissedDate = localStorage.getItem(S.ONE_YEAR_AGO_DISMISS_KEY()); } catch (e) { /* noop */ }

@@ -262,11 +262,21 @@ export function computeTrendPoints(fullHistory, current, filterGoalId) {
    特定のstorage keyに依存しない純粋な関数のため、両者でそのまま再利用する）
    ================================================================ */
 export function loadStreakData(key) {
+  let s = { days: {}, longest: 0 };
   try {
     const d = JSON.parse(localStorage.getItem(key));
-    if (d && typeof d === 'object') return { days: d.days || {}, longest: d.longest || 0 };
+    if (d && typeof d === 'object') s = { days: d.days || {}, longest: d.longest || 0 };
   } catch (e) { /* 破損データは初期状態として扱う */ }
-  return { days: {}, longest: 0 };
+  // 過去の記録の補正に使う入力時刻（獲得履歴/クエスト記録のtime）。どちらのストリークでもない場合は補正しない。
+  // 完了フラグは標準版(tai-nomacan単体)と同じ名前・同じnsKey()規則にして、プロフィール削除時に一緒に消え、
+  // 単体版とtai-hub版のどちらで補正しても重複して行わないようにする。
+  if (key === STREAK_KEY()) {
+    return streakMigrateGameDay(s, key, nsKey('skyNomacanStreakGameDay_v1'), () => loadHistory().map((e) => e && e.time));
+  }
+  if (key === QUEST_STREAK_KEY()) {
+    return streakMigrateGameDay(s, key, nsKey('dailyQuestStreakGameDay_v1'), () => loadQuestLog().map((e) => e && e.time));
+  }
+  return s;
 }
 export function saveStreakData(key, s) {
   try { localStorage.setItem(key, JSON.stringify(s)); } catch (e) { /* noop */ }
@@ -286,9 +296,64 @@ export function streakRunEndingAt(days, dateStr) {
   while (days[cur]) { n++; cur = streakAddDays(cur, -1); }
   return n;
 }
+
+/* ----------------------------------------------------------------
+   🕓 連続記録の「1日」はゲーム内の日付で数える。
+   ゲームの日付更新(デイリーリセット)は太平洋時間0時=日本時間では夏時間中16:00
+   (冬時間中は17:00)。日付が変わった後でも、次の更新(日本時間15:59/16:59)までの入力は
+   前のゲーム内日付の記録として扱い、連続記録が途切れないようにする。
+   streakDateStr()はカレンダー計算用(ローカル日付)のままで、「いま/入力時刻がどのゲーム内日付か」
+   を求める時だけ下のgameDayStr()を使う。
+   ---------------------------------------------------------------- */
+let gameDayFormatter = null;
+export function gameDayStr(ms) {
+  try {
+    if (!gameDayFormatter) {
+      gameDayFormatter = new Intl.DateTimeFormat('en-US', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' });
+    }
+    const m = {};
+    gameDayFormatter.formatToParts(new Date(ms)).forEach((p) => { m[p.type] = p.value; });
+    return m.year + '-' + m.month + '-' + m.day;
+  } catch (e) { return streakDateStr(new Date(ms)); }
+}
+// ゲーム内の「今日」を、カレンダー計算(ヒートマップ等)用のローカル0時のDateとして返す
+export function gameTodayDate() {
+  const p = gameDayStr(Date.now()).split('-');
+  return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+}
+// 記録済みの日(days)の中で最も長く連続している日数
+function streakLongestRun(days) {
+  const keys = Object.keys(days).sort();
+  let best = 0, run = 0, prev = null;
+  keys.forEach((k) => {
+    run = (prev !== null && streakAddDays(prev, 1) === k) ? run + 1 : 1;
+    if (run > best) best = run;
+    prev = k;
+  });
+  return best;
+}
+// 過去の記録の補正。以前はカレンダー日(日本時間0時区切り)で日付を記録していたため、
+// 日付が変わった後〜15:59の入力が翌日の記録になり、連続記録が途切れていることがある。
+// 残っている入力時刻から本来のゲーム内日付を求めて補い、最長記録も更新する
+// (既存の記録は消さない＝連続日数が減ることはない)。プロフィールごとに1回だけ行う。
+function streakMigrateGameDay(s, key, flagKey, getTimes) {
+  try { if (localStorage.getItem(flagKey) === '1') return s; } catch (e) { return s; }
+  let changed = false;
+  getTimes().forEach((ms) => {
+    if (typeof ms !== 'number' || !isFinite(ms)) return;
+    const g = gameDayStr(ms);
+    if (!s.days[g]) { s.days[g] = 1; changed = true; }
+  });
+  if (changed) {
+    s.longest = Math.max(s.longest, streakLongestRun(s.days));
+    saveStreakData(key, s);
+  }
+  try { localStorage.setItem(flagKey, '1'); } catch (e) { /* noop */ }
+  return s;
+}
 export function streakRecordToday(key) {
   const s = loadStreakData(key);
-  const today = streakDateStr(new Date());
+  const today = gameDayStr(Date.now());
   if (!s.days[today]) {
     s.days[today] = 1;
     s.longest = Math.max(s.longest, streakRunEndingAt(s.days, today));
@@ -297,7 +362,7 @@ export function streakRecordToday(key) {
   return s;
 }
 export function streakCurrentLive(s) {
-  const today = streakDateStr(new Date());
+  const today = gameDayStr(Date.now());
   if (s.days[today]) return streakRunEndingAt(s.days, today);
   const yesterday = streakAddDays(today, -1);
   if (s.days[yesterday]) return streakRunEndingAt(s.days, yesterday);
@@ -305,8 +370,7 @@ export function streakCurrentLive(s) {
 }
 // 表示範囲(グリッドの開始日・週数)を、記録済みの最も古い日付とHEATMAP_MIN/MAX_WEEKSから決める。
 export function computeHeatmapRange(days) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const today = gameTodayDate();
   let minDate = today;
   Object.keys(days).forEach((k) => {
     const p = k.split('-');
@@ -346,7 +410,7 @@ export function questDateLabel(dateStr) {
 export function questLogSave(text) {
   text = (text || '').trim();
   if (!text) return null;
-  const today = streakDateStr(new Date());
+  const today = gameDayStr(Date.now());
   const list = loadQuestLog();
   const existing = list.find((e) => e.date === today);
   if (existing) {
@@ -361,7 +425,7 @@ export function questLogSave(text) {
   return { list, streak };
 }
 export function questLogTodayText() {
-  const today = streakDateStr(new Date());
+  const today = gameDayStr(Date.now());
   const found = loadQuestLog().find((e) => e.date === today);
   return found ? found.text : '';
 }
@@ -375,8 +439,8 @@ export function oneYearAgoTruncate(text, max) {
 }
 export function findOneYearAgoHistoryEntry(history, today) {
   for (const e of history) {
-    const d = new Date(e.time);
-    if (d.getMonth() === today.getMonth() && d.getDate() === today.getDate() && d.getFullYear() === today.getFullYear() - 1) return e;
+    const g = gameDayStr(e.time).split('-');
+    if (Number(g[1]) - 1 === today.getMonth() && Number(g[2]) === today.getDate() && Number(g[0]) === today.getFullYear() - 1) return e;
   }
   return null;
 }

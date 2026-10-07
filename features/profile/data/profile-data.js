@@ -3,7 +3,7 @@
    移植元: profile/index.html の <script> 冒頭にあった `profile` / `links`
    の2つのオブジェクト・配列を、値を一切変えずにそのままES moduleへ
    移した。site-dock/pf-modal/tools-drawer等の共有chrome向けのリンク
-   （SITE_LINKS）とは別物で、こちらは「Links」セクション自体の見出し・
+   （共通ツール一覧 site-links.json）とは別物で、こちらは「Links」セクション自体の見出し・
    説明文（サイト運営者向けの日本語コメントも含め、編集のしやすさを
    優先した元の1件ずつのオブジェクト形式）をそのまま保持する。
 

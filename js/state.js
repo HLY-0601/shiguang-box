@@ -488,25 +488,3 @@ export function wipeAllData() {
   localStorage.clear();
 }
 
-/* ================================================================
-   🌐 他ツールへのリンク一覧（引き出し用）。ハブに内蔵した5ツールは
-   ハッシュリンクに、残りは既存の外部URLのまま（item/profiles.js の
-   SITE_LINKSを踏襲。tai-hub版だけ current/hubRoute を追加）。
-   ================================================================ */
-export const SITE_LINKS = [
-  { icon: 'i-folder', ja: 'アイテム所持管理', en: 'Item Collection Tracker', hubRoute: '#/item', current: true },
-  { icon: 'i-masks', ja: 'エモート所持率管理', en: 'Emote Collection Tracker', hubRoute: '#/emote' },
-  { icon: 'i-pin', ja: '創作物管理ツール', en: 'Creation Manager', hubRoute: '#/share' },
-  { icon: 'i-candle', ja: 'ノマキャン計算機', en: 'Candle Calculator', hubRoute: '#/tai-nomacan' },
-  { icon: 'i-compass', ja: 'ノマキャン計算機プロ', en: 'Candle Calculator Pro', hubRoute: '#/tai-nomacan-pro' },
-  { icon: 'i-star-candle', ja: '星のキャンドル計算機', en: 'Star Candle Calculator', hubRoute: '#/star-candle' },
-  { icon: 'i-sparkle', ja: '精霊同行ツール', en: 'Spirit Companion Tool', hubRoute: '#/companion' },
-  { icon: 'i-wing', ja: '羽トラッカー', en: 'Wing Tracker', hubRoute: '#/wings' },
-  { icon: 'i-tree', ja: '精霊ツリー管理', en: 'Spirit Tree Catalog', hubRoute: '#/spirit-catalog', badgeTest: true },
-  { icon: 'i-wing', ja: '再訪精霊データベース', en: 'Revisit Spirit Database', hubRoute: '#/tai-revisit' },
-  { icon: 'i-music-note', ja: '楽譜づくり', en: 'Sheet Music Maker', hubRoute: '#/tai-score', badgeTest: true },
-  { icon: 'i-card', ja: '星紡ぎカード', en: 'Self-Intro Card Maker', hubRoute: '#/tai-card' },
-  { icon: 'i-sync', ja: 'データ引継ぎ', en: 'Data Transfer', hubRoute: '#/data-transfer' },
-  { icon: 'i-settings', ja: '設定・クレジット', en: 'Settings & Credits', hubRoute: '#/tai-info' },
-  { icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', hubRoute: '#/profile' },
-];

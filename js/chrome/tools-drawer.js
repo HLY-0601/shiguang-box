@@ -1,12 +1,13 @@
 /* ================================================================
-   「他のツール」引き出し。item/profiles.js の SITE_LINKS ドロワーを
-   移植。ハブ内蔵5ツールは#/ハッシュリンク、残りは既存の外部URLのまま。
+   「他のツール」引き出し。一覧は全サイト共通の site-links.json
+   （js/site-links.js）から取得して描画する。ハブ内にあるツールは#/ハッシュ
+   リンク（SPA内遷移）、無いものは外部URL。現在開いているツールの強調表示は無い。
    ================================================================ */
-import { CURRENT_LANG } from '../i18n.js';
-import { SITE_LINKS } from '../state.js';
+import { CURRENT_LANG, escapeHtml } from '../i18n.js';
 import { navigate } from '../router.js';
+import { initSiteLinks, refreshSiteLinks, getSiteLinks, siteLinkHref, siteLinkName } from '../site-links.js';
 
-let currentToolKey = 'item';
+let siteLinksStarted = false;
 
 function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
 
@@ -32,15 +33,28 @@ function ensureDom() {
   renderNav();
 }
 
+// 起動時に1回だけ呼ぶ（site-dock.jsのrender()から）。キャッシュ済みの一覧を読み込み、
+// 裏で最新を取得して端末に保存する（引き出しを開いていれば描画し直す）。
+export function init() {
+  if (siteLinksStarted) return;
+  siteLinksStarted = true;
+  initSiteLinks();
+  refreshSiteLinks().then(changed => { if (changed) renderNav(); }).catch(() => renderNav());
+}
+
 function renderNav() {
   const nav = document.getElementById('toolsDrawerNav');
   if (!nav) return;
-  nav.innerHTML = SITE_LINKS.map(s => {
-    const isCurrentHubRoute = s.hubRoute && s.hubRoute === `#/${currentToolKey}`;
-    const href = s.hubRoute || s.href;
-    return `<a class="pf-drawer-link${isCurrentHubRoute ? ' current' : ''}" href="${href}" data-hub-route="${s.hubRoute || ''}">
+  const links = getSiteLinks();
+  if (!links) {
+    nav.innerHTML = `<p style="font-size:12px;color:var(--hub-text-2);padding:4px 12px;">${t('ツール一覧を読み込めませんでした', 'Could not load the tool list')}</p>`;
+    return;
+  }
+  nav.innerHTML = links.map(s => {
+    const { href, hubRoute } = siteLinkHref(s);
+    return `<a class="pf-drawer-link" href="${href}" data-hub-route="${hubRoute}">
       <svg class="inline-icon" width="19" height="19"><use href="#${s.icon}"/></svg>
-      ${s.badgeTest ? `<span class="pf-drawer-badge-test">${t('test', 'test')}</span>` : ''} ${t(s.ja, s.en)}
+      ${s.badgeTest ? `<span class="pf-drawer-badge-test">${t('test', 'test')}</span>` : ''} ${escapeHtml(siteLinkName(s, CURRENT_LANG))}
     </a>`;
   }).join('');
   nav.querySelectorAll('a[data-hub-route]').forEach(a => {
@@ -52,11 +66,6 @@ function renderNav() {
       close();
     });
   });
-}
-
-export function setActive(toolKey) {
-  currentToolKey = toolKey;
-  renderNav();
 }
 
 export function open() {

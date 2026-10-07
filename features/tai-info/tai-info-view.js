@@ -43,9 +43,9 @@ const STYLE_LINK_ID = 'tai-info-view-styles';
 const ICON_SPRITE_ID = 'tai-info-icon-sprite';
 const TABS = ['settings', 'credits', 'privacy', 'references'];
 
-// 🔑 tai-hub内での全14ツールのハブ内ルート（tools-drawer.js のSITE_LINKS.hubRouteと
-// 同じ値。ここではjs/state.jsのSITE_LINKS配列自体は編集しない方針のため、
-// このファイル内に同じ値を直接持つ）。
+// 🔑 tai-hub内での全14ツールのハブ内ルート（共通ツール一覧 site-links.json の
+// id と同じ #/<id>。js/site-links.js 参照）。この表は目的別早見表・機能対応表の
+// リンク用に、このファイル内に同じ値を直接持つ。
 // 🩹 以前はitem/emote/share/nomacan/starCandleの5件だけがこのマップに入っており、
 // 残り9件（wings/companion/spirit-catalog/tai-revisit/tai-score/tai-card/
 // data-transfer/tai-info自身/profile）はhrefで外部github.ioへ直接リンクして

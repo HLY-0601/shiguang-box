@@ -10,6 +10,7 @@ import * as toolsDrawer from './tools-drawer.js';
 import * as settingsModal from './settings-modal.js';
 
 export function render(mountEl) {
+  toolsDrawer.init();
   mountEl.innerHTML = `
     <nav class="site-dock" aria-label="${CURRENT_LANG === 'en' ? 'Quick menu' : 'クイックメニュー'}">
       <button type="button" id="dockProfileBtn">
@@ -38,7 +39,6 @@ export function render(mountEl) {
 
 export function setActiveRoute(toolKey) {
   document.getElementById('dockDashboardBtn')?.classList.remove('current-route');
-  toolsDrawer.setActive(toolKey);
 }
 
 export function refreshProfileLabel(label) {

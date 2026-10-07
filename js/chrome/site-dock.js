@@ -37,10 +37,6 @@ export function render(mountEl) {
   document.getElementById('dockSettingsBtn').addEventListener('click', () => settingsModal.open());
 }
 
-export function setActiveRoute(toolKey) {
-  document.getElementById('dockDashboardBtn')?.classList.remove('current-route');
-}
-
 export function refreshProfileLabel(label) {
   const el = document.getElementById('siteDockProfileLabel');
   if (el) el.textContent = label;

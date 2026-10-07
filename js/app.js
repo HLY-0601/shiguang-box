@@ -22,7 +22,5 @@ const activeProfile = ensureProfilesInit().find(p => p.id === getActiveProfileId
 siteDock.refreshProfileLabel(pfDisplayName(activeProfile));
 applyProfileTint(activeProfile && activeProfile.color); // 🎨 起動時、選択中プロフィールのアカウントカラーを反映
 
-initRouter(document.getElementById('app-root'), {
-  onRouteChange(toolKey) { siteDock.setActiveRoute(toolKey); },
-});
+initRouter(document.getElementById('app-root'));
 startRouter();

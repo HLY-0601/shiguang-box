@@ -13,11 +13,9 @@ import { ROUTES, DEFAULT_ROUTE } from './router-registry.js';
 let appRoot = null;
 let currentRoute = null; // { toolKey, sub }
 let currentEntry = null; // ROUTES[toolKey]
-let onRouteChange = null; // (toolKey, sub) => void
 
-export function initRouter(rootEl, opts = {}) {
+export function initRouter(rootEl) {
   appRoot = rootEl;
-  onRouteChange = opts.onRouteChange || null;
   window.addEventListener('hashchange', applyRoute);
 }
 
@@ -51,7 +49,6 @@ function applyRoute() {
   currentRoute = { toolKey, sub };
 
   document.title = entry.title ? entry.title(sub) : 'tai-hub';
-  if (onRouteChange) onRouteChange(toolKey, sub);
 }
 
 export function getCurrentRoute() {

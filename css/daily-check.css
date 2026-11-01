@@ -408,3 +408,8 @@ html.dc-measuring .daily-check-view .dc-print-area { display: block; position: f
 @media (prefers-reduced-transparency: reduce) { .dc-toast { background: var(--hub-card); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media (prefers-contrast: more) { .dc-toast { background: var(--hub-card); border: 1px solid var(--hub-text-2); backdrop-filter: none; -webkit-backdrop-filter: none; } }
 @media print { .dc-toast { display: none !important; } }
+/* PDFで保存: 画像化する間だけ、印刷用の面を画面外に「見える状態で」出す（savePrintPdf()） */
+html.dc-capturing .daily-check-view .dc-print-area { display: block; position: fixed; left: -10000px; top: 0; }
+html.dc-capturing .daily-check-view .dc-paper { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+/* 印刷・PDFでは、メモ欄は余った高さいっぱいに伸ばす（上の「3マス分の高さ」より優先させる） */
+.daily-check-view .dc-print-area .dc-paper:not(.editing) .dc-memo-lines { height: auto; }

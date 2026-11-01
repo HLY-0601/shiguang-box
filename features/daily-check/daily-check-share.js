@@ -3,6 +3,7 @@
    チェックの付いていない（配布用の）シートを画面外に組み立て、html2canvas（CDN。wings-share.js と同じ版）で
    PNGにする。画像の下端にはサイトのURLを小さく入れる。
    スマホは共有シート（navigator.share）で、そうでなければプレビューを出して「画像を保存」とXへの投稿を選べる。
+   PDFで保存（savePrintPdf）は、印刷と同じ紙面をjsPDFでA4のPDFにする（ファイル末尾）。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
@@ -93,4 +94,59 @@ function showPreview(dataUrl, filename, text) {
   document.addEventListener('keydown', onKey);
   document.body.appendChild(el);
   el.querySelector('[data-share-close]').focus();
+}
+
+/* ================================================================
+   PDFで保存。印刷と同じ紙面（preparePrintArea() が組み立てた .dc-print-sheet）を画像にし、
+   jsPDF（CDN）でA4（縦・横）の余白の内側にぴったり貼る。ブラウザの印刷画面を経由しないので、
+   スマホでもそのままPDFファイルになる
+   ================================================================ */
+const JSPDF_URL = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+let jspdfLoading = null;
+function ensureJsPdf() {
+  if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve();
+  if (jspdfLoading) return jspdfLoading;
+  jspdfLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = JSPDF_URL;
+    s.onload = () => resolve();
+    s.onerror = () => { jspdfLoading = null; reject(new Error('jsPDF load failed')); };
+    document.head.appendChild(s);
+  });
+  return jspdfLoading;
+}
+
+/** area: .dc-print-area（中身は組み立て済み）。landscape: 横向き。marginMm: 印刷と同じ余白 */
+export async function savePrintPdf(area, { landscape, marginMm, filename, onToast }) {
+  onToast(t('PDFを作っています…', 'Creating the PDF…'));
+  const html = document.documentElement;
+  html.classList.add('dc-capturing'); // 画面外に、見える状態で出す（画像化のため）
+  try {
+    await Promise.all([ensureHtml2Canvas(), ensureJsPdf()]);
+    const sheetEl = area.querySelector('.dc-print-sheet');
+    // 約300dpi相当で画像にする（96dpi×3）
+    const canvas = await window.html2canvas(sheetEl, { backgroundColor: '#ffffff', scale: 3, useCORS: true });
+    const pageW = landscape ? 297 : 210;
+    const pageH = landscape ? 210 : 297;
+    const pdf = new window.jspdf.jsPDF({ orientation: landscape ? 'landscape' : 'portrait', unit: 'mm', format: 'a4' });
+    // 紙面の大きさ（mm）は .dc-print-sheet の幅・高さそのもの
+    const wMm = (sheetEl.offsetWidth / 96) * 25.4;
+    const hMm = (sheetEl.offsetHeight / 96) * 25.4;
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', marginMm, marginMm, Math.min(wMm, pageW - marginMm * 2), Math.min(hMm, pageH - marginMm * 2), undefined, 'FAST');
+    // jsPDFのsave()はファイル名が付かない環境があるので、自分でリンクを作って保存する
+    const url = URL.createObjectURL(pdf.output('blob'));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${safeFilename(filename)}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    onToast(t('PDFを保存しました', 'Saved the PDF'));
+  } catch (err) {
+    console.error('[daily-check-share] failed to create PDF', err);
+    onToast(t('PDFを作れませんでした。通信状況を確かめて、もう一度お試しください', 'Could not create the PDF. Check your connection and try again'));
+  } finally {
+    html.classList.remove('dc-capturing');
+  }
 }

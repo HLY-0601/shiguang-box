@@ -20,7 +20,7 @@
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
 import { nsKey } from '../../js/state.js';
 import { ptParts, ptToReal } from '../../js/pacific-time.js';
-import { shareSheetImage } from './daily-check-share.js';
+import { shareSheetImage, savePrintPdf } from './daily-check-share.js';
 
 const STYLE_LINK_ID = 'daily-check-view-styles';
 const SHEETS_KEY = 'dailyCheckSheets_v1';
@@ -429,6 +429,7 @@ function toolbarHtml(sheet) {
         <button type="button" class="dc-btn${editing ? ' on' : ''}" data-act="toggle-edit" aria-pressed="${editing}">${escapeHtml(editing ? t('編集を終える', 'Done editing') : t('項目を編集', 'Edit items'))}</button>
         <button type="button" class="dc-btn${styling ? ' on' : ''}" data-act="toggle-style" aria-pressed="${styling}">${escapeHtml(t('着せ替え・印刷設定', 'Style & print'))}</button>
         <button type="button" class="dc-btn primary" data-act="print">${escapeHtml(t('印刷する', 'Print'))}</button>
+        <button type="button" class="dc-btn" data-act="pdf">${escapeHtml(t('PDFで保存', 'Save as PDF'))}</button>
         <button type="button" class="dc-btn" data-act="share">${escapeHtml(t('画像で保存・共有', 'Save / share image'))}</button>
         <button type="button" class="dc-btn danger" data-act="sheet-del">${escapeHtml(t('このシートを削除', 'Delete sheet'))}</button>
       </div>${goalHint}
@@ -702,8 +703,8 @@ function sideScales(rendered, plan) {
   return out;
 }
 
-function doPrint() {
-  const sheet = activeSheet();
+// 印刷用の面（.dc-print-area）を、印刷・PDFと同じ紙面に組み立てる（A4・向き・左右2枚・上下2回・穴の目印）
+function preparePrintArea(sheet) {
   const two = sheet.style.perPage === 2;
   const layout = LAYOUTS[two ? 'landscape' : 'portrait'];
   const sheets = two ? printPairSheets(sheet) : [sheet];
@@ -717,21 +718,28 @@ function doPrint() {
   const rendered = renderPrintArea(area, layout, plan, sheet.style.showHoles);
   // 左右（上下）のシートは同じ縮小率にそろえる（大きさが揃って見えるように）
   const scale = Math.min(...plan.map((p, i) => (p.stack ? stacked[i] : full[i])));
-
-  let styleEl = document.getElementById('dcPageStyle');
-  if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'dcPageStyle'; document.head.appendChild(styleEl); }
-  styleEl.textContent = `@page { size: A4 ${two ? 'landscape' : 'portrait'}; margin: ${PRINT_MARGIN_MM}mm; }`;
-
   rendered.papers.forEach((paper, i) => {
     const sl = rendered.slots[i];
     paper.style.width = `${(sl.w * PX_PER_MM) / scale}px`;
     // 枠の高さいっぱいに伸ばす。項目が少なくて余った分はメモの欄が広がって埋める（.dc-print-area の flex 指定）
     paper.style.height = `${(sl.h * PX_PER_MM) / scale}px`;
-    paper.style.zoom = String(scale);
+    // 縮小はtransformで（zoomは画像化（html2canvas）で正しく扱えないため。左上を基準に縮めて枠にぴったり収める）
+    paper.style.transform = `scale(${scale})`;
+    paper.style.transformOrigin = '0 0';
     // 背景で描く細い線（メモの罫線・方眼）は縮小で1px未満になると印刷で消えるので、縮めた後も1pxになる太さを渡す
     paper.style.setProperty('--dc-hair', `${Math.max(1, 1 / scale)}px`);
   });
   html.classList.remove('dc-measuring');
+  return { two, sheets, area };
+}
+
+function doPrint() {
+  const sheet = activeSheet();
+  const { two } = preparePrintArea(sheet);
+  const html = document.documentElement;
+  let styleEl = document.getElementById('dcPageStyle');
+  if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'dcPageStyle'; document.head.appendChild(styleEl); }
+  styleEl.textContent = `@page { size: A4 ${two ? 'landscape' : 'portrait'}; margin: ${PRINT_MARGIN_MM}mm; }`;
 
   html.classList.add('dc-printing');
   if (onAfterPrint) window.removeEventListener('afterprint', onAfterPrint);
@@ -784,6 +792,16 @@ function onClick(ev) {
   }
   if (act === 'toggle-style') { styling = !styling; render(); return; }
   if (act === 'print') { flushSave(); doPrint(); return; }
+  if (act === 'pdf') {
+    flushSave();
+    if (btn.dataset.busy) return; // 作っている間の連打を防ぐ
+    btn.dataset.busy = '1';
+    const { two, sheets, area } = preparePrintArea(sheet);
+    const name = two && sheets[0] !== sheets[1] ? `${sheets[0].title}_${sheets[1].title}` : (sheet.title || t('チェックシート', 'Checklist'));
+    savePrintPdf(area, { landscape: two, marginMm: PRINT_MARGIN_MM, filename: name, onToast: showToast })
+      .finally(() => { delete btn.dataset.busy; });
+    return;
+  }
   if (act === 'share') {
     flushSave();
     if (btn.dataset.busy) return; // 作っている間の連打を防ぐ

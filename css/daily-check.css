@@ -413,3 +413,8 @@ html.dc-capturing .daily-check-view .dc-print-area { display: block; position: f
 html.dc-capturing .daily-check-view .dc-paper { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 /* 印刷・PDFでは、メモ欄は余った高さいっぱいに伸ばす（上の「3マス分の高さ」より優先させる） */
 .daily-check-view .dc-print-area .dc-paper:not(.editing) .dc-memo-lines { height: auto; }
+/* 印刷するシート（2日分は左上・右上・左下・右下の4つ） */
+.daily-check-view .dc-pairs-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
+.daily-check-view .dc-pairs-grid .dc-pair { flex-direction: column; align-items: stretch; gap: 3px; font-size: 12px; }
+.daily-check-view .dc-pairs-grid .dc-pair-select { max-width: none; width: 100%; }
+.daily-check-view .dc-pair b { font-weight: 700; }

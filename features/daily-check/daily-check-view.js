@@ -187,7 +187,7 @@ function normalizeSheet(s) {
   if (!STICKERS[style.sticker]) style.sticker = DEFAULT_STYLE.sticker;
   delete style.font; // 以前の「文字」設定の名残りは捨てる
   style.perPage = style.perPage === 2 ? 2 : 1;
-  ['printLeft', 'printRight'].forEach(k => { if (typeof style[k] !== 'string') delete style[k]; });
+  ['printLeft', 'printRight', 'printLeftBottom', 'printRightBottom', 'printBottom'].forEach(k => { if (typeof style[k] !== 'string' || !style[k]) delete style[k]; });
   delete style.printLayout; delete style.paperSize; // 以前の「印刷する形」「用紙」の名残り（今はA4・1日分単位に固定）
   return {
     id: String(s.id || genId()),
@@ -472,16 +472,40 @@ function themeGroupHtml(st) {
   }).join('');
   return `<div class="dc-style-row"><span class="dc-style-label">${escapeHtml(t('テーマ', 'Theme'))}${cur ? '' : `<span class="dc-custom-tag">${escapeHtml(t('カスタム', 'Custom'))}</span>`}</span><div class="dc-themes">${cards}</div></div>`;
 }
-// 2日分（左右に並べる）で、左と右にどのシートを印刷するか。初期値はどちらも今開いているシート
+// 印刷するシートの選び方。2日分は左右（それぞれ上・下）、1日分は上（＝今のシート）と下。
+// 「下」は、上のシートと下のシートがどちらも半分の高さに収まって上下2段で印刷する時だけ使う（初期値は上と同じシート）。
+// 小さいシートなら、2日分で最大4枚を1度に印刷できる
 function printPairHtml(sheet) {
-  const sel = (side, cur) => `<label class="dc-pair"><span>${escapeHtml(side === 'printLeft' ? t('左', 'Left') : t('右', 'Right'))}</span>
-    <select class="dc-pair-select" data-print-side="${side}">${doc.sheets.map(s => `<option value="${escapeHtml(s.id)}"${s.id === cur ? ' selected' : ''}>${escapeHtml(s.title || t('無題のシート', 'Untitled'))}</option>`).join('')}</select></label>`;
-  const [left, right] = printPairSheets(sheet).map(s => s.id);
-  return `<div class="dc-style-row"><span class="dc-style-label">${escapeHtml(t('印刷するシート', 'Sheets to print'))}</span><div class="dc-pairs">${sel('printLeft', left)}${sel('printRight', right)}</div></div>`;
+  const st = sheet.style;
+  const opts = (cur, withSame) => (withSame ? `<option value=""${cur ? '' : ' selected'}>${escapeHtml(t('（上と同じ）', '(same as top)'))}</option>` : '')
+    + doc.sheets.map(s => `<option value="${escapeHtml(s.id)}"${s.id === cur ? ' selected' : ''}>${escapeHtml(s.title || t('無題のシート', 'Untitled'))}</option>`).join('');
+  const sel = (key, label, cur, withSame) => `<label class="dc-pair"><span>${escapeHtml(label)}</span><select class="dc-pair-select" data-print-side="${key}">${opts(cur, withSame)}</select></label>`;
+  const valid = id => (id && doc.sheets.some(s => s.id === id) ? id : '');
+  let body;
+  if (st.perPage === 2) {
+    const [left, right] = printPairSheets(sheet).map(s => s.id);
+    body = `<div class="dc-pairs dc-pairs-grid">
+      ${sel('printLeft', t('左・上', 'Left, top'), left, false)}${sel('printRight', t('右・上', 'Right, top'), right, false)}
+      ${sel('printLeftBottom', t('左・下', 'Left, bottom'), valid(st.printLeftBottom), true)}${sel('printRightBottom', t('右・下', 'Right, bottom'), valid(st.printRightBottom), true)}
+    </div>`;
+  } else {
+    body = `<div class="dc-pairs"><span class="dc-pair"><span>${escapeHtml(t('上', 'Top'))}</span><b>${escapeHtml(sheet.title || t('無題のシート', 'Untitled'))}</b></span>${sel('printBottom', t('下', 'Bottom'), valid(st.printBottom), true)}</div>`;
+  }
+  return `<div class="dc-style-row"><span class="dc-style-label">${escapeHtml(t('印刷するシート', 'Sheets to print'))}</span>${body}
+    <p class="dc-style-note">${escapeHtml(t('「下」は、上のシートと下のシートがどちらも小さく、紙の上半分と下半分に収まる時だけ印刷されます。大きいシートの時は上のシートを1枚で大きく印刷します。', '"Bottom" is used only when both the top and bottom sheets are small enough to fit in half the page. Otherwise the top sheet is printed full size.'))}</p></div>`;
 }
 function printPairSheets(sheet) {
   const find = id => doc.sheets.find(s => s.id === id) || sheet;
   return [find(sheet.style.printLeft), find(sheet.style.printRight)];
+}
+// 列ごとの { top, bottom }（下が未選択・削除済みなら上と同じ）
+function printColumns(sheet) {
+  const find = (id, fallback) => doc.sheets.find(s => s.id === id) || fallback;
+  if (sheet.style.perPage === 2) {
+    const [left, right] = printPairSheets(sheet);
+    return [{ top: left, bottom: find(sheet.style.printLeftBottom, left) }, { top: right, bottom: find(sheet.style.printRightBottom, right) }];
+  }
+  return [{ top: sheet, bottom: find(sheet.style.printBottom, sheet) }];
 }
 function stylePanelHtml(sheet) {
   const st = sheet.style;
@@ -498,7 +522,7 @@ function stylePanelHtml(sheet) {
       <p class="dc-style-note">${escapeHtml(st.perPage === 2
     ? t('A4を横向きにして、左右に1枚ずつ並べて印刷します。真ん中の点線で切ると、A5サイズのシートが2枚になります。項目が少ないシートは、その側の上半分と下半分に1回ずつ印刷します。', 'Prints two sheets side by side on landscape A4. Cut along the center line to get two A5 sheets. A short sheet is printed twice on its side, top and bottom.')
     : t('A4の縦向きで印刷します。項目が少なく半分の高さに収まるシートは、上半分と下半分に1回ずつ印刷します。', 'Prints on portrait A4. A short sheet that fits in half the height is printed twice, top and bottom.'))}</p>
-      ${st.perPage === 2 ? printPairHtml(sheet) : ''}
+      ${printPairHtml(sheet)}
       <div class="dc-style-row"><span class="dc-style-label">${escapeHtml(t('その他', 'Other'))}</span><div class="dc-chips">
         ${onOff('showDate', st.showDate, t('日付の欄', 'Date field'))}
         ${st.showDate ? onOff('showYear', st.showYear, t('日付に年も入れる', 'Include the year')) : ''}
@@ -646,7 +670,7 @@ const LAYOUTS = {
 };
 const STACK_GAP_MM = 6.5; // 上下に2回印刷する時の、区切り線から上下のシートまでの間隔
 
-// その列にシートを置く枠。stack なら同じシートを上半分と下半分に1つずつ
+// その列にシートを置く枠。stack なら上半分と下半分に1つずつ
 function sideSlots(layout, side, stack) {
   if (!stack) return [{ x: side.x, y: 0, w: side.w, h: layout.h }];
   const bottomY = side.midY + STACK_GAP_MM;
@@ -676,11 +700,11 @@ function fitScale(paper, availW, availH) {
 // 半分の高さに入れた時の縮小率が、列いっぱいに入れた時のこの割合以上（＝あまり縮めずに収まる）なら上下2回にする
 const STACK_MIN_RATIO = 0.85;
 
-// plan: 列ごとの { sheet, stack }。枠・区切り線・●を描き、各シートの要素と枠を返す
+// plan: 列ごとの { sheet, bottom, stack }（bottom は上下2段の時の下のシート）。枠・区切り線・●を描き、各シートの要素と枠を返す
 function renderPrintArea(area, layout, plan, showHoles) {
   const mm = v => `${v}mm`;
   const slots = [];
-  plan.forEach((p, i) => sideSlots(layout, layout.sides[i], p.stack).forEach(sl => slots.push({ ...sl, sheet: p.sheet })));
+  plan.forEach((p, i) => sideSlots(layout, layout.sides[i], p.stack).forEach((sl, j) => slots.push({ ...sl, sheet: j === 1 ? (p.bottom || p.sheet) : p.sheet })));
   area.innerHTML = `
     <div class="dc-print-sheet" style="width:${mm(layout.w)};height:${mm(layout.h)}">
       ${slots.map(sl => `<div class="dc-slot" style="left:${mm(sl.x)};top:${mm(sl.y)};width:${mm(sl.w)};height:${mm(sl.h)}">${paperHtml(sl.sheet, { mode: 'print' })}</div>`).join('')}
@@ -707,14 +731,15 @@ function sideScales(rendered, plan) {
 function preparePrintArea(sheet) {
   const two = sheet.style.perPage === 2;
   const layout = LAYOUTS[two ? 'landscape' : 'portrait'];
-  const sheets = two ? printPairSheets(sheet) : [sheet];
+  const cols = printColumns(sheet);
   const area = viewRoot().querySelector('.dc-print-area');
   const html = document.documentElement;
-  // 画面外で、印刷時と同じ見た目にして測る。列いっぱいに1回の場合と上下2回の場合を両方測り、列ごとに決める
+  // 画面外で、印刷時と同じ見た目にして測る。列いっぱいに1回の場合と上下2段の場合を両方測り、列ごとに決める
+  // （上下2段は、上と下のどちらのシートも半分の高さにあまり縮めずに収まる時だけ）
   html.classList.add('dc-measuring');
-  const full = sideScales(renderPrintArea(area, layout, sheets.map(sh => ({ sheet: sh, stack: false })), false), sheets.map(() => ({ stack: false })));
-  const stacked = sideScales(renderPrintArea(area, layout, sheets.map(sh => ({ sheet: sh, stack: true })), false), sheets.map(() => ({ stack: true })));
-  const plan = sheets.map((sh, i) => ({ sheet: sh, stack: stacked[i] >= full[i] * STACK_MIN_RATIO }));
+  const full = sideScales(renderPrintArea(area, layout, cols.map(c => ({ sheet: c.top, stack: false })), false), cols.map(() => ({ stack: false })));
+  const stacked = sideScales(renderPrintArea(area, layout, cols.map(c => ({ sheet: c.top, bottom: c.bottom, stack: true })), false), cols.map(() => ({ stack: true })));
+  const plan = cols.map((c, i) => ({ sheet: c.top, bottom: c.bottom, stack: stacked[i] >= full[i] * STACK_MIN_RATIO }));
   const rendered = renderPrintArea(area, layout, plan, sheet.style.showHoles);
   // 左右（上下）のシートは同じ縮小率にそろえる（大きさが揃って見えるように）
   const scale = Math.min(...plan.map((p, i) => (p.stack ? stacked[i] : full[i])));
@@ -730,12 +755,23 @@ function preparePrintArea(sheet) {
     paper.style.setProperty('--dc-hair', `${Math.max(1, 1 / scale)}px`);
   });
   html.classList.remove('dc-measuring');
-  return { two, sheets, area };
+  const printed = [];
+  plan.forEach(p => { printed.push(p.sheet); if (p.stack) printed.push(p.bottom); });
+  // 下に別のシートを選んだのに、どちらかが大きくて上下2段にできなかった列
+  const skipped = plan.filter(p => !p.stack && p.bottom !== p.sheet).map(p => p.bottom);
+  return { two, printed, skipped, area };
+}
+
+function notifySkipped(skipped) {
+  if (!skipped.length) return;
+  const names = [...new Set(skipped.map(s => `「${s.title || t('無題のシート', 'Untitled')}」`))].join('');
+  showToast(t(`シートが大きく上下に分けられないため、下に選んだ${names}は印刷しません`, `${names} was not printed: the sheets are too large to split top and bottom`));
 }
 
 function doPrint() {
   const sheet = activeSheet();
-  const { two } = preparePrintArea(sheet);
+  const { two, skipped } = preparePrintArea(sheet);
+  notifySkipped(skipped);
   const html = document.documentElement;
   let styleEl = document.getElementById('dcPageStyle');
   if (!styleEl) { styleEl = document.createElement('style'); styleEl.id = 'dcPageStyle'; document.head.appendChild(styleEl); }
@@ -796,8 +832,9 @@ function onClick(ev) {
     flushSave();
     if (btn.dataset.busy) return; // 作っている間の連打を防ぐ
     btn.dataset.busy = '1';
-    const { two, sheets, area } = preparePrintArea(sheet);
-    const name = two && sheets[0] !== sheets[1] ? `${sheets[0].title}_${sheets[1].title}` : (sheet.title || t('チェックシート', 'Checklist'));
+    const { two, printed, skipped, area } = preparePrintArea(sheet);
+    notifySkipped(skipped);
+    const name = [...new Set(printed.map(s => s.title || t('チェックシート', 'Checklist')))].join('_');
     savePrintPdf(area, { landscape: two, marginMm: PRINT_MARGIN_MM, filename: name, onToast: showToast })
       .finally(() => { delete btn.dataset.busy; });
     return;
@@ -947,7 +984,8 @@ function onInput(ev) {
 function onChange(ev) {
   const el = ev.target;
   if (el.dataset && el.dataset.printSide) {
-    activeSheet().style[el.dataset.printSide] = el.value;
+    const st = activeSheet().style;
+    if (el.value) st[el.dataset.printSide] = el.value; else delete st[el.dataset.printSide];
     saveDoc();
     return;
   }

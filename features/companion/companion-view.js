@@ -52,9 +52,12 @@
          activeIndex, spirits, hasSeasonPass,
          ownedCandles, estimatedDailyCandles, optimizerPlan:{ids}, walkLog
        }
-       （元実装にあった sharedNotes / sharedCalcFormula =「全精霊共通のメモ・計算」と、
-       シーズン進捗のシェアカードは、利用者がいないため2026-10-14に機能ごと廃止した。
-       保存済みの値は読み込まず、次回の保存で消える）
+       ＋ sharedNotes: 全精霊共通のメモ（文字列。2026-10-14にいったん廃止したが、
+       要望により2026-11-01にメモだけ復活。元サイトと同じキー名なので、元サイトの
+       バックアップに残っていたメモもそのまま読み込める）
+       （元実装の sharedCalcFormula =「全精霊共通の計算」と、シーズン進捗の
+       シェアカードは、利用者がいないため2026-10-14に廃止したまま。保存済みの値は
+       読み込まず、次回の保存で消える）
        spirits は4要素の配列（各 { id, name, walkDays, currentPreset,
        treeData:{tier1..4:[{id,type?,name,points,candles,checked,excluded,
        customLabel?,customImage?,firstUnlock?,noPoints?,firstBonus?,
@@ -223,6 +226,8 @@ const TRANSLATIONS = {
     copy_plan_btn: 'プランをコピー', copy_success: 'コピーしました', copy_failed: 'コピーに失敗しました',
 
     shared_close: '閉じる', shared_open: '開く',
+    shared_notes_title: 'メモ', shared_notes_note: '4体の精霊すべてで共通のメモです。自動で保存されます。',
+    shared_notes_placeholder: '例: アドパス購入済み。毎日の連れ歩きを忘れずに。残りの必要キャンドルなど自由に',
 
     walk_title_pre: '', walk_title_post: 'との連れ歩き（同行）日数', walk_unit: '/ 77 日',
 
@@ -367,6 +372,8 @@ const TRANSLATIONS = {
     copy_plan_btn: 'Copy Plan', copy_success: 'Copied', copy_failed: 'Copy failed',
 
     shared_close: 'Close', shared_open: 'Open',
+    shared_notes_title: 'Notes', shared_notes_note: 'Shared across all 4 spirits. Saved automatically.',
+    shared_notes_placeholder: 'e.g. Bought the pass. Walk every day. Candles still needed…',
 
     walk_title_pre: 'Days walked with', walk_title_post: '', walk_unit: '/ 77 days',
 
@@ -1034,6 +1041,12 @@ const TEMPLATE = `
         </div>
       </div>
 
+      <div class="section-card shared-memo-card">
+        <label class="shared-memo-title" for="companionSharedNotes">{{ t('shared_notes_title') }}</label>
+        <div class="shared-memo-note">{{ t('shared_notes_note') }}</div>
+        <textarea id="companionSharedNotes" v-model="sharedNotes" class="memo-textarea shared-memo-textarea"
+                  maxlength="5000" :placeholder="t('shared_notes_placeholder')"></textarea>
+      </div>
 
     </div>
 
@@ -1241,6 +1254,7 @@ function buildSetup(Vue) {
     const showMultiSpiritLog = ref(false);
     const showMultiSpiritPlan = ref(false);
     const showOptimizer = ref(false);
+    const sharedNotes = ref(''); // 全精霊共通のメモ
     const optSelectedId = ref('');
     const optimizerIds = ref([]);
     const optCopyStatus = ref('');
@@ -2014,6 +2028,7 @@ function buildSetup(Vue) {
         estimatedDailyCandles: estimatedDailyCandles.value,
         optimizerPlan: { ids: optimizerIds.value },
         walkLog: walkLog.value,
+        sharedNotes: sharedNotes.value,
       };
       try { localStorage.setItem(nsKey(DATA_KEY), JSON.stringify(data)); } catch (e) { /* 保存領域の上限などで失敗した場合、今回の保存のみスキップする */ }
     };
@@ -2022,6 +2037,7 @@ function buildSetup(Vue) {
       if (Number.isInteger(parsed.activeIndex) && parsed.activeIndex >= 0 && parsed.activeIndex < spirits.value.length) activeIndex.value = parsed.activeIndex;
       if (parsed.hasSeasonPass !== undefined) hasSeasonPass.value = parsed.hasSeasonPass;
       if (parsed.ownedCandles !== undefined) ownedCandles.value = parsed.ownedCandles;
+      if (typeof parsed.sharedNotes === 'string') sharedNotes.value = parsed.sharedNotes;
       if (parsed.optimizerPlan) optimizerIds.value = Array.isArray(parsed.optimizerPlan.ids) ? parsed.optimizerPlan.ids : [];
       const readDaily = (n) => {
         if (n === null || typeof n === 'object') return candlesPerDay.value;
@@ -2068,7 +2084,7 @@ function buildSetup(Vue) {
       clearTimeout(toastHideTimer);
       eventDashboard.unmount();
     });
-    watch([activeIndex, spirits, hasSeasonPass, ownedCandles, estimatedDailyCandles, walkLog], () => { save(); }, { deep: true });
+    watch([activeIndex, spirits, hasSeasonPass, ownedCandles, estimatedDailyCandles, walkLog, sharedNotes], () => { save(); }, { deep: true });
 
     return {
       t, fmtNum, pad2, spiritName, translateItemName, seasonNameDisplay,
@@ -2076,7 +2092,7 @@ function buildSetup(Vue) {
       activeStatusText, activeRemainingDays,
       incrementWalkDays, decrementWalkDays, applyPreset, resetAllConfirming, requestResetAll, cancelResetAll,
       getIcon, getItemImageUrl, TYPE_IMAGES, getLevel, cleanName, getItemLabel, getItemLabelForSpirit, isPhantomItem, getTier2Slots,
-      showOptimizer, optSelectedId, estimatedDailyCandles, optimizerCandidates, optimizerRows, optimizerSummary, optAdd, optMove, optRemove,
+      showOptimizer, sharedNotes, optSelectedId, estimatedDailyCandles, optimizerCandidates, optimizerRows, optimizerSummary, optAdd, optMove, optRemove,
       optCopyStatus, optCopyPlan, heartCopyStatus, heartCopyPlan,
       hasSeasonPass, ownedCandles, candlesPerDay,
       showForecast, showHeartPlanDetail, showMultiSpiritLog, showMultiSpiritPlan,

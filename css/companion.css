@@ -1427,3 +1427,38 @@
 .companion-view .wr-del { border: 1px solid var(--danger-text, #ff3b30); background: transparent; color: var(--danger-text, #ff3b30); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; }
 .companion-view .wr-close { border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-gray); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-family: inherit; cursor: pointer; }
 .companion-view .wr-edit-hint { font-size: 11px; color: var(--text-gray); margin: 8px 0 0; line-height: 1.5; }
+
+/* 📝 全精霊共通のメモ（左の列のいちばん下） */
+.companion-view .shared-memo-card { padding-bottom: 16px; }
+.companion-view .shared-memo-title {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  color: var(--text-color);
+}
+.companion-view .shared-memo-note {
+  font-size: 11px;
+  color: var(--text-gray);
+  margin: 4px 0 8px;
+  letter-spacing: 0.02em;
+}
+.companion-view .shared-memo-textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 120px;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 16px; /* iOSで入力時に拡大されないよう16px */
+  line-height: 1.6;
+  font-family: inherit;
+  background: var(--input-bg);
+  color: var(--text-color);
+  resize: vertical;
+}
+.companion-view .shared-memo-textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  background: var(--card-bg);
+}

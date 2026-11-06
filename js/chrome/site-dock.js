@@ -3,7 +3,7 @@
    ツール/設定）。emote/index.html の.site-dock markupを移植。itemは
    元々これを持っていなかったため、tai-hubで初めて手に入る共通chrome。
    ================================================================ */
-import { CURRENT_LANG } from '../i18n.js';
+import { CURRENT_LANG, pickLang } from '../i18n.js';
 import * as pfModal from './pf-modal.js';
 import * as dashModal from './dash-modal.js';
 import * as toolsDrawer from './tools-drawer.js';
@@ -14,26 +14,26 @@ import { unseenCount, onNoticesChanged } from '../notices.js';
 export function render(mountEl) {
   toolsDrawer.init();
   mountEl.innerHTML = `
-    <nav class="site-dock" aria-label="${CURRENT_LANG === 'en' ? 'Quick menu' : 'クイックメニュー'}">
+    <nav class="site-dock" aria-label="${pickLang('Quick menu', 'クイックメニュー')}">
       <button type="button" id="dockProfileBtn">
         <span class="site-dock-icon"><span class="icon-chip" style="width:28px;height:28px;"><svg class="inline-icon" width="22" height="22"><use href="#i-folder"/></svg></span></span>
-        <span class="site-dock-label" id="siteDockProfileLabel">${CURRENT_LANG === 'en' ? 'Profile' : 'プロフィール'}</span>
+        <span class="site-dock-label" id="siteDockProfileLabel">${pickLang('Profile', 'プロフィール')}</span>
       </button>
       <button type="button" id="dockDashboardBtn" class="dock-dash">
         <span class="site-dock-icon"><span class="icon-chip" style="width:28px;height:28px;"><svg class="inline-icon" width="22" height="22"><use href="#i-calendar"/></svg></span></span>
-        <span class="site-dock-label">${CURRENT_LANG === 'en' ? 'Dashboard' : 'ダッシュボード'}</span>
+        <span class="site-dock-label">${pickLang('Dashboard', 'ダッシュボード')}</span>
       </button>
       <button type="button" id="dockNoticeBtn" class="dock-notice">
         <span class="site-dock-icon"><span class="icon-chip" style="width:28px;height:28px;"><svg class="inline-icon" width="22" height="22"><use href="#i-bell"/></svg></span><span class="dock-badge" id="dockNoticeBadge" hidden></span></span>
-        <span class="site-dock-label">${CURRENT_LANG === 'en' ? 'Notices' : 'お知らせ'}</span>
+        <span class="site-dock-label">${pickLang('Notices', 'お知らせ')}</span>
       </button>
       <button type="button" id="dockToolsBtn" class="dock-tools">
         <span class="site-dock-icon"><span class="icon-chip" style="width:28px;height:28px;"><svg class="inline-icon" width="22" height="22"><use href="#i-menu"/></svg></span></span>
-        <span class="site-dock-label">${CURRENT_LANG === 'en' ? 'Other Tools' : '他のツール'}</span>
+        <span class="site-dock-label">${pickLang('Other Tools', '他のツール')}</span>
       </button>
       <button type="button" id="dockSettingsBtn">
         <span class="site-dock-icon"><span class="icon-chip" style="width:28px;height:28px;"><svg class="inline-icon" width="22" height="22"><use href="#i-settings"/></svg></span></span>
-        <span class="site-dock-label">${CURRENT_LANG === 'en' ? 'Display Settings' : '表示設定'}</span>
+        <span class="site-dock-label">${pickLang('Display Settings', '表示設定')}</span>
       </button>
     </nav>`;
 
@@ -60,7 +60,7 @@ export function refreshNoticeBadge() {
   badge.hidden = n === 0;
   badge.textContent = n > 9 ? '9+' : String(n);
   const btn = document.getElementById('dockNoticeBtn');
-  if (btn) btn.setAttribute('aria-label', n ? (CURRENT_LANG === 'en' ? `Notices (${n} new)` : `お知らせ（未読${n}件）`) : (CURRENT_LANG === 'en' ? 'Notices' : 'お知らせ'));
+  if (btn) btn.setAttribute('aria-label', n ? (pickLang(`Notices (${n} new)`, `お知らせ（未読${n}件）`)) : (pickLang('Notices', 'お知らせ')));
 }
 
 export function refreshProfileLabel(label) {

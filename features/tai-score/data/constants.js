@@ -4,7 +4,7 @@
    Sky Music Nightly (github.com/Specy/genshin-music) のデフォルトハープ配列
    [60,62,64,65,67,69,71,72,74,76,77,79,81,83,84] と同一。値は一切変更していない。
    ================================================================ */
-import { CURRENT_LANG } from '../../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../../js/i18n.js';
 
 export const NOTE_LABELS = ['ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ', 'ド', 'レ', 'ミ', 'ファ', 'ソ', 'ラ', 'シ', 'ド'];
 export const NOTE_LABELS_EN = ['Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Ti', 'Do', 'Re', 'Mi', 'Fa', 'Sol', 'La', 'Ti', 'Do'];
@@ -21,9 +21,9 @@ export function instrumentCodeFromLabel(label) {
 }
 // 現在の表示言語での楽器ラベル（テキスト譜面のヘッダー等、常に日本語で扱う箇所には使わない）
 export function instrumentLabel(code) {
-  return (CURRENT_LANG === 'en' ? INSTRUMENT_LABELS_EN[code] : INSTRUMENT_LABELS[code]) || code;
+  return (pickLang(INSTRUMENT_LABELS_EN[code], INSTRUMENT_LABELS[code])) || code;
 }
 // 音名表示（ド・レ・ミ…）。英語表示時はドレミ唱法のローマ字表記(Do/Re/Mi…)にする。
-export function noteLabel(i) { return CURRENT_LANG === 'en' ? NOTE_LABELS_EN[i] : NOTE_LABELS[i]; }
+export function noteLabel(i) { return pickLang(NOTE_LABELS_EN[i], NOTE_LABELS[i]); }
 
 export const DEFAULT_KEY_BINDINGS = ['y', 'u', 'i', 'o', 'p', 'h', 'j', 'k', 'l', ';', 'n', 'm', ',', '.', '/'];

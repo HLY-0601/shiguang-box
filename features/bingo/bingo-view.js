@@ -9,6 +9,7 @@
    データの形は bingo-state.js を参照。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { notifyChanged } from '../../js/notices.js';
 import { saveElementImage, toast } from '../shared/share-image.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
@@ -16,7 +17,7 @@ import {
   FREE, loadBingo, saveBingo, ensureWeek, buildCells, countLines, lineCells, nextWeekStart,
 } from './bingo-state.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const STYLE_ID = 'fun-tools-styles';
 
 let containerEl = null;

@@ -9,6 +9,7 @@
    暗くせず外側の操作も止めない（色を変えながら実際の画面で確かめられる。css/theme.css の .ts-live）。
    ================================================================ */
 import { CURRENT_LANG, RAW_LANG, setLang, escapeHtml } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import {
   getSkyThemeMode, toggleTheme, exportAllData, parseImportFile, importAllData, wipeAllData,
   getShortcutsEnabled, setShortcutsEnabled, getShowTitlesEnabled, setShowTitlesEnabled,
@@ -18,7 +19,7 @@ import * as sidePanels from './side-panels.js';
 import { getActiveTheme, wipeWallpapers, PRESETS, sameLook } from '../theme.js';
 import { ROUTES } from '../router-registry.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 function themeInfo(mode) {
   return {

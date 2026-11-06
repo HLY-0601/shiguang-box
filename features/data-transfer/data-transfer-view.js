@@ -41,13 +41,14 @@
      tai-score/tai-revisit等］と同じくこのビュー内に直書きしている——
      tai-hubの共有chromeにはフッターを描画する仕組み自体が存在しない）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { pfDisplayName } from '../../js/state.js';
 import { t } from './data/i18n-data-transfer.js';
 import * as S from './data-transfer-state.js';
 
-function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
-const JOINER = CURRENT_LANG === 'en' ? ', ' : '、';
+function tt(ja, en) { return ; }
+const JOINER = pickLang(', ', '、');
 
 const STYLE_LINK_ID = 'data-transfer-view-styles';
 const ICON_SPRITE_ID = 'data-transfer-icon-sprite';
@@ -145,15 +146,15 @@ function injectLocalIconSprite() {
    コードのコピーは長すぎて貼り付けられないことがあるため、ファイルでの手順だけを案内する。
    ================================================================ */
 function appGuideHtml() {
-  const steps = CURRENT_LANG === 'en' ? [
+  const steps = pickLang([
     'In the app you have been using (the old site), open "Data Transfer", select the sites, tap "Create Code for Selected Sites", then "Download as File". On iPhone the file goes to the Downloads folder in the Files app. From November 1, the screen shown on the old sites also has "Save data to a file", which works the same way.',
     'Open tai-hub where you will use it from now on. To use it from your home screen, open tai-hub in Safari, tap the Share button → "Add to Home Screen", and open it from the new icon. (A home-screen app and Safari keep separate data, so do the next step in the one you will use.)',
     'In tai-hub, go to "Data Transfer" → "Restore from a Code", tap "Choose File" and pick the saved file. Select the sites to restore and tap "Restore Selected Sites".',
-  ] : [
+  ], [
     '今まで使っていたアプリ（旧サイト）で「データ引継ぎ」を開き、移したいサイトを選んで「選んだサイトのコードを作成」→「ファイルとしてダウンロード」を押します。iPhoneでは「ファイル」アプリの「ダウンロード」フォルダに保存されます。11月1日からは、旧サイトを開くと出る画面の「データをファイルに保存」でも同じように保存できます。',
     'tai-hubを、これから使う場所で開きます。ホーム画面から使う場合は、Safariでtai-hubを開いて共有ボタン →「ホーム画面に追加」を選び、追加したアイコンから開いてください（ホーム画面のアプリとSafariでもデータは別々なので、使う方で次の手順を行います）。',
     'tai-hubの「データ引継ぎ」→「コードから復元」で「ファイルを選択」を押し、保存したファイルを選びます。復元したいサイトを選んで「選んだサイトを復元する」を押せば完了です。',
-  ];
+  ]);
   return `
         <details class="card dt-app-guide">
           <summary class="dt-app-guide-summary">${escapeHtml(tt('ホーム画面に追加したアプリで使っている方へ', 'If you use a home-screen app'))}</summary>
@@ -826,8 +827,8 @@ function renderImportWarningBoxHtml(info, selectedIds) {
   }) => {
     let text = escapeHtml(S.siteLabel(site));
     if (importUpdatedAt) {
-      const openParen = CURRENT_LANG === 'en' ? ' (' : '（';
-      const closeParen = CURRENT_LANG === 'en' ? ')' : '）';
+      const openParen = pickLang(' (', '（');
+      const closeParen = pickLang(')', '）');
       text += `${openParen}${t('dyn.importCodeDateLabel')}: ${escapeHtml(S.siteUpdatedAtLabel(importUpdatedAt))}`;
       if (localUpdatedAt) {
         text += ` / ${t('dyn.importLocalDateLabel')}: ${escapeHtml(S.siteUpdatedAtLabel(localUpdatedAt))}`;

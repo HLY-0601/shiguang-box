@@ -52,7 +52,9 @@ function applyRoute() {
   if (!ROUTES[toolKey]) { toolKey = DEFAULT_ROUTE; sub = ''; }
   const entry = ROUTES[toolKey];
 
-  if (currentEntry && currentEntry !== entry && typeof currentEntry.unmount === 'function') {
+  // 同じツールのサブルート再マウント時にも必ずunmount()を通し、
+  // グローバルリスナー・タイマーの重複登録（リーク）を防ぐ。
+  if (currentEntry && typeof currentEntry.unmount === 'function') {
     currentEntry.unmount();
   }
   appRoot.innerHTML = '';

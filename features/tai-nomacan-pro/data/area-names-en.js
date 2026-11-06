@@ -327,7 +327,11 @@ export const AREA_NAMES_EN = {
   "イベント報酬": "Event Reward",
 };
 
+import { AREA_NAMES_ZH } from './area-names-zh.js';
+
 export function displayAreaName(lang, jaName) {
-  if (lang !== 'en' || !jaName) return jaName;
-  return AREA_NAMES_EN[jaName] || jaName;
+  if (!jaName) return jaName;
+  if (lang === 'en') return AREA_NAMES_EN[jaName] || jaName;
+  if (lang === 'zh') return AREA_NAMES_ZH[jaName] || jaName;
+  return jaName;
 }

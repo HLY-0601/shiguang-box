@@ -6,12 +6,13 @@
    旧スタンプ帳（#/stamps）も、この画面を開く。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { navigate } from '../../js/router.js';
 import { notifyChanged } from '../../js/notices.js';
 import { injectStylesheet } from '../bingo/bingo-view.js';
 import { TITLE_TOOLS, toolTitles, titleTotals, markTitlesSeen } from '../../js/titles.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 let containerEl = null;
 let filter = '';
 

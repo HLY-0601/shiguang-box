@@ -8,12 +8,13 @@
    （精霊はツリーの詳細を直接開く）。所持済みのアイテム・エモートには印を付ける。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import { navigate } from '../router.js';
 import { nsKey } from '../state.js';
 import { getSiteLinks, siteLinkName } from '../site-links.js';
 import { CATEGORY_REGISTRY } from '../../features/item/data/categories.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const MAX_PER_GROUP = 8;
 
 let overlayEl = null;

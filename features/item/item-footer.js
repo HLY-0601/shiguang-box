@@ -7,7 +7,8 @@
    参考・画像引用元のリンクは元のページごとの内容のまま（本ファイルの REFS は元のHTMLから抽出）。
    ハブでは設定/クレジットは同じSPA内のページ（#/tai-info）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 
 const REFS = {
   "dashboard": {
@@ -264,7 +265,7 @@ const REFS = {
   }
 };
 
-function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function tt(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 /** key: 'dashboard' | 'all' | 'cost' | 'music_sheet' | <カテゴリkey>。未知のkeyは参考リンク無しで返す */
 export function itemFooterHtml(key) {
@@ -273,8 +274,8 @@ export function itemFooterHtml(key) {
   const A = 'target="_blank" rel="noopener noreferrer"';
   const refBlock = ref ? `
     <span class="item-footer-sub">
-      ${escapeHtml(en ? ref.enLabel : ref.jaLabel)}
-      ${ref.links.map(l => `<a href="${en && l.enHref ? l.enHref : l.href}" ${A}>${escapeHtml(en ? l.en : l.ja)}</a>`).join('\n      ／\n      ')}
+      ${escapeHtml(pickLang(ref.enLabel, ref.jaLabel))}
+      ${ref.links.map(l => `<a href="${en && l.enHref ? l.enHref : l.href}" ${A}>${escapeHtml(pickLang(l.en, l.ja))}</a>`).join('\n      ／\n      ')}
     </span><br>` : '';
   return `
   <footer class="item-footer">

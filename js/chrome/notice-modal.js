@@ -3,11 +3,12 @@
    開いた時点で並んでいるお知らせを既読にする（ドックのバッジが消える）。
    未読だったものには小さな点を付けて、今回新しく届いたものが分かるようにする。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import { navigate } from '../router.js';
 import { collectNotices, markSeen, isSeen } from '../notices.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 let overlayEl = null;
 
 const ITEM_CATS = ['cape', 'mask', 'necklace', 'hairstyle', 'hair_accessory', 'head_accessory', 'outfit', 'shoes', 'face_accessory', 'portable_item', 'large_placeable', 'small_placeable'];
@@ -68,7 +69,7 @@ async function fillWishNames(list) {
       try {
         const mod = await import(`../../features/item/data/items/${it.catKey}.js`);
         const found = (mod.ITEMS || []).find(x => x.id === it.id);
-        return found ? { name: CURRENT_LANG === 'en' ? (found.nameEn || found.name) : found.name, img: found.img } : null;
+        return found ? { name: pickLang((found.nameEn || found.name), found.name), img: found.img } : null;
       } catch (e) { return null; }
     }));
     slot.innerHTML = names.filter(Boolean).map(x => `<span class="notice-wish-chip">${x.img ? `<img src="${escapeHtml(x.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}${escapeHtml(x.name)}</span>`).join('');

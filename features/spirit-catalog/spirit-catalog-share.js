@@ -31,7 +31,7 @@
    このファイルもdocument.body直下に生成するため）。
    ================================================================ */
 
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import { t } from './data/i18n-catalog.js';
 import {
@@ -42,7 +42,7 @@ const SITE_URL = toolShareUrl('spirit-catalog');
 const SHARE_HASHTAG_JA = '#Sky精霊ツリー管理';
 const SHARE_HASHTAG_EN = '#SkySpiritTree';
 // ツイート本文の他の部分と同じくCURRENT_LANGに応じてハッシュタグも切り替える
-function shareHashtag() { return CURRENT_LANG === 'en' ? SHARE_HASHTAG_EN : SHARE_HASHTAG_JA; }
+function shareHashtag() { return pickLang(SHARE_HASHTAG_EN, SHARE_HASHTAG_JA); }
 
 const OVERLAY_ID = 'scShareCustomizeOverlay';
 const PREVIEW_OVERLAY_ID = 'scSharePreviewOverlay';

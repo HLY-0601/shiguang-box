@@ -16,6 +16,7 @@
    辿り、現在言語→jaへフォールバックし、{varName}を置換する）。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 export const INFO_I18N = {
   tabs: {
@@ -168,7 +169,7 @@ function resolve(dict, path) {
 
 export function t(key, vars) {
   const entry = resolve(INFO_I18N, key);
-  let str = entry ? ((CURRENT_LANG === 'en' ? entry.en : entry.ja) || entry.ja || key) : key;
+  let str = entry ? (CURRENT_LANG === 'en' ? (entry.en || entry.ja || key) : (CURRENT_LANG === 'zh' ? (entry.ja !== undefined ? zhTr(entry.ja) : key) : (entry.ja || key))) : key;
   if (vars) {
     Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
   }

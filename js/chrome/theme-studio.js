@@ -15,9 +15,10 @@
    ・開く演出は他のボトムシートと同じ@keyframes（CLAUDE.md参照）。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import * as T from '../theme.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const ICON = (id, size = 16) => `<svg class="inline-icon" width="${size}" height="${size}"><use href="#${id}"/></svg>`;
 
 const ACCENTS = ['#E9578A', '#F2603D', '#F5A524', '#D4A02C', '#2F9E5B', '#14A37F', '#1E88E5', '#6C63D8', '#8466E8', '#B0794C', '#FF2BD6', '#6B7280'];

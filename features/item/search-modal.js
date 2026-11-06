@@ -43,7 +43,7 @@
    元実装のロジック・文言をそのまま移植している。
    ================================================================ */
 
-import { CURRENT_LANG, trEvent, trCat, trItem, escapeHtml, resetFilterPanel } from '../../js/i18n.js';
+import { CURRENT_LANG, trEvent, trCat, trItem, escapeHtml, resetFilterPanel, pickLang } from '../../js/i18n.js';
 import { getCategoryState, saveCategoryState, recordItemAcquire, removeItemAcquireRecord, isWishItem, toggleWishItem } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { isSeasonLikeEvent, getCurrentEventNames, REVISIT_SPIRIT_SCHEDULES, isRevisitScheduleActive } from './data/season-data.js';
@@ -200,62 +200,62 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card sm-card">
-      <button type="button" class="modal-close-btn" id="smCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="smCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Item Search' : 'アイテム検索'}</div>
+      <div class="modal-title">${pickLang('Item Search', 'アイテム検索')}</div>
 
       <div class="sm-panel">
         <div class="sm-row">
           <div class="sm-search-box">
             <svg class="inline-icon" width="15" height="15" style="flex-shrink:0;color:var(--hub-text-2)"><use href="#i-search"/></svg>
             <input type="text" class="sm-input" id="smName" autocomplete="off"
-                   placeholder="${en ? 'Search by item name, season, or day...' : 'アイテム名・季節/日々で検索...'}">
+                   placeholder="${pickLang('Search by item name, season, or day...', 'アイテム名・季節/日々で検索...')}">
           </div>
         </div>
         <div class="sm-row">
           <label class="sm-toggle">
             <input type="checkbox" id="smCurrentOnly">
-            <span>${en ? 'Currently available only' : '現在開催中の季節・イベントのみ'}</span>
+            <span>${pickLang('Currently available only', '現在開催中の季節・イベントのみ')}</span>
           </label>
         </div>
         <div class="sm-row" id="smCurrentTypeRow" style="display:none;">
           <select class="sm-select" id="smCurrentType">
-            <option value="all">${en ? 'All (Season/Day/Revisit)' : 'すべて（季節・日々・再訪）'}</option>
+            <option value="all">${pickLang('All (Season/Day/Revisit)', 'すべて（季節・日々・再訪）')}</option>
           </select>
         </div>
         <div class="sm-row">
           <select class="sm-select" id="smEvent">
-            <option value="all">${en ? 'All Seasons/Events' : 'すべての季節・イベント'}</option>
+            <option value="all">${pickLang('All Seasons/Events', 'すべての季節・イベント')}</option>
           </select>
         </div>
         <div class="sm-row sm-row-multi">
           <select class="sm-select" id="smCat">
-            <option value="all">${en ? 'All Categories' : 'すべてのカテゴリ'}</option>
+            <option value="all">${pickLang('All Categories', 'すべてのカテゴリ')}</option>
             ${GRID_CATEGORIES.map(c => `<option value="${c.key}">${escapeHtml(trCat(c.name))}</option>`).join('')}
           </select>
           <select class="sm-select" id="smOwned">
-            <option value="all">${en ? 'All Ownership States' : 'すべての所持状態'}</option>
-            <option value="owned">${en ? 'Owned Only' : '所持中のみ'}</option>
-            <option value="notOwned">${en ? 'Not Owned Only' : '未所持のみ'}</option>
+            <option value="all">${pickLang('All Ownership States', 'すべての所持状態')}</option>
+            <option value="owned">${pickLang('Owned Only', '所持中のみ')}</option>
+            <option value="notOwned">${pickLang('Not Owned Only', '未所持のみ')}</option>
           </select>
           <select class="sm-select" id="smFav">
-            <option value="all">${en ? 'All Favorites' : 'すべてのお気に入り'}</option>
-            <option value="fav">${en ? 'Favorites Only' : 'お気に入り指定のみ'}</option>
+            <option value="all">${pickLang('All Favorites', 'すべてのお気に入り')}</option>
+            <option value="fav">${pickLang('Favorites Only', 'お気に入り指定のみ')}</option>
           </select>
         </div>
         <div class="sm-row sm-row-multi" id="smRegularAreaRow" style="display:none;">
           <select class="sm-select" id="smRegularArea">
-            <option value="all">${en ? 'All Areas' : 'すべてのエリア'}</option>
+            <option value="all">${pickLang('All Areas', 'すべてのエリア')}</option>
           </select>
           <label class="sm-toggle">
             <input type="checkbox" id="smElderOnly">
-            <span>${en ? "Elders' items only" : '大精霊のアイテムのみ'}</span>
+            <span>${pickLang("Elders' items only", '大精霊のアイテムのみ')}</span>
           </label>
         </div>
         <div class="sm-row">
           <button type="button" class="sm-advanced-toggle" id="smAdvancedToggleBtn">
-            <span>${en ? 'More Filters &amp; Sort' : '詳細な絞り込み・並び替え'}</span>
+            <span>${pickLang('More Filters &amp; Sort', '詳細な絞り込み・並び替え')}</span>
             <span class="sm-advanced-chevron" id="smAdvancedChevron">
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
             </span>
@@ -263,32 +263,32 @@ function renderModalHtml() {
         </div>
         <div class="sm-row sm-row-multi sm-advanced-row" id="smAdvancedRow" style="display:none;">
           <select class="sm-select" id="smSort">
-            <option value="default">${en ? 'Sort: Default' : '並び替え：標準'}</option>
-            <option value="name">${en ? 'Sort: Name (A-Z)' : '並び替え：名前順'}</option>
-            <option value="eventOrder">${en ? 'Sort: Season/Day Order' : '並び替え：季節・日々順'}</option>
-            <option value="notOwnedFirst">${en ? 'Sort: Not Owned First' : '並び替え：未所持を先に'}</option>
-            <option value="ownedFirst">${en ? 'Sort: Owned First' : '並び替え：所持済みを先に'}</option>
+            <option value="default">${pickLang('Sort: Default', '並び替え：標準')}</option>
+            <option value="name">${pickLang('Sort: Name (A-Z)', '並び替え：名前順')}</option>
+            <option value="eventOrder">${pickLang('Sort: Season/Day Order', '並び替え：季節・日々順')}</option>
+            <option value="notOwnedFirst">${pickLang('Sort: Not Owned First', '並び替え：未所持を先に')}</option>
+            <option value="ownedFirst">${pickLang('Sort: Owned First', '並び替え：所持済みを先に')}</option>
           </select>
         </div>
         <div class="sm-row sm-row-multi sm-advanced-row" id="smAdvancedRow2" style="display:none;">
           <select class="sm-select" id="smCostType">
-            <option value="all">${en ? 'All (Free/Paid)' : 'すべて（無課金・課金）'}</option>
-            <option value="free">${en ? 'Free Only' : '無課金のみ'}</option>
-            <option value="premium">${en ? 'Paid Only' : '課金のみ'}</option>
+            <option value="all">${pickLang('All (Free/Paid)', 'すべて（無課金・課金）')}</option>
+            <option value="free">${pickLang('Free Only', '無課金のみ')}</option>
+            <option value="premium">${pickLang('Paid Only', '課金のみ')}</option>
           </select>
           <select class="sm-select" id="smReprint">
-            <option value="all">${en ? 'All (Reprint)' : 'すべて（復刻）'}</option>
-            <option value="reprint">${en ? 'Reprintable Only' : '復刻ありのみ'}</option>
-            <option value="noReprint">${en ? 'No-Reprint Only' : '復刻なしのみ'}</option>
+            <option value="all">${pickLang('All (Reprint)', 'すべて（復刻）')}</option>
+            <option value="reprint">${pickLang('Reprintable Only', '復刻ありのみ')}</option>
+            <option value="noReprint">${pickLang('No-Reprint Only', '復刻なしのみ')}</option>
           </select>
           <select class="sm-select" id="smDye">
-            <option value="all">${en ? 'All (Dye)' : 'すべて（染色）'}</option>
-            <option value="dye">${en ? 'Dyeable Only' : '染色可のみ'}</option>
-            <option value="noDye">${en ? 'Not Dyeable Only' : '染色不可のみ'}</option>
+            <option value="all">${pickLang('All (Dye)', 'すべて（染色）')}</option>
+            <option value="dye">${pickLang('Dyeable Only', '染色可のみ')}</option>
+            <option value="noDye">${pickLang('Not Dyeable Only', '染色不可のみ')}</option>
           </select>
         </div>
         <div class="sm-row" style="justify-content:flex-end;">
-          <button type="button" class="sm-clear-btn" id="smClearBtn">${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</button>
+          <button type="button" class="sm-clear-btn" id="smClearBtn">${pickLang('Clear All Filters', 'フィルターを全てクリア')}</button>
         </div>
       </div>
 
@@ -296,18 +296,18 @@ function renderModalHtml() {
         <svg class="inline-icon" width="18" height="18"><use href="#i-check"/></svg>
         <span class="sm-markall-text">
           <b id="smMarkAllLabel"></b>
-          <small>${en ? 'Marks every not-yet-owned item currently shown below as owned' : '下に表示中の未所持アイテムをすべて所持済みにします'}</small>
+          <small>${pickLang('Marks every not-yet-owned item currently shown below as owned', '下に表示中の未所持アイテムをすべて所持済みにします')}</small>
         </span>
       </button>
 
       <div class="sm-result-header">
-        <p class="sm-result-label">${en ? 'Results' : '検索結果'}</p>
+        <p class="sm-result-label">${pickLang('Results', '検索結果')}</p>
         <span class="sm-result-count" id="smResultCount"></span>
       </div>
       <div id="smResults" class="sm-results"></div>
 
       <div class="sm-done-row">
-        <button type="button" class="sm-done-btn" id="smDoneBtn">${en ? 'Done' : '閉じる'}</button>
+        <button type="button" class="sm-done-btn" id="smDoneBtn">${pickLang('Done', '閉じる')}</button>
       </div>
     </div>`;
 }
@@ -381,18 +381,16 @@ function buildEventOptions() {
   const otherEvents = events.filter(e => !isSeasonLikeEvent(e) && !isDayLikeEvent(e));
   const opts = list => list.map(ev => `<option value="${escapeHtml(ev)}">${escapeHtml(trEvent(ev))}</option>`).join('');
 
-  select.innerHTML = `<option value="all">${en ? 'All Seasons/Events' : 'すべての季節・イベント'}</option>`
-    + (seasonEvents.length ? `<optgroup label="${en ? 'Seasons' : '季節'}">${opts(seasonEvents)}</optgroup>` : '')
-    + (dayEvents.length ? `<optgroup label="${en ? 'Days' : '日々'}">${opts(dayEvents)}</optgroup>` : '')
-    + (otherEvents.length ? `<optgroup label="${en ? 'Other' : 'その他'}">${opts(otherEvents)}</optgroup>` : '');
+  select.innerHTML = `<option value="all">${pickLang('All Seasons/Events', 'すべての季節・イベント')}</option>`
+    + (seasonEvents.length ? `<optgroup label="${pickLang('Seasons', '季節')}">${opts(seasonEvents)}</optgroup>` : '')
+    + (dayEvents.length ? `<optgroup label="${pickLang('Days', '日々')}">${opts(dayEvents)}</optgroup>` : '')
+    + (otherEvents.length ? `<optgroup label="${pickLang('Other', 'その他')}">${opts(otherEvents)}</optgroup>` : '');
 }
 
 function showLoading() {
   const resultsEl = overlayEl?.querySelector('#smResults');
   if (resultsEl) {
-    resultsEl.innerHTML = `<div class="sm-empty">${CURRENT_LANG === 'en'
-      ? 'Loading…<br>Fetching item data from each category'
-      : '読み込み中…<br>各カテゴリのアイテムデータを取得しています'}</div>`;
+    resultsEl.innerHTML = `<div class="sm-empty">${pickLang('Loading…<br>Fetching item data from each category', '読み込み中…<br>各カテゴリのアイテムデータを取得しています')}</div>`;
   }
   const countEl = overlayEl?.querySelector('#smResultCount');
   if (countEl) countEl.textContent = '';
@@ -401,9 +399,7 @@ function showLoading() {
 function showLoadError() {
   const resultsEl = overlayEl?.querySelector('#smResults');
   if (resultsEl) {
-    resultsEl.innerHTML = `<div class="sm-empty">${CURRENT_LANG === 'en'
-      ? 'Failed to load item data. Please try again.'
-      : 'アイテムデータの読み込みに失敗しました。もう一度お試しください。'}</div>`;
+    resultsEl.innerHTML = `<div class="sm-empty">${pickLang('Failed to load item data. Please try again.', 'アイテムデータの読み込みに失敗しました。もう一度お試しください。')}</div>`;
   }
 }
 
@@ -430,9 +426,9 @@ function syncRegularAreaFilterUI(fEvent) {
   const select = overlayEl.querySelector('#smRegularArea');
   const areasPresent = new Set(allItemsCache.filter(it => it.event === fEvent && it.regularArea).map(it => it.regularArea));
   const prev = select.value;
-  select.innerHTML = `<option value="all">${CURRENT_LANG === 'en' ? 'All Areas' : 'すべてのエリア'}</option>`
+  select.innerHTML = `<option value="all">${pickLang('All Areas', 'すべてのエリア')}</option>`
     + REGULAR_AREA_ORDER.filter(a => areasPresent.has(a)).map(a =>
-      `<option value="${a}">${escapeHtml(CURRENT_LANG === 'en' ? REGULAR_AREA_EN[a] : REGULAR_AREA_JA[a])}</option>`).join('');
+      `<option value="${a}">${escapeHtml(pickLang(REGULAR_AREA_EN[a], REGULAR_AREA_JA[a]))}</option>`).join('');
   if ([...select.options].some(o => o.value === prev)) select.value = prev;
 }
 
@@ -450,10 +446,10 @@ function syncCurrentTypeFilterUI() {
   const hasRevisit = isRevisitSpiritCurrentlyActive();
   const en = CURRENT_LANG === 'en';
   const prev = select.value;
-  select.innerHTML = `<option value="all">${en ? 'All (Season/Day/Revisit)' : 'すべて（季節・日々・再訪）'}</option>`
-    + (hasSeason ? `<option value="season">${en ? 'Season Only' : '季節のみ'}</option>` : '')
-    + (hasDay ? `<option value="day">${en ? 'Day Event Only' : '日々のみ'}</option>` : '')
-    + (hasRevisit ? `<option value="revisit">${en ? 'Revisit Spirit Only' : '再訪のみ'}</option>` : '');
+  select.innerHTML = `<option value="all">${pickLang('All (Season/Day/Revisit)', 'すべて（季節・日々・再訪）')}</option>`
+    + (hasSeason ? `<option value="season">${pickLang('Season Only', '季節のみ')}</option>` : '')
+    + (hasDay ? `<option value="day">${pickLang('Day Event Only', '日々のみ')}</option>` : '')
+    + (hasRevisit ? `<option value="revisit">${pickLang('Revisit Spirit Only', '再訪のみ')}</option>` : '');
   if ([...select.options].some(o => o.value === prev)) select.value = prev;
 }
 
@@ -516,7 +512,7 @@ function getFilteredItems(stateCache) {
 function sortItems(items, mode, stateCache) {
   const en = CURRENT_LANG === 'en';
   if (mode === 'name') {
-    return [...items].sort((a, b) => trItem(a).localeCompare(trItem(b), en ? 'en' : 'ja'));
+    return [...items].sort((a, b) => trItem(a).localeCompare(trItem(b), pickLang('en', 'ja')));
   }
   if (mode === 'eventOrder') {
     return [...items].sort((a, b) => {
@@ -547,7 +543,7 @@ function render() {
   const countEl = overlayEl.querySelector('#smResultCount');
   if (countEl) {
     countEl.textContent = filtered.length > 0
-      ? (en ? `${filtered.length} items (${ownedCount} owned)` : `${filtered.length}件（所持 ${ownedCount}件）`)
+      ? (pickLang(`${filtered.length} items (${ownedCount} owned)`, `${filtered.length}件（所持 ${ownedCount}件）`))
       : '';
   }
 
@@ -557,15 +553,13 @@ function render() {
   if (markBtn) {
     const show = overlayEl.querySelector('#smEvent').value !== 'all' && notOwnedCount > 0;
     markBtn.style.display = show ? '' : 'none';
-    if (show) overlayEl.querySelector('#smMarkAllLabel').textContent = en
-      ? `Mark ${notOwnedCount} filtered item(s) as owned`
-      : `絞り込み結果の未所持${notOwnedCount}件を所持済みにする`;
+    if (show) overlayEl.querySelector('#smMarkAllLabel').textContent = pickLang(`Mark ${notOwnedCount} filtered item(s) as owned`, `絞り込み結果の未所持${notOwnedCount}件を所持済みにする`);
   }
 
   const resultsEl = overlayEl.querySelector('#smResults');
   if (!resultsEl) return;
   if (filtered.length === 0) {
-    resultsEl.innerHTML = `<div class="sm-empty">${en ? 'No items match the selected filters.' : '条件に一致するアイテムが見つかりません。'}</div>`;
+    resultsEl.innerHTML = `<div class="sm-empty">${pickLang('No items match the selected filters.', '条件に一致するアイテムが見つかりません。')}</div>`;
     return;
   }
   resultsEl.innerHTML = filtered.map(item => resultRowHtml(item, stateCache)).join('');
@@ -588,13 +582,13 @@ function resultRowHtml(item, stateCache) {
           <span class="sm-result-name">${escapeHtml(trItem(item))}</span>
         </div>
       </div>
-      <button type="button" class="sm-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Wishlist' : 'ウィッシュリスト'}">
+      <button type="button" class="sm-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${pickLang('Wishlist', 'ウィッシュリスト')}" title="${pickLang('Wishlist', 'ウィッシュリスト')}">
         <svg class="inline-icon" width="17" height="17"><use href="#i-cart"/></svg>
       </button>
-      <button type="button" class="sm-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${en ? 'Favorite' : 'お気に入り'}">
+      <button type="button" class="sm-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${pickLang('Favorite', 'お気に入り')}">
         <svg class="inline-icon" width="17" height="17" style="stroke:currentColor; fill:${isFav ? 'currentColor' : 'none'}; stroke-width:1.8;"><use href="#i-star"/></svg>
       </button>
-      <div class="sm-owned-dot ${isOwned ? 'owned' : ''}" data-act="toggle-owned" role="button" aria-label="${en ? 'Toggle ownership status' : '所持状態を切り替える'}">
+      <div class="sm-owned-dot ${isOwned ? 'owned' : ''}" data-act="toggle-owned" role="button" aria-label="${pickLang('Toggle ownership status', '所持状態を切り替える')}">
         ${isOwned ? '<svg class="inline-icon" width="13" height="13" style="stroke:#fff; fill:none; stroke-width:2.6;"><use href="#i-check"/></svg>' : ''}
       </div>
     </div>`;
@@ -627,8 +621,8 @@ function notifySearchTitlesCheck() {
   checkAndUnlockTitles().then(newlyEarned => {
     if (!newlyEarned || !newlyEarned.length) return;
     const msg = newlyEarned.length === 1
-      ? (CURRENT_LANG === 'en' ? `Title unlocked: ${newlyEarned[0].nameEn}` : `称号解禁「${newlyEarned[0].name}」`)
-      : (CURRENT_LANG === 'en' ? `${newlyEarned.length} titles unlocked!` : `称号を${newlyEarned.length}個解禁！`);
+      ? (pickLang(`Title unlocked: ${newlyEarned[0].nameEn}`, `称号解禁「${newlyEarned[0].name}」`))
+      : (pickLang(`${newlyEarned.length} titles unlocked!`, `称号を${newlyEarned.length}個解禁！`));
     showSearchModalToast(msg);
   }).catch(e => console.error('[item search] title check failed', e));
 }
@@ -657,11 +651,11 @@ function toggleWish(catKey, id, btnEl) {
   const en = CURRENT_LANG === 'en';
   const added = toggleWishItem(catKey, id);
   if (added === null) {
-    showSearchModalToast(en ? 'Owned items cannot be added to the wishlist' : '所持済みのアイテムはウィッシュリストに追加できません');
+    showSearchModalToast(pickLang('Owned items cannot be added to the wishlist', '所持済みのアイテムはウィッシュリストに追加できません'));
     return;
   }
   if (btnEl) btnEl.classList.toggle('is-wish', added);
-  showSearchModalToast(added ? (en ? 'Added to wishlist' : 'ウィッシュリストに追加しました') : (en ? 'Removed from wishlist' : 'ウィッシュリストから外しました'));
+  showSearchModalToast(added ? (pickLang('Added to wishlist', 'ウィッシュリストに追加しました')) : (pickLang('Removed from wishlist', 'ウィッシュリストから外しました')));
 }
 
 // 現在の絞り込み結果のうち未所持のものを、確認のうえまとめて所持済みにする
@@ -672,7 +666,7 @@ function markFilteredOwned() {
   const stateCache = buildStateCache();
   const targets = getFilteredItems(stateCache).filter(it => !stateCache[it.catKey].owned[it.id]);
   if (targets.length === 0) return;
-  if (!window.confirm(en ? `Mark ${targets.length} item(s) as owned?` : `${targets.length}件のアイテムを所持済みにします。よろしいですか？`)) return;
+  if (!window.confirm(pickLang(`Mark ${targets.length} item(s) as owned?`, `${targets.length}件のアイテムを所持済みにします。よろしいですか？`))) return;
   const touched = new Set();
   targets.forEach(it => {
     stateCache[it.catKey].owned[it.id] = true;
@@ -685,7 +679,7 @@ function markFilteredOwned() {
   });
   notifySearchTitlesCheck();
   render();
-  showSearchModalToast(en ? `${targets.length} item(s) marked as owned` : `${targets.length}件を所持済みにしました`);
+  showSearchModalToast(pickLang(`${targets.length} item(s) marked as owned`, `${targets.length}件を所持済みにしました`));
 }
 
 /* ================================================================

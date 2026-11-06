@@ -37,7 +37,7 @@
      方式より category-view.js 式の方を優先した）。
    ================================================================ */
 
-import { CURRENT_LANG, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../../js/i18n.js';
 import { toolShareUrl } from '../../../js/site-config.js';
 import { getCategoryState, isCountableItem } from '../../../js/state.js';
 import { CATEGORY_REGISTRY } from '../data/categories.js';
@@ -61,12 +61,12 @@ export const COST_SHARE_HASHTAG = '#Skyアイテム所持率';
    している。他5色は元々リテラルhexだったため無変更）
    ================================================================ */
 export const SHARE_THEMES = {
-  orange: { label: CURRENT_LANG === 'en' ? 'Orange' : 'オレンジ', grad: 'linear-gradient(135deg, #FF6200 0%, #FF9500 55%, #FFBB00 100%)' },
-  blue:   { label: CURRENT_LANG === 'en' ? 'Blue'   : 'ブルー',   grad: 'linear-gradient(135deg, #0051A8 0%, #007AFF 55%, #5AC8FA 100%)' },
-  green:  { label: CURRENT_LANG === 'en' ? 'Green'  : 'グリーン', grad: 'linear-gradient(135deg, #1F7A3D 0%, #34C759 55%, #8BE28B 100%)' },
-  purple: { label: CURRENT_LANG === 'en' ? 'Purple' : 'パープル', grad: 'linear-gradient(135deg, #4B2E83 0%, #7B4FCB 55%, #B98CFF 100%)' },
-  pink:   { label: CURRENT_LANG === 'en' ? 'Pink'   : 'ピンク',   grad: 'linear-gradient(135deg, #B0184D 0%, #FF2D78 55%, #FF8FB3 100%)' },
-  dark:   { label: CURRENT_LANG === 'en' ? 'Dark'   : 'ダーク',   grad: 'linear-gradient(135deg, #05070d 0%, #1b2333 100%)' },
+  orange: { label: pickLang('Orange', 'オレンジ'), grad: 'linear-gradient(135deg, #FF6200 0%, #FF9500 55%, #FFBB00 100%)' },
+  blue:   { label: pickLang('Blue', 'ブルー'),   grad: 'linear-gradient(135deg, #0051A8 0%, #007AFF 55%, #5AC8FA 100%)' },
+  green:  { label: pickLang('Green', 'グリーン'), grad: 'linear-gradient(135deg, #1F7A3D 0%, #34C759 55%, #8BE28B 100%)' },
+  purple: { label: pickLang('Purple', 'パープル'), grad: 'linear-gradient(135deg, #4B2E83 0%, #7B4FCB 55%, #B98CFF 100%)' },
+  pink:   { label: pickLang('Pink', 'ピンク'),   grad: 'linear-gradient(135deg, #B0184D 0%, #FF2D78 55%, #FF8FB3 100%)' },
+  dark:   { label: pickLang('Dark', 'ダーク'),   grad: 'linear-gradient(135deg, #05070d 0%, #1b2333 100%)' },
 };
 
 /* ================================================================
@@ -231,7 +231,7 @@ function showImagePreview(dataUrl, filename, shareText) {
   const twitterHref = shareText ? `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}` : '';
   overlay.innerHTML = `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="ispCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="ispCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
       <div class="modal-title">${shareText ? (en ? 'Save Image & Post to X' : '画像を保存してXへ投稿') : (en ? 'Save Image' : '画像を保存')}</div>

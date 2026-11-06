@@ -13,6 +13,7 @@
    フォールバックし、{varName}を置換する）。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 export const REVISIT_I18N = {
   ja: {
@@ -124,7 +125,7 @@ export const REVISIT_I18N = {
 export function t(key, vars) {
   let str = (REVISIT_I18N[CURRENT_LANG] && REVISIT_I18N[CURRENT_LANG][key] !== undefined)
     ? REVISIT_I18N[CURRENT_LANG][key]
-    : (REVISIT_I18N.ja[key] !== undefined ? REVISIT_I18N.ja[key] : key);
+    : (REVISIT_I18N.ja[key] !== undefined ? zhTr(REVISIT_I18N.ja[key]) : key);
   if (vars) {
     Object.keys(vars).forEach((k) => { str = str.split('{' + k + '}').join(vars[k]); });
   }

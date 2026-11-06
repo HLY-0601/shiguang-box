@@ -21,6 +21,7 @@
    ケースに対応するため）。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 const DT_I18N = {
   page: {
@@ -115,7 +116,7 @@ export function t(key, vars) {
   const parts = key.split('.');
   let node = DT_I18N;
   for (const p of parts) node = node ? node[p] : undefined;
-  let entry = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : node.ja) : undefined;
+  let entry = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : (node.ja !== undefined ? zhTr(node.ja) : undefined)) : undefined;
   if (entry === undefined) entry = '';
   let str = typeof entry === 'function' ? entry(vars || {}) : entry;
   if (vars) {

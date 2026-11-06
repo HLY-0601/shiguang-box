@@ -10,32 +10,45 @@
 
 export const SITE_LANG_KEY = 'sky_app_lang';
 
-// 保存できる言語。zh-TW/ko は精霊同行ツール(companion)だけが対応していて、他のツールは
-// 元サイト群と同じく日本語表示にフォールバックする（getLang()はja/enの2値のまま）
-export const SITE_LANGS = ['ja', 'en', 'zh-TW', 'ko'];
+import { zhTr } from './i18n-zh.js';
 
-// 保存されている言語（4値）。精霊同行ツールなど、zh-TW/koを扱うものだけがこちらを読む
+// 保存できる言語。zh-TW/ko は精霊同行ツール(companion)だけが対応していて、他のツールは
+// 中央の日本語→中国語辞書（i18n-zh.js）経由で中国語表示する
+export const SITE_LANGS = ['zh', 'ja', 'en', 'zh-TW', 'ko'];
+
+// 保存されている言語（5値）。精霊同行ツールなど、zh-TW/koを扱うものだけがこちらを読む
 export function getRawLang() {
   let v = null;
   try { v = localStorage.getItem(SITE_LANG_KEY); } catch (e) { /* noop */ }
-  return SITE_LANGS.includes(v) ? v : 'ja';
+  return SITE_LANGS.includes(v) ? v : 'zh';
 }
 
 export function getLang() {
-  return getRawLang() === 'en' ? 'en' : 'ja';
+  const raw = getRawLang();
+  if (raw === 'en') return 'en';
+  if (raw === 'ja') return 'ja';
+  return 'zh'; // 未設定・zh・zh-TW/ko は簡体字中国語として扱う
 }
 
 export function setLang(lang) {
-  localStorage.setItem(SITE_LANG_KEY, SITE_LANGS.includes(lang) ? lang : 'ja');
+  localStorage.setItem(SITE_LANG_KEY, SITE_LANGS.includes(lang) ? lang : 'zh');
   location.reload();
 }
 
 export function toggleLang() {
-  setLang(getLang() === 'ja' ? 'en' : 'ja');
+  setLang(getLang() === 'zh' ? 'en' : 'zh');
 }
 
 export const CURRENT_LANG = getLang();
-export const RAW_LANG = getRawLang(); // zh-TW/ko を含む4値（精霊同行ツール用）
+export const RAW_LANG = getRawLang(); // zh-TW/ko を含む5値（精霊同行ツール用）
+
+// 二値の en ? enVal : jaVal インライン分岐を三値化する汎用ヘルパー。
+// zh では日本語側の値を中央辞書で中国語に変換する（辞書に無ければ原値のまま）。
+export function pickLang(enVal, jaVal) {
+  if (CURRENT_LANG === 'en') return enVal;
+  if (CURRENT_LANG === 'zh') return zhTr(jaVal);
+  return jaVal;
+}
 
 // 季節・日々・コラボイベント名の日本語→英語対応表（item/i18n.jsと同一）
 export const SEASON_NAME_EN = {
@@ -135,11 +148,13 @@ export const CAT_NAME_EN = {
 };
 
 export function trEvent(jpName) {
-  if (CURRENT_LANG !== 'en') return jpName;
-  return SEASON_NAME_EN[jpName] || jpName;
+  if (CURRENT_LANG === 'en') return SEASON_NAME_EN[jpName] || jpName;
+  if (CURRENT_LANG === 'zh') return zhTr(jpName);
+  return jpName;
 }
 
 export function trSource(source) {
+  if (CURRENT_LANG === 'zh') return zhTr(source);
   if (CURRENT_LANG !== 'en') return source;
   const m = /^([^（(]+)(?:[（(](.+)[）)])?$/.exec(source);
   if (!m) return source;
@@ -150,13 +165,15 @@ export function trSource(source) {
 }
 
 export function trCat(jpName) {
-  if (CURRENT_LANG !== 'en') return jpName;
-  return CAT_NAME_EN[jpName] || jpName;
+  if (CURRENT_LANG === 'en') return CAT_NAME_EN[jpName] || jpName;
+  if (CURRENT_LANG === 'zh') return zhTr(jpName);
+  return jpName;
 }
 
 export function trItem(item) {
-  if (CURRENT_LANG !== 'en') return item.name;
-  return item.nameEn || item.name;
+  if (CURRENT_LANG === 'en') return item.nameEn || item.name;
+  if (CURRENT_LANG === 'zh') return item.nameZh || zhTr(item.name);
+  return item.name;
 }
 
 export function escapeHtml(s) {

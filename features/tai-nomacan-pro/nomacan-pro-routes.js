@@ -4,7 +4,7 @@
    純粋な計算はnomacan-pro-state.jsに委譲する（nomacan-history.jsと
    同じ分割方針）。
    ================================================================ */
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { t } from './data/i18n-nomacan-pro.js';
 import * as S from './nomacan-pro-state.js';
 import { nsKey } from '../../js/state.js';
@@ -268,11 +268,11 @@ function templateCreditsHtml() {
   const links = S.TEMPLATE_ROUTE_CREDITS.map((c) => `
       <a class="nmp-credit-link" href="${escapeHtml(c.url)}" target="_blank" rel="noopener noreferrer">
         <svg class="inline-icon" width="14" height="14"><use href="#${ICON[c.kind]}"/></svg>
-        <span>${escapeHtml(CURRENT_LANG === 'en' ? c.en : c.ja)}</span>
+        <span>${escapeHtml(pickLang(c.en, c.ja))}</span>
         <svg class="inline-icon nmp-credit-arrow" width="12" height="12"><use href="#i-chevron-right"/></svg>
       </a>`).join('');
   return `<div class="nmp-route-credits">
-    <div class="nmp-route-credits-title">${escapeHtml(CURRENT_LANG === 'en' ? 'Route credits' : 'このルートの参考元')}</div>
+    <div class="nmp-route-credits-title">${escapeHtml(pickLang('Route credits', 'このルートの参考元'))}</div>
     <div class="nmp-route-credits-links">${links}</div>
   </div>`;
 }
@@ -353,7 +353,7 @@ function fmtSeconds(s) {
 function fmtMinSec(totalSeconds) {
   const m = Math.floor(totalSeconds / 60);
   const s = Math.floor(totalSeconds % 60);
-  return CURRENT_LANG === 'en' ? `${m}m ${s}s` : `${m}分${s}秒`;
+  return pickLang(`${m}m ${s}s`, `${m}分${s}秒`);
 }
 function escapeHtml(str) {
   return String(str == null ? '' : str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

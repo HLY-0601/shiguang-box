@@ -44,6 +44,7 @@
 import { nsKey } from '../../js/state.js';
 import { titlesSlotHtml, refreshTitleLinks } from '../../js/titles.js';
 import { CURRENT_LANG } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { t } from './data/i18n-star-candle.js';
 import { TITLES } from './data/titles.js';
 import { fmt, jpDate, weekdayLabel, monthYearLabel, formatDateValue } from './date-utils.js';
@@ -52,7 +53,7 @@ import * as Forecast from './star-candle-forecast.js';
 // 元のI18N辞書のうち、header/footer等「呼び出し箇所が少ない自前文言」向けの
 // 素朴なt(ja,en)パターン(js/chrome/*.jsと同じ流儀)。この2件以外は全てdata/
 // i18n-star-candle.jsのキー付き辞書t(key,vars)を使う。
-function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function tt(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 const STYLE_LINK_ID = 'star-candle-view-styles';
 const ICON_SPRITE_ID = 'star-candle-icon-sprite';

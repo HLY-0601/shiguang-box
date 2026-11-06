@@ -42,12 +42,13 @@
    emote-view.js側の既存スタイルは一切変更しない）。
    ================================================================ */
 
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import { EMOTES } from './data/emotes.js';
 import { getStats, formatPct, loadOwned } from './emote-state.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 
 const SITE_URL = toolShareUrl('emote');
 const SHARE_HASHTAG = '#Skyエモート所持率';
@@ -101,7 +102,7 @@ function buildEmoteIconGridHtml() {
     for (let lv = 1; lv <= e.maxLevel; lv++) {
       dots.push(`<span class="es-exp-lv-dot ${ownedLevels.has(lv) ? 'is-owned' : ''}"></span>`);
     }
-    const name = CURRENT_LANG === 'en' ? e.nameEn : e.name;
+    const name = pickLang(e.nameEn, e.name);
     return `
       <div class="es-exp-icon-cell ${isComplete ? 'is-complete' : ''}" title="${escapeHtml(name)}">
         <img src="${e.img}" alt="${escapeHtml(name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.style.display='none';">

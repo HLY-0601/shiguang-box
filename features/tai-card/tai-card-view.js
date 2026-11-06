@@ -34,7 +34,7 @@
      （テーマは共有chromeのトグル操作でのみ変わる設計に統一されている）。
    ================================================================ */
 import { nsKey, getActiveProfileId } from '../../js/state.js';
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import { t } from './data/i18n-tai-card.js';
 import * as S from './tai-card-state.js';
@@ -424,7 +424,7 @@ function wireThemeRow() {
     b.type = 'button';
     b.className = 'tc-theme-swatch' + (th.id === state.theme ? ' active' : '');
     b.style.background = th.grad;
-    b.setAttribute('aria-label', (EN ? th.nameEn : th.name) + (EN ? ' theme' : 'テーマ'));
+    b.setAttribute('aria-label', (pickLang(th.nameEn, th.name)) + (pickLang(' theme', 'テーマ')));
     b.addEventListener('click', () => {
       state.theme = th.id;
       row.querySelectorAll('.tc-theme-swatch').forEach(x => x.classList.remove('active'));
@@ -620,7 +620,7 @@ function wireCustomNote() {
 }
 
 /* ── フレンドコードの連絡方法 ── */
-function translateFriendContactOption(ja) { return EN ? (S.FRIEND_CONTACT_OPTION_EN[ja] || ja) : ja; }
+function translateFriendContactOption(ja) { return pickLang((S.FRIEND_CONTACT_OPTION_EN[ja] || ja), ja); }
 function wireFriendContactChips() {
   drawFriendContactChips();
 }
@@ -891,7 +891,7 @@ function wireDetailGroups() {
   const detailGroupsEl = q('#tcDetailGroups');
   S.DETAIL_GROUPS.forEach(g => {
     const wrap = el('div', 'tc-chipgroup');
-    const labelEl = el('div', 'tc-chip-label', `<span class="tc-ic">${g.icon}</span><span>${escapeHtml(EN ? g.labelEn : g.label)}</span>`);
+    const labelEl = el('div', 'tc-chip-label', `<span class="tc-ic">${g.icon}</span><span>${escapeHtml(pickLang(g.labelEn, g.label))}</span>`);
     wrap.appendChild(labelEl);
     detailGroupsEl.appendChild(wrap);
 
@@ -936,7 +936,7 @@ function wireEcoStats() {
     const row = el('div', 'tc-f tc-eco-field-row');
     row.innerHTML = `
       <div class="tc-eco-field-head">
-        <label>${f.icon} ${escapeHtml(EN ? f.labelEn : f.label)} <span style="color:var(--tc-teal-ink);font-family:'IBM Plex Mono',monospace;font-size:10px;">→ ${escapeHtml(EN ? f.sourceEn : f.source)}</span></label>
+        <label>${f.icon} ${escapeHtml(pickLang(f.labelEn, f.label))} <span style="color:var(--tc-teal-ink);font-family:'IBM Plex Mono',monospace;font-size:10px;">→ ${escapeHtml(pickLang(f.sourceEn, f.source))}</span></label>
         <label class="tc-switch tc-eco-vis-switch"><input type="checkbox" ${f.visible ? 'checked' : ''} aria-label="${escapeHtml(t('makePublicAriaLabelTemplate', { label: EN ? f.labelEn : f.label }))}"><span class="tc-track"></span><span class="tc-knob"></span></label>
       </div>
       <input type="text" value="${escapeHtml(f.value || '')}" placeholder="${escapeHtml(EN ? f.placeholderEn : f.placeholder)}">`;
@@ -1019,7 +1019,7 @@ function wireTrendGraphs() {
     const row = el('div', 'tc-f tc-eco-field-row');
     row.innerHTML = `
       <div class="tc-eco-field-head">
-        <label>${g.icon} ${escapeHtml(EN ? g.labelEn : g.label)} <span style="color:var(--tc-teal-ink);font-family:'IBM Plex Mono',monospace;font-size:10px;">→ ${escapeHtml(EN ? g.sourceEn : g.source)}</span></label>
+        <label>${g.icon} ${escapeHtml(pickLang(g.labelEn, g.label))} <span style="color:var(--tc-teal-ink);font-family:'IBM Plex Mono',monospace;font-size:10px;">→ ${escapeHtml(pickLang(g.sourceEn, g.source))}</span></label>
         <label class="tc-switch tc-eco-vis-switch"><input type="checkbox" ${g.visible ? 'checked' : ''} aria-label="${escapeHtml(t('reflectInProfileAriaLabelTemplate', { label: EN ? g.labelEn : g.label }))}"><span class="tc-track"></span><span class="tc-knob"></span></label>
       </div>`;
     trendEditEl.appendChild(row);
@@ -1245,7 +1245,7 @@ function renderCard() {
         ? filledRanges.map(r => `<div class="tc-card-clock-range"><span class="tc-pt-num">${r.start}</span><span class="tc-pt-unit">${t('hourUnitLabel')}</span>〜<span class="tc-pt-num">${r.end}</span><span class="tc-pt-unit">${t('hourUnitLabel')}</span></div>`).join('')
         : `<div class="tc-card-clock-range na">${t('notConfiguredLabel')}</div>`;
     const vibe = !state.playTimeIrregular ? playTimeVibeLabel(filledRanges) : null;
-    const vibeHtml = vibe ? `<div class="tc-card-clock-vibe"><span>${vibe.icon}</span>${EN ? vibe.textEn : vibe.text}</div>` : '';
+    const vibeHtml = vibe ? `<div class="tc-card-clock-vibe"><span>${vibe.icon}</span>${pickLang(vibe.textEn, vibe.text)}</div>` : '';
     setSection(ptEl, `
       <div class="tc-card-sec-title">PLAY TIME</div>
       <div class="tc-card-sec-heading">${t('secPlayTimeTitle')}</div>
@@ -1276,7 +1276,7 @@ function renderCard() {
       const parts = selected.map(x => x === S.FREE_TEXT ? (state.detailFreeText[g.id] || S.FREE_TEXT) : x).filter(Boolean);
       if (!parts.length) return '';
       const valueHtml = parts.map((p, i) => (i > 0 ? '<span class="tc-dc-value-sep">・</span>' : '') + `<span class="tc-dc-value-part">${escapeHtml(translateDetailOption(p))}</span>`).join('');
-      return `<div class="tc-detail-chip"><span class="tc-dc-icon">${g.icon}</span><div class="tc-dc-body"><span class="tc-dc-label">${escapeHtml(EN ? g.labelEn : g.label)}</span><span class="tc-dc-value">${valueHtml}</span></div></div>`;
+      return `<div class="tc-detail-chip"><span class="tc-dc-icon">${g.icon}</span><div class="tc-dc-body"><span class="tc-dc-label">${escapeHtml(pickLang(g.labelEn, g.label))}</span><span class="tc-dc-value">${valueHtml}</span></div></div>`;
     }).join('');
     if (chips) {
       setSection(dtEl, `
@@ -1290,7 +1290,7 @@ function renderCard() {
   const titlesWrapEl = q('#tcCardTitlesWrap');
   const selectedTitles = syncedTitlesCache.filter(ti => state.titles.selected.includes(ti.key));
   if (state.vis.titles && selectedTitles.length) {
-    const badges = selectedTitles.map(ti => `<span class="tc-card-title-badge"><span class="tc-ctb-icon">${ti.icon}</span>${escapeHtml(EN ? (ti.nameEn || ti.name) : ti.name)}</span>`).join('');
+    const badges = selectedTitles.map(ti => `<span class="tc-card-title-badge"><span class="tc-ctb-icon">${ti.icon}</span>${escapeHtml(pickLang((ti.nameEn || ti.name), ti.name))}</span>`).join('');
     setSection(titlesWrapEl, `
       <div class="tc-card-sec-title">TITLES</div>
       <div class="tc-card-sec-heading">${t('secTitlesTitle')}</div>
@@ -1332,7 +1332,7 @@ function renderCard() {
       const pct = pctMatch ? Math.max(0, Math.min(100, Number(pctMatch[1]))) : null;
       const bar = pct !== null ? `<div class="tc-progress-bar"><div class="tc-progress-bar-fill" style="width:${pct}%"></div></div>` : '';
       const valueHtml = `<div class="tc-soft-row-value ${f.value ? '' : 'na'}">${f.value ? splitNumUnit(f.value, 'tc-eco-val-num', 'tc-eco-val-unit') : t('notSetLabel')}</div>${bar}`;
-      html += `<div class="tc-eco-tile tc-soft-row"><div class="tc-soft-row-icon">${f.icon}</div><div class="tc-soft-row-body"><div class="tc-soft-row-label">${escapeHtml(EN ? f.labelEn : f.label)}</div>${valueHtml}</div></div>`;
+      html += `<div class="tc-eco-tile tc-soft-row"><div class="tc-soft-row-icon">${f.icon}</div><div class="tc-soft-row-body"><div class="tc-soft-row-label">${escapeHtml(pickLang(f.labelEn, f.label))}</div>${valueHtml}</div></div>`;
     });
     html += '</div>';
     setSection(ecoWrapEl, html);
@@ -1349,9 +1349,9 @@ function renderCard() {
       const series = S.getTrendSeriesFromTool(g.rawCurrentKey, g.rawHistoryKey);
       const body = series.length >= 2
         ? renderTrendSparklineHtml(series)
-        : `<p class="tc-trend-empty">${escapeHtml(t('trendEmptyTemplate', { source: EN ? g.sourceEn : g.source }))}</p>`;
+        : `<p class="tc-trend-empty">${escapeHtml(t('trendEmptyTemplate', { source: pickLang(g.sourceEn, g.source)}))}</p>`;
       html += `<div class="tc-trend-block">
-        <div class="tc-trend-block-label">${g.icon} ${escapeHtml(EN ? g.labelEn : g.label)}</div>
+        <div class="tc-trend-block-label">${g.icon} ${escapeHtml(pickLang(g.labelEn, g.label))}</div>
         ${body}
       </div>`;
     });
@@ -1538,4 +1538,4 @@ function wireShareImage() {
       shareBtn.disabled = false;
     }
   });
-}
+}}

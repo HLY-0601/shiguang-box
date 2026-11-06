@@ -44,7 +44,7 @@
    文言をそのまま移植している。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trEvent, trItem, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, trEvent, trItem, escapeHtml, pickLang } from '../../../js/i18n.js';
 import { nsKey } from '../../../js/state.js';
 import {
   GRID_CATEGORIES, SHARE_THEMES, SITE_URL, FAV_SHARE_HASHTAG,
@@ -114,8 +114,8 @@ function buildFavExportCardEl(items, comment, style, theme, bgImageDataUrl) {
     card.style.background = SHARE_THEMES[theme] ? SHARE_THEMES[theme].grad : SHARE_THEMES.orange.grad;
   }
   card.innerHTML = `
-    <div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l1.6 2H18.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5Z"/></svg>${en ? 'Item Collection Tracker' : 'アイテム所持率管理'}</div>
-    <div class="ish-exp-title">${en ? 'Favorite Items' : 'お気に入りアイテム'}</div>
+    <div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l1.6 2H18.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5Z"/></svg>${pickLang('Item Collection Tracker', 'アイテム所持率管理')}</div>
+    <div class="ish-exp-title">${pickLang('Favorite Items', 'お気に入りアイテム')}</div>
     ${comment ? `<div class="ish-exp-comment">${escapeHtml(comment)}</div>` : ''}
     ${bodyHtml}
   `;
@@ -127,9 +127,7 @@ function buildFavExportCardEl(items, comment, style, theme, bgImageDataUrl) {
 function buildFavShareText(comment) {
   const en = CURRENT_LANG === 'en';
   if (comment) return `${comment}\n\n${SITE_URL}\n${FAV_SHARE_HASHTAG}`;
-  return en
-    ? `My favorite items\n\n${SITE_URL}\n${FAV_SHARE_HASHTAG}`
-    : `お気に入りアイテムまとめ\n\n${SITE_URL}\n${FAV_SHARE_HASHTAG}`;
+  return pickLang(`My favorite items\n\n${SITE_URL}\n${FAV_SHARE_HASHTAG}`, `お気に入りアイテムまとめ\n\n${SITE_URL}\n${FAV_SHARE_HASHTAG}`);
 }
 
 /* ================================================================
@@ -148,16 +146,16 @@ function buildCatFilterOptions() {
   const presentCats = new Set(favShareItems.map(i => i.catKey));
   const cats = GRID_CATEGORIES.filter(c => presentCats.has(c.key));
   const select = overlayEl.querySelector('#fsCatFilter');
-  select.innerHTML = `<option value="all">${en ? 'All Categories' : 'すべてのカテゴリ'}</option>` +
+  select.innerHTML = `<option value="all">${pickLang('All Categories', 'すべてのカテゴリ')}</option>` +
     cats.map(c => `<option value="${c.key}">${escapeHtml(trCat(c.name))}</option>`).join('');
 }
 
 function buildEventFilterOptions() {
   const en = CURRENT_LANG === 'en';
   const events = [...new Set(favShareItems.map(i => i.event))]
-    .sort((a, b) => trEvent(a).localeCompare(trEvent(b), en ? 'en' : 'ja'));
+    .sort((a, b) => trEvent(a).localeCompare(trEvent(b), pickLang('en', 'ja')));
   const select = overlayEl.querySelector('#fsEventFilter');
-  select.innerHTML = `<option value="all">${en ? 'All Seasons/Events' : 'すべての季節・イベント'}</option>` +
+  select.innerHTML = `<option value="all">${pickLang('All Seasons/Events', 'すべての季節・イベント')}</option>` +
     events.map(ev => `<option value="${escapeHtml(ev)}">${escapeHtml(trEvent(ev))}</option>`).join('');
 }
 
@@ -167,7 +165,7 @@ function renderFavItemSelectList() {
   if (favShareItems.length === 0) { listEl.innerHTML = ''; return; }
   const visible = getFilteredFavShareItems();
   if (visible.length === 0) {
-    listEl.innerHTML = `<div class="ish-empty-msg" style="padding:14px 0;">${en ? 'No favorite items match this filter' : '絞り込み条件に一致するお気に入りアイテムがありません'}</div>`;
+    listEl.innerHTML = `<div class="ish-empty-msg" style="padding:14px 0;">${pickLang('No favorite items match this filter', '絞り込み条件に一致するお気に入りアイテムがありません')}</div>`;
     return;
   }
   listEl.innerHTML = visible.map(item => {
@@ -228,10 +226,10 @@ function updateBgStatusUI() {
   const status = overlayEl.querySelector('#fsBgStatus');
   const clearBtn = overlayEl.querySelector('#fsBgClearBtn');
   if (favShareBgImageDataUrl) {
-    status.textContent = en ? 'Image selected' : '画像を選択中';
+    status.textContent = pickLang('Image selected', '画像を選択中');
     clearBtn.style.display = '';
   } else {
-    status.textContent = en ? 'Not selected (using theme color)' : '未選択（テーマの色を使用）';
+    status.textContent = pickLang('Not selected (using theme color)', '未選択（テーマの色を使用）');
     clearBtn.style.display = 'none';
   }
 }
@@ -240,7 +238,7 @@ function onBgImageSelected(e) {
   const file = e.target.files && e.target.files[0];
   if (!file) return;
   if (!file.type.startsWith('image/')) {
-    showShareToast(en ? 'Please select an image file' : '画像ファイルを選択してください');
+    showShareToast(pickLang('Please select an image file', '画像ファイルを選択してください'));
     e.target.value = '';
     return;
   }
@@ -265,7 +263,7 @@ async function handleShareClick() {
   const en = CURRENT_LANG === 'en';
   const selected = getSelectedFavItems();
   if (selected.length === 0) {
-    showShareToast(en ? 'Please select at least one item to share' : '共有するアイテムを1つ以上選択してください');
+    showShareToast(pickLang('Please select at least one item to share', '共有するアイテムを1つ以上選択してください'));
     return;
   }
   const comment = overlayEl.querySelector('#fsComment').value.trim();
@@ -273,9 +271,9 @@ async function handleShareClick() {
   const theme = favShareTheme;
   const bgImageDataUrl = favShareBgImageDataUrl;
   close();
-  await exportShareImage(() => buildFavExportCardEl(selected, comment, style, theme, bgImageDataUrl), en ? 'Favorite Items' : 'お気に入りアイテム', {
+  await exportShareImage(() => buildFavExportCardEl(selected, comment, style, theme, bgImageDataUrl), pickLang('Favorite Items', 'お気に入りアイテム'), {
     shareText: buildFavShareText(comment),
-    successToast: en ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 
@@ -286,37 +284,37 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="fsCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="fsCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Share Favorites' : 'お気に入りを共有'}</div>
+      <div class="modal-title">${pickLang('Share Favorites', 'お気に入りを共有')}</div>
 
-      <div class="ish-hint" id="fsCountText">${en ? 'Loading…' : '読み込み中…'}</div>
+      <div class="ish-hint" id="fsCountText">${pickLang('Loading…', '読み込み中…')}</div>
 
-      <div class="ish-section-label">${en ? 'Display Style' : '表示スタイル'}</div>
+      <div class="ish-section-label">${pickLang('Display Style', '表示スタイル')}</div>
       <div class="ish-action-row" style="margin-top:0;">
-        <button type="button" class="ish-action-btn secondary" id="fsStyleDetailBtn">${en ? 'Detailed View' : '詳細表示'}</button>
-        <button type="button" class="ish-action-btn secondary" id="fsStyleIconBtn">${en ? 'Icons Only' : 'アイコンのみ'}</button>
+        <button type="button" class="ish-action-btn secondary" id="fsStyleDetailBtn">${pickLang('Detailed View', '詳細表示')}</button>
+        <button type="button" class="ish-action-btn secondary" id="fsStyleIconBtn">${pickLang('Icons Only', 'アイコンのみ')}</button>
       </div>
 
-      <div class="ish-section-label">${en ? 'Background Theme' : '背景テーマ'}</div>
+      <div class="ish-section-label">${pickLang('Background Theme', '背景テーマ')}</div>
       <div class="ish-theme-row" id="fsThemeRow"></div>
 
-      <div class="ish-section-label">${en ? 'Background Image (optional)' : '背景画像（任意）'}</div>
+      <div class="ish-section-label">${pickLang('Background Image (optional)', '背景画像（任意）')}</div>
       <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
         <label class="ish-action-btn secondary" style="flex:0 0 auto; padding:8px 14px; font-size:12.5px;">
-          <span>${en ? 'Choose Image' : '画像を選ぶ'}</span>
+          <span>${pickLang('Choose Image', '画像を選ぶ')}</span>
           <input type="file" accept="image/*" id="fsBgInput" style="display:none;">
         </label>
-        <span id="fsBgStatus" style="font-size:12px; color:var(--hub-text-2);">${en ? 'Not selected (using theme color)' : '未選択（テーマの色を使用）'}</span>
-        <span id="fsBgClearBtn" style="display:none; color:var(--hub-accent); font-weight:600; font-size:12px; cursor:pointer;">${en ? 'Remove' : '削除'}</span>
+        <span id="fsBgStatus" style="font-size:12px; color:var(--hub-text-2);">${pickLang('Not selected (using theme color)', '未選択（テーマの色を使用）')}</span>
+        <span id="fsBgClearBtn" style="display:none; color:var(--hub-accent); font-weight:600; font-size:12px; cursor:pointer;">${pickLang('Remove', '削除')}</span>
       </div>
 
       <div class="ish-section-label" style="display:flex; align-items:center; justify-content:space-between;">
-        <span>${en ? 'Select Items to Share' : '共有するアイテムを選択'}</span>
+        <span>${pickLang('Select Items to Share', '共有するアイテムを選択')}</span>
         <span style="display:flex; gap:10px; text-transform:none; letter-spacing:normal;">
-          <span id="fsSelectAll" style="color:var(--hub-accent); font-weight:600; cursor:pointer;">${en ? 'Select All' : 'すべて選択'}</span>
-          <span id="fsDeselectAll" style="color:var(--hub-accent); font-weight:600; cursor:pointer;">${en ? 'Deselect All' : 'すべて解除'}</span>
+          <span id="fsSelectAll" style="color:var(--hub-accent); font-weight:600; cursor:pointer;">${pickLang('Select All', 'すべて選択')}</span>
+          <span id="fsDeselectAll" style="color:var(--hub-accent); font-weight:600; cursor:pointer;">${pickLang('Deselect All', 'すべて解除')}</span>
         </span>
       </div>
       <div style="display:flex; gap:8px; margin-bottom:8px;">
@@ -325,11 +323,11 @@ function renderModalHtml() {
       </div>
       <div id="fsItemSelectList" class="ish-cat-grid" style="max-height:240px; overflow-y:auto; padding-right:2px;"></div>
 
-      <div class="ish-section-label">${en ? 'Comment (optional)' : 'コメント（任意）'}</div>
-      <textarea id="fsComment" class="ish-textarea" maxlength="120" placeholder="${en ? 'e.g. Things I want, items I often use for XX style, etc.' : '例）今欲しいもの、〇〇系でよく使うアイテムなど'}"></textarea>
+      <div class="ish-section-label">${pickLang('Comment (optional)', 'コメント（任意）')}</div>
+      <textarea id="fsComment" class="ish-textarea" maxlength="120" placeholder="${pickLang('e.g. Things I want, items I often use for XX style, etc.', '例）今欲しいもの、〇〇系でよく使うアイテムなど')}"></textarea>
 
       <div class="ish-action-row" style="margin-top:16px;">
-        <button type="button" class="ish-action-btn twitter full" id="fsShareBtn">${en ? 'Share Image on X' : 'Xで画像を共有'}</button>
+        <button type="button" class="ish-action-btn twitter full" id="fsShareBtn">${pickLang('Share Image on X', 'Xで画像を共有')}</button>
       </div>
     </div>`;
 }
@@ -388,9 +386,7 @@ export async function open() {
   } catch (e) {
     console.error('[favorites-share] failed to load favorite items', e);
     if (myToken !== openToken || !overlayEl) return;
-    overlayEl.querySelector('#fsCountText').textContent = en
-      ? 'Failed to load. Please try again.'
-      : '読み込みに失敗しました。もう一度お試しください。';
+    overlayEl.querySelector('#fsCountText').textContent = pickLang('Failed to load. Please try again.', '読み込みに失敗しました。もう一度お試しください。');
     return;
   }
   if (myToken !== openToken || !overlayEl) return; // 読込待ち中に閉じ/再オープンされた
@@ -400,8 +396,8 @@ export async function open() {
   buildEventFilterOptions();
   renderFavItemSelectList();
   overlayEl.querySelector('#fsCountText').textContent = favShareItems.length > 0
-    ? (en ? `You currently have ${favShareItems.length} favorite item(s)` : `現在 ${favShareItems.length}件のお気に入りアイテムがあります`)
-    : (en ? "You haven't favorited any items yet (use the favorite button on a category page to add some)" : 'お気に入り登録したアイテムがまだありません（各カテゴリページのお気に入りボタンで登録できます）');
+    ? (pickLang(`You currently have ${favShareItems.length} favorite item(s)`, `現在 ${favShareItems.length}件のお気に入りアイテムがあります`))
+    : (pickLang("You haven't favorited any items yet (use the favorite button on a category page to add some)", 'お気に入り登録したアイテムがまだありません（各カテゴリページのお気に入りボタンで登録できます）'));
 }
 
 export function close() {

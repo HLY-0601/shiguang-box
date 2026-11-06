@@ -36,7 +36,7 @@
    （長押し保存・ダウンロード）＋Xの投稿画面を開くボタン」の流れになる。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, escapeHtml, pickLang } from '../../../js/i18n.js';
 import {
   GRID_CATEGORIES,
   loadAllItemsOnce, getItemByCatId, getOwnedItemsForCat,
@@ -81,9 +81,7 @@ function renderList() {
   const sets = getClosetCollages();
 
   if (sets.length === 0) {
-    el.innerHTML = `<div class="cd-empty-msg">${en
-      ? 'No collages yet.<br>Create one from the button below!'
-      : 'まだコラージュがありません。<br>下のボタンから作成してみましょう！'}</div>`;
+    el.innerHTML = `<div class="cd-empty-msg">${pickLang('No collages yet.<br>Create one from the button below!', 'まだコラージュがありません。<br>下のボタンから作成してみましょう！')}</div>`;
     return;
   }
 
@@ -95,9 +93,9 @@ function renderList() {
         <div class="cd-card-header">
           <div class="cd-card-title">${escapeHtml(set.name)}</div>
           <div class="cd-card-actions">
-            <button type="button" class="cd-icon-btn" data-act="edit" title="${en ? 'Edit' : '編集'}"><svg class="inline-icon" width="15" height="15"><use href="#i-edit"/></svg></button>
-            <button type="button" class="cd-icon-btn" data-act="export" title="${en ? 'Share Image on X' : 'Xで画像を共有'}"><svg class="inline-icon" width="15" height="15"><use href="#i-upload"/></svg></button>
-            <button type="button" class="cd-icon-btn danger" data-act="delete" title="${en ? 'Delete' : '削除'}"><svg class="inline-icon" width="15" height="15"><use href="#i-trash"/></svg></button>
+            <button type="button" class="cd-icon-btn" data-act="edit" title="${pickLang('Edit', '編集')}"><svg class="inline-icon" width="15" height="15"><use href="#i-edit"/></svg></button>
+            <button type="button" class="cd-icon-btn" data-act="export" title="${pickLang('Share Image on X', 'Xで画像を共有')}"><svg class="inline-icon" width="15" height="15"><use href="#i-upload"/></svg></button>
+            <button type="button" class="cd-icon-btn danger" data-act="delete" title="${pickLang('Delete', '削除')}"><svg class="inline-icon" width="15" height="15"><use href="#i-trash"/></svg></button>
           </div>
         </div>
         <div class="cl-mini-board" style="grid-template-columns:repeat(${set.cols}, 1fr); background:${preset.css};">${cellsHtml}</div>
@@ -115,7 +113,7 @@ async function handleListClick(e) {
 
   if (act === 'delete') {
     const en = CURRENT_LANG === 'en';
-    if (!confirm(en ? 'Delete this collage?' : 'このコラージュを削除しますか？')) return;
+    if (!confirm(pickLang('Delete this collage?', 'このコラージュを削除しますか？'))) return;
     saveClosetCollages(getClosetCollages().filter(s => s.id !== id));
     renderList();
   } else if (act === 'edit') {
@@ -217,8 +215,8 @@ function cellEditHtml(cell, i) {
 function saveCollage() {
   const en = CURRENT_LANG === 'en';
   const name = overlayEl.querySelector('#clNameInput').value.trim();
-  if (!name) { showCoordToast(en ? 'Please enter a collage name' : 'コラージュ名を入力してください'); overlayEl.querySelector('#clNameInput').focus(); return; }
-  if (closetEditing.cells.every(c => !c)) { showCoordToast(en ? 'Please fill in at least one cell' : '最低1マスは埋めてください'); return; }
+  if (!name) { showCoordToast(pickLang('Please enter a collage name', 'コラージュ名を入力してください')); overlayEl.querySelector('#clNameInput').focus(); return; }
+  if (closetEditing.cells.every(c => !c)) { showCoordToast(pickLang('Please fill in at least one cell', '最低1マスは埋めてください')); return; }
 
   closetEditing.name = name;
   closetEditing.caption = overlayEl.querySelector('#clCaptionInput').value.trim();
@@ -237,12 +235,12 @@ function saveCollage() {
   } catch (err) {
     console.error('[closet-collage] failed to save', err);
     const msg = (err && err.name === 'QuotaExceededError')
-      ? (en ? 'Not enough storage space to save this collage' : 'コラージュを保存する容量が足りません')
-      : (en ? 'Failed to save the collage' : 'コラージュの保存に失敗しました');
+      ? (pickLang('Not enough storage space to save this collage', 'コラージュを保存する容量が足りません'))
+      : (pickLang('Failed to save the collage', 'コラージュの保存に失敗しました'));
     showCoordToast(msg);
     return;
   }
-  showCoordToast(en ? `Saved "${name}"!` : `「${name}」を保存しました！`);
+  showCoordToast(pickLang(`Saved "${name}"!`, `「${name}」を保存しました！`));
   showListView();
 }
 
@@ -272,21 +270,21 @@ function ensureCellOverlay() {
   cellOverlayEl.addEventListener('click', e => { if (e.target === cellOverlayEl) closeCellPicker(); });
   cellOverlayEl.innerHTML = `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="clCellCloseX" aria-label="${en ? 'Close' : '閉じる'}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
-      <div class="modal-title">${en ? 'Choose Cell Content' : 'マスの内容を選ぶ'}</div>
+      <button type="button" class="modal-close-btn" id="clCellCloseX" aria-label="${pickLang('Close', '閉じる')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
+      <div class="modal-title">${pickLang('Choose Cell Content', 'マスの内容を選ぶ')}</div>
 
       <div class="cd-action-row">
         <label class="cd-action-btn secondary full" style="display:flex; align-items:center; justify-content:center; gap:6px;">
           <svg class="inline-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M4.5 4.5h15v15h-15Z"/><path d="M4.5 15.5l4.2-4.5a1 1 0 0 1 1.5 0l2.3 2.5 2.5-3a1 1 0 0 1 1.5 0l3 4.5"/><path d="M9 9.5a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z"/></svg>
-          <span>${en ? 'Add a Photo' : '写真を追加'}</span>
+          <span>${pickLang('Add a Photo', '写真を追加')}</span>
           <input type="file" accept="image/*" id="clCellPhotoInput" style="display:none;">
         </label>
       </div>
 
-      <label class="cd-form-label" style="margin-top:16px;">${en ? 'Choose from Owned Items' : '所持アイテムから選ぶ'}</label>
+      <label class="cd-form-label" style="margin-top:16px;">${pickLang('Choose from Owned Items', '所持アイテムから選ぶ')}</label>
       <div id="clItemPicks"></div>
 
-      <button type="button" class="cd-action-btn secondary danger full" id="clClearCellBtn" style="margin-top:14px;">${en ? 'Clear This Cell' : 'このマスを空にする'}</button>
+      <button type="button" class="cd-action-btn secondary danger full" id="clClearCellBtn" style="margin-top:14px;">${pickLang('Clear This Cell', 'このマスを空にする')}</button>
     </div>`;
   document.body.appendChild(cellOverlayEl);
 
@@ -314,7 +312,7 @@ function renderCellPicker() {
         <div class="cd-pick-strip">${itemBtns}</div>
       </div>`;
   }).join('');
-  el.innerHTML = rows || `<div class="cd-empty-msg">${en ? 'No owned items yet' : 'まだ所持アイテムがありません'}</div>`;
+  el.innerHTML = rows || `<div class="cd-empty-msg">${pickLang('No owned items yet', 'まだ所持アイテムがありません')}</div>`;
 }
 
 function clearCell() {
@@ -337,7 +335,7 @@ async function handleCellPhotoChange(e) {
     renderBoard();
   } catch (err) {
     console.error('[closet-collage] failed to attach cell photo', err);
-    showCoordToast(en ? 'Failed to attach the photo' : '写真の添付に失敗しました');
+    showCoordToast(pickLang('Failed to attach the photo', '写真の添付に失敗しました'));
   }
 }
 
@@ -357,16 +355,14 @@ function buildExportCardEl(set) {
 
   const en = CURRENT_LANG === 'en';
   const today = new Date();
-  const dateTxt = en
-    ? `Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-    : `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`;
+  const dateTxt = pickLang(`Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`, `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`);
 
   const card = document.createElement('div');
   card.className = 'cle-export-card' + (preset.dark ? ' cle-dark' : '');
   card.style.background = preset.css;
   card.innerHTML = `
     ${preset.accent ? `<div class="cle-accent cle-accent-tl">${preset.accent}</div><div class="cle-accent cle-accent-br">${preset.accent}</div>` : ''}
-    <div class="cle-brand">${en ? 'Item Collection Tracker' : 'アイテム所持率管理'}</div>
+    <div class="cle-brand">${pickLang('Item Collection Tracker', 'アイテム所持率管理')}</div>
     <div class="cle-title">${escapeHtml(set.name)}</div>
     <div class="cle-board" style="grid-template-columns:repeat(${set.cols}, 1fr);">${cellsHtml}</div>
     ${set.caption ? `<div class="cle-caption">${escapeHtml(set.caption)}</div>` : ''}
@@ -381,12 +377,10 @@ function exportClosetImage(id) {
   if (!set) return;
   const en = CURRENT_LANG === 'en';
   injectShareSharedStyles();
-  const shareText = en
-    ? `My "${set.name}" closet collage!\n\n${SITE_URL}\n${CLOSET_SHARE_HASHTAG}`
-    : `「${set.name}」のクローゼットコラージュ！\n\n${SITE_URL}\n${CLOSET_SHARE_HASHTAG}`;
+  const shareText = pickLang(`My "${set.name}" closet collage!\n\n${SITE_URL}\n${CLOSET_SHARE_HASHTAG}`, `「${set.name}」のクローゼットコラージュ！\n\n${SITE_URL}\n${CLOSET_SHARE_HASHTAG}`);
   return exportShareImage(() => buildExportCardEl(set), set.name, {
     shareText,
-    successToast: en ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 
@@ -397,58 +391,58 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="clCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="clCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
 
       <div id="clListView">
-        <div class="modal-title">${en ? 'Closet Collage' : 'クローゼットコラージュ'}</div>
+        <div class="modal-title">${pickLang('Closet Collage', 'クローゼットコラージュ')}</div>
         <div id="clList"></div>
         <button type="button" class="cd-action-btn primary full" id="clNewBtn" style="margin-top:12px;">
           <svg class="inline-icon" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"/></svg>
-          ${en ? 'Create New Collage' : '新しいコラージュを作成'}
+          ${pickLang('Create New Collage', '新しいコラージュを作成')}
         </button>
       </div>
 
       <div id="clEditView" style="display:none;">
         <button type="button" class="cd-modal-back" id="clBackBtn">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
-          ${en ? 'Back' : '戻る'}
+          ${pickLang('Back', '戻る')}
         </button>
-        <div class="modal-title" style="font-size:15px; margin-top:6px;">${en ? 'Edit Collage' : 'コラージュを編集'}</div>
+        <div class="modal-title" style="font-size:15px; margin-top:6px;">${pickLang('Edit Collage', 'コラージュを編集')}</div>
 
         <div class="cd-form-field">
-          <label class="cd-form-label">${en ? 'Collage Name' : 'コラージュ名'}</label>
-          <input type="text" class="cd-form-input" id="clNameInput" placeholder="${en ? 'e.g. My Favorites Closet' : '例: お気に入りクローゼット'}">
+          <label class="cd-form-label">${pickLang('Collage Name', 'コラージュ名')}</label>
+          <input type="text" class="cd-form-input" id="clNameInput" placeholder="${pickLang('e.g. My Favorites Closet', '例: お気に入りクローゼット')}">
         </div>
 
         <div class="cl-size-row">
           <div class="cl-stepper">
-            <span class="cl-stepper-label">${en ? 'Rows' : '縦'}</span>
+            <span class="cl-stepper-label">${pickLang('Rows', '縦')}</span>
             <button type="button" class="cl-stepper-btn" data-axis="rows" data-delta="-1"><svg class="inline-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
             <span class="cl-stepper-val" id="clRowsVal">3</span>
             <button type="button" class="cl-stepper-btn" data-axis="rows" data-delta="1"><svg class="inline-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
           <div class="cl-stepper">
-            <span class="cl-stepper-label">${en ? 'Cols' : '横'}</span>
+            <span class="cl-stepper-label">${pickLang('Cols', '横')}</span>
             <button type="button" class="cl-stepper-btn" data-axis="cols" data-delta="-1"><svg class="inline-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
             <span class="cl-stepper-val" id="clColsVal">3</span>
             <button type="button" class="cl-stepper-btn" data-axis="cols" data-delta="1"><svg class="inline-icon" width="13" height="13" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
           </div>
         </div>
 
-        <label class="cd-form-label">${en ? 'Background' : '背景'}</label>
+        <label class="cd-form-label">${pickLang('Background', '背景')}</label>
         <div class="cl-bg-row" id="clBgRow"></div>
 
-        <label class="cd-form-label" style="margin-top:14px;">${en ? 'Tap a cell to add an item or photo' : 'マスをタップしてアイテムや写真を追加'}</label>
+        <label class="cd-form-label" style="margin-top:14px;">${pickLang('Tap a cell to add an item or photo', 'マスをタップしてアイテムや写真を追加')}</label>
         <div class="cl-board" id="clBoard"></div>
 
         <div class="cd-form-field">
-          <label class="cd-form-label">${en ? 'Caption (optional)' : 'コメント（任意）'}</label>
-          <input type="text" class="cd-form-input" id="clCaptionInput" maxlength="60" placeholder="${en ? 'e.g. My favorite coords this season' : '例: 今季のお気に入りまとめ'}">
+          <label class="cd-form-label">${pickLang('Caption (optional)', 'コメント（任意）')}</label>
+          <input type="text" class="cd-form-input" id="clCaptionInput" maxlength="60" placeholder="${pickLang('e.g. My favorite coords this season', '例: 今季のお気に入りまとめ')}">
         </div>
 
-        <button type="button" class="cd-action-btn primary full" id="clSaveBtn">${en ? 'Save This Collage' : 'このコラージュを保存'}</button>
+        <button type="button" class="cd-action-btn primary full" id="clSaveBtn">${pickLang('Save This Collage', 'このコラージュを保存')}</button>
       </div>
     </div>`;
 }
@@ -490,12 +484,12 @@ export async function open() {
   requestAnimationFrame(() => overlayEl.classList.add('open'));
 
   const en = CURRENT_LANG === 'en';
-  overlayEl.querySelector('#clList').innerHTML = `<div class="cd-empty-msg">${en ? 'Loading…' : '読み込み中…'}</div>`;
+  overlayEl.querySelector('#clList').innerHTML = `<div class="cd-empty-msg">${pickLang('Loading…', '読み込み中…')}</div>`;
   try {
     await loadAllItemsOnce(); // セル内容（所持アイテムのID参照）の解決に必要
   } catch (e) {
     console.error('[closet-collage] failed to load item data', e);
-    if (overlayEl) overlayEl.querySelector('#clList').innerHTML = `<div class="cd-empty-msg">${en ? 'Failed to load item data.' : 'アイテムデータの読み込みに失敗しました。'}</div>`;
+    if (overlayEl) overlayEl.querySelector('#clList').innerHTML = `<div class="cd-empty-msg">${pickLang('Failed to load item data.', 'アイテムデータの読み込みに失敗しました。')}</div>`;
     return;
   }
   if (!overlayEl || !document.body.contains(overlayEl)) return; // 読込待ち中に閉じられた

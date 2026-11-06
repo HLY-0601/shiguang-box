@@ -13,6 +13,7 @@
    同じ方針。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 export const I18N = {
   common: { labelSep: { ja: '：', en: ': ' } },
@@ -185,7 +186,7 @@ export function t(path, vars) {
   const parts = path.split('.');
   let node = I18N;
   for (const p of parts) { node = node && node[p]; }
-  let s = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : node.ja) : path;
+  let s = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : zhTr(node.ja)) : path;
   if (s === undefined) s = path;
   if (vars) {
     Object.keys(vars).forEach((k) => { s = String(s).split('{' + k + '}').join(vars[k]); });
@@ -195,4 +196,4 @@ export function t(path, vars) {
 
 // 呼び出し数が少ない自前文言向けの素朴な t(ja, en) パターン（他の移植済みツールと同じ、
 // nomacan-view.js の tt() 相当）。
-export function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+export function tt(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }

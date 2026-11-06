@@ -88,7 +88,7 @@
      tai-nomacan/share等と同じ方式でこのファイル専用のローカルスプライト
      （cp-i-* プレフィックス）を追加注入している。
    ================================================================ */
-import { CURRENT_LANG, RAW_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, RAW_LANG, pickLang } from '../../js/i18n.js';
 import { nsKey, readCompanionDataRaw } from '../../js/state.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
 import {
@@ -447,7 +447,7 @@ const TYPE_LABELS_EN = { walk: 'Emote', magic: 'Spell', seasonal: 'Seasonal Item
 // 季節の英語名（Sky Wiki・SkyGame-Dataの表記）
 const SEASON_NAME_EN = CURRENT_SEASON_NAME === '遥かなる真珠の季節' ? 'Season of Pearl' : CURRENT_SEASON_NAME;
 const FIRST_UNLOCK_SUFFIX = FIRST_UNLOCK_SUFFIX_I18N[LANG] || ' (初回解放)';
-function spiritNameOf(spirit) { return CURRENT_LANG === 'en' ? (SPIRIT_NAME_EN[spirit.name] || spirit.name) : spirit.name; }
+function spiritNameOf(spirit) { return pickLang((SPIRIT_NAME_EN[spirit.name] || spirit.name), spirit.name); }
 const NAME_I18N = { en: NAME_EN, 'zh-TW': NAME_ZH_TW, ko: NAME_KO };
 function translateItemName(str) { const m = NAME_I18N[LANG]; return m ? (m[str] || str) : str; }
 const TYPE_LABELS = { en: TYPE_LABELS_EN, 'zh-TW': TYPE_LABELS_ZH_TW, ko: TYPE_LABELS_KO }[LANG] || TYPE_LABELS_JA;
@@ -1712,7 +1712,7 @@ function buildSetup(Vue) {
        📅 ヘッダーのシーズン残り時間・シーズン何日目か
        ================================================================ */
     const pad2Local = pad2;
-    const seasonNameDisplay = computed(() => CURRENT_LANG === 'en' ? SEASON_NAME_EN : CURRENT_SEASON_NAME);
+    const seasonNameDisplay = computed(() => pickLang(SEASON_NAME_EN, CURRENT_SEASON_NAME));
     const seasonDayInfo = computed(() => {
       const now = nowForCountdown.value;
       const totalDays = countDailyResetsUntil(SEASON_START, SEASON_END) + 1;

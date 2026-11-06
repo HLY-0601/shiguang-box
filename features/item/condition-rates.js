@@ -10,7 +10,7 @@
    ・That Sky Shop は集計対象外（旧サイトの条件別達成率と同じ。全体ゲージ・カテゴリ件数も同じ規則）
    ・cost==='free' は、キャンドル/ハート交換・アドベンチャーパス入手など「課金なしで入手できる」もの
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
 import { getCategoryState } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { isSeasonLikeEvent } from './data/season-data.js';
@@ -94,15 +94,15 @@ function injectStyles() {
 function rowHtml(row, owned, total, en) {
   const p = Math.round(owned / total * 100);
   const high = p >= 80;
-  const desc = en ? row.descEn : row.descJa;
+  const desc = pickLang(row.descEn, row.descJa);
   return `
     <div class="cond-row">
       <div class="cond-top">
-        <span class="cond-name">${escapeHtml(en ? row.en : row.ja)}</span>
+        <span class="cond-name">${escapeHtml(pickLang(row.en, row.ja))}</span>
         <span class="cond-pct ${p === 0 ? 'empty' : high ? 'high' : ''}">${p}<span class="num-unit">%</span></span>
       </div>
       <div class="cat-bar"><div class="cat-fill ${high ? 'high' : ''}" style="width:${p}%"></div></div>
-      <div class="cond-sub">${owned} / ${total}${en ? ' owned' : ' 所持'}</div>
+      <div class="cond-sub">${owned} / ${total}${pickLang(' owned', ' 所持')}</div>
       ${desc ? `<div class="cond-desc">${escapeHtml(desc)}</div>` : ''}
     </div>`;
 }
@@ -116,10 +116,10 @@ export async function mount(container) {
   container.innerHTML = `
     <div class="cond-section${collapsed ? ' collapsed' : ''}">
       <button type="button" class="cond-toggle" aria-expanded="${!collapsed}">
-        <span>${en ? 'Completion Rate by Condition' : '条件別の達成率'}</span>
+        <span>${pickLang('Completion Rate by Condition', '条件別の達成率')}</span>
         <svg class="inline-icon cond-chev" width="14" height="14" viewBox="0 0 24 24">${CHEVRON_PATH}</svg>
       </button>
-      <div class="cond-card"><div class="cond-loading">${en ? 'Loading…' : '読み込み中…'}</div></div>
+      <div class="cond-card"><div class="cond-loading">${pickLang('Loading…', '読み込み中…')}</div></div>
     </div>`;
   const section = container.querySelector('.cond-section');
   const toggle = container.querySelector('.cond-toggle');
@@ -147,8 +147,6 @@ export async function mount(container) {
 
   const card = container.querySelector('.cond-card');
   if (card) {
-    card.innerHTML = rowsHtml + `<div class="cond-note">${en
-      ? 'Items from That Sky Shop are excluded from these rates.'
-      : '※ That Sky Shop のアイテムは集計対象外です。'}</div>`;
+    card.innerHTML = rowsHtml + `<div class="cond-note">${pickLang('Items from That Sky Shop are excluded from these rates.', '※ That Sky Shop のアイテムは集計対象外です。')}</div>`;
   }
 }

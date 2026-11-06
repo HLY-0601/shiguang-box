@@ -11,7 +11,8 @@
        wishPlanSettings_v1: { deadline: 'season'|'date', date: 'YYYY-MM-DD', perDay: 1日に集める本数 }
    キャンドル以外（課金・チケット・価格不明）のアイテムは、順番には並べるが本数の計算からは外す。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, getWishIds, removeWishItem, getCategoryState } from '../../js/state.js';
 import { navigate } from '../../js/router.js';
 import { CATEGORY_REGISTRY } from '../item/data/categories.js';
@@ -19,7 +20,7 @@ import { CURRENT_SEASON } from '../item/data/season-data.js';
 import { injectStylesheet } from '../bingo/bingo-view.js';
 import { toast } from '../shared/share-image.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 const ORDER_KEY = 'wishPlanOrder_v1';
 const SETTINGS_KEY = 'wishPlanSettings_v1';
 const DAY = 86400000;
@@ -72,7 +73,7 @@ function buildRows() {
         return;
       }
       const e = (costData[cat.key] || []).find(x => x.id === id);
-      if (e) list.push({ key: `${cat.key}:${id}`, cat, id, name: CURRENT_LANG === 'en' ? (e.nameEn || e.name) : e.name, cost: e.cost || { type: 'unknown' }, source: e.source || '' });
+      if (e) list.push({ key: `${cat.key}:${id}`, cat, id, name: pickLang((e.nameEn || e.name), e.name), cost: e.cost || { type: 'unknown' }, source: e.source || '' });
     });
   });
   const order = readJson(ORDER_KEY, []);
@@ -158,7 +159,7 @@ function render() {
       <span class="wp-thumb" data-img-key="${escapeHtml(row.key)}">${row.img ? `<img src="${escapeHtml(row.img)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}</span>
       <div class="wp-main">
         <div class="wp-name">${escapeHtml(row.name)}</div>
-        <div class="wp-meta">${escapeHtml(CURRENT_LANG === 'en' ? row.cat.nameEn : row.cat.name)}・${escapeHtml(costLabel(row.cost))}</div>
+        <div class="wp-meta">${escapeHtml(pickLang(row.cat.nameEn, row.cat.name))}・${escapeHtml(costLabel(row.cost))}</div>
         <div class="wp-status">${escapeHtml(status)}</div>
       </div>
       <div class="wp-move">

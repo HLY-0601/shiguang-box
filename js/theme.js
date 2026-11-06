@@ -150,7 +150,7 @@ export const FONTS = {
 
 export const BASE_THEME = Object.freeze({
   v: 1, name: '', base: '',
-  accent: '#6C63D8',
+  accent: '#3F51B5', // 群青（ウルトラマリン）
   hue: null,          // 背景の色合い(0-360)。null＝アクセント色に合わせる
   tint: 40,           // 背景に乗せる色の濃さ(0-100)
   bg: null,           // 「好きな色」の背景(#RRGGBB)。指定時は明るさもこの色から決まる
@@ -794,8 +794,26 @@ export function applyTheme() {
   }
 }
 
+const DEFAULT_THEME_SEEDED_KEY = 'sky_hub_default_theme_seeded_v1';
+// 初回起動時だけ、群青（ウルトラマリン）の既定テーマを自動適用する。
+// 一度フラグを立てた後は、ユーザーがテーマを外しても再適用しない。
+function seedDefaultThemeIfNeeded() {
+  let seeded = false;
+  try { seeded = localStorage.getItem(DEFAULT_THEME_SEEDED_KEY) === '1'; } catch (_) { /* noop */ }
+  if (seeded) return;
+  try {
+    const st = loadState();
+    if (!st.active) {
+      st.active = normalizeTheme({ ...BASE_THEME });
+      saveState(st);
+    }
+    localStorage.setItem(DEFAULT_THEME_SEEDED_KEY, '1');
+  } catch (_) { /* 容量不足等では既定CSSのまま */ }
+}
+
 /** 起動時に1回呼ぶ。以後は ライト/ダーク切替・システム設定の変化にも追従する */
 export function initTheme() {
+  seedDefaultThemeIfNeeded();
   applyTheme();
   addEventListener('pagehide', () => { if (cacheTimer) { clearTimeout(cacheTimer); writeCacheNow(); } });
   // 既存の「テーマ切替」(ライト/ダーク/システム)が data-theme を書き換えたら、配色を作り直す

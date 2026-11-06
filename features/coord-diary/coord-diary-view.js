@@ -11,7 +11,8 @@
    📸 「撮影ポーズに困ったら」（photo-gacha.js）: 撮影お題ガチャを小さな折りたたみで置く（2026-11-06に試作から移した）。
    📚 「シーズンアルバム」タブ（season-album.js）: 季節ごとの記録と写真のアルバム（2026-11-06に試作から移した）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 import { notifyChanged } from '../../js/notices.js';
 import { CATEGORY_REGISTRY } from '../item/data/categories.js';
@@ -23,7 +24,7 @@ import { albumsHtml } from './season-album.js';
 import { gachaHtml, handleGacha, ensureEmotes, resetGacha, gachaOpen } from './photo-gacha.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 const KEY = 'coordDiary_v1';
 const CATS = CATEGORY_REGISTRY.filter(c => c.section !== 'special');
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -88,7 +89,7 @@ function loadOwned() {
     } else {
       (Array.isArray(d.ownedItems) ? d.ownedItems : []).forEach(it => {
         if (it && it.id && ownedIds[it.id]) {
-          const name = CURRENT_LANG === 'en' ? (it.nameEn || it.name) : it.name;
+          const name = pickLang((it.nameEn || it.name), it.name);
           out[`${c.key}:${it.id}`] = { k: `${c.key}:${it.id}`, cat: c, id: it.id, name, img: it.img, key: norm(`${it.name} ${it.nameEn || ''} ${c.name} ${c.nameEn}`) };
         }
       });
@@ -108,7 +109,7 @@ function loadCatalog() {
     CATS.forEach((c, i) => (mods[i].ITEMS || []).forEach(it => {
       const k = `${c.key}:${it.id}`;
       // 検索はひらがな・カタカナ・英語名・読みがな・カテゴリ名のどれでも当たるようにする
-      out[k] = { k, cat: c, id: it.id, name: CURRENT_LANG === 'en' ? (it.nameEn || it.name) : it.name, img: it.img || '', key: norm(`${it.name} ${it.nameEn || ''} ${yomi[it.id] || ''} ${c.name} ${c.nameEn} ${it.event || ''}`) };
+      out[k] = { k, cat: c, id: it.id, name: pickLang((it.nameEn || it.name), it.name), img: it.img || '', key: norm(`${it.name} ${it.nameEn || ''} ${yomi[it.id] || ''} ${c.name} ${c.nameEn} ${it.event || ''}`) };
     }));
     catalog = out;
     return out;
@@ -341,7 +342,7 @@ function formHtml() {
     ${hasPhoto ? `<button type="button" class="fun-btn small" data-act="clear-photo">${t('写真を外す', 'Remove photo')}</button>` : ''}
     <div class="fun-field-row">
       <label class="fun-field"><span class="fun-label">${t('日付', 'Date')}</span><input class="fun-input" type="date" name="date" required max="${todayStr()}" value="${form.date}"></label>
-      <label class="fun-field"><span class="fun-label">${t('場所（あれば）', 'Place (optional)')}</span><select class="fun-input" name="place"><option value="">${t('なし', 'None')}</option>${PLACES.map(p => `<option value="${p.id}"${(form.place || '') === p.id ? ' selected' : ''}>${escapeHtml(CURRENT_LANG === 'en' ? p.en : p.ja)}</option>`).join('')}</select></label>
+      <label class="fun-field"><span class="fun-label">${t('場所（あれば）', 'Place (optional)')}</span><select class="fun-input" name="place"><option value="">${t('なし', 'None')}</option>${PLACES.map(p => `<option value="${p.id}"${(form.place || '') === p.id ? ' selected' : ''}>${escapeHtml(pickLang(p.en, p.ja))}</option>`).join('')}</select></label>
     </div>
     <div class="fun-field">
       <span class="fun-label">${t('着ていたアイテム', 'Items worn')} <span class="cd-sel-count">${selectedCount}</span></span>

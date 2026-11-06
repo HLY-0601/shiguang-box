@@ -37,7 +37,7 @@
    ================================================================ */
 
 import { titlesSlotHtml } from '../../js/titles.js';
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
 import { getCategoryState, loadTitleStore, saveTitleStore, nsKey, isCountableItem } from '../../js/state.js';
 import * as conditionRates from './condition-rates.js';
 
@@ -203,15 +203,15 @@ function chipHtml(t, store) {
   const en = CURRENT_LANG === 'en';
   if (!store.earned[t.id]) {
     return `
-      <div class="titp-chip locked" title="${escapeHtml(en ? 'Unlocks when you meet its condition' : '称号は条件を満たすと明らかになります')}">
+      <div class="titp-chip locked" title="${escapeHtml(pickLang('Unlocks when you meet its condition', '称号は条件を満たすと明らかになります'))}">
         <span class="titp-chip-icon">${iconHtml('lock')}</span>
         <span class="titp-chip-name">？？？</span>
       </div>`;
   }
   return `
-    <div class="titp-chip" title="${escapeHtml(en ? t.descEn : t.descJa)}">
+    <div class="titp-chip" title="${escapeHtml(pickLang(t.descEn, t.descJa))}">
       <span class="titp-chip-icon">${t.icon}</span>
-      <span class="titp-chip-name">${escapeHtml(en ? t.nameEn : t.name)}</span>
+      <span class="titp-chip-name">${escapeHtml(pickLang(t.nameEn, t.name))}</span>
     </div>`;
 }
 
@@ -233,7 +233,7 @@ async function renderPanel(container) {
   const earnedCount = TITLES.filter(t => store.earned[t.id]).length;
 
   container.innerHTML = `
-    <p class="sec-label">${en ? 'Overall Completion Rate' : '全体の達成率'}</p>
+    <p class="sec-label">${pickLang('Overall Completion Rate', '全体の達成率')}</p>
     <div class="titp-gauge-card">
       <div class="titp-gauge-wrap">
         <svg class="titp-gauge-svg" viewBox="0 0 96 96">
@@ -246,15 +246,15 @@ async function renderPanel(container) {
         </div>
       </div>
       <div class="titp-gauge-text">
-        <div class="titp-gauge-title">${en ? 'Collection Completion Rate' : 'コレクション達成率'}</div>
+        <div class="titp-gauge-title">${pickLang('Collection Completion Rate', 'コレクション達成率')}</div>
         <div class="titp-gauge-nums">
           <div>
             <div class="titp-gauge-num">${hasAnyOwned ? sumOwned : '--'}</div>
-            <div class="titp-gauge-num-lbl">${en ? 'Owned' : '所持中'}</div>
+            <div class="titp-gauge-num-lbl">${pickLang('Owned', '所持中')}</div>
           </div>
           <div>
             <div class="titp-gauge-num" style="opacity:.72">${hasAnyOwned ? sumTotal : '--'}</div>
-            <div class="titp-gauge-num-lbl">${en ? 'Total Items' : '総アイテム数'}</div>
+            <div class="titp-gauge-num-lbl">${pickLang('Total Items', '総アイテム数')}</div>
           </div>
         </div>
       </div>
@@ -262,7 +262,7 @@ async function renderPanel(container) {
     ${!hasAnyOwned ? `
     <div class="titp-hint">
       <span class="titp-hint-icon">${iconHtml('lightbulb')}</span>
-      <span>${en ? 'Register items on each category page and your completion rate will automatically appear here' : '各カテゴリページでアイテムを登録すると、ここに所持率が自動で反映されます'}</span>
+      <span>${pickLang('Register items on each category page and your completion rate will automatically appear here', '各カテゴリページでアイテムを登録すると、ここに所持率が自動で反映されます')}</span>
     </div>` : ''}
 
     <div id="titpCondRates"></div>
@@ -416,8 +416,8 @@ export async function refresh(container) {
   if (newlyEarned.length) {
     const en = CURRENT_LANG === 'en';
     const msg = newlyEarned.length === 1
-      ? (en ? `Title unlocked: ${newlyEarned[0].nameEn}` : `称号解禁「${newlyEarned[0].name}」`)
-      : (en ? `${newlyEarned.length} titles unlocked!` : `称号を${newlyEarned.length}個解禁！`);
+      ? (pickLang(`Title unlocked: ${newlyEarned[0].nameEn}`, `称号解禁「${newlyEarned[0].name}」`))
+      : (pickLang(`${newlyEarned.length} titles unlocked!`, `称号を${newlyEarned.length}個解禁！`));
     showToast(msg);
   }
   await renderPanel(container);

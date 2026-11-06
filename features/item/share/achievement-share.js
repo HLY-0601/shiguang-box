@@ -36,7 +36,7 @@
    詳細はshare-data.js冒頭コメント参照）。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, escapeHtml, pickLang } from '../../../js/i18n.js';
 import { nsKey } from '../../../js/state.js';
 import {
   GRID_CATEGORIES, SHARE_THEMES, SITE_URL, SHARE_HASHTAG,
@@ -91,21 +91,17 @@ function buildOverallExportCardEl(opts = {}) {
   }).join('');
 
   const today = new Date();
-  const dateTxt = en
-    ? `Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-    : `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`;
+  const dateTxt = pickLang(`Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`, `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`);
 
   const card = document.createElement('div');
   card.className = 'ish-export-card';
   card.style.background = SHARE_THEMES[theme].grad;
   card.innerHTML = `
-    <div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l1.6 2H18.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5Z"/></svg>${en ? 'Item Collection Tracker' : 'アイテム所持率管理'}</div>
+    <div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px"><path d="M4 6.5A1.5 1.5 0 0 1 5.5 5h4l1.6 2H18.5A1.5 1.5 0 0 1 20 8.5v9a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5Z"/></svg>${pickLang('Item Collection Tracker', 'アイテム所持率管理')}</div>
     <div class="ish-exp-hero">
       <div class="ish-exp-hero-pct">${pctTxt}</div>
-      <div class="ish-exp-hero-label">${en ? 'Collection Completion Rate' : 'コレクション達成率'}</div>
-      <div class="ish-exp-hero-nums">${en
-        ? `Owned ${tot > 0 ? own : '--'} / Total ${tot > 0 ? tot : '--'}`
-        : `所持中 ${tot > 0 ? own : '--'} ／ 総アイテム数 ${tot > 0 ? tot : '--'}`}</div>
+      <div class="ish-exp-hero-label">${pickLang('Collection Completion Rate', 'コレクション達成率')}</div>
+      <div class="ish-exp-hero-nums">${pickLang(`Owned ${tot > 0 ? own : '--'} / Total ${tot > 0 ? tot : '--'}`, `所持中 ${tot > 0 ? own : '--'} ／ 総アイテム数 ${tot > 0 ? tot : '--'}`)}</div>
     </div>
     ${comment ? `<div class="ish-exp-comment">${escapeHtml(comment)}</div>` : ''}
     ${cells ? `<div class="ish-exp-cat-grid">${cells}</div>` : ''}
@@ -122,9 +118,7 @@ function buildOverallTweetText(comment) {
   const en = CURRENT_LANG === 'en';
   const { own, tot, p } = getShareStats();
   const pctTxt = p !== null ? p + '%' : '--%';
-  return en
-    ? `My item completion rate is ${pctTxt}!\n(Owned ${own} / Total ${tot})\nHow much do you have?\n\n${SITE_URL}\n${SHARE_HASHTAG}`
-    : `アイテム所持率は${pctTxt}でした！\n（所持中 ${own} ／ 総アイテム数 ${tot}）\nあなたは何%持ってる？\n\n${SITE_URL}\n${SHARE_HASHTAG}`;
+  return pickLang(`My item completion rate is ${pctTxt}!\n(Owned ${own} / Total ${tot})\nHow much do you have?\n\n${SITE_URL}\n${SHARE_HASHTAG}`, `アイテム所持率は${pctTxt}でした！\n（所持中 ${own} ／ 総アイテム数 ${tot}）\nあなたは何%持ってる？\n\n${SITE_URL}\n${SHARE_HASHTAG}`);
 }
 
 /* ================================================================
@@ -134,13 +128,13 @@ export async function shareOnX() {
   const en = CURRENT_LANG === 'en';
   await loadAllShareItemsOnce();
   if (getShareStats().tot === 0) {
-    showShareToast(en ? 'Please register items on a category page first' : 'まずはカテゴリページでアイテムを登録してください');
+    showShareToast(pickLang('Please register items on a category page first', 'まずはカテゴリページでアイテムを登録してください'));
     return;
   }
   injectShareSharedStyles();
-  return exportShareImage(() => buildOverallExportCardEl({}), en ? 'Collection Completion Rate' : 'コレクション達成率', {
+  return exportShareImage(() => buildOverallExportCardEl({}), pickLang('Collection Completion Rate', 'コレクション達成率'), {
     shareText: buildOverallTweetText(''),
-    successToast: en ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 
@@ -151,22 +145,22 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="asCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="asCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Customize Image' : '画像をカスタマイズ'}</div>
+      <div class="modal-title">${pickLang('Customize Image', '画像をカスタマイズ')}</div>
 
-      <div class="ish-section-label">${en ? 'Background Theme' : '背景テーマ'}</div>
+      <div class="ish-section-label">${pickLang('Background Theme', '背景テーマ')}</div>
       <div class="ish-theme-row" id="asThemeRow"></div>
 
-      <div class="ish-section-label">${en ? 'Categories to Show' : '表示するカテゴリ'}</div>
+      <div class="ish-section-label">${pickLang('Categories to Show', '表示するカテゴリ')}</div>
       <div class="ish-cat-grid" id="asCatGrid"></div>
 
-      <div class="ish-section-label">${en ? 'Comment (optional)' : 'コメント（任意）'}</div>
-      <textarea id="asComment" class="ish-textarea" maxlength="120" placeholder="${en ? 'e.g. Player name: XX (default text is used if left blank)' : '例）プレイヤーネーム：〇〇（未入力の場合は通常の文言になります）'}"></textarea>
+      <div class="ish-section-label">${pickLang('Comment (optional)', 'コメント（任意）')}</div>
+      <textarea id="asComment" class="ish-textarea" maxlength="120" placeholder="${pickLang('e.g. Player name: XX (default text is used if left blank)', '例）プレイヤーネーム：〇〇（未入力の場合は通常の文言になります）')}"></textarea>
 
       <div class="ish-action-row" style="margin-top:16px;">
-        <button type="button" class="ish-action-btn twitter full" id="asShareBtn">${en ? 'Share Image on X with These Settings' : 'この設定でXへ画像を共有'}</button>
+        <button type="button" class="ish-action-btn twitter full" id="asShareBtn">${pickLang('Share Image on X with These Settings', 'この設定でXへ画像を共有')}</button>
       </div>
     </div>`;
 }
@@ -207,9 +201,9 @@ function readCustomizeFromModal() {
 async function handleShareClick() {
   const opts = readCustomizeFromModal();
   close();
-  await exportShareImage(() => buildOverallExportCardEl(opts), CURRENT_LANG === 'en' ? 'Collection Completion Rate' : 'コレクション達成率', {
+  await exportShareImage(() => buildOverallExportCardEl(opts), pickLang('Collection Completion Rate', 'コレクション達成率'), {
     shareText: buildOverallTweetText(opts.comment),
-    successToast: CURRENT_LANG === 'en' ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 
@@ -227,7 +221,7 @@ export async function open() {
   const en = CURRENT_LANG === 'en';
   await loadAllShareItemsOnce();
   if (getShareStats().tot === 0) {
-    showShareToast(en ? 'Please register items on a category page first' : 'まずはカテゴリページでアイテムを登録してください');
+    showShareToast(pickLang('Please register items on a category page first', 'まずはカテゴリページでアイテムを登録してください'));
     return;
   }
 

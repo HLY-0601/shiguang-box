@@ -6,9 +6,10 @@
    PDFで保存（savePrintPdf）は、印刷と同じ紙面をjsPDFでA4のPDFにする（ファイル末尾）。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const H2C_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
 const SITE_LABEL = HUB_BASE_URL.replace(/^https?:\/\//, '').replace(/\/$/, '');
 

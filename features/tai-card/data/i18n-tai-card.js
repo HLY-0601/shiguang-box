@@ -16,6 +16,7 @@
    言語→ja→キー自身の順にフォールバックし、{varName}を置換する）。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 const DICT = {
   ja: {
@@ -268,7 +269,7 @@ const DICT = {
 
 export function t(key, vars) {
   const dict = DICT[CURRENT_LANG] || DICT.ja;
-  let str = dict[key] !== undefined ? dict[key] : (DICT.ja[key] !== undefined ? DICT.ja[key] : key);
+  let str = dict[key] !== undefined ? dict[key] : (DICT.ja[key] !== undefined ? zhTr(DICT.ja[key]) : key);
   if (vars) {
     Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
   }

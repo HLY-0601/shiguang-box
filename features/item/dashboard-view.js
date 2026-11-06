@@ -15,7 +15,7 @@
    分離済みのため、このファイル自身の検索インデックス構築ロジックは
    カテゴリグリッドの所持数集計にのみ使う。
    ================================================================ */
-import { CURRENT_LANG, trCat, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trCat, escapeHtml, pickLang } from '../../js/i18n.js';
 import { getCategoryState, isCountableItem } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import * as titlesPanel from './titles-panel.js';
@@ -157,10 +157,8 @@ function renderFirstVisitHint() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="pf-hint-banner" id="dashFirstVisitHint">
-      <span class="pf-hint-banner-text"><svg class="inline-icon" width="18" height="18">${LIGHTBULB_PATH}</svg> ${en
-        ? 'New here from a shared link? Switch between multiple save-slot profiles, and use Data Transfer to move your data to another device — no cloud account needed.'
-        : '共有リンクから来た方へ：プロフィール切替で複数の保存枠を使い分けたり、データ引継ぎでクラウド不要のまま別端末にデータを移せます。'}</span>
-      <button type="button" class="pf-hint-banner-close" id="dashFirstVisitHintClose" aria-label="${en ? 'Dismiss' : '閉じる'}"><svg class="inline-icon" width="18" height="18"><use href="#i-close"/></svg></button>
+      <span class="pf-hint-banner-text"><svg class="inline-icon" width="18" height="18">${LIGHTBULB_PATH}</svg> ${pickLang('New here from a shared link? Switch between multiple save-slot profiles, and use Data Transfer to move your data to another device — no cloud account needed.', '共有リンクから来た方へ：プロフィール切替で複数の保存枠を使い分けたり、データ引継ぎでクラウド不要のまま別端末にデータを移せます。')}</span>
+      <button type="button" class="pf-hint-banner-close" id="dashFirstVisitHintClose" aria-label="${pickLang('Dismiss', '閉じる')}"><svg class="inline-icon" width="18" height="18"><use href="#i-close"/></svg></button>
     </div>`;
 }
 
@@ -169,12 +167,10 @@ function renderWelcomeCard() {
   return `
     <div class="welcome-card">
       <button type="button" class="welcome-title" id="dashWelcomeToggle" aria-expanded="false">
-        <span class="welcome-title-label">${en ? 'For First-Time Visitors' : 'はじめての方へ'}</span>
+        <span class="welcome-title-label">${pickLang('For First-Time Visitors', 'はじめての方へ')}</span>
         <span class="welcome-toggle-icon" id="dashWelcomeToggleIcon"><svg class="inline-icon" width="14" height="14">${CHEVRON_RIGHT_PATH}</svg></span>
       </button>
-      <div class="welcome-text" id="dashWelcomeText" style="display:none;">${en
-        ? 'This tool lets you track your Sky dress-up item collection by category.<br>Use the Random Coord feature to discover new combinations, save favorites with My Coord, and share your completion rate as an image on X.<br>Start by registering items in a category you\'re interested in!<br>Clicking an item\'s name searches for &quot;item name + Sky&quot; automatically, so give it a try!<br>Please report any bugs or issues to @Skyzztai!'
-        : 'このツールでは、Skyのドレスアップアイテムの所持状況をカテゴリ別にチェックできます。<br>ランダムコーデ機能で新しい組み合わせを発見したり、マイコーデでお気に入りを保存したりできるほか、達成率を画像にしてXでシェアすることも可能です。<br>まずは気になるカテゴリからアイテムを登録してみてください！<br>アイテムの名前をクリックすると、「アイテム名+Sky」で自動で検索できますので活用してみてください！<br>不具合やミスは@Skyzztaiまでお知らせください！'}</div>
+      <div class="welcome-text" id="dashWelcomeText" style="display:none;">${pickLang('This tool lets you track your Sky dress-up item collection by category.<br>Use the Random Coord feature to discover new combinations, save favorites with My Coord, and share your completion rate as an image on X.<br>Start by registering items in a category you\'re interested in!<br>Clicking an item\'s name searches for &quot;item name + Sky&quot; automatically, so give it a try!<br>Please report any bugs or issues to @Skyzztai!', 'このツールでは、Skyのドレスアップアイテムの所持状況をカテゴリ別にチェックできます。<br>ランダムコーデ機能で新しい組み合わせを発見したり、マイコーデでお気に入りを保存したりできるほか、達成率を画像にしてXでシェアすることも可能です。<br>まずは気になるカテゴリからアイテムを登録してみてください！<br>アイテムの名前をクリックすると、「アイテム名+Sky」で自動で検索できますので活用してみてください！<br>不具合やミスは@Skyzztaiまでお知らせください！')}</div>
     </div>`;
 }
 
@@ -196,91 +192,83 @@ function renderShell() {
   return `
     <div class="item-view">
     <div class="dash-wrap">
-      <h1 class="item-large-title">${en ? 'Item Collection Tracker' : 'アイテム所持率管理'}</h1>
+      <h1 class="item-large-title">${pickLang('Item Collection Tracker', 'アイテム所持率管理')}</h1>
       <div id="dashFirstVisitHintWrap">${renderFirstVisitHint()}</div>
       ${renderWelcomeCard()}
 
       <div id="dashTitlesPanel"></div>
 
-      <p class="sec-label">${en ? 'All Items' : '全アイテム'}</p>
+      <p class="sec-label">${pickLang('All Items', '全アイテム')}</p>
       ${featureBtnHtml({
         href: '#/item/all', icon: 'i-grid',
-        label: en ? 'Browse & Select All Items at Once' : '全アイテムを一覧で見る・選択',
-        desc: en ? 'View items from every category together as image tiles, and tap to mark what you own'
-                 : '全カテゴリのアイテムを画像タイルでまとめて表示し、タップで所持を一気に選択できます',
+        label: pickLang('Browse & Select All Items at Once', '全アイテムを一覧で見る・選択'),
+        desc: pickLang('View items from every category together as image tiles, and tap to mark what you own', '全カテゴリのアイテムを画像タイルでまとめて表示し、タップで所持を一気に選択できます'),
       })}
 
-      <p class="sec-label" id="dashCatLabel">${en ? 'Categories' : 'カテゴリ一覧'}</p>
+      <p class="sec-label" id="dashCatLabel">${pickLang('Categories', 'カテゴリ一覧')}</p>
       <div class="cat-grid" id="dashCatGrid">
         ${GRID_CATEGORIES.map(cat => catTileHtml(cat, null, null)).join('')}
       </div>
 
-      <p class="sec-label">${en ? 'Item Search' : 'アイテム検索'}</p>
+      <p class="sec-label">${pickLang('Item Search', 'アイテム検索')}</p>
       ${featureBtnHtml({
         id: 'dashOpenSearchBtn', icon: 'i-search',
-        label: en ? 'Search Items by Season / Event' : '季節・イベントでアイテムを検索',
-        desc: en ? 'Search items across all categories by season, day event, category, favorite, and ownership status'
-                 : '全カテゴリのアイテムを季節・日々・カテゴリ・お気に入り・所持状況で横断検索できます',
+        label: pickLang('Search Items by Season / Event', '季節・イベントでアイテムを検索'),
+        desc: pickLang('Search items across all categories by season, day event, category, favorite, and ownership status', '全カテゴリのアイテムを季節・日々・カテゴリ・お気に入り・所持状況で横断検索できます'),
       })}
 
-      <p class="sec-label">${en ? 'Music Sheet Completion' : '楽譜コンプリート管理'}</p>
+      <p class="sec-label">${pickLang('Music Sheet Completion', '楽譜コンプリート管理')}</p>
       ${featureBtnHtml({
         href: `#/item/${MUSIC_SHEET_CAT ? MUSIC_SHEET_CAT.key : 'music_sheet'}`, icon: 'i-sheet-music',
-        label: en ? 'Music Sheet Completion Tracker' : '楽譜コンプリート率',
-        desc: en ? "Track which of the in-game Music Sheets you've collected, by acquisition method and candle cost"
-                 : 'ゲーム内の楽譜の入手状況とコンプリート率を管理できます',
+        label: pickLang('Music Sheet Completion Tracker', '楽譜コンプリート率'),
+        desc: pickLang("Track which of the in-game Music Sheets you've collected, by acquisition method and candle cost", 'ゲーム内の楽譜の入手状況とコンプリート率を管理できます'),
       })}
 
-      <p class="sec-label">${en ? 'Cost Management' : 'コスト管理'}</p>
+      <p class="sec-label">${pickLang('Cost Management', 'コスト管理')}</p>
       <div class="dash-feature-row">
         ${featureBtnHtml({
           href: '#/item/cost', icon: 'i-coin',
-          label: en ? 'Item Cost Breakdown' : 'アイテム別コスト',
-          desc: en ? 'Check the actual acquisition cost of owned items (Candles, Wax, Hearts, real currency)'
-                   : '所持アイテムの実際の入手コスト（キャンドル・星のキャンドル・ハート・実額）を確認できます',
+          label: pickLang('Item Cost Breakdown', 'アイテム別コスト'),
+          desc: pickLang('Check the actual acquisition cost of owned items (Candles, Wax, Hearts, real currency)', '所持アイテムの実際の入手コスト（キャンドル・星のキャンドル・ハート・実額）を確認できます'),
         })}
         ${featureBtnHtml({
           id: 'dashOpenWishlistBtn', icon: 'i-cart',
-          label: en ? 'Wishlist & Unlock Calculator' : 'ウィッシュリスト・必要コスト計算',
-          desc: en ? 'Register items you want, and it automatically totals the candles/hearts/money needed and the shortfall'
-                   : '欲しいアイテムを登録すると、必要なキャンドル・ハート・課金額の合計と不足数を自動計算します',
+          label: pickLang('Wishlist & Unlock Calculator', 'ウィッシュリスト・必要コスト計算'),
+          desc: pickLang('Register items you want, and it automatically totals the candles/hearts/money needed and the shortfall', '欲しいアイテムを登録すると、必要なキャンドル・ハート・課金額の合計と不足数を自動計算します'),
         })}
         ${featureBtnHtml({
           id: 'dashOpenAcquireLogBtn', icon: 'i-calendar',
-          label: en ? 'Acquisition Log' : 'アイテム獲得ログ',
-          desc: en ? 'View a chronological list of when you marked each item as owned' : '所持チェックを入れた日時の一覧を確認できます',
+          label: pickLang('Acquisition Log', 'アイテム獲得ログ'),
+          desc: pickLang('View a chronological list of when you marked each item as owned', '所持チェックを入れた日時の一覧を確認できます'),
         })}
       </div>
 
-      <p class="sec-label">${en ? 'Share Achievement Rate' : '達成率をシェア'}</p>
+      <p class="sec-label">${pickLang('Share Achievement Rate', '達成率をシェア')}</p>
       <div class="dash-feature-row">
         ${featureBtnHtml({
           id: 'dashShareOnXBtn', icon: 'i-upload', variant: 'twitter',
-          label: en ? 'Share Image to X' : 'Xで画像を共有',
-          desc: en ? 'Turn your achievement rate into an image and post it to X (also saves the image)'
-                   : '達成率を画像にしてXへ投稿できます（画像の保存も同時にできます）',
+          label: pickLang('Share Image to X', 'Xで画像を共有'),
+          desc: pickLang('Turn your achievement rate into an image and post it to X (also saves the image)', '達成率を画像にしてXへ投稿できます（画像の保存も同時にできます）'),
         })}
         ${featureBtnHtml({
           id: 'dashCustomizeShareBtn', icon: 'i-palette',
-          label: en ? 'Customize & Share' : 'カスタマイズして共有',
-          desc: en ? 'Choose which categories to show, a background theme, and a comment before saving/sharing'
-                   : '表示するカテゴリ・背景テーマ・コメントを自分好みに設定してから保存/共有できます',
+          label: pickLang('Customize & Share', 'カスタマイズして共有'),
+          desc: pickLang('Choose which categories to show, a background theme, and a comment before saving/sharing', '表示するカテゴリ・背景テーマ・コメントを自分好みに設定してから保存/共有できます'),
         })}
       </div>
 
-      <p class="sec-label">${en ? 'Share Your Favorites' : 'お気に入りをシェア'}</p>
+      <p class="sec-label">${pickLang('Share Your Favorites', 'お気に入りをシェア')}</p>
       ${featureBtnHtml({
         id: 'dashFavShareBtn', icon: 'i-star',
-        label: en ? 'Share Favorite Items' : 'お気に入りアイテムを共有',
-        desc: en ? 'Save and share your favorited items as an image with a comment' : 'お気に入り登録したアイテムをコメント付きの画像で保存・共有できます',
+        label: pickLang('Share Favorite Items', 'お気に入りアイテムを共有'),
+        desc: pickLang('Save and share your favorited items as an image with a comment', 'お気に入り登録したアイテムをコメント付きの画像で保存・共有できます'),
       })}
 
-      <p class="sec-label">${en ? 'Coord Features' : 'コーデ機能'}</p>
+      <p class="sec-label">${pickLang('Coord Features', 'コーデ機能')}</p>
       ${featureBtnHtml({
         href: '#/coord-diary', icon: 'i-hanger',
-        label: en ? 'Outfit Diary' : 'コーデ日記',
-        desc: en ? 'Random Coord, My Coord and Closet Collage have moved here, next to your outfit log'
-                 : 'ランダムコーデ・マイコーデ・クローゼットコラージュは、コーデ日記へ引っ越しました',
+        label: pickLang('Outfit Diary', 'コーデ日記'),
+        desc: pickLang('Random Coord, My Coord and Closet Collage have moved here, next to your outfit log', 'ランダムコーデ・マイコーデ・クローゼットコラージュは、コーデ日記へ引っ越しました'),
       })}
     </div>
     </div>`;

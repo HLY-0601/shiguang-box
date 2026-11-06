@@ -9,6 +9,7 @@
    ================================================================ */
 
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 export const NOMA_PRO_I18N = {
     area: {
@@ -264,7 +265,7 @@ export function t(key, vars) {
   const parts = key.split('.');
   let node = NOMA_PRO_I18N;
   for (const p of parts) node = node ? node[p] : undefined;
-  let str = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : (node.ja !== undefined ? node.ja : '')) : '';
+  let str = node ? (node[CURRENT_LANG] !== undefined ? node[CURRENT_LANG] : (node.ja !== undefined ? zhTr(node.ja) : '')) : '';
   if (vars) {
     Object.keys(vars).forEach((k) => { str = str.split('{' + k + '}').join(vars[k]); });
   }

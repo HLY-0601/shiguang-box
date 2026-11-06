@@ -4,13 +4,14 @@
    リンク（SPA内遷移）、無いものは外部URL。現在開いているツールの強調表示は無い。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import { navigate } from '../router.js';
 import { initSiteLinks, refreshSiteLinks, getSiteLinks, siteLinkHref, siteLinkName } from '../site-links.js';
 import { refreshToLatest } from '../refresh.js';
 
 let siteLinksStarted = false;
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 function ensureDom() {
   if (document.getElementById('toolsDrawerPanel')) return;

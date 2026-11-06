@@ -49,7 +49,8 @@
    元実装のロジックをそのまま移植している。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, trSource, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, trSource, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { getCategoryState, getWishIds, removeWishItem, nsKey } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { ITEM_COST_DATA } from './data/cost-data.js';
@@ -62,7 +63,7 @@ const MUSIC_CATEGORY = CATEGORY_REGISTRY.find(c => c.key === MUSIC_SHEET_CAT_KEY
 const STYLE_ID = 'wishlist-cost-modal-styles';
 const OVERLAY_ID = 'wishCostModalOverlay';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 /* ================================================================
    画像URLの読み込み（cost-view.jsのloadCategoryItemsModule/
@@ -161,21 +162,19 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card wcm-card">
-      <button type="button" class="modal-close-btn" id="wcmCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="wcmCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Wishlist &amp; Cost Calculator' : 'ウィッシュリスト・必要コスト計算'}</div>
+      <div class="modal-title">${pickLang('Wishlist &amp; Cost Calculator', 'ウィッシュリスト・必要コスト計算')}</div>
 
       <div class="wcm-hint">
-        ${en
-          ? 'Add items using the cart button on each category page or the Item Cost page. Items you mark as owned are automatically excluded from the totals.'
-          : '各カテゴリページや「アイテム別コスト」ページのカートボタンで追加できます。入手済みにしたアイテムは自動で合計から外れます。'}
+        ${pickLang('Add items using the cart button on each category page or the Item Cost page. Items you mark as owned are automatically excluded from the totals.', '各カテゴリページや「アイテム別コスト」ページのカートボタンで追加できます。入手済みにしたアイテムは自動で合計から外れます。')}
       </div>
 
       <div id="wcmBody"><!-- JS --></div>
 
       <div class="wcm-done-row">
-        <button type="button" class="wcm-done-btn" id="wcmDoneBtn">${en ? 'Done' : '閉じる'}</button>
+        <button type="button" class="wcm-done-btn" id="wcmDoneBtn">${pickLang('Done', '閉じる')}</button>
       </div>
     </div>`;
 }
@@ -272,15 +271,15 @@ function computeTotals(rows) {
    ================================================================ */
 function costHtml(cost) {
   const en = CURRENT_LANG === 'en';
-  if (!cost) return `<span class="wcm-cost unknown">${en ? 'No data' : 'データなし'}</span>`;
+  if (!cost) return `<span class="wcm-cost unknown">${pickLang('No data', 'データなし')}</span>`;
   switch (cost.type) {
     case 'candle': return `<span class="wcm-cost"><svg class="inline-icon" width="16" height="16"><use href="#i-candle"/></svg> ${cost.value}</span>`;
     case 'starCandle': return `<span class="wcm-cost"><svg class="inline-icon" width="16" height="16"><use href="#i-star"/></svg> ${cost.value}</span>`;
     case 'heart': return `<span class="wcm-cost"><svg class="inline-icon" width="16" height="16"><use href="#i-heart"/></svg> ${cost.value}</span>`;
     case 'money': return `<span class="wcm-cost money">¥${Number(cost.value).toLocaleString()}</span>`;
-    case 'ticket': return `<span class="wcm-cost unknown">${en ? 'Ticket exchange' : 'チケット交換'}</span>`;
-    case 'na': return `<span class="wcm-cost unknown">${en ? 'Pass/Ultimate item' : 'パス・究極系'}</span>`;
-    default: return `<span class="wcm-cost unknown">${en ? 'Unknown' : '価格不明'}</span>`;
+    case 'ticket': return `<span class="wcm-cost unknown">${pickLang('Ticket exchange', 'チケット交換')}</span>`;
+    case 'na': return `<span class="wcm-cost unknown">${pickLang('Pass/Ultimate item', 'パス・究極系')}</span>`;
+    default: return `<span class="wcm-cost unknown">${pickLang('Unknown', '価格不明')}</span>`;
   }
 }
 
@@ -295,9 +294,7 @@ function render() {
 
   const rows = getWishRows();
   if (rows.length === 0) {
-    bodyEl.innerHTML = `<div class="wcm-empty">${en
-      ? 'Your wishlist is empty.<br>Add items using the cart button on each category page or the Item Cost page.'
-      : 'ウィッシュリストは空です。<br>各カテゴリページや「アイテム別コスト」ページのカートボタンで追加できます。'}</div>`;
+    bodyEl.innerHTML = `<div class="wcm-empty">${pickLang('Your wishlist is empty.<br>Add items using the cart button on each category page or the Item Cost page.', 'ウィッシュリストは空です。<br>各カテゴリページや「アイテム別コスト」ページのカートボタンで追加できます。')}</div>`;
     return;
   }
 
@@ -314,11 +311,11 @@ function render() {
         <span class="wcm-icon-fallback"><svg class="inline-icon" width="18" height="18"><use href="#i-wing"/></svg></span>
       </div>
       <div class="wcm-info">
-        <div class="wcm-name">${escapeHtml(trItem(r))}${r.owned ? `<span class="wcm-owned-badge"><svg class="inline-icon" width="13" height="13"><use href="#i-check"/></svg>${en ? 'Owned' : '入手済み'}</span>` : ''}</div>
+        <div class="wcm-name">${escapeHtml(trItem(r))}${r.owned ? `<span class="wcm-owned-badge"><svg class="inline-icon" width="13" height="13"><use href="#i-check"/></svg>${pickLang('Owned', '入手済み')}</span>` : ''}</div>
         <div class="wcm-meta">${escapeHtml(trCat(r.cat.name))} ・ ${escapeHtml(trSource(r.source))}</div>
       </div>
       ${costHtml(r.cost)}
-      <button type="button" class="wcm-remove-btn" data-act="remove" data-cat="${r.cat.key}" data-id="${r.id}" aria-label="${en ? 'Remove' : '削除'}">
+      <button type="button" class="wcm-remove-btn" data-act="remove" data-cat="${r.cat.key}" data-id="${r.id}" aria-label="${pickLang('Remove', '削除')}">
         <svg class="inline-icon" width="15" height="15"><use href="#i-close"/></svg>
       </button>
     </div>`).join('');
@@ -327,30 +324,30 @@ function render() {
     <div class="wcm-list">${listHtml}</div>
 
     <div class="wcm-own-inputs">
-      <label><svg class="inline-icon" width="17" height="17"><use href="#i-candle"/></svg> ${en ? 'Owned Candles' : '所持キャンドル'}
+      <label><svg class="inline-icon" width="17" height="17"><use href="#i-candle"/></svg> ${pickLang('Owned Candles', '所持キャンドル')}
         <input type="number" id="wcmOwnCandle" data-own-currency min="0" value="${numInputVal(own.candle)}">
       </label>
-      <label><svg class="inline-icon" width="17" height="17"><use href="#i-star"/></svg> ${en ? 'Owned Season Candles' : '所持星のキャンドル'}
+      <label><svg class="inline-icon" width="17" height="17"><use href="#i-star"/></svg> ${pickLang('Owned Season Candles', '所持星のキャンドル')}
         <input type="number" id="wcmOwnStarCandle" data-own-currency min="0" value="${numInputVal(own.starCandle)}">
       </label>
-      <label><svg class="inline-icon" width="17" height="17"><use href="#i-heart"/></svg> ${en ? 'Owned Hearts' : '所持ハート'}
+      <label><svg class="inline-icon" width="17" height="17"><use href="#i-heart"/></svg> ${pickLang('Owned Hearts', '所持ハート')}
         <input type="number" id="wcmOwnHeart" data-own-currency min="0" value="${numInputVal(own.heart)}">
       </label>
     </div>
 
     <div class="wcm-total-box">
-      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-candle"/></svg> ${en ? 'Candles needed' : '必要キャンドル合計'}</span><b>${totals.sumCandle.toLocaleString()}</b></div>
-      <div class="wcm-total-row"><span class="wcm-total-sub">${en ? 'Still short' : 'あと'}</span>
-        <b class="${lackCandle > 0 ? 'lack' : 'enough'}">${lackCandle > 0 ? lackCandle.toLocaleString() + (en ? '' : ' 本') : (en ? 'Enough! ' : '足りています ') + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
-      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-star"/></svg> ${en ? 'Season Candles needed' : '必要星のキャンドル合計'}</span><b>${totals.sumStarCandle.toLocaleString()}</b></div>
-      <div class="wcm-total-row"><span class="wcm-total-sub">${en ? 'Still short' : 'あと'}</span>
-        <b class="${lackStarCandle > 0 ? 'lack' : 'enough'}">${lackStarCandle > 0 ? lackStarCandle.toLocaleString() + (en ? '' : ' 本') : (en ? 'Enough! ' : '足りています ') + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
-      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-heart"/></svg> ${en ? 'Hearts needed' : '必要ハート合計'}</span><b>${totals.sumHeart.toLocaleString()}</b></div>
-      <div class="wcm-total-row"><span class="wcm-total-sub">${en ? 'Still short' : 'あと'}</span>
-        <b class="${lackHeart > 0 ? 'lack' : 'enough'}">${lackHeart > 0 ? lackHeart.toLocaleString() + (en ? '' : ' 個') : (en ? 'Enough! ' : '足りています ') + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
-      ${totals.sumMoney > 0 ? `<div class="wcm-total-row"><span>${en ? 'Real-money total' : '課金合計'}</span><b>¥${totals.sumMoney.toLocaleString()}</b></div>` : ''}
-      ${totals.unknownCount > 0 ? `<div class="wcm-total-row"><span>${en ? 'No price data' : '価格不明・対象外'}</span><b>${totals.unknownCount}${en ? '' : ' 件'}</b></div>` : ''}
-      ${totals.ownedCount > 0 ? `<div class="wcm-total-row wcm-total-row-muted"><span><svg class="inline-icon" width="15" height="15"><use href="#i-check"/></svg> ${en ? 'Already owned (excluded)' : '入手済み（合計から除外）'}</span><b>${totals.ownedCount}${en ? '' : ' 件'}</b></div>` : ''}
+      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-candle"/></svg> ${pickLang('Candles needed', '必要キャンドル合計')}</span><b>${totals.sumCandle.toLocaleString()}</b></div>
+      <div class="wcm-total-row"><span class="wcm-total-sub">${pickLang('Still short', 'あと')}</span>
+        <b class="${lackCandle > 0 ? 'lack' : 'enough'}">${lackCandle > 0 ? lackCandle.toLocaleString() + (pickLang('', ' 本')) : (pickLang('Enough! ', '足りています ')) + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
+      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-star"/></svg> ${pickLang('Season Candles needed', '必要星のキャンドル合計')}</span><b>${totals.sumStarCandle.toLocaleString()}</b></div>
+      <div class="wcm-total-row"><span class="wcm-total-sub">${pickLang('Still short', 'あと')}</span>
+        <b class="${lackStarCandle > 0 ? 'lack' : 'enough'}">${lackStarCandle > 0 ? lackStarCandle.toLocaleString() + (pickLang('', ' 本')) : (pickLang('Enough! ', '足りています ')) + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
+      <div class="wcm-total-row"><span><svg class="inline-icon" width="17" height="17"><use href="#i-heart"/></svg> ${pickLang('Hearts needed', '必要ハート合計')}</span><b>${totals.sumHeart.toLocaleString()}</b></div>
+      <div class="wcm-total-row"><span class="wcm-total-sub">${pickLang('Still short', 'あと')}</span>
+        <b class="${lackHeart > 0 ? 'lack' : 'enough'}">${lackHeart > 0 ? lackHeart.toLocaleString() + (pickLang('', ' 個')) : (pickLang('Enough! ', '足りています ')) + '<svg class="inline-icon" width="14" height="14"><use href="#i-check"/></svg>'}</b></div>
+      ${totals.sumMoney > 0 ? `<div class="wcm-total-row"><span>${pickLang('Real-money total', '課金合計')}</span><b>¥${totals.sumMoney.toLocaleString()}</b></div>` : ''}
+      ${totals.unknownCount > 0 ? `<div class="wcm-total-row"><span>${pickLang('No price data', '価格不明・対象外')}</span><b>${totals.unknownCount}${pickLang('', ' 件')}</b></div>` : ''}
+      ${totals.ownedCount > 0 ? `<div class="wcm-total-row wcm-total-row-muted"><span><svg class="inline-icon" width="15" height="15"><use href="#i-check"/></svg> ${pickLang('Already owned (excluded)', '入手済み（合計から除外）')}</span><b>${totals.ownedCount}${pickLang('', ' 件')}</b></div>` : ''}
     </div>`;
 }
 

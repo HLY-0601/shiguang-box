@@ -5,6 +5,7 @@
    実装を移植し、フル機能で揃えてある。
    ================================================================ */
 import { CURRENT_LANG } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import {
   ensureProfilesInit, getActiveProfileId, pfDisplayName, nsKeyFor,
   createProfile, renameProfile, deleteProfile, switchProfile, duplicateProfile,
@@ -38,7 +39,7 @@ const CURRENCY_FIELDS = [
 
 let editingId = null;
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 // 🏆 指定プロフィールの解除済み称号一覧（アイコン・名前・説明・出典ツール名）を、
 // TITLE_CATALOG（'item'自身＋姉妹サイト群）を横断して合算して返す。

@@ -35,7 +35,8 @@
      直接dynamic importする（fetchより軽量・確実。挙動は同じ）。
    ================================================================ */
 import { nsKey, nsKeyFor, getActiveProfileId, removeWishItem } from '../../js/state.js';
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { t } from './data/i18n-catalog.js';
 import { SPIRIT_TREE_DATA } from './data/spirit-tree-data.js';
 import { SPIRIT_YOMI } from './data/spirit-yomi-data.js';
@@ -69,11 +70,11 @@ export const SEASON_JA_MAP = {
 };
 export function seasonLabel(seasonKey) {
   if (!seasonKey) return seasonKey;
-  return CURRENT_LANG === 'en' ? seasonKey : (SEASON_JA_MAP[seasonKey] || seasonKey);
+  return pickLang(seasonKey, (SEASON_JA_MAP[seasonKey] || seasonKey));
 }
 const TYPE_JA = { Season: '季節精霊', Regular: '恒常精霊', Elder: '長老', Guide: '季節ガイド', Special: '特殊', Event: 'イベント' };
 const TYPE_EN = { Season: 'Seasonal', Regular: 'Regular', Elder: 'Elder', Guide: 'Guide', Special: 'Special', Event: 'Event' };
-export function typeLabel(type) { return (CURRENT_LANG === 'en' ? TYPE_EN[type] : TYPE_JA[type]) || type; }
+export function typeLabel(type) { return (pickLang(TYPE_EN[type], TYPE_JA[type])) || type; }
 
 /* ================================================================
    並び順（種別→エリア/シーズン順）。読み込み時に1回だけ適用する。
@@ -105,7 +106,7 @@ const REALM_ORDER_JA = {
   'Isle of Dawn': '孤島', 'Daylight Prairie': '草原', 'Hidden Forest': '雨林',
   'Valley of Triumph': '峡谷', 'Golden Wasteland': '捨てられた地', 'Vault of Knowledge': '書庫',
 };
-export function realmOrderLabel(realmKey) { return CURRENT_LANG === 'en' ? realmKey : (REALM_ORDER_JA[realmKey] || realmKey); }
+export function realmOrderLabel(realmKey) { return pickLang(realmKey, (REALM_ORDER_JA[realmKey] || realmKey)); }
 export function areaGroupLabel(key) { return key === OTHER_AREA_KEY ? t('browse.otherAreas') : realmOrderLabel(key); }
 export function spiritRealmKey(s) { return (s.area && AREA_TO_REALM[s.area]) || OTHER_AREA_KEY; }
 export const NO_SEASON_KEY = '__no_season__';
@@ -180,6 +181,7 @@ SPIRIT_TREE_DATA.forEach((s) => { spiritByGuid[s.guid] = s; });
 
 export function spiritName(s) {
   if (CURRENT_LANG === 'en') return s.name;
+  if (CURRENT_LANG === 'zh') return s.nameZh || (s.nameJa ? zhTr(s.nameJa) : s.name);
   return s.nameJa || s.name;
 }
 
@@ -793,6 +795,10 @@ export function resolveNodeNameJa(n, spirit) {
 export function itemDisplayName(n, spirit) {
   if (n.itemType === 'Music' && n.itemName) return n.itemName;
   if (CURRENT_LANG === 'en') return n.itemName || n.itemNameJa || resolveNodeNameJa(n, spirit) || t('detail.noItemName');
+  if (CURRENT_LANG === 'zh') {
+    const jaBase = n.itemNameJa || resolveNodeNameJa(n, spirit);
+    return n.itemNameZh || (jaBase ? zhTr(jaBase) : (n.itemName || t('detail.noItemName')));
+  }
   return n.itemNameJa || resolveNodeNameJa(n, spirit) || n.itemName || t('detail.noItemName');
 }
 

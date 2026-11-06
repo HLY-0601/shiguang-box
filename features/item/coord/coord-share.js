@@ -34,7 +34,7 @@
      ダークテーマで反転しても画像の見た目が変わらないようにする）。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, escapeHtml, pickLang } from '../../../js/i18n.js';
 import { nsKey } from '../../../js/state.js';
 import {
   GRID_CATEGORIES, loadAllItemsOnce, getItemByCatId, getOwnedItemsForCat,
@@ -76,13 +76,13 @@ export function getCoordPhotoAspectRatio() {
 export function coordShareControlsHtml() {
   const en = CURRENT_LANG === 'en';
   return `
-    <div class="cs-style-toggle" role="group" aria-label="${en ? 'Image style' : '画像のスタイル'}">
-      <button type="button" class="cs-style-btn" data-cs-style="polaroid">${en ? 'Polaroid' : 'ポラロイド風'}</button>
-      <button type="button" class="cs-style-btn" data-cs-style="grid">${en ? 'Icon Grid' : 'アイコングリッド'}</button>
+    <div class="cs-style-toggle" role="group" aria-label="${pickLang('Image style', '画像のスタイル')}">
+      <button type="button" class="cs-style-btn" data-cs-style="polaroid">${pickLang('Polaroid', 'ポラロイド風')}</button>
+      <button type="button" class="cs-style-btn" data-cs-style="grid">${pickLang('Icon Grid', 'アイコングリッド')}</button>
     </div>
     <div class="cs-id-row">
       <input type="text" class="cs-id-input" maxlength="40" value="${escapeHtml(getShareUserId())}"
-        placeholder="${en ? 'Your ID (optional, shown on the photo)' : '自分のID（任意・写真に表示されます）'}">
+        placeholder="${pickLang('Your ID (optional, shown on the photo)', '自分のID（任意・写真に表示されます）')}">
     </div>`;
 }
 
@@ -113,13 +113,11 @@ const STICKER_SPARKLE = '<svg width="22" height="22" viewBox="0 0 24 24" style="
 const STICKER_CANDLE = '<svg width="22" height="22" viewBox="0 0 24 24" style="stroke:#007AFF;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><g transform="translate(12 12) scale(1.25) translate(-12 -13.5)"><path d="M12 12L5 6.5v3.5c0 1.2 1 2.2 2.2 2.2H12ZM12 12l7-5.5v3.5c0 1.2-1 2.2-2.2 2.2H12Z"/><circle cx="12" cy="12" r="1.6"/><path d="M12 13.6v6.9M9.3 20.5h5.4"/></g></svg>';
 const PHOTO_PLACEHOLDER = '<svg width="28" height="28" viewBox="0 0 24 24" style="stroke:rgba(255,255,255,0.35);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round"><g transform="translate(12 12) scale(1.167) translate(-12 -12)"><path d="M4.5 4.5h15v15h-15Z"/><path d="M4.5 15.5l4.2-4.5a1 1 0 0 1 1.5 0l2.3 2.5 2.5-3a1 1 0 0 1 1.5 0l3 4.5"/><path d="M9 9.5a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z"/></g></svg>';
 
-function brandLabel() { return CURRENT_LANG === 'en' ? 'Item Collection Tracker' : 'アイテム所持率管理'; }
+function brandLabel() { return pickLang('Item Collection Tracker', 'アイテム所持率管理'); }
 
 function createdDateText() {
   const today = new Date();
-  return CURRENT_LANG === 'en'
-    ? `Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-    : `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`;
+  return pickLang(`Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`, `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`);
 }
 
 // ポラロイド風（写真があればテープ・ステッカー付きのポラロイド、その下に装備一覧）
@@ -189,7 +187,7 @@ export function buildIconGridCardEl(items, photoDataUrl, playerName) {
 export function shareCoordImage(title, items, filenameBase, shareText, photoDataUrl) {
   const en = CURRENT_LANG === 'en';
   if (!items || Object.keys(items).length === 0) {
-    showCoordToast(en ? 'No coord selected' : 'コーデが選択されていません');
+    showCoordToast(pickLang('No coord selected', 'コーデが選択されていません'));
     return Promise.resolve();
   }
   injectCoordSharedStyles();
@@ -200,20 +198,16 @@ export function shareCoordImage(title, items, filenameBase, shareText, photoData
     : () => buildPolaroidCardEl(title, items, photoDataUrl);
   return exportShareImage(buildFn, filenameBase, {
     shareText,
-    successToast: en ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 
 // コメント文（アイテムの列挙はしない。内容は画像側で見せる）
 export function buildRandomShareText() {
-  return CURRENT_LANG === 'en'
-    ? `Here's my random coord!\n\n${SITE_URL}\n${RANDOM_SHARE_HASHTAG}`
-    : `ランダムコーデが決まりました！\n\n${SITE_URL}\n${RANDOM_SHARE_HASHTAG}`;
+  return pickLang(`Here's my random coord!\n\n${SITE_URL}\n${RANDOM_SHARE_HASHTAG}`, `ランダムコーデが決まりました！\n\n${SITE_URL}\n${RANDOM_SHARE_HASHTAG}`);
 }
 export function buildMyCoordShareText(label) {
-  return CURRENT_LANG === 'en'
-    ? `My "${label}" coord\n\n${SITE_URL}\n${COORD_SHARE_HASHTAG}`
-    : `「${label}」のコーデ\n\n${SITE_URL}\n${COORD_SHARE_HASHTAG}`;
+  return pickLang(`My "${label}" coord\n\n${SITE_URL}\n${COORD_SHARE_HASHTAG}`, `「${label}」のコーデ\n\n${SITE_URL}\n${COORD_SHARE_HASHTAG}`);
 }
 
 /* ================================================================
@@ -243,13 +237,11 @@ export function buildCoordShareUrl(items, name) {
 export async function shareCoordLink(items, name) {
   const en = CURRENT_LANG === 'en';
   if (!items || Object.keys(items).length === 0) {
-    showCoordToast(en ? 'No coord selected' : 'コーデが選択されていません');
+    showCoordToast(pickLang('No coord selected', 'コーデが選択されていません'));
     return;
   }
   const url = buildCoordShareUrl(items, name);
-  const shareText = en
-    ? `Check out this coord: "${name}"! What do you think?`
-    : `「${name}」というコーデを考えてみました！どう思いますか？`;
+  const shareText = pickLang(`Check out this coord: "${name}"! What do you think?`, `「${name}」というコーデを考えてみました！どう思いますか？`);
   if (isMobileDevice() && navigator.share) {
     try {
       await navigator.share({ title: name, text: shareText, url });
@@ -261,7 +253,7 @@ export async function shareCoordLink(items, name) {
   }
   try {
     await navigator.clipboard.writeText(url);
-    showCoordToast(en ? 'Link copied! Paste it anywhere to share.' : 'リンクをコピーしました！好きな場所に貼り付けて共有できます。');
+    showCoordToast(pickLang('Link copied! Paste it anywhere to share.', 'リンクをコピーしました！好きな場所に貼り付けて共有できます。'));
   } catch (e) {
     openLinkPreview(url);
   }
@@ -280,10 +272,10 @@ function openLinkPreview(url) {
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
   overlay.innerHTML = `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" aria-label="${en ? 'Close' : '閉じる'}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
-      <div class="modal-title">${en ? 'Share Link' : '共有リンク'}</div>
+      <button type="button" class="modal-close-btn" aria-label="${pickLang('Close', '閉じる')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
+      <div class="modal-title">${pickLang('Share Link', '共有リンク')}</div>
       <textarea class="cs-link-text" readonly></textarea>
-      <div class="cs-hint">${en ? 'Long-press or select the text above to copy it manually.' : '上のテキストを長押しまたは選択してコピーしてください。'}</div>
+      <div class="cs-hint">${pickLang('Long-press or select the text above to copy it manually.', '上のテキストを長押しまたは選択してコピーしてください。')}</div>
     </div>`;
   document.body.appendChild(overlay);
   const ta = overlay.querySelector('textarea');
@@ -315,7 +307,7 @@ export async function openSharedCoordFromRoute(sub) {
     await loadAllItemsOnce();
   } catch (e) {
     console.error('[coord-share] failed to load item data', e);
-    showCoordToast(en ? 'Failed to load item data.' : 'アイテムデータの読み込みに失敗しました。');
+    showCoordToast(pickLang('Failed to load item data.', 'アイテムデータの読み込みに失敗しました。'));
     return clearCoordHash();
   }
   const items = {};
@@ -324,7 +316,7 @@ export async function openSharedCoordFromRoute(sub) {
     if (found) items[catKey] = found;
   });
   const rawName = typeof payload.n === 'string' ? payload.n.trim().slice(0, 60) : '';
-  sharedCoord = { name: rawName || (en ? 'Shared Coord' : '共有されたコーデ'), items };
+  sharedCoord = { name: rawName || (pickLang('Shared Coord', '共有されたコーデ')), items };
   renderSharedCoord();
 }
 
@@ -350,7 +342,7 @@ function renderSharedCoord() {
           <div class="cs-shared-cat">${escapeHtml(trCat(cat.name))}</div>
           <div class="cs-shared-name">${escapeHtml(trItem(item))}</div>
         </div>
-        ${owned ? `<svg class="inline-icon cs-shared-owned" width="18" height="18" aria-label="${en ? 'Owned' : '所持済み'}"><use href="#i-check"/></svg>` : ''}
+        ${owned ? `<svg class="inline-icon cs-shared-owned" width="18" height="18" aria-label="${pickLang('Owned', '所持済み')}"><use href="#i-check"/></svg>` : ''}
       </div>`;
   }).join('');
   const hasItems = Object.keys(sharedCoord.items).length > 0;
@@ -361,15 +353,15 @@ function renderSharedCoord() {
   overlay.addEventListener('click', e => { if (e.target === overlay) closeSharedCoord(); });
   overlay.innerHTML = `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="scCloseX" aria-label="${en ? 'Close' : '閉じる'}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
-      <div class="modal-title">${en ? 'Shared Coord' : '共有されたコーデ'}</div>
+      <button type="button" class="modal-close-btn" id="scCloseX" aria-label="${pickLang('Close', '閉じる')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
+      <div class="modal-title">${pickLang('Shared Coord', '共有されたコーデ')}</div>
       <div class="cd-card">
         <div class="cd-card-header"><div class="cd-card-title">${escapeHtml(sharedCoord.name)}</div></div>
-        ${hasItems ? rows : `<div class="cd-empty-msg">${en ? 'No items could be loaded.' : 'アイテムを読み込めませんでした。'}</div>`}
+        ${hasItems ? rows : `<div class="cd-empty-msg">${pickLang('No items could be loaded.', 'アイテムを読み込めませんでした。')}</div>`}
       </div>
-      <div class="cs-hint"><svg class="inline-icon cs-shared-owned" width="14" height="14"><use href="#i-check"/></svg> ${en ? '= you already own this' : '＝ 所持済み'}</div>
+      <div class="cs-hint"><svg class="inline-icon cs-shared-owned" width="14" height="14"><use href="#i-check"/></svg> ${pickLang('= you already own this', '＝ 所持済み')}</div>
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn primary full" id="scSaveBtn" ${hasItems ? '' : 'disabled'}>${en ? 'Save to My Coord' : 'マイコーデに保存'}</button>
+        <button type="button" class="cd-action-btn primary full" id="scSaveBtn" ${hasItems ? '' : 'disabled'}>${pickLang('Save to My Coord', 'マイコーデに保存')}</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);
@@ -377,7 +369,7 @@ function renderSharedCoord() {
   overlay.querySelector('#scSaveBtn').addEventListener('click', () => {
     if (!sharedCoord || Object.keys(sharedCoord.items).length === 0) return;
     addSavedCoord(sharedCoord.name, sharedCoord.items);
-    showCoordToast(en ? 'Saved to My Coord!' : 'マイコーデに保存しました！');
+    showCoordToast(pickLang('Saved to My Coord!', 'マイコーデに保存しました！'));
     closeSharedCoord();
   });
   requestAnimationFrame(() => overlay.classList.add('open'));
@@ -407,7 +399,7 @@ export function openPhotoCrop(file, { ratio = 1, outSize = 900 } = {}) {
   injectStyles();
   const en = CURRENT_LANG === 'en';
   if (!file || !/^image\//.test(file.type)) {
-    showCoordToast(en ? 'Please select an image file' : '画像ファイルを選択してください');
+    showCoordToast(pickLang('Please select an image file', '画像ファイルを選択してください'));
     return Promise.resolve(null);
   }
   return new Promise(resolve => {
@@ -415,7 +407,7 @@ export function openPhotoCrop(file, { ratio = 1, outSize = 900 } = {}) {
     const img = new Image();
     img.onerror = () => {
       URL.revokeObjectURL(objectUrl);
-      showCoordToast(en ? 'Failed to load the image' : '画像の読み込みに失敗しました');
+      showCoordToast(pickLang('Failed to load the image', '画像の読み込みに失敗しました'));
       resolve(null);
     };
     img.onload = () => startCrop(img, objectUrl, ratio, outSize, resolve);
@@ -431,19 +423,17 @@ function startCrop(img, objectUrl, ratio, outSize, resolve) {
   overlay.id = CROP_OVERLAY_ID;
   overlay.innerHTML = `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" data-crop="cancel" aria-label="${en ? 'Close' : '閉じる'}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
-      <div class="modal-title">${en ? 'Adjust Photo Position' : '写真の位置を調整'}</div>
-      <div class="cs-hint">${en
-        ? 'Drag to reposition, and use the slider to zoom in/out. Nothing outside the frame will be included.'
-        : 'ドラッグして位置を調整し、スライダーで拡大・縮小できます。枠の外側は画像に含まれません。'}</div>
+      <button type="button" class="modal-close-btn" data-crop="cancel" aria-label="${pickLang('Close', '閉じる')}"><svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg></button>
+      <div class="modal-title">${pickLang('Adjust Photo Position', '写真の位置を調整')}</div>
+      <div class="cs-hint">${pickLang('Drag to reposition, and use the slider to zoom in/out. Nothing outside the frame will be included.', 'ドラッグして位置を調整し、スライダーで拡大・縮小できます。枠の外側は画像に含まれません。')}</div>
       <div class="cs-crop-viewport"><img alt=""></div>
       <div class="cs-crop-zoom-row">
         <svg class="inline-icon" width="18" height="18"><use href="#i-search"/></svg>
-        <input type="range" class="cs-crop-slider" min="100" max="300" value="100" aria-label="${en ? 'Zoom' : 'ズーム'}">
+        <input type="range" class="cs-crop-slider" min="100" max="300" value="100" aria-label="${pickLang('Zoom', 'ズーム')}">
       </div>
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn secondary" data-crop="cancel">${en ? 'Cancel' : 'キャンセル'}</button>
-        <button type="button" class="cd-action-btn primary" data-crop="ok">${en ? 'Use This Position' : 'この位置で決定'}</button>
+        <button type="button" class="cd-action-btn secondary" data-crop="cancel">${pickLang('Cancel', 'キャンセル')}</button>
+        <button type="button" class="cd-action-btn primary" data-crop="ok">${pickLang('Use This Position', 'この位置で決定')}</button>
       </div>
     </div>`;
   document.body.appendChild(overlay);

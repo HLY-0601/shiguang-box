@@ -6,7 +6,8 @@
    画面は3つのタブ: フレンド／記念日／フォト日記。日記の上には、過去の同じ日の思い出（「1年前の今日」）を出す。
    データの形は friends-state.js を参照（写真は IndexedDB、それ以外は localStorage）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { notifyChanged } from '../../js/notices.js';
 import { injectStylesheet } from '../bingo/bingo-view.js';
 import { toast } from '../shared/share-image.js';
@@ -15,7 +16,7 @@ import {
   loadFriendsDoc, saveFriendsDoc, upcomingAnniversaries, daysSince, todayStr, putPhoto, getPhoto, deletePhoto,
 } from './friends-state.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 // アイコンにすぐ選べる文字（Skyらしいもの）。自分で好きな文字・絵文字も入れられる
 const AVATAR_PRESETS = ['⭐', '🌙', '☁️', '🕯️', '🦋', '🐳', '🦀', '🌸', '🎵', '💖', '🍵', '🌈'];
 const COLORS = ['#E8679A', '#F59E0B', '#22A06B', '#3489D6', '#8574DB', '#A8646F', '#5F7F63', '#64748B'];
@@ -252,7 +253,7 @@ function diaryHtml() {
 function placeMapHtml(list) {
   const groups = [...PLACES.map(p => ({ p, items: list.filter(d => d.place === p.id) })), { p: null, items: list.filter(d => !d.place) }].filter(g => g.items.length);
   return `<div class="fr-places">${groups.map(g => `<section class="fr-place" style="--pc:${g.p ? g.p.color : 'var(--hub-text-3)'}">
-    <h3 class="fr-place-head"><span class="fr-place-pin"><svg class="inline-icon" width="14" height="14"><use href="#i-map"/></svg></span>${escapeHtml(g.p ? (CURRENT_LANG === 'en' ? g.p.en : g.p.ja) : t('場所なし', 'No place'))}<span>${t(`${g.items.length}件`, `${g.items.length}`)}</span></h3>
+    <h3 class="fr-place-head"><span class="fr-place-pin"><svg class="inline-icon" width="14" height="14"><use href="#i-map"/></svg></span>${escapeHtml(g.p ? (pickLang(g.p.en, g.p.ja)) : t('場所なし', 'No place'))}<span>${t(`${g.items.length}件`, `${g.items.length}`)}</span></h3>
     <div class="fr-place-strip">${g.items.map(d => `<button type="button" class="fr-place-card" data-act="edit-diary" data-id="${d.id}">
       ${d.photoId ? `<span class="fr-photo" data-photo="${escapeHtml(d.photoId)}"></span>` : `<span class="fr-place-text">${escapeHtml((d.text || '').slice(0, 40))}</span>`}
       <small>${fmtDate(d.date)}</small></button>`).join('')}</div>
@@ -282,7 +283,7 @@ function diaryFormHtml(d) {
     ${preview ? `<button type="button" class="fun-btn small" data-act="clear-photo">${t('写真を外す', 'Remove photo')}</button>` : ''}
     <div class="fun-field-row">
       <label class="fun-field"><span class="fun-label">${t('日付', 'Date')}</span><input class="fun-input" type="date" name="date" required max="${todayStr()}" value="${d ? d.date : todayStr()}"></label>
-      <label class="fun-field"><span class="fun-label">${t('場所（あれば）', 'Place (optional)')}</span><select class="fun-input" name="place"><option value="">${t('なし', 'None')}</option>${PLACES.map(p => `<option value="${p.id}"${d && d.place === p.id ? ' selected' : ''}>${escapeHtml(CURRENT_LANG === 'en' ? p.en : p.ja)}</option>`).join('')}</select></label>
+      <label class="fun-field"><span class="fun-label">${t('場所（あれば）', 'Place (optional)')}</span><select class="fun-input" name="place"><option value="">${t('なし', 'None')}</option>${PLACES.map(p => `<option value="${p.id}"${d && d.place === p.id ? ' selected' : ''}>${escapeHtml(pickLang(p.en, p.ja))}</option>`).join('')}</select></label>
     </div>
     <label class="fun-field"><span class="fun-label">${t('ひとこと', 'A few words')}</span><textarea class="fun-textarea" name="text" rows="3" maxlength="2000" placeholder="${t('今日あったこと、うれしかったこと', 'What happened today?')}">${escapeHtml(d ? d.text : '')}</textarea></label>
     ${doc.friends.length ? `<div class="fun-field"><span class="fun-label">${t('一緒にいたフレンド', 'With')}</span><div class="fun-chips">${doc.friends.map(f => `<label class="fun-chip fun-chip-check"><input type="checkbox" name="friendIds" value="${f.id}"${ids.has(f.id) ? ' checked' : ''}>${avatarHtml(f, 'is-tiny')}${escapeHtml(f.name)}</label>`).join('')}</div></div>` : ''}

@@ -24,7 +24,7 @@
    ——tai-hubで新たに導入された複数プロフィール機構に対する妥当な
    拡張で、元のスタンドアロン版の挙動を壊すものではない）。
    ================================================================ */
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { PROFILES_KEY, ACTIVE_PROFILE_KEY, DEFAULT_PROFILE_ID, loadProfiles, saveProfiles, nsKey } from '../../js/state.js';
 
 export { PROFILES_KEY, ACTIVE_PROFILE_KEY, DEFAULT_PROFILE_ID };
@@ -138,7 +138,7 @@ export const SITE_CATALOG = [
 ];
 
 export function siteLabel(site) {
-  return CURRENT_LANG === 'en' ? site.labelEn : site.label;
+  return pickLang(site.labelEn, site.label);
 }
 
 export function getAllLocalStorageKeys() {
@@ -267,7 +267,7 @@ export function siteUpdatedAtLabel(iso) {
   if (!iso) return '';
   try {
     const d = new Date(iso);
-    return d.toLocaleString(CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP', {
+    return d.toLocaleString(pickLang('en-US', 'ja-JP'), {
       year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit',
     });
   } catch (e) { return ''; }

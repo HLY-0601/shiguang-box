@@ -8,12 +8,13 @@
    「日々」のイベント（features/shared/event-dates.js）のアルバムも、季節と同じ数え方で並べる（2026-11-06〜）。
    イベントは季節の最中にあるので、同じ記録が季節のアルバムと日々のアルバムの両方に入ることがある。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 import { SEASON_DATES } from '../shared/season-dates.js';
 import { EVENT_DATES } from '../shared/event-dates.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 function readJson(key, fb) { try { const v = JSON.parse(localStorage.getItem(nsKey(key))); return v == null ? fb : v; } catch (e) { return fb; } }
 function localDateStr(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 
@@ -56,7 +57,7 @@ export function albumsHtml(openKey) {
 }
 
 function albumHtml(a, openKey) {
-  const name = CURRENT_LANG === 'en' ? a.s.en : a.s.ja;
+  const name = pickLang(a.s.en, a.s.ja);
   const open = openKey === a.key;
   const cover = a.photos[0];
   const stats = [

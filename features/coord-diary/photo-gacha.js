@@ -3,11 +3,12 @@
    場所・エモート（名前ではなくアイコンで出す）・構図・人数をくじで決める（時間帯は2026-11-06に外した）。2026-11-06に試作（#/lab-photo-gacha）から移した。
    photoGacha_v1: { log: [{ id, date, place, emoteId, comp, people, done }] }（新しい順・最大100件。以前の記録に残る time は使わない）
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 import { PLACES } from '../shared/places.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 const KEY = 'photoGacha_v1';
 const COMPS = [{ ja: '顔のアップ', en: 'Close-up' }, { ja: '全身', en: 'Full body' }, { ja: '後ろ姿', en: 'From behind' }, { ja: '見上げる角度', en: 'Low angle' }, { ja: '見下ろす角度', en: 'High angle' }, { ja: 'シルエット', en: 'Silhouette' }, { ja: '景色を大きく', en: 'Wide landscape' }, { ja: '手もとだけ', en: 'Hands only' }];
 const PEOPLE = [{ ja: 'ひとりで', en: 'Solo' }, { ja: 'ふたりで', en: 'With one friend' }, { ja: 'みんなで', en: 'With a group' }, { ja: '精霊と', en: 'With a spirit' }];
@@ -37,7 +38,7 @@ export function ensureEmotes(onReady) {
   if (!emotesLoading) emotesLoading = import('../emote/data/emotes.js').then(m => { emotes = (m.EMOTES || []).filter(e => e.id !== 'emote_001'); }).catch(() => { emotes = []; });
   emotesLoading.then(() => onReady && onReady());
 }
-function emoteName(id) { const e = (emotes || []).find(x => x.id === id); return e ? (CURRENT_LANG === 'en' ? e.nameEn : e.name) : t('好きなエモート', 'Any emote'); }
+function emoteName(id) { const e = (emotes || []).find(x => x.id === id); return e ? (pickLang(e.nameEn, e.name)) : t('好きなエモート', 'Any emote'); }
 // エモートはアイコンで出す（名前は読み上げ用とホバー表示に回す。画像が読めない・データが無い時は名前を文字で出す）
 function emoteIconHtml(id) {
   const e = (emotes || []).find(x => x.id === id);

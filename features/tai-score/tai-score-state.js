@@ -18,7 +18,7 @@
    既存ユーザーのデータ（＝既定プロフィール相当）は無改修でそのまま読める。
    ================================================================ */
 import { nsKey } from '../../js/state.js';
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import { t } from './data/i18n-score.js';
 import { PITCHES, NOTE_ABC_CODES, instrumentCodeFromLabel, DEFAULT_KEY_BINDINGS } from './data/constants.js';
@@ -146,7 +146,7 @@ export function saveLibrarySort(v) { localStorage.setItem(LIBRARY_SORT_KEY(), v)
 export function sortSongs(songs, sortMode) {
   const arr = songs.slice();
   switch (sortMode) {
-    case 'name': arr.sort((a, b) => (a.name || '').localeCompare(b.name || '', CURRENT_LANG === 'en' ? 'en' : 'ja')); break;
+    case 'name': arr.sort((a, b) => (a.name || '').localeCompare(b.name || '', pickLang('en', 'ja'))); break;
     case 'bpm': arr.sort((a, b) => a.bpm - b.bpm); break;
     case 'notes': arr.sort((a, b) => songNoteCount(b) - songNoteCount(a)); break;
     case 'updated':

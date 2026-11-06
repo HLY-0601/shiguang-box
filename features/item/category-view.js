@@ -24,7 +24,7 @@ import {
   isWishItem, toggleWishItem,
   recordItemAcquire, removeItemAcquireRecord,
 } from '../../js/state.js';
-import { CURRENT_LANG, trEvent, trItem, escapeHtml, resetFilterPanel } from '../../js/i18n.js';
+import { CURRENT_LANG, trEvent, trItem, escapeHtml, resetFilterPanel, pickLang } from '../../js/i18n.js';
 import { checkAndUnlockTitles } from './titles-panel.js';
 import { appendItemFooter } from './item-footer.js';
 
@@ -130,7 +130,7 @@ export function unmount() {
    ================================================================ */
 function renderShell(cfg) {
   const en = CURRENT_LANG === 'en';
-  const catName = en ? cfg.nameEn : cfg.name;
+  const catName = pickLang(cfg.nameEn, cfg.name);
   const iconHtml = cfg.img
     ? `<img src="${cfg.img}" alt="${escapeHtml(catName)}" loading="lazy" referrerpolicy="no-referrer">`
     : `<svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg>`;
@@ -146,15 +146,15 @@ function renderShell(cfg) {
   return `
     <div class="item-view">
       <div class="cv-wrap">
-        <a href="#/item" class="back-link">${en ? '&larr; Back to Category List' : '&larr; カテゴリ一覧へ戻る'}</a>
-        <h1 class="item-large-title">${escapeHtml(en ? `${catName} Checklist` : `${catName}チェック`)}</h1>
+        <a href="#/item" class="back-link">${pickLang('&larr; Back to Category List', '&larr; カテゴリ一覧へ戻る')}</a>
+        <h1 class="item-large-title">${escapeHtml(pickLang(`${catName} Checklist`, `${catName}チェック`))}</h1>
 
         <div class="cv-header-card">
           <div class="cv-header-info">
             <div class="cv-header-icon" id="catIcon">${iconHtml}</div>
             <div>
               <div class="cv-header-name" id="catName">${escapeHtml(catName)}</div>
-              <div class="cv-header-count" id="catCount">-- / -- ${en ? 'owned' : '所持'}</div>
+              <div class="cv-header-count" id="catCount">-- / -- ${pickLang('owned', '所持')}</div>
             </div>
           </div>
           <div class="cv-header-pct" id="catPct">--%</div>
@@ -162,87 +162,87 @@ function renderShell(cfg) {
 
         <div class="cv-control-panel">
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Name Search' : '名前検索'}</span>
+            <span class="cv-control-label">${pickLang('Name Search', '名前検索')}</span>
             <svg class="inline-icon" width="16" height="16"><use href="#i-search"/></svg>
-            <input type="text" class="cv-select-box cv-search-input" id="searchName" placeholder="${en ? 'Filter by item name...' : 'アイテム名で絞り込み...'}" oninput="window.__catViewFilterAndRender()">
+            <input type="text" class="cv-select-box cv-search-input" id="searchName" placeholder="${pickLang('Filter by item name...', 'アイテム名で絞り込み...')}" oninput="window.__catViewFilterAndRender()">
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Filter' : '絞り込み'}</span>
+            <span class="cv-control-label">${pickLang('Filter', '絞り込み')}</span>
             <select class="cv-select-box" id="filterStatus" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All ownership states' : 'すべての所持状態'}</option>
-              <option value="owned">${en ? 'Owned only' : '所持中のみ'}</option>
-              <option value="notOwned">${en ? 'Not owned only' : '未所持のみ'}</option>
+              <option value="all">${pickLang('All ownership states', 'すべての所持状態')}</option>
+              <option value="owned">${pickLang('Owned only', '所持中のみ')}</option>
+              <option value="notOwned">${pickLang('Not owned only', '未所持のみ')}</option>
             </select>
             <select class="cv-select-box" id="filterFav" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All favorites' : 'すべてのお気に入り'}</option>
-              <option value="fav">${en ? 'Favorites only' : 'お気に入り指定のみ'}</option>
+              <option value="all">${pickLang('All favorites', 'すべてのお気に入り')}</option>
+              <option value="fav">${pickLang('Favorites only', 'お気に入り指定のみ')}</option>
             </select>
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Attributes' : '属性・条件'}</span>
+            <span class="cv-control-label">${pickLang('Attributes', '属性・条件')}</span>
             <select class="cv-select-box" id="filterCost" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All acquisition methods (paid/free)' : 'すべての入手方法（課金/無課金）'}</option>
-              <option value="free">${en ? 'Free items' : '無課金アイテム'}</option>
-              <option value="premium">${en ? 'Paid items' : '課金アイテム'}</option>
+              <option value="all">${pickLang('All acquisition methods (paid/free)', 'すべての入手方法（課金/無課金）')}</option>
+              <option value="free">${pickLang('Free items', '無課金アイテム')}</option>
+              <option value="premium">${pickLang('Paid items', '課金アイテム')}</option>
             </select>
             <select class="cv-select-box" id="filterDye" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All dye options' : 'すべての染色可否'}</option>
-              <option value="dye-o">${en ? 'Dyeable' : '染色あり'}</option>
-              <option value="dye-x">${en ? 'Not dyeable' : '染色なし'}</option>
+              <option value="all">${pickLang('All dye options', 'すべての染色可否')}</option>
+              <option value="dye-o">${pickLang('Dyeable', '染色あり')}</option>
+              <option value="dye-x">${pickLang('Not dyeable', '染色なし')}</option>
             </select>
             <select class="cv-select-box" id="filterReprint" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All re-release states' : 'すべての復刻状態'}</option>
-              <option value="noReprint">${en ? 'No re-release' : '復刻なし'}</option>
+              <option value="all">${pickLang('All re-release states', 'すべての復刻状態')}</option>
+              <option value="noReprint">${pickLang('No re-release', '復刻なし')}</option>
             </select>
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Other' : 'その他'}</span>
+            <span class="cv-control-label">${pickLang('Other', 'その他')}</span>
             <select class="cv-select-box" id="filterEvent" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All events/sources' : 'すべてのイベント・登場元'}</option>
+              <option value="all">${pickLang('All events/sources', 'すべてのイベント・登場元')}</option>
             </select>
             ${hasColorData ? `<select class="cv-select-box" id="filterColor" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All colors' : 'すべての色'}</option>
+              <option value="all">${pickLang('All colors', 'すべての色')}</option>
             </select>` : ''}
             ${hasTypeData ? `<select class="cv-select-box" id="filterType" onchange="window.__catViewFilterAndRender()">
-              <option value="all">${en ? 'All types' : 'すべてのタイプ'}</option>
+              <option value="all">${pickLang('All types', 'すべてのタイプ')}</option>
             </select>` : ''}
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Sort' : '並び替え'}</span>
+            <span class="cv-control-label">${pickLang('Sort', '並び替え')}</span>
             <select class="cv-select-box" id="sortOrder" onchange="window.__catViewFilterAndRender()">
-              <option value="default">${en ? 'Sort: Default' : '並び替え: 標準'}</option>
-              <option value="nameAsc">${en ? 'Item Name (A-Z)' : 'アイテム名（昇順）'}</option>
-              <option value="event">${en ? 'By Event Name' : 'イベント名順'}</option>
-              ${hasColorData ? `<option value="color">${en ? 'By Color' : '色順'}</option>` : ''}
-              ${hasTypeData ? `<option value="type">${en ? 'By Type' : 'タイプ順'}</option>` : ''}
+              <option value="default">${pickLang('Sort: Default', '並び替え: 標準')}</option>
+              <option value="nameAsc">${pickLang('Item Name (A-Z)', 'アイテム名（昇順）')}</option>
+              <option value="event">${pickLang('By Event Name', 'イベント名順')}</option>
+              ${hasColorData ? `<option value="color">${pickLang('By Color', '色順')}</option>` : ''}
+              ${hasTypeData ? `<option value="type">${pickLang('By Type', 'タイプ順')}</option>` : ''}
             </select>
           </div>
           <div class="cv-control-row cv-control-reset-row">
             <button type="button" class="cv-control-reset-btn" onclick="window.__catViewResetFilters()">
-              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</span>
+              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${pickLang('Clear All Filters', 'フィルターを全てクリア')}</span>
             </button>
           </div>
         </div>
 
         <div class="cv-list-header-row">
-          <p class="cv-sec-label">${en ? 'Item List' : 'アイテム一覧'}</p>
+          <p class="cv-sec-label">${pickLang('Item List', 'アイテム一覧')}</p>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <select class="cv-grid-cols-select" id="gridColsSelect" onchange="window.__catViewSetGridCols(this.value)" title="${en ? 'Grid columns' : 'グリッドの列数'}" aria-label="${en ? 'Grid columns' : 'グリッドの列数'}">
-              <option value="auto">${en ? 'Columns: Auto' : '列数: 自動'}</option>
-              <option value="2">${en ? '2 columns' : '2列'}</option>
-              <option value="3">${en ? '3 columns' : '3列'}</option>
-              <option value="4">${en ? '4 columns' : '4列'}</option>
-              <option value="5">${en ? '5 columns' : '5列'}</option>
-              <option value="6">${en ? '6 columns' : '6列'}</option>
+            <select class="cv-grid-cols-select" id="gridColsSelect" onchange="window.__catViewSetGridCols(this.value)" title="${pickLang('Grid columns', 'グリッドの列数')}" aria-label="${pickLang('Grid columns', 'グリッドの列数')}">
+              <option value="auto">${pickLang('Columns: Auto', '列数: 自動')}</option>
+              <option value="2">${pickLang('2 columns', '2列')}</option>
+              <option value="3">${pickLang('3 columns', '3列')}</option>
+              <option value="4">${pickLang('4 columns', '4列')}</option>
+              <option value="5">${pickLang('5 columns', '5列')}</option>
+              <option value="6">${pickLang('6 columns', '6列')}</option>
             </select>
-            <div class="cv-view-toggle" role="group" aria-label="${en ? 'View mode' : '表示切替'}">
+            <div class="cv-view-toggle" role="group" aria-label="${pickLang('View mode', '表示切替')}">
               <button type="button" class="cv-view-toggle-btn" id="viewBtnGrid" onclick="window.__catViewSetViewMode('grid')" aria-pressed="true">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-                <span>${en ? 'Grid' : 'グリッド'}</span>
+                <span>${pickLang('Grid', 'グリッド')}</span>
               </button>
               <button type="button" class="cv-view-toggle-btn" id="viewBtnList" onclick="window.__catViewSetViewMode('list')" aria-pressed="false">
                 <svg class="inline-icon" width="14" height="14"><use href="#i-menu"/></svg>
-                <span>${en ? 'List' : 'リスト'}</span>
+                <span>${pickLang('List', 'リスト')}</span>
               </button>
             </div>
           </div>
@@ -268,7 +268,7 @@ function updateHeaderScore(owned, total) {
   const pct = total > 0 ? Math.round((owned / total) * 100) : 0;
   const countEl = containerEl.querySelector('#catCount');
   const pctEl = containerEl.querySelector('#catPct');
-  if (countEl) countEl.textContent = en ? `${owned} / ${total} owned` : `${owned} / ${total} 所持`;
+  if (countEl) countEl.textContent = pickLang(`${owned} / ${total} owned`, `${owned} / ${total} 所持`);
   if (pctEl) pctEl.textContent = `${pct}%`;
 }
 
@@ -359,7 +359,7 @@ function handleToggleFav(id, btn) {
 function handleToggleWish(id, btn) {
   const added = toggleWishItem(categoryConfig.key, id);
   if (added === null) {
-    showCatViewToast(CURRENT_LANG === 'en' ? 'Owned items cannot be added to the wishlist' : '所持済みのアイテムはウィッシュリストに追加できません');
+    showCatViewToast(pickLang('Owned items cannot be added to the wishlist', '所持済みのアイテムはウィッシュリストに追加できません'));
     return;
   }
   btn.classList.toggle('is-wish', added);
@@ -444,9 +444,9 @@ function filterAndRender() {
 
   // 2. 並び替え (Sort)
   if (sOrder === 'nameAsc') {
-    filtered.sort((a, b) => trItem(a).localeCompare(trItem(b), en ? 'en' : 'ja'));
+    filtered.sort((a, b) => trItem(a).localeCompare(trItem(b), pickLang('en', 'ja')));
   } else if (sOrder === 'event') {
-    filtered.sort((a, b) => trEvent(a.event).localeCompare(trEvent(b.event), en ? 'en' : 'ja'));
+    filtered.sort((a, b) => trEvent(a.event).localeCompare(trEvent(b.event), pickLang('en', 'ja')));
   } else if (sOrder === 'color') {
     filtered.sort((a, b) => (a.color || '').localeCompare(b.color || '', 'ja'));
   } else if (sOrder === 'type') {
@@ -456,7 +456,7 @@ function filterAndRender() {
   // 3. 出力 (Render)
   const listEl = containerEl.querySelector('#itemList');
   if (filtered.length === 0) {
-    listEl.innerHTML = `<div class="cv-empty-message">${en ? 'No matching items found.' : '該当するアイテムが見つかりません。'}</div>`;
+    listEl.innerHTML = `<div class="cv-empty-message">${pickLang('No matching items found.', '該当するアイテムが見つかりません。')}</div>`;
     refreshHeaderScore();
     return;
   }
@@ -475,10 +475,10 @@ function filterAndRender() {
     const tip = [
       trItem(item),
       trEvent(item.event),
-      item.cost === 'premium' ? (en ? 'Paid' : '課金') : (en ? 'Free' : '無課金'),
-      en ? `Dye ${item.dye ? 'Yes' : 'No'}` : `染色${item.dye ? 'あり' : 'なし'}`,
-      item.noReprint ? (en ? 'No Re-release' : '復刻なし') : '',
-      item.color ? (en ? `Color: ${item.color}` : `色:${item.color}`) : '',
+      item.cost === 'premium' ? (pickLang('Paid', '課金')) : (pickLang('Free', '無課金')),
+      pickLang(`Dye ${item.dye ? 'Yes' : 'No'}`, `染色${item.dye ? 'あり' : 'なし'}`),
+      item.noReprint ? (pickLang('No Re-release', '復刻なし')) : '',
+      item.color ? (pickLang(`Color: ${item.color}`, `色:${item.color}`)) : '',
       typeEnabled() ? (item.type || '') : '',
     ].filter(Boolean).join(' ／ ');
 
@@ -487,8 +487,8 @@ function filterAndRender() {
         <div class="cv-item-tile-frame ${isOwned ? 'is-owned' : ''}" id="card_${item.id}" title="${escapeHtml(tip)}" onclick="window.__catViewToggleOwned('${item.id}')" tabindex="0" role="button" aria-pressed="${isOwned}" onkeydown="if(event.target===event.currentTarget&&(event.key==='Enter'||event.key===' ')){event.preventDefault();window.__catViewToggleOwned('${item.id}');}">
           ${item.cost === 'premium' ? '<span class="cv-tile-cost-dot" aria-hidden="true"></span>' : ''}
           ${item.noReprint ? '<span class="cv-tile-nr-badge">NR</span>' : ''}
-          <button class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__catViewToggleFav('${item.id}', this)" aria-label="${en ? 'Favorite' : 'お気に入り'}"><svg class="inline-icon" width="14" height="14" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
-          <button class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__catViewToggleWish('${item.id}', this)" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
+          <button class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" onclick="event.stopPropagation(); window.__catViewToggleFav('${item.id}', this)" aria-label="${pickLang('Favorite', 'お気に入り')}"><svg class="inline-icon" width="14" height="14" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg></button>
+          <button class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" onclick="event.stopPropagation(); window.__catViewToggleWish('${item.id}', this)" aria-label="${pickLang('Wishlist', 'ウィッシュリスト')}" title="${pickLang('Add to wishlist', 'ウィッシュリストに追加')}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
           <div class="cv-item-tile-img-wrap">
             <img src="${imgSrc}" alt="${escapeHtml(trItem(item))}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('cv-img-fallback')">
             <span class="cv-item-tile-fallback"><svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg></span>
@@ -517,9 +517,9 @@ function filterAndRender() {
             </a>
             <div class="cv-item-meta-row">
               <span class="cv-badge">${trEvent(item.event)}</span>
-              <span class="cv-badge ${item.cost === 'premium' ? 'cv-badge-premium' : 'cv-badge-free'}">${item.cost === 'premium' ? (en ? 'Paid' : '課金') : (en ? 'Free' : '無課金')}</span>
-              <span class="cv-badge ${item.dye ? 'cv-badge-dye-o' : ''}">${en ? 'Dye' : '染色'} ${item.dye ? '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-check"/></svg>' : '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-close"/></svg>'}</span>
-              ${item.noReprint ? `<span class="cv-badge cv-badge-no-reprint">${en ? 'No Re-release' : '復刻なし'}</span>` : ''}
+              <span class="cv-badge ${item.cost === 'premium' ? 'cv-badge-premium' : 'cv-badge-free'}">${item.cost === 'premium' ? (pickLang('Paid', '課金')) : (pickLang('Free', '無課金'))}</span>
+              <span class="cv-badge ${item.dye ? 'cv-badge-dye-o' : ''}">${pickLang('Dye', '染色')} ${item.dye ? '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-check"/></svg>' : '<svg class="inline-icon" width="14" height="14" style="vertical-align:-2px"><use href="#i-close"/></svg>'}</span>
+              ${item.noReprint ? `<span class="cv-badge cv-badge-no-reprint">${pickLang('No Re-release', '復刻なし')}</span>` : ''}
               ${item.color ? `<span class="cv-badge cv-badge-color">${item.color}</span>` : ''}
               ${typeEnabled() && item.type ? `<span class="cv-badge cv-badge-color">${item.type}</span>` : ''}
             </div>
@@ -528,7 +528,7 @@ function filterAndRender() {
         <button class="cv-fav-btn ${isFav ? 'is-fav' : ''}" onclick="window.__catViewToggleFav('${item.id}', this)">
           <svg class="inline-icon" width="18" height="18" style="stroke:currentColor;fill:${isFav ? 'currentColor' : 'none'};stroke-width:1.6"><use href="#i-star"/></svg>
         </button>
-        <button class="cv-wish-btn ${isWish ? 'is-wish' : ''}" onclick="window.__catViewToggleWish('${item.id}', this)" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}">
+        <button class="cv-wish-btn ${isWish ? 'is-wish' : ''}" onclick="window.__catViewToggleWish('${item.id}', this)" aria-label="${pickLang('Wishlist', 'ウィッシュリスト')}" title="${pickLang('Add to wishlist', 'ウィッシュリストに追加')}">
           <svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg>
         </button>
       </div>
@@ -563,8 +563,8 @@ function notifyTitlesCheck() {
   checkAndUnlockTitles().then(newlyEarned => {
     if (!newlyEarned || !newlyEarned.length) return;
     const msg = newlyEarned.length === 1
-      ? (CURRENT_LANG === 'en' ? `Title unlocked: ${newlyEarned[0].nameEn}` : `称号解禁「${newlyEarned[0].name}」`)
-      : (CURRENT_LANG === 'en' ? `${newlyEarned.length} titles unlocked!` : `称号を${newlyEarned.length}個解禁！`);
+      ? (pickLang(`Title unlocked: ${newlyEarned[0].nameEn}`, `称号解禁「${newlyEarned[0].name}」`))
+      : (pickLang(`${newlyEarned.length} titles unlocked!`, `称号を${newlyEarned.length}個解禁！`));
     showCatViewToast(msg);
   }).catch(e => console.error('[item category] title check failed', e));
 }

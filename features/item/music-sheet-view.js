@@ -36,7 +36,8 @@
       元実装と完全に同一で、見た目の表現だけの差（グリッドタイルの
       title属性ツールチップは従来通りテキストのまま）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml, trEvent, resetFilterPanel } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, trEvent, resetFilterPanel, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, isWishItem, toggleWishItem, removeWishItem } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { MUSIC_SHEETS, SEASON_ORDER, METHOD_LABEL_JA, METHOD_LABEL_EN, CAT_KEY } from './data/music-sheets-data.js';
@@ -46,7 +47,7 @@ import { appendItemFooter } from './item-footer.js';
 const LINK_ID = 'item-music-sheet-styles-link';
 const VIEW_MODE_KEY = 'musicSheets_viewMode'; // item/music_sheet.htmlと同一キー（あえてnsKey化しない。元実装もプロフィール非依存）
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 
 // ── モジュール内状態（mount毎に更新される） ──────────────────
 let containerEl = null;
@@ -93,12 +94,12 @@ export function unmount() {
 function renderShell() {
   const en = CURRENT_LANG === 'en';
   const cfg = CATEGORY_REGISTRY.find(c => c.key === CAT_KEY) || {};
-  const catName = en ? cfg.nameEn : cfg.name;
+  const catName = pickLang(cfg.nameEn, cfg.name);
 
   return `
     <div class="item-view">
       <div class="ms-wrap">
-        <a href="#/item" class="back-link">${en ? '&larr; Back to Category List' : '&larr; カテゴリ一覧へ戻る'}</a>
+        <a href="#/item" class="back-link">${pickLang('&larr; Back to Category List', '&larr; カテゴリ一覧へ戻る')}</a>
         <h1 class="item-large-title">${t('楽譜コンプリート管理', 'Music Sheet Completion')}</h1>
 
         <div class="ms-header-card">
@@ -107,7 +108,7 @@ function renderShell() {
               <div class="ms-header-icon"><svg class="inline-icon" width="24" height="24"><use href="#i-sheet-music"/></svg></div>
               <div>
                 <div class="ms-header-name">${escapeHtml(catName)}</div>
-                <div class="ms-header-count" id="msCatCount">-- / -- ${en ? 'owned' : '所持'}</div>
+                <div class="ms-header-count" id="msCatCount">-- / -- ${pickLang('owned', '所持')}</div>
               </div>
             </div>
             <div class="ms-header-pct" id="msCatPct">--%</div>
@@ -234,7 +235,7 @@ function updateHeaderScore() {
   const pct = total > 0 ? Math.round((owned / total) * 100) : 0;
   const countEl = containerEl.querySelector('#msCatCount');
   const pctEl = containerEl.querySelector('#msCatPct');
-  if (countEl) countEl.textContent = en ? `${owned} / ${total} owned` : `${owned} / ${total} 所持`;
+  if (countEl) countEl.textContent = pickLang(`${owned} / ${total} owned`, `${owned} / ${total} 所持`);
   if (pctEl) pctEl.textContent = `${pct}%`;
 }
 
@@ -245,7 +246,7 @@ function updateMethodSummary() {
   const html = methods.map(m => {
     const group = MUSIC_SHEETS.filter(s => s.method === m);
     const owned = group.filter(s => userStates.owned[s.id]).length;
-    const label = en ? METHOD_LABEL_EN[m] : METHOD_LABEL_JA[m];
+    const label = pickLang(METHOD_LABEL_EN[m], METHOD_LABEL_JA[m]);
     return `<span class="ms-method-chip on-${m}"><span class="dot"></span>${owned}/${group.length} ${label}</span>`;
   }).join('');
   const el = containerEl.querySelector('#msMethodSummary');
@@ -255,17 +256,17 @@ function updateMethodSummary() {
 // 難易度が未公開（null）の楽譜は「?」と表示する
 const dq = (v) => (v == null ? '?' : v);
 function trKey(k) {
-  return CURRENT_LANG === 'en' ? k.replace('メジャー', ' Major').trim() : k;
+  return pickLang(k.replace('メジャー', ' Major').trim(), k);
 }
 
 function sheetDisplayName(s) {
-  return CURRENT_LANG === 'en' ? (s.nameEn || s.name) : s.name;
+  return pickLang((s.nameEn || s.name), s.name);
 }
 
 // 精霊名の表示（精霊がいない入手元＝奏の音楽堂・日々イベントの場合はnull）
 function spiritDisplayName(s) {
   if (!s.spirit) return null;
-  return CURRENT_LANG === 'en' ? (s.spiritEn || s.spirit) : s.spirit;
+  return pickLang((s.spiritEn || s.spirit), s.spirit);
 }
 
 /* ================================================================
@@ -379,7 +380,7 @@ function filterAndRender() {
   const diffScore = (s) => fDiffPart !== 'all' ? s.diff[fDiffPart] : (s.diff.m + s.diff.w + s.diff.b + s.diff.p);
 
   if (sOrder === 'nameAsc') {
-    filtered.sort((a, b) => sheetDisplayName(a).localeCompare(sheetDisplayName(b), en ? 'en' : 'ja'));
+    filtered.sort((a, b) => sheetDisplayName(a).localeCompare(sheetDisplayName(b), pickLang('en', 'ja')));
   } else if (sOrder === 'priceDesc') {
     filtered.sort((a, b) => (b.price ?? -1) - (a.price ?? -1));
   } else if (sOrder === 'season') {
@@ -411,14 +412,14 @@ function filterAndRender() {
     const dispName = sheetDisplayName(s);
     const spiritName = spiritDisplayName(s);
     const tip = [
-      `${en ? 'No.' : '№'}${s.num} ${dispName}`,
-      en ? METHOD_LABEL_EN[s.method] : METHOD_LABEL_JA[s.method],
+      `${pickLang('No.', '№')}${s.num} ${dispName}`,
+      pickLang(METHOD_LABEL_EN[s.method], METHOD_LABEL_JA[s.method]),
       trEvent(s.season),
-      spiritName ? (en ? `Spirit: ${spiritName}` : `精霊: ${spiritName}`) : '',
-      s.price === null ? (en ? 'Price unlisted on wiki' : '価格: Wiki未記載') : (en ? `Price: ${s.price}` : `価格: ${s.price}`),
+      spiritName ? (pickLang(`Spirit: ${spiritName}`, `精霊: ${spiritName}`)) : '',
+      s.price === null ? (pickLang('Price unlisted on wiki', '価格: Wiki未記載')) : (pickLang(`Price: ${s.price}`, `価格: ${s.price}`)),
       trKey(s.key),
-      `${en ? 'Melody' : '旋律'}${dq(s.diff.m)} / ${en ? 'Wind' : '管楽器'}${dq(s.diff.w)} / ${en ? 'Bass' : '低音'}${dq(s.diff.b)} / ${en ? 'Percussion' : '打楽器'}${dq(s.diff.p)}`,
-      s.note ? (en ? (s.noteEn || s.note) : s.note) : ''
+      `${pickLang('Melody', '旋律')}${dq(s.diff.m)} / ${pickLang('Wind', '管楽器')}${dq(s.diff.w)} / ${pickLang('Bass', '低音')}${dq(s.diff.b)} / ${pickLang('Percussion', '打楽器')}${dq(s.diff.p)}`,
+      s.note ? (pickLang((s.noteEn || s.note), s.note)) : ''
     ].filter(Boolean).join(' ／ ');
     const wikiUrl = `https://www.google.com/search?q=${encodeURIComponent('Sky 星を紡ぐ子どもたち 楽譜 ' + s.name)}`;
 
@@ -469,10 +470,10 @@ function filterAndRender() {
               ${escapeHtml(dispName)} <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 14L20 4"/><path d="M14 4h6v6"/><path d="M18 13v6a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6"/></svg>
             </a>
             <div class="ms-item-meta-row">
-              <span class="ms-badge ms-method-${s.method}">${en ? METHOD_LABEL_EN[s.method] : METHOD_LABEL_JA[s.method]}</span>
+              <span class="ms-badge ms-method-${s.method}">${pickLang(METHOD_LABEL_EN[s.method], METHOD_LABEL_JA[s.method])}</span>
               ${priceLabel(s)}
               <span class="ms-badge ms-key-badge">${trKey(s.key)}</span>
-              ${s.note ? `<span class="ms-badge">${escapeHtml(en ? (s.noteEn || s.note) : s.note)}</span>` : ''}
+              ${s.note ? `<span class="ms-badge">${escapeHtml(pickLang((s.noteEn || s.note), s.note))}</span>` : ''}
             </div>
             <div class="ms-source-row"><svg class="inline-icon" width="12" height="12"><use href="#i-calendar"/></svg> ${trEvent(s.season)}${spiritName ? ` ・ ${t('精霊', 'Spirit')}: ${escapeHtml(spiritName)}` : ''}</div>
             <div class="ms-diff-row">${diffHtml}</div>

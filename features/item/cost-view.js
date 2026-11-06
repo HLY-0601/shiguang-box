@@ -19,7 +19,8 @@
    同じ形のアイテムに変換して、このコスト集計に合流させている（元実装と同じ）。
    ================================================================ */
 
-import { CURRENT_LANG, trEvent, trSource, trCat, trItem, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trEvent, trSource, trCat, trItem, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { getCategoryState, isWishItem, toggleWishItem, nsKey, getItemAcquireLog } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { ITEM_COST_DATA } from './data/cost-data.js';
@@ -36,7 +37,7 @@ const GRID_CATEGORIES = CATEGORY_REGISTRY.filter(c => c.section === 'grid');
 const CAT_LABEL_MAP = Object.fromEntries(GRID_CATEGORIES.map(c => [c.key, c.name]));
 CAT_LABEL_MAP[MUSIC_SHEET_CAT_KEY] = '楽譜';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 /* ================================================================
    季節の実装順・日々の年間開催順（item/item_cost.html の
@@ -255,14 +256,14 @@ function computeAllItems() {
 // 表示は変わらない（個数自体は呼び出し側の所持数入力欄で別途わかる）。
 function costHtml(cost, quantity) {
   const en = CURRENT_LANG === 'en';
-  if (!cost) return en ? 'Unknown' : '不明';
+  if (!cost) return pickLang('Unknown', '不明');
   const qty = (quantity && quantity > 1) ? quantity : 1;
   const withQty = (iconTag, unit) => {
     if (qty > 1 && cost.value > 0) {
       const total = cost.value * qty;
-      return `${iconTag} ${total.toLocaleString()}${en ? '' : unit}<span class="cost-qty-note">(${cost.value.toLocaleString()}${en ? '' : unit}×${qty})</span>`;
+      return `${iconTag} ${total.toLocaleString()}${pickLang('', unit)}<span class="cost-qty-note">(${cost.value.toLocaleString()}${pickLang('', unit)}×${qty})</span>`;
     }
-    return `${iconTag} ${cost.value}${en ? '' : unit}`;
+    return `${iconTag} ${cost.value}${pickLang('', unit)}`;
   };
   if (cost.type === 'candle') return withQty('<svg class="inline-icon" width="15" height="15"><use href="#i-candle"/></svg>', '本');
   if (cost.type === 'starCandle') return withQty('<svg class="inline-icon" width="15" height="15"><use href="#i-star"/></svg>', '本');
@@ -274,9 +275,9 @@ function costHtml(cost, quantity) {
     }
     return `¥${cost.value.toLocaleString()}`;
   }
-  if (cost.type === 'na') return en ? 'N/A' : '対象外';
-  if (cost.type === 'ticket') return en ? 'Ticket Exchange' : 'チケット交換';
-  return en ? 'Unknown' : '不明';
+  if (cost.type === 'na') return pickLang('N/A', '対象外');
+  if (cost.type === 'ticket') return pickLang('Ticket Exchange', 'チケット交換');
+  return pickLang('Unknown', '不明');
 }
 
 function renderItemCard(item) {
@@ -361,7 +362,7 @@ function renderItemCard(item) {
       ${badges.length ? `<div class="cost-item-badges">${badges.join('')}</div>` : ''}
       ${(() => {
         const noteObj = (showTicketToggle && item.acquireMode === 'revisit') ? item.revisitCost : item.cost;
-        const noteSource = noteObj && (en ? (noteObj.noteEn || noteObj.note) : noteObj.note);
+        const noteSource = noteObj && (pickLang((noteObj.noteEn || noteObj.note), noteObj.note));
         return noteSource ? `<div class="cost-item-note">※ ${escapeHtml(noteSource)}</div>` : '';
       })()}
       ${acquireToggleHtml}
@@ -522,9 +523,9 @@ function renderSummary(items) {
   lastOwnedCount = ownedCount;
   lastTotalItemCount = items.length;
   const en = CURRENT_LANG === 'en';
-  setText('#costSumCandle', `${candleSum.toLocaleString()}${en ? '' : '本'}`);
-  setText('#costSumStarCandle', `${starCandleSum.toLocaleString()}${en ? '' : '本'}`);
-  setText('#costSumHeart', `${heartSum.toLocaleString()}${en ? '' : '個'}`);
+  setText('#costSumCandle', `${candleSum.toLocaleString()}${pickLang('', '本')}`);
+  setText('#costSumStarCandle', `${starCandleSum.toLocaleString()}${pickLang('', '本')}`);
+  setText('#costSumHeart', `${heartSum.toLocaleString()}${pickLang('', '個')}`);
   setText('#costSumMoney', `¥${moneySum.toLocaleString()}`);
 
   const giftRow = hostEl.querySelector('#costSummaryGiftRow');
@@ -613,9 +614,9 @@ function renderRemainingSummary(items) {
   });
 
   const en = CURRENT_LANG === 'en';
-  setText('#costSumCandleRemain', `${candleSum.toLocaleString()}${en ? '' : '本'}`);
-  setText('#costSumStarCandleRemain', `${starCandleSum.toLocaleString()}${en ? '' : '本'}`);
-  setText('#costSumHeartRemain', `${heartSum.toLocaleString()}${en ? '' : '個'}`);
+  setText('#costSumCandleRemain', `${candleSum.toLocaleString()}${pickLang('', '本')}`);
+  setText('#costSumStarCandleRemain', `${starCandleSum.toLocaleString()}${pickLang('', '本')}`);
+  setText('#costSumHeartRemain', `${heartSum.toLocaleString()}${pickLang('', '個')}`);
   setText('#costSumMoneyRemain', `¥${moneySum.toLocaleString()}`);
   const hintEl = hostEl.querySelector('#costSummaryHintRemain');
   if (hintEl) {
@@ -1108,19 +1109,17 @@ function renderShell() {
   return `
     <div class="item-view">
       <div class="cost-wrap">
-        <a href="#/item" class="back-link">${en ? '&larr; Back to Category List' : '&larr; カテゴリ一覧へ戻る'}</a>
-        <h1 class="item-large-title">${en ? 'Item Costs' : 'アイテム別コスト'}</h1>
+        <a href="#/item" class="back-link">${pickLang('&larr; Back to Category List', '&larr; カテゴリ一覧へ戻る')}</a>
+        <h1 class="item-large-title">${pickLang('Item Costs', 'アイテム別コスト')}</h1>
 
         <div class="cost-notice-card">
-          ${en
-            ? `Costs are compiled from the <a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki (English)</a>'s "Source" and "Cost" tables for each item.<br>
+          ${pickLang(`Costs are compiled from the <a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki (English)</a>'s "Source" and "Cost" tables for each item.<br>
           There are four currencies: <b>Candles</b> (the basic currency for most items), <b>Season Candles</b> (a special currency used for Nesting Workshop furniture and some permanent items), <b>Hearts</b>, and <b>Real Money (JPY)</b>. Real-money amounts are converted to Japanese App Store price tiers (the wiki lists USD, so tier prices are converted to their real JPY equivalents). Some real-money items are priced as a bundle with another item (noted where applicable) &mdash; owning multiple items in the same bundle only adds that bundle's price once to the total.<br>
           Covers all 12 categories (Shoes, Necklace, Large Placeable Items, Outfit, Hairstyle, Face Accessory, Head Accessory, Hair Accessory, Props, Mask, Small Placeable Items, Cape) plus Music Sheets. Items are grouped by season/day rather than by category.<br>
-          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> The costs listed here are approximate estimates only.</b> Actual amounts may differ due to how wiki data, bundle pricing, and currency rounding are interpreted. No accuracy is guaranteed &mdash; please use this as a reference only.`
-            : `<a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki（英語版）</a>の「入手方法(Source)」「コスト(Cost)」の一覧表を基に、各アイテムの実際の入手コストをまとめています。<br>
+          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> The costs listed here are approximate estimates only.</b> Actual amounts may differ due to how wiki data, bundle pricing, and currency rounding are interpreted. No accuracy is guaranteed &mdash; please use this as a reference only.`, `<a href="https://sky-children-of-the-light.fandom.com/wiki/Shoes" target="_blank" rel="noopener noreferrer">Sky: Children of the Light Wiki（英語版）</a>の「入手方法(Source)」「コスト(Cost)」の一覧表を基に、各アイテムの実際の入手コストをまとめています。<br>
           通貨は<b>キャンドル</b>（通常アイテムの基本通貨）・<b>星のキャンドル</b>（巣づくり工房の家具や一部の恒常アイテムで使う特別な通貨）・<b>ハート</b>・<b>実額（円）</b>の4種類があります。実額は日本のAppストア価格帯を基にした円換算です（Wikiは米ドル表記のため、Tierごとの実際の円価格に置き換えています）。実額のアイテムは、他のアイテムとのセット価格になっている場合があります（その場合は注記しています）。セット内の複数アイテムを所持済みにしても、合計額にはセット価格が1回分のみ加算されます。<br>
           全12カテゴリ（シューズ・ネックレス・大きい設置アイテム・アウトフィット・ヘアスタイル・フェイスアクセサリー・ヘッドアクセサリー・ヘアアクセサリー・持ち物アイテム・マスク・小さい設置アイテム・ケープ）に加え、楽譜にも対応しています。カテゴリ分けはせず、季節・日々ごとにまとめて表示しています。<br>
-          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> ここに記載しているコストはあくまで目安・概算です。</b>Wikiの情報やセット価格の解釈、円換算の丸めなどにより、実際の金額と差が生じる場合があります。正確な金額の保証はできませんので、参考程度にご利用ください。`}
+          <b><svg class="inline-icon" width="14" height="14"><use href="#i-warning"/></svg> ここに記載しているコストはあくまで目安・概算です。</b>Wikiの情報やセット価格の解釈、円換算の丸めなどにより、実際の金額と差が生じる場合があります。正確な金額の保証はできませんので、参考程度にご利用ください。`)}
         </div>
 
         <div class="cost-summary-card">

@@ -18,7 +18,8 @@
    画像カードの色はハブのテーマ(ダーク)に左右されないようすべてリテラル値。
    ================================================================ */
 
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import {
   SHARE_THEMES, SITE_URL, COST_SHARE_HASHTAG, exportShareImage, injectShareSharedStyles, showShareToast,
 } from './share/share-data.js';
@@ -37,16 +38,14 @@ const svgSmall = path => `<svg width="18" height="18" viewBox="0 0 24 24" style=
 
 export const COST_ICONS = { coin: ICON_COIN, candle: ICON_CANDLE, star: ICON_STAR, heart: ICON_HEART, gift: ICON_GIFT };
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 
 function brandHtml() {
   return `<div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px">${ICON_COIN}</svg>${t('アイテム別コスト管理', 'Item Cost Tracker')}</div>`;
 }
 function dateHtml() {
   const d = new Date();
-  const txt = CURRENT_LANG === 'en'
-    ? `Created ${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
-    : `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日作成`;
+  const txt = pickLang(`Created ${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`, `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日作成`);
   return `<div class="ish-exp-date">${txt}</div>`;
 }
 function newCard(inner) {

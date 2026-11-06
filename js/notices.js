@@ -13,7 +13,8 @@
    既読はプロフィールごと（nsKey('noticesSeen_v1')＝お知らせのidの配列）。お知らせのidは
    「何の・いつの回か」まで含むので、次の来訪・翌年の記念日はまた未読として出る。
    ================================================================ */
-import { CURRENT_LANG } from './i18n.js';
+import { CURRENT_LANG, pickLang } from './i18n.js';
+import { zhTr } from './i18n-zh.js';
 import { nsKey, getWishIds, isItemOwned } from './state.js';
 import { cycleIndexAt, cycleBounds } from './pacific-time.js';
 import { CURRENT_SEASON, EVENT_SCHEDULE, NEXT_UPDATE, REVISIT_SPIRIT_SCHEDULES } from '../features/item/data/season-data.js';
@@ -21,7 +22,7 @@ import { loadFriendsDoc, upcomingAnniversaries } from '../features/friends/frien
 import { hasBingoData, loadBingo, weekKeyAt } from '../features/bingo/bingo-state.js';
 import { titleTotals, titlesSeenCount } from './titles.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 const DAY = 86400000;
 const SEEN_KEY = 'noticesSeen_v1';
 export const WAITLIST_KEY = 'revisitWaitlist_v1'; // 再訪精霊データベースの「待っている」精霊（英語名の配列）
@@ -105,7 +106,7 @@ export function collectNotices(nowDate = new Date()) {
     if (!w) return;
     if (!w.active && w.start - now > 7 * DAY) return;
     const knownSpirit = !w.unknownSpirit;
-    const name = knownSpirit ? (CURRENT_LANG === 'en' ? s.spiritEn : s.spiritJa) : null;
+    const name = knownSpirit ? (pickLang(s.spiritEn, s.spiritJa)) : null;
     const waiting = knownSpirit && s.spiritEn && waitlist.has(s.spiritEn);
     const wishItems = knownSpirit ? (s.items || []).filter(it => getWishIds(it.catKey).includes(String(it.id)) && !isItemOwned(it.catKey, it.id)) : [];
     const when = w.active ? t(`終了まで${daysLeftText(w.end - now)}（${fmtDate(w.end)}まで）`, `Ends in ${daysLeftText(w.end - now)} (until ${fmtDate(w.end)})`)

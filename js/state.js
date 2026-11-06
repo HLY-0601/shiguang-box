@@ -9,14 +9,14 @@
    既存ユーザーのデータ互換性が壊れる。値の意味を変える変更はしないこと。
    ================================================================ */
 
-import { CURRENT_LANG } from './i18n.js';
+import { CURRENT_LANG, pickLang } from './i18n.js';
 
 export const PROFILES_KEY = 'skyProfiles_v1';
 export const ACTIVE_PROFILE_KEY = 'skyActiveProfile_v1';
 export const DEFAULT_PROFILE_ID = 'default';
 
 export function pfDefaultName() {
-  return CURRENT_LANG === 'en' ? 'Main' : 'メイン';
+  return pickLang('Main', 'メイン');
 }
 
 export function pfDisplayName(p) {
@@ -139,6 +139,48 @@ export function renameProfile(id, name) {
   saveProfiles(list);
 }
 
+// 端末（ブラウザ）単位の設定・インフラ用キー。プロフィールデータではないため、
+// デフォルトプロフィール複製時に新プロフィール名前空間へコピーしない。
+const DEVICE_LEVEL_KEYS = new Set([
+  PROFILES_KEY,
+  ACTIVE_PROFILE_KEY,
+  'sky_app_lang',
+  'sky_app_theme',
+  'sky_shortcuts_enabled',
+  'sky_hub_start_route',
+  'sky_hub_side_panels',
+  'sky_hub_theme_v1',
+  'sky_hub_theme_css_v1',
+  'sky_hub_refreshed_at',
+  'sky_pf_show_titles',
+  'sky_side_tools',
+  'sky_side_dash',
+  'gameItems_viewMode',
+  'gameItems_gridCols',
+  'sky_dash_reminder_enabled',
+  'sky_dash_reminder_minutes',
+  'sky_dash_reminder_notified_v1',
+  'sky_dailyreset_notify_enabled',
+  'sky_shard_notify_enabled',
+  'sky_first_visit_hint_shown_v1',
+  'sky_share_calendar_collapsed',
+  'sky_recap_style',
+  'sky_current_time_mult',
+  'skyNomacanProTemplateSeeded_v1',
+  'sky_companion_oneyear_banner_dismissed_date',
+  'sky_coord_tab',
+  'sky_friends_tab',
+  'sky_area_detail_open',
+  'sky_area_today_filter',
+  'sky_area_tree_open_v1',
+  'sky_area_view_mode',
+  'sky_atlas_bg_opacity',
+  'sky_catalog_cost_display_enabled',
+  'sky_dc_bar_open',
+  'sky_dc_bingo_open',
+  'sky_tools_test_collapsed',
+]);
+
 // プロフィールを複製する（tai-card移植のために追加——item自身にはこの機能は無い。
 // 複製元プロフィール配下の全nsKey化キー（__p_<id>サフィックス、デフォルト
 // プロフィールなら接尾辞なし）を新しいプロフィールIDの下へコピーする）
@@ -148,7 +190,7 @@ export function duplicateProfile(id) {
   if (!src) return;
   const newId = 'p_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   const baseName = pfDisplayName(src);
-  const newName = CURRENT_LANG === 'en' ? `${baseName} Copy` : `${baseName}のコピー`;
+  const newName = pickLang(`${baseName} Copy`, `${baseName}のコピー`);
 
   const suffix = id === DEFAULT_PROFILE_ID ? null : `__p_${id}`;
   const keysToCopy = [];
@@ -158,9 +200,8 @@ export function duplicateProfile(id) {
       if (key.endsWith(suffix)) keysToCopy.push(key);
     } else if (!key.includes('__p_')) {
       // デフォルトプロフィールの複製時は、他プロフィール接尾辞を持たない
-      // 「無印」キーが対象。ただしskyProfiles_v1/skyActiveProfile_v1等の
-      // プロフィール機構自体のキーはコピー対象から除外する
-      if (key === PROFILES_KEY || key === ACTIVE_PROFILE_KEY) continue;
+      // 「無印」キーが対象。ただし端末単位の設定・プロフィール機構自体のキーは除外する
+      if (DEVICE_LEVEL_KEYS.has(key)) continue;
       keysToCopy.push(key);
     }
   }
@@ -169,6 +210,15 @@ export function duplicateProfile(id) {
     const value = localStorage.getItem(key);
     if (value !== null) localStorage.setItem(nsKeyFor(rawKey, newId), value);
   });
+
+  // 旧「精霊同行ツール」のレガシーキー sky_companion_v4_data__<id>（__p_なし）も
+  // サフィックス判定に掛からないため明示的にコピーする
+  if (suffix) {
+    const legacyValue = localStorage.getItem(`${CURRENCY_COMPANION_KEY}__${id}`);
+    if (legacyValue !== null) {
+      localStorage.setItem(`${CURRENCY_COMPANION_KEY}__${newId}`, legacyValue);
+    }
+  }
 
   list.push({ id: newId, name: newName });
   saveProfiles(list);

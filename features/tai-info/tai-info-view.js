@@ -32,12 +32,13 @@
       （CHANGELOG/TOOL_USAGE_SIGNS関連一式）を削除し、ラベルを
       「設定・クレジット」に追従させた。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { navigate } from '../../js/router.js';
 import { t } from './data/i18n-info.js';
 import { REFERENCE_SOURCES } from './data/references.js';
 
-function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function tt(ja, en) { return ; }
 
 const STYLE_LINK_ID = 'tai-info-view-styles';
 const ICON_SPRITE_ID = 'tai-info-icon-sprite';
@@ -302,7 +303,7 @@ const TOOL_GUIDE_ITEMS = [
 ];
 
 function renderLink(link) {
-  const label = escapeHtml(CURRENT_LANG === 'en' ? link.en : link.ja);
+  const label = escapeHtml(pickLang(link.en, link.ja));
   const badge = link.badgeTest ? `<span class="tool-badge-test">${escapeHtml(tt('test', 'test'))}</span> ` : '';
   if (link.tabSwitch) {
     return `${badge}<a href="javascript:void(0)" data-tab-switch="${link.tabSwitch}">${label}</a>`;
@@ -315,9 +316,9 @@ function renderLink(link) {
 
 function renderToolGuideList() {
   return TOOL_GUIDE_ITEMS.map(item => {
-    const text = escapeHtml(CURRENT_LANG === 'en' ? item.textEn : item.textJa);
+    const text = escapeHtml(pickLang(item.textEn, item.textJa));
     const linksHtml = item.links.map(renderLink).join('・');
-    const suffix = item.suffixJa ? escapeHtml(CURRENT_LANG === 'en' ? (item.suffixEn || '') : item.suffixJa) : '';
+    const suffix = item.suffixJa ? escapeHtml(pickLang((item.suffixEn || ''), item.suffixJa)) : '';
     return `<li><svg class="inline-icon" width="15" height="15"><use href="#${item.icon}"/></svg> <b>${text}</b> → ${linksHtml}${suffix}</li>`;
   }).join('');
 }
@@ -339,7 +340,7 @@ const COMPAT_TABLE_ROWS = [
 function renderCompatTableRows() {
   const okIcon = `<svg class="inline-icon ok" width="14" height="14"><use href="#i-check"/></svg>`;
   return COMPAT_TABLE_ROWS.map(row => {
-    const label = escapeHtml(CURRENT_LANG === 'en' ? row.en : row.ja);
+    const label = escapeHtml(pickLang(row.en, row.ja));
     const linkHtml = row.tabSwitch
       ? `<a href="javascript:void(0)" data-tab-switch="${row.tabSwitch}"><svg class="inline-icon" width="19" height="19"><use href="#${row.icon}"/></svg> ${label}</a>`
       : row.route
@@ -443,7 +444,7 @@ function renderRefQuickJump() {
   const el = els.refQuickJump;
   if (!el) return;
   el.innerHTML = REFERENCE_SOURCES.map(g => `
-    <button type="button" class="ref-jump-pill" data-jump="${g.id}">${escapeHtml(CURRENT_LANG === 'en' ? (g.groupEn || g.group) : g.group)}</button>`).join('');
+    <button type="button" class="ref-jump-pill" data-jump="${g.id}">${escapeHtml(pickLang((g.groupEn || g.group), g.group))}</button>`).join('');
   el.querySelectorAll('.ref-jump-pill').forEach(btn => {
     btn.addEventListener('click', () => scrollToCardAnchor('references', btn.dataset.jump));
   });
@@ -455,12 +456,12 @@ function renderReferences() {
   renderRefQuickJump();
   el.innerHTML = REFERENCE_SOURCES.map(g => `
   <div class="ref-group" id="references-${g.id}" tabindex="-1">
-    <div class="ref-group-label">${escapeHtml(CURRENT_LANG === 'en' ? (g.groupEn || g.group) : g.group)}</div>
+    <div class="ref-group-label">${escapeHtml(pickLang((g.groupEn || g.group), g.group))}</div>
     <ul class="ref-list">
       ${g.items.map(it => `
         <li class="ref-item">
           ${it.url ? `<a href="${it.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(it.title)}</a>` : `<span>${escapeHtml(it.title)}</span>`}
-          ${it.note ? `<span class="ref-note">${escapeHtml(CURRENT_LANG === 'en' ? (it.noteEn || it.note) : it.note)}</span>` : ''}
+          ${it.note ? `<span class="ref-note">${escapeHtml(pickLang((it.noteEn || it.note), it.note))}</span>` : ''}
         </li>`).join('')}
     </ul>
   </div>`).join('');

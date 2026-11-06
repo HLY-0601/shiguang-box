@@ -81,14 +81,15 @@
    形で移植した。
    ================================================================ */
 
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { pacificFakeToReal, cycleBounds, cycleIndexAt, ptOffsetChanges, ptParts, ptToReal } from '../../js/pacific-time.js';
 import {
   CURRENT_SEASON, EVENT_SCHEDULE, CANDLE_BONUS_SCHEDULE, NEXT_UPDATE, REVISIT_SPIRIT_SCHEDULES,
   seasonInProgress, scheduleWithUpcomingSeason,
 } from '../item/data/season-data.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 
 /* ================================================================
    🌐 このパネル固有の文言（wings/index.htmlのI18N辞書からdash*キーのみ移植）
@@ -115,7 +116,7 @@ const DASH_EVENT_NAME_EN = {
   'いたずらな日々': 'Days of Mischief',
 };
 function dashEventName(name) {
-  return CURRENT_LANG === 'en' ? (DASH_EVENT_NAME_EN[name] || name) : name;
+  return pickLang((DASH_EVENT_NAME_EN[name] || name), name);
 }
 
 function escapeHtml(s) {

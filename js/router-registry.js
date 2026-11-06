@@ -20,7 +20,7 @@
    ================================================================ */
 
 import { CATEGORY_REGISTRY } from '../features/item/data/categories.js';
-import { CURRENT_LANG } from './i18n.js';
+import { CURRENT_LANG, pickLang } from './i18n.js';
 
 export const DEFAULT_ROUTE = 'item';
 
@@ -89,11 +89,11 @@ const itemEntry = {
     Object.values(itemMods).forEach(mod => mod && mod.unmount && mod.unmount());
   },
   title(sub) {
-    if (!sub || sub.startsWith('coord=')) return CURRENT_LANG === 'en' ? 'Item Collection Tracker - tai-hub' : 'アイテム所持管理 - tai-hub';
-    if (sub === 'cost') return CURRENT_LANG === 'en' ? 'Cost Calculator - tai-hub' : 'コスト集計 - tai-hub';
-    if (sub === 'all') return CURRENT_LANG === 'en' ? 'All Items - tai-hub' : '全アイテム一覧 - tai-hub';
+    if (!sub || sub.startsWith('coord=')) return pickLang('Item Collection Tracker - tai-hub', 'アイテム所持管理 - tai-hub');
+    if (sub === 'cost') return pickLang('Cost Calculator - tai-hub', 'コスト集計 - tai-hub');
+    if (sub === 'all') return pickLang('All Items - tai-hub', '全アイテム一覧 - tai-hub');
     const cat = CATEGORY_REGISTRY.find(c => c.key === sub);
-    if (cat) return `${CURRENT_LANG === 'en' ? cat.nameEn : cat.name} - tai-hub`;
+    if (cat) return `${pickLang(cat.nameEn, cat.name)} - tai-hub`;
     return 'tai-hub';
   },
 };
@@ -119,7 +119,7 @@ function lazyToolEntry(importFn, nameJa, nameEn) {
       token++; // 進行中のmount()（動的import待ち）を無効化
       if (mod) mod.unmount();
     },
-    title() { return `${CURRENT_LANG === 'en' ? nameEn : nameJa} - tai-hub`; },
+    title() { return `${pickLang(nameEn, nameJa)} - tai-hub`; },
   };
 }
 

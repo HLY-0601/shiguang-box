@@ -48,7 +48,7 @@
    文言をそのまま移植している。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, escapeHtml, pickLang } from '../../js/i18n.js';
 import { getItemAcquireLog, removeItemAcquireRecord } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { SHARE_THEMES, SITE_URL, RECAP_SHARE_HASHTAG, itemIconHtml, exportShareImage, showShareToast, injectShareSharedStyles } from './share/share-data.js';
@@ -148,21 +148,19 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card alm-card">
-      <button type="button" class="modal-close-btn" id="almCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="almCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Acquisition Log' : 'アイテム獲得ログ'}</div>
+      <div class="modal-title">${pickLang('Acquisition Log', 'アイテム獲得ログ')}</div>
 
       <div class="alm-hint">
-        ${en
-          ? 'Records the date/time you checked off each item as owned. Unchecking an item removes its record.'
-          : '所持チェックを入れた日時を自動で記録します。チェックを外すと記録も消えます。'}
+        ${pickLang('Records the date/time you checked off each item as owned. Unchecking an item removes its record.', '所持チェックを入れた日時を自動で記録します。チェックを外すと記録も消えます。')}
       </div>
 
       <div id="almBody"><!-- JS --></div>
 
       <div class="alm-done-row">
-        <button type="button" class="alm-done-btn" id="almDoneBtn">${en ? 'Done' : '閉じる'}</button>
+        <button type="button" class="alm-done-btn" id="almDoneBtn">${pickLang('Done', '閉じる')}</button>
       </div>
     </div>`;
 }
@@ -199,15 +197,13 @@ function wireControls() {
 
 function showLoading() {
   const bodyEl = overlayEl?.querySelector('#almBody');
-  if (bodyEl) bodyEl.innerHTML = `<div class="alm-empty">${CURRENT_LANG === 'en' ? 'Loading…' : '読み込み中…'}</div>`;
+  if (bodyEl) bodyEl.innerHTML = `<div class="alm-empty">${pickLang('Loading…', '読み込み中…')}</div>`;
 }
 
 function showLoadError() {
   const bodyEl = overlayEl?.querySelector('#almBody');
   if (bodyEl) {
-    bodyEl.innerHTML = `<div class="alm-empty">${CURRENT_LANG === 'en'
-      ? 'Failed to load item data. Please try again.'
-      : 'アイテムデータの読み込みに失敗しました。もう一度お試しください。'}</div>`;
+    bodyEl.innerHTML = `<div class="alm-empty">${pickLang('Failed to load item data. Please try again.', 'アイテムデータの読み込みに失敗しました。もう一度お試しください。')}</div>`;
   }
 }
 
@@ -218,9 +214,7 @@ function fmtDate(iso) {
   const en = CURRENT_LANG === 'en';
   const d = new Date(iso);
   if (isNaN(d.getTime())) return '';
-  return en
-    ? d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-    : `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  return pickLang(d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }), `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`);
 }
 
 /* ================================================================
@@ -234,9 +228,7 @@ function render() {
 
   const entries = getEntries();
   if (entries.length === 0) {
-    bodyEl.innerHTML = `<div class="alm-empty">${en
-      ? 'No records yet.<br>Checking off an item as owned on a category page will add it here.'
-      : 'まだ記録がありません。<br>各カテゴリページで所持チェックを入れると、ここに記録されます。'}</div>`;
+    bodyEl.innerHTML = `<div class="alm-empty">${pickLang('No records yet.<br>Checking off an item as owned on a category page will add it here.', 'まだ記録がありません。<br>各カテゴリページで所持チェックを入れると、ここに記録されます。')}</div>`;
     return;
   }
 
@@ -255,7 +247,7 @@ function render() {
           <span class="alm-meta-sep">・</span>${escapeHtml(fmtDate(e.at))}
         </div>
       </div>
-      <button type="button" class="alm-remove-btn" data-act="remove" data-id="${e.itemId}" aria-label="${en ? 'Delete record' : '記録を削除'}">
+      <button type="button" class="alm-remove-btn" data-act="remove" data-id="${e.itemId}" aria-label="${pickLang('Delete record', '記録を削除')}">
         <svg class="inline-icon" width="15" height="15"><use href="#i-close"/></svg>
       </button>
     </div>`).join('');
@@ -273,13 +265,13 @@ function render() {
   bodyEl.innerHTML = `
     <div class="alm-list">${listHtml}</div>
     <div class="alm-total-box">
-      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-folder"/></svg> ${en ? 'Total recorded' : '記録件数'}</span><b>${entries.length}${en ? '' : ' 件'}</b></div>
-      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-calendar"/></svg> ${en ? 'Acquired this month' : '今月の入手数'}</span><b>${monthCount}${en ? '' : ' 件'}</b></div>
-      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-calendar"/></svg> ${en ? 'Acquired this year' : '今年の入手数'}</span><b>${yearCount}${en ? '' : ' 件'}</b></div>
+      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-folder"/></svg> ${pickLang('Total recorded', '記録件数')}</span><b>${entries.length}${pickLang('', ' 件')}</b></div>
+      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-calendar"/></svg> ${pickLang('Acquired this month', '今月の入手数')}</span><b>${monthCount}${pickLang('', ' 件')}</b></div>
+      <div class="alm-total-row"><span><svg class="inline-icon" width="16" height="16"><use href="#i-calendar"/></svg> ${pickLang('Acquired this year', '今年の入手数')}</span><b>${yearCount}${pickLang('', ' 件')}</b></div>
     </div>
     <div class="alm-share-row">
-      <button type="button" class="alm-share-btn" data-act="share-recap" data-scope="month">${en ? 'Share This Month’s Recap' : '今月の振り返りを画像でシェア'}</button>
-      <button type="button" class="alm-share-btn" data-act="share-recap" data-scope="year">${en ? 'Share This Year’s Recap' : '今年の振り返りを画像でシェア'}</button>
+      <button type="button" class="alm-share-btn" data-act="share-recap" data-scope="month">${pickLang('Share This Month’s Recap', '今月の振り返りを画像でシェア')}</button>
+      <button type="button" class="alm-share-btn" data-act="share-recap" data-scope="year">${pickLang('Share This Year’s Recap', '今年の振り返りを画像でシェア')}</button>
     </div>`;
 }
 
@@ -305,8 +297,8 @@ function getRecapStats(scope) {
 function buildRecapCardEl(scope) {
   const { count, recent, year, month } = getRecapStats(scope);
   const en = CURRENT_LANG === 'en';
-  const periodTxt = scope === 'year' ? (en ? `${year}` : `${year}年`) : (en ? `${RECAP_MONTH_EN[month]} ${year}` : `${year}年${month + 1}月`);
-  const labelTxt = scope === 'year' ? (en ? 'Items Acquired This Year' : '今年獲得したアイテム数') : (en ? 'Items Acquired This Month' : '今月獲得したアイテム数');
+  const periodTxt = scope === 'year' ? (pickLang(`${year}`, `${year}年`)) : (pickLang(`${RECAP_MONTH_EN[month]} ${year}`, `${year}年${month + 1}月`));
+  const labelTxt = scope === 'year' ? (pickLang('Items Acquired This Year', '今年獲得したアイテム数')) : (pickLang('Items Acquired This Month', '今月獲得したアイテム数'));
   const rows = recent.map(e => `
     <div class="ish-exp-row">
       <div class="ish-exp-icon">${itemIconHtml(e.cat, e.item)}</div>
@@ -316,14 +308,12 @@ function buildRecapCardEl(scope) {
       </div>
     </div>`).join('');
   const today = new Date();
-  const dateTxt = en
-    ? `Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
-    : `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`;
+  const dateTxt = pickLang(`Created ${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`, `${today.getFullYear()}年${today.getMonth() + 1}月${today.getDate()}日作成`);
   const card = document.createElement('div');
   card.className = 'ish-export-card';
   card.style.background = SHARE_THEMES.orange.grad;
   card.innerHTML = `
-    <div class="ish-exp-brand">${en ? 'Sky Item Collection Tracker' : 'Sky アイテム所持率管理'}</div>
+    <div class="ish-exp-brand">${pickLang('Sky Item Collection Tracker', 'Sky アイテム所持率管理')}</div>
     <div class="ish-exp-hero">
       <div class="ish-exp-hero-pct">${count}</div>
       <div class="ish-exp-hero-label">${labelTxt}</div>
@@ -331,7 +321,7 @@ function buildRecapCardEl(scope) {
     </div>
     ${rows
       ? `<div class="ish-exp-body">${rows}</div>`
-      : `<div class="ish-exp-comment">${en ? 'No items recorded in this period yet' : 'この期間の記録はまだありません'}</div>`}
+      : `<div class="ish-exp-comment">${pickLang('No items recorded in this period yet', 'この期間の記録はまだありません')}</div>`}
     <div class="ish-exp-date">${dateTxt}</div>`;
   document.body.appendChild(card);
   return card;
@@ -340,24 +330,22 @@ function buildRecapCardEl(scope) {
 function buildRecapTweetText(scope) {
   const { count, year, month } = getRecapStats(scope);
   const en = CURRENT_LANG === 'en';
-  const periodTxt = scope === 'year' ? (en ? `in ${year}` : `${year}年は`) : (en ? `in ${RECAP_MONTH_EN[month]} ${year}` : `${year}年${month + 1}月は`);
-  return en
-    ? `I acquired ${count} new item(s) ${periodTxt}!\nHow many did you get?\n\n${SITE_URL}\n${RECAP_SHARE_HASHTAG}`
-    : `${periodTxt}新しく${count}件のアイテムを入手しました！\nあなたは何個入手した？\n\n${SITE_URL}\n${RECAP_SHARE_HASHTAG}`;
+  const periodTxt = scope === 'year' ? (pickLang(`in ${year}`, `${year}年は`)) : (pickLang(`in ${RECAP_MONTH_EN[month]} ${year}`, `${year}年${month + 1}月は`));
+  return pickLang(`I acquired ${count} new item(s) ${periodTxt}!\nHow many did you get?\n\n${SITE_URL}\n${RECAP_SHARE_HASHTAG}`, `${periodTxt}新しく${count}件のアイテムを入手しました！\nあなたは何個入手した？\n\n${SITE_URL}\n${RECAP_SHARE_HASHTAG}`);
 }
 
 function shareRecap(scope) {
   const { count } = getRecapStats(scope);
   const en = CURRENT_LANG === 'en';
   if (count === 0) {
-    showShareToast(en ? 'No items recorded in this period yet' : 'この期間の記録がまだありません');
+    showShareToast(pickLang('No items recorded in this period yet', 'この期間の記録がまだありません'));
     return;
   }
   injectShareSharedStyles();
-  const filenameBase = scope === 'year' ? (en ? 'Yearly Recap' : '年間振り返り') : (en ? 'Monthly Recap' : '月間振り返り');
+  const filenameBase = scope === 'year' ? (pickLang('Yearly Recap', '年間振り返り')) : (pickLang('Monthly Recap', '月間振り返り'));
   return exportShareImage(() => buildRecapCardEl(scope), filenameBase, {
     shareText: buildRecapTweetText(scope),
-    successToast: en ? 'Shared!' : '共有しました！',
+    successToast: pickLang('Shared!', '共有しました！'),
   });
 }
 

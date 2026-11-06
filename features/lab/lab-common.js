@@ -4,9 +4,10 @@
    入口はデイリーチェックシート単体のページ（#/daily-check）の「試作中の機能」だけ。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 
-export const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+export const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 
 export function readJson(key, fb) { try { const v = JSON.parse(localStorage.getItem(nsKey(key))); return v == null ? fb : v; } catch (e) { return fb; } }
 export function writeJson(key, v) { try { localStorage.setItem(nsKey(key), JSON.stringify(v)); return true; } catch (e) { return false; } }

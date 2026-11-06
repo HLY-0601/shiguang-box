@@ -21,13 +21,14 @@
    wings-state.js 側に既に移植済み（このファイルはそこに委譲するだけ）。
    ================================================================ */
 
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import {
   getWingStats, SHARE_THEMES, loadShareCustomize, saveShareCustomize,
 } from './wings-state.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 
 const SITE_URL = toolShareUrl('wings');
 const SHARE_HASHTAG = '#Sky羽トラッカー';
@@ -62,7 +63,7 @@ function buildExportCardEl(opts = {}) {
   card.innerHTML = `
     <div class="wg-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="vertical-align:-2px;margin-right:3px;" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(12 12) scale(1.281) translate(-10.5 -12.83)"><path d="M4 19c2-6 6-11 13-13-1 6-2 9-6 12-3 2-5 2-7 1Z"/><path d="M7 17c3-2 6-5 8-9"/></g></svg> ${t('羽トラッカー', 'Wing Tracker')}</div>
     <div class="wg-exp-hero">
-      <div class="wg-exp-hero-pct">${totalAll.toLocaleString()}${CURRENT_LANG === 'en' ? '' : '<span class="wg-num-unit">枚</span>'}</div>
+      <div class="wg-exp-hero-pct">${totalAll.toLocaleString()}${pickLang('', '<span class="wg-num-unit">枚</span>')}</div>
       <div class="wg-exp-hero-label">${t('光の翼 合計', 'Total Winged Light')}</div>
       <div class="wg-exp-hero-nums">${t(
         `季節精霊 ${seasonFeathers}/${seasonSpiritsTotal} ・ 恒常精霊 ${permFeathers}/${permTotal}`,

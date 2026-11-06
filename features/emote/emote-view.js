@@ -32,7 +32,8 @@
    ================================================================ */
 
 import { titlesSlotHtml, refreshTitleLinks } from '../../js/titles.js';
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { EMOTES } from './data/emotes.js';
 import { TITLES } from './data/titles.js';
 import {
@@ -45,10 +46,10 @@ import {
 } from './emote-state.js';
 import * as Share from './emote-share.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 function tpl(str, vars) { return str.replace(/\{(\w+)\}/g, (_, k) => (vars && k in vars) ? vars[k] : ''); }
 // TITLES要素（{name,nameEn}）から現在言語の表示名を返す（元実装のL({ja,en})相当）
-function L(obj) { return CURRENT_LANG === 'en' ? (obj.nameEn || obj.name) : obj.name; }
+function L(obj) { return pickLang((obj.nameEn || obj.name), obj.name); }
 
 const STYLE_ID = 'emote-view-styles';
 let containerEl = null;
@@ -74,10 +75,10 @@ const TILE_CHECK_ICON = '<svg width="11" height="11" viewBox="0 0 24 24" fill="n
 /* ================================================================
    表示アクセサ（LANGに応じてどちらの表記を主表示にするか切り替える）
    ================================================================ */
-function emoteName(e) { return CURRENT_LANG === 'en' ? e.nameEn : e.name; }
-function emoteNameSecondary(e) { return CURRENT_LANG === 'en' ? e.name : e.nameEn; }
-function locationDisplay(e) { return CURRENT_LANG === 'en' ? (e.locationEn || e.location) : e.location; }
-function spiritDisplay(e) { return CURRENT_LANG === 'en' ? (e.spiritEn || e.spirit) : e.spirit; }
+function emoteName(e) { return pickLang(e.nameEn, e.name); }
+function emoteNameSecondary(e) { return pickLang(e.name, e.nameEn); }
+function locationDisplay(e) { return pickLang((e.locationEn || e.location), e.location); }
+function spiritDisplay(e) { return pickLang((e.spiritEn || e.spirit), e.spirit); }
 
 // Sky Wiki検索リンク：精霊が判明していればその居場所を、案内人（AURORA等）が
 // 付与するものは案内人名を、不明ならエモート名自体で検索する
@@ -98,9 +99,7 @@ function emoteSearchUrl(e) {
 function fmtAcquireLogDate(iso) {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return '';
-  return CURRENT_LANG === 'en'
-    ? d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-    : `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  return pickLang(d.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }), `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`);
 }
 
 /* ── 文言ヘルパー（1回しか使わないものはテンプレート内に直書き） ── */
@@ -173,7 +172,7 @@ function buildShell() {
   return `
     <div class="emote-view">
       <div class="em-wrap">
-        <header class="tool-nav-head"><h1><svg class="inline-icon" width="19" height="19"><use href="#i-masks"/></svg> ${CURRENT_LANG === 'en' ? 'Emote Collection Tracker' : 'エモート所持率管理'}</h1></header>
+        <header class="tool-nav-head"><h1><svg class="inline-icon" width="19" height="19"><use href="#i-masks"/></svg> ${pickLang('Emote Collection Tracker', 'エモート所持率管理')}</h1></header>
         <div id="emOneYearAgoBannerSlot"></div>
 
         <div class="em-header-card">
@@ -575,7 +574,7 @@ function renderTitlesPanel(stats) {
   if (newly.length === 1) {
     showEmToast(tpl(t('称号「{name}」を獲得！', 'Title unlocked: {name}!'), { name: L(newly[0]) }));
   } else if (newly.length > 1) {
-    const names = newly.map(L).join(CURRENT_LANG === 'en' ? ', ' : '、');
+    const names = newly.map(L).join(pickLang(', ', '、'));
     showEmToast(tpl(t('称号を{n}個獲得！ {names}', '{n} titles unlocked! {names}'), { n: newly.length, names }));
   }
   // 称号の一覧は称号一覧（#/titles）へ移した。ここでは獲得数の案内だけを最新にする

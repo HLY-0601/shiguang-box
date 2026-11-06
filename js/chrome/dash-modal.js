@@ -16,9 +16,10 @@
    ことで、どのツールからでも同じフル機能ダッシュボードを開けるようにする。
    ================================================================ */
 import { CURRENT_LANG } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import * as eventDashboard from '../../features/shared/event-dashboard.js';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 export function open() {
   document.getElementById('dashModalOverlay')?.remove();

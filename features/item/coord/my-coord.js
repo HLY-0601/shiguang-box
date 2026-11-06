@@ -31,7 +31,7 @@
    ボタンから直接ファイル選択→位置調整→保存まで完結させている。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, escapeHtml, pickLang } from '../../../js/i18n.js';
 import {
   GRID_CATEGORIES, EXCLUSIVE_KEYS,
   loadAllItemsOnce, getAllItemsCache, getOwnedItemsForCat,
@@ -68,9 +68,7 @@ function renderList() {
   const sets = getSavedCoords();
 
   if (sets.length === 0) {
-    el.innerHTML = `<div class="cd-empty-msg">${en
-      ? 'No saved coords yet.<br>Save one from Random Coord, or<br>create a new one.'
-      : '保存されたコーデはありません。<br>ランダムコーデから保存するか、<br>新規作成してください。'}</div>`;
+    el.innerHTML = `<div class="cd-empty-msg">${pickLang('No saved coords yet.<br>Save one from Random Coord, or<br>create a new one.', '保存されたコーデはありません。<br>ランダムコーデから保存するか、<br>新規作成してください。')}</div>`;
     return;
   }
 
@@ -89,14 +87,14 @@ function renderList() {
         <div class="cd-card-header">
           <div class="cd-card-title">${escapeHtml(set.name)}</div>
           <div class="cd-card-actions">
-            <button type="button" class="cd-icon-btn" data-act="share-x" title="${en ? 'Share Image on X' : 'Xで画像を共有'}"><svg class="inline-icon" width="15" height="15"><use href="#i-upload"/></svg></button>
-            <button type="button" class="cd-icon-btn" data-act="share-link" title="${en ? 'Share as Link' : 'リンクで共有'}"><svg class="inline-icon" width="15" height="15"><use href="#i-link"/></svg></button>
-            ${set.photoDataUrl ? `<img class="cd-photo-thumb" src="${set.photoDataUrl}" alt="" data-act="pick-photo" title="${en ? 'Change Photo' : '写真を変更'}">` : ''}
-            <button type="button" class="cd-icon-btn" data-act="pick-photo" title="${en ? 'Attach a Photo' : '写真を添付'}">
+            <button type="button" class="cd-icon-btn" data-act="share-x" title="${pickLang('Share Image on X', 'Xで画像を共有')}"><svg class="inline-icon" width="15" height="15"><use href="#i-upload"/></svg></button>
+            <button type="button" class="cd-icon-btn" data-act="share-link" title="${pickLang('Share as Link', 'リンクで共有')}"><svg class="inline-icon" width="15" height="15"><use href="#i-link"/></svg></button>
+            ${set.photoDataUrl ? `<img class="cd-photo-thumb" src="${set.photoDataUrl}" alt="" data-act="pick-photo" title="${pickLang('Change Photo', '写真を変更')}">` : ''}
+            <button type="button" class="cd-icon-btn" data-act="pick-photo" title="${pickLang('Attach a Photo', '写真を添付')}">
               <svg class="inline-icon" width="16" height="16" viewBox="0 0 24 24"><path d="M4.5 4.5h15v15h-15Z"/><path d="M4.5 15.5l4.2-4.5a1 1 0 0 1 1.5 0l2.3 2.5 2.5-3a1 1 0 0 1 1.5 0l3 4.5"/><path d="M9 9.5a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4Z"/></svg>
             </button>
-            ${set.photoDataUrl ? `<button type="button" class="cd-icon-btn danger" data-act="clear-photo" title="${en ? 'Remove Photo' : '写真を削除'}"><svg class="inline-icon" width="15" height="15"><use href="#i-close"/></svg></button>` : ''}
-            <button type="button" class="cd-icon-btn danger" data-act="delete" title="${en ? 'Delete' : '削除'}"><svg class="inline-icon" width="15" height="15"><use href="#i-trash"/></svg></button>
+            ${set.photoDataUrl ? `<button type="button" class="cd-icon-btn danger" data-act="clear-photo" title="${pickLang('Remove Photo', '写真を削除')}"><svg class="inline-icon" width="15" height="15"><use href="#i-close"/></svg></button>` : ''}
+            <button type="button" class="cd-icon-btn danger" data-act="delete" title="${pickLang('Delete', '削除')}"><svg class="inline-icon" width="15" height="15"><use href="#i-trash"/></svg></button>
           </div>
         </div>
         <div class="cd-item-rows">${rows}</div>
@@ -114,7 +112,7 @@ function handleListClick(e) {
 
   if (act === 'delete') {
     const en = CURRENT_LANG === 'en';
-    if (!confirm(en ? 'Delete this coord?' : 'このコーデを削除しますか？')) return;
+    if (!confirm(pickLang('Delete this coord?', 'このコーデを削除しますか？'))) return;
     deleteSavedCoord(id);
     renderList();
   } else if (act === 'share-x') {
@@ -146,8 +144,8 @@ async function handlePhotoFileChange(e) {
   } catch (err) {
     console.error('[my-coord] failed to attach photo', err);
     const msg = (err && err.name === 'QuotaExceededError')
-      ? (en ? 'Not enough storage space to save this photo' : '写真を保存する容量が足りません')
-      : (en ? 'Failed to attach the photo' : '写真の添付に失敗しました');
+      ? (pickLang('Not enough storage space to save this photo', '写真を保存する容量が足りません'))
+      : (pickLang('Failed to attach the photo', '写真の添付に失敗しました'));
     showCoordToast(msg);
   }
 }
@@ -164,12 +162,12 @@ async function showCreateForm() {
   if (nameInput) nameInput.value = '';
 
   if (!getAllItemsCache()) {
-    overlayEl.querySelector('#mcCatSelects').innerHTML = `<div class="cd-empty-msg">${CURRENT_LANG === 'en' ? 'Loading…' : '読み込み中…'}</div>`;
+    overlayEl.querySelector('#mcCatSelects').innerHTML = `<div class="cd-empty-msg">${pickLang('Loading…', '読み込み中…')}</div>`;
     try {
       await loadAllItemsOnce();
     } catch (err) {
       console.error('[my-coord] failed to load item data', err);
-      overlayEl.querySelector('#mcCatSelects').innerHTML = `<div class="cd-empty-msg">${CURRENT_LANG === 'en' ? 'Failed to load item data.' : 'アイテムデータの読み込みに失敗しました。'}</div>`;
+      overlayEl.querySelector('#mcCatSelects').innerHTML = `<div class="cd-empty-msg">${pickLang('Failed to load item data.', 'アイテムデータの読み込みに失敗しました。')}</div>`;
       return;
     }
     if (!overlayEl || overlayEl.querySelector('#mcCreateView').style.display === 'none') return;
@@ -185,19 +183,19 @@ function buildCreateForm() {
   el.innerHTML = GRID_CATEGORIES.map(cat => {
     const owned = getOwnedItemsForCat(cat.key);
     const prefix = cat.key === EXCLUSIVE_KEYS[0]
-      ? `<div class="cd-exclusive-hint"><svg class="inline-icon" width="16" height="16"><use href="#i-warning"/></svg> ${en ? 'Only one of the following 3 categories can be selected' : '以下3カテゴリはどれか1つのみ選択できます'}</div>`
+      ? `<div class="cd-exclusive-hint"><svg class="inline-icon" width="16" height="16"><use href="#i-warning"/></svg> ${pickLang('Only one of the following 3 categories can be selected', '以下3カテゴリはどれか1つのみ選択できます')}</div>`
       : '';
 
     if (owned.length === 0) {
       return `${prefix}<div class="cd-pick-row">
           <div class="cd-pick-label">${catIconHtml(cat)} ${escapeHtml(trCat(cat.name))}</div>
-          <div class="cd-pick-empty">${en ? '(No owned items)' : '（所持アイテムなし）'}</div>
+          <div class="cd-pick-empty">${pickLang('(No owned items)', '（所持アイテムなし）')}</div>
         </div>`;
     }
 
     const selectedId = coordFormSelection[cat.key];
     const noneBtn = `<div class="cd-pick-item cd-pick-none ${!selectedId ? 'selected' : ''}" data-cat="${cat.key}" data-id=""
-        title="${en ? 'None' : '選択しない'}"><svg class="inline-icon" width="19" height="19"><use href="#i-close"/></svg></div>`;
+        title="${pickLang('None', '選択しない')}"><svg class="inline-icon" width="19" height="19"><use href="#i-close"/></svg></div>`;
     const itemBtns = owned.map(i => `<div class="cd-pick-item ${selectedId === i.id ? 'selected' : ''}" data-cat="${cat.key}" data-id="${escapeHtml(String(i.id))}"
         title="${escapeHtml(trItem(i))}">${itemIconHtml(cat, i)}</div>`).join('');
 
@@ -228,7 +226,7 @@ function saveCreatedCoord() {
   const en = CURRENT_LANG === 'en';
   const nameInput = overlayEl.querySelector('#mcNewName');
   const name = (nameInput?.value || '').trim();
-  if (!name) { showCoordToast(en ? 'Please enter a coord name' : 'コーデ名を入力してください'); nameInput?.focus(); return; }
+  if (!name) { showCoordToast(pickLang('Please enter a coord name', 'コーデ名を入力してください')); nameInput?.focus(); return; }
 
   const items = {};
   GRID_CATEGORIES.forEach(cat => {
@@ -239,11 +237,11 @@ function saveCreatedCoord() {
     if (item) items[cat.key] = item;
   });
 
-  if (Object.keys(items).length === 0) { showCoordToast(en ? 'Please select at least one item' : '最低1つのアイテムを選択してください'); return; }
+  if (Object.keys(items).length === 0) { showCoordToast(pickLang('Please select at least one item', '最低1つのアイテムを選択してください')); return; }
 
   addSavedCoord(name, items);
   coordFormSelection = {};
-  showCoordToast(en ? `Saved "${name}"!` : `「${name}」を保存しました！`);
+  showCoordToast(pickLang(`Saved "${name}"!`, `「${name}」を保存しました！`));
   showList();
 }
 
@@ -254,37 +252,37 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="mcCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="mcCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
 
       <div id="mcListView">
-        <div class="modal-title">${en ? 'My Coord' : 'マイコーデ'}</div>
+        <div class="modal-title">${pickLang('My Coord', 'マイコーデ')}</div>
         <div id="mcList"></div>
         <button type="button" class="cd-action-btn primary full" id="mcCreateBtn" style="margin-top:12px;">
           <svg class="inline-icon" width="14" height="14" viewBox="0 0 24 24" style="vertical-align:-2px;"><path d="M12 5v14M5 12h14"/></svg>
-          ${en ? 'Create New Coord' : '新しいコーデを作成'}
+          ${pickLang('Create New Coord', '新しいコーデを作成')}
         </button>
-        <div class="cs-hint" style="margin-top:18px;">${en ? 'Image style when sharing (applies to Random Coord too)' : '共有する画像のスタイル（ランダムコーデにも共通で適用されます）'}</div>
+        <div class="cs-hint" style="margin-top:18px;">${pickLang('Image style when sharing (applies to Random Coord too)', '共有する画像のスタイル（ランダムコーデにも共通で適用されます）')}</div>
         ${coordShareControlsHtml()}
       </div>
 
       <div id="mcCreateView" style="display:none;">
         <button type="button" class="cd-modal-back" id="mcBackBtn">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></svg>
-          ${en ? 'Back' : '戻る'}
+          ${pickLang('Back', '戻る')}
         </button>
-        <div class="modal-title" style="font-size:15px; margin-top:6px;">${en ? 'Create New Coord' : '新規コーデ作成'}</div>
+        <div class="modal-title" style="font-size:15px; margin-top:6px;">${pickLang('Create New Coord', '新規コーデ作成')}</div>
 
         <div class="cd-form-field">
-          <label class="cd-form-label">${en ? 'Coord Name' : 'コーデ名'}</label>
-          <input type="text" class="cd-form-input" id="mcNewName" placeholder="${en ? 'e.g. Casual, Favorites...' : '例: 普段着、お気に入り...'}">
+          <label class="cd-form-label">${pickLang('Coord Name', 'コーデ名')}</label>
+          <input type="text" class="cd-form-input" id="mcNewName" placeholder="${pickLang('e.g. Casual, Favorites...', '例: 普段着、お気に入り...')}">
         </div>
 
-        <label class="cd-form-label">${en ? 'Select Items (per category)' : 'アイテムを選択（カテゴリごと）'}</label>
+        <label class="cd-form-label">${pickLang('Select Items (per category)', 'アイテムを選択（カテゴリごと）')}</label>
         <div id="mcCatSelects"></div>
 
-        <button type="button" class="cd-action-btn primary full" id="mcSaveNewBtn" style="margin-top:12px;">${en ? 'Save This Coord' : 'このコーデを保存'}</button>
+        <button type="button" class="cd-action-btn primary full" id="mcSaveNewBtn" style="margin-top:12px;">${pickLang('Save This Coord', 'このコーデを保存')}</button>
       </div>
 
       <input type="file" accept="image/*" id="mcPhotoFileInput" style="display:none;">

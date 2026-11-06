@@ -26,6 +26,7 @@
    フォールバック順に文字列を取り出し、{varName}をvars[varName]で置換する）。
    ================================================================ */
 import { CURRENT_LANG } from '../../../js/i18n.js';
+import { zhTr } from '../../../js/i18n-zh.js';
 
 const I18N = {
   ja: {
@@ -471,7 +472,7 @@ const I18N = {
 
 export function t(key, vars) {
   const dict = I18N[CURRENT_LANG] || I18N.ja;
-  let str = dict[key] !== undefined ? dict[key] : (I18N.ja[key] !== undefined ? I18N.ja[key] : key);
+  let str = dict[key] !== undefined ? dict[key] : (I18N.ja[key] !== undefined ? zhTr(I18N.ja[key]) : key);
   if (vars) {
     Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
   }

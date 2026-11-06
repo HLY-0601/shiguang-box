@@ -10,7 +10,8 @@
    - 今日・明日のフレンドの記念日
    - 1日1回のおみくじ（今日のラッキーエリア・エモート・色・ひとこと）
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { getActiveProfileId } from '../../js/state.js';
 import { navigate } from '../../js/router.js';
 import { ptParts } from '../../js/pacific-time.js';
@@ -19,8 +20,8 @@ import { loadBingo, weekKeyAt, countLines, FREE } from '../bingo/bingo-state.js'
 import { loadFriendsDoc, upcomingAnniversaries } from '../friends/friends-state.js';
 import { loadOmikuji, drawOmikuji, gameDayKey, mergeTodoIntoDailyCheck, FORTUNES, LUCKY_REALMS, LUCKY_COLORS, MESSAGES } from './today-state.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
-const L = o => (CURRENT_LANG === 'en' ? o.en : o.ja);
+const t = (ja, en) => ();
+const L = o => (pickLang(o.en, o.ja));
 
 let containerEl = null;
 let brief = null;
@@ -164,7 +165,7 @@ function omikujiHtml() {
       <p class="td-omi-msg">${escapeHtml(L(MESSAGES[r.msg]))}</p>
       <dl class="td-omi-list">
         <div><dt>${t('ラッキーエリア', 'Lucky area')}</dt><dd>${escapeHtml(L(LUCKY_REALMS[r.realm]))}</dd></div>
-        ${emote ? `<div><dt>${t('ラッキーエモート', 'Lucky emote')}</dt><dd>${escapeHtml(CURRENT_LANG === 'en' ? emote.nameEn : emote.name)}</dd></div>` : ''}
+        ${emote ? `<div><dt>${t('ラッキーエモート', 'Lucky emote')}</dt><dd>${escapeHtml(pickLang(emote.nameEn, emote.name))}</dd></div>` : ''}
         <div><dt>${t('ラッキーカラー', 'Lucky color')}</dt><dd><span class="td-omi-swatch" style="background:${color.hex}"></span>${escapeHtml(L(color))}</dd></div>
       </dl>
     </div>

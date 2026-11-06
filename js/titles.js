@@ -8,11 +8,12 @@
    - お知らせ（js/notices.js）は、前に称号一覧を開いた時より獲得数が増えていたら知らせる（titlesSeen_v1）
    称号を獲得した時のトーストは、今まで通り各ツールが出す。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from './i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from './i18n.js';
+import { zhTr } from './i18n-zh.js';
 import { nsKey, nsKeyFor, getActiveProfileId } from './state.js';
 import { TITLE_CATALOG } from '../features/tai-card/data/title-catalog.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => ();
 
 /** 称号を持つツール（並び順＝称号一覧の並び）。route は称号一覧から「そのツールを開く」の行き先 */
 export const TITLE_TOOLS = [
@@ -68,7 +69,7 @@ export function toolTitles(key, profileId) {
   const dates = earnedDates(raw, ids);
   return Object.keys(entry.titles).map(id => {
     const d = entry.titles[id];
-    return { id, icon: d.icon, name: CURRENT_LANG === 'en' ? d.nameEn || d.name : d.name, desc: CURRENT_LANG === 'en' ? d.descEn || d.desc : d.desc, earned: set.has(id), earnedAt: dates[id] || '' };
+    return { id, icon: d.icon, name: pickLang(d.nameEn || d.name, d.name), desc: pickLang(d.descEn || d.desc, d.desc), earned: set.has(id), earnedAt: dates[id] || '' };
   });
 }
 

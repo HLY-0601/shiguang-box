@@ -32,7 +32,7 @@
    ここからはそれを呼ぶだけ。写真はドラッグ＆ズームで範囲を選ぶ。
    ================================================================ */
 
-import { CURRENT_LANG, trCat, trItem, escapeHtml } from '../../../js/i18n.js';
+import { CURRENT_LANG, trCat, trItem, escapeHtml, pickLang } from '../../../js/i18n.js';
 import {
   GRID_CATEGORIES, EXCLUSIVE_KEYS,
   loadAllItemsOnce, getOwnedItemsForCat, getFavIds, toggleFavItem,
@@ -73,7 +73,7 @@ function shuffleOutfit() {
   let anyFavExists = !favOnlyMode;
   if (favOnlyMode) {
     anyFavExists = GRID_CATEGORIES.some(c => getFavIds(c.key).length > 0);
-    if (!anyFavExists) showCoordToast(CURRENT_LANG === 'en' ? 'No favorites set. Picking randomly from all items' : 'お気に入りが未設定です。全アイテムからランダムします');
+    if (!anyFavExists) showCoordToast(pickLang('No favorites set. Picking randomly from all items', 'お気に入りが未設定です。全アイテムからランダムします'));
   }
   currentRandomFavOnly = favOnlyMode && anyFavExists;
 
@@ -98,7 +98,7 @@ function renderCurrentRandom() {
   const hasAny = Object.keys(currentRandom).length > 0;
 
   if (currentRandomFavOnly && hasAny) {
-    html += `<div class="rc-fav-mode-bar">${en ? 'Picking randomly from favorite items only' : 'お気に入りアイテムのみでランダム中'}</div>`;
+    html += `<div class="rc-fav-mode-bar">${pickLang('Picking randomly from favorite items only', 'お気に入りアイテムのみでランダム中')}</div>`;
   }
 
   GRID_CATEGORIES.forEach(cat => {
@@ -111,7 +111,7 @@ function renderCurrentRandom() {
           <div class="rc-icon">${catIconHtml(cat)}</div>
           <div class="rc-info">
             <div class="rc-cat">${escapeHtml(trCat(cat.name))}</div>
-            <div class="rc-empty">${en ? 'Not used in this coord' : 'このコーデでは使用しない'}</div>
+            <div class="rc-empty">${pickLang('Not used in this coord', 'このコーデでは使用しない')}</div>
           </div>
         </div>`;
       return;
@@ -119,7 +119,7 @@ function renderCurrentRandom() {
 
     const favOn = picked && getFavIds(cat.key).includes(String(picked.id));
     const favBtn = picked
-      ? `<button type="button" class="rc-fav-btn ${favOn ? 'fav-on' : ''}" data-act="toggle-fav" data-cat="${cat.key}" data-id="${escapeHtml(String(picked.id))}" title="${en ? 'Add to favorites' : 'お気に入り登録'}">
+      ? `<button type="button" class="rc-fav-btn ${favOn ? 'fav-on' : ''}" data-act="toggle-fav" data-cat="${cat.key}" data-id="${escapeHtml(String(picked.id))}" title="${pickLang('Add to favorites', 'お気に入り登録')}">
            <svg class="inline-icon" width="20" height="20" style="stroke:currentColor; fill:${favOn ? 'currentColor' : 'none'}; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round;"><use href="#i-star"/></svg>
          </button>`
       : '';
@@ -131,16 +131,14 @@ function renderCurrentRandom() {
           <div class="rc-cat">${escapeHtml(trCat(cat.name))}</div>
           ${picked
             ? `<div class="rc-name">${escapeHtml(trItem(picked))}</div>`
-            : `<div class="rc-empty">${en ? 'No owned items' : '所持アイテムなし'}</div>`}
+            : `<div class="rc-empty">${pickLang('No owned items', '所持アイテムなし')}</div>`}
         </div>
         ${favBtn}
       </div>`;
   });
 
   if (!hasAny) {
-    html = `<div class="cd-empty-msg">${en
-      ? 'Once you check off items on each category page,<br>random coords will appear here.'
-      : '各カテゴリページで所持チェックをすると<br>ここにランダムコーデが表示されます。'}</div>`;
+    html = `<div class="cd-empty-msg">${pickLang('Once you check off items on each category page,<br>random coords will appear here.', '各カテゴリページで所持チェックをすると<br>ここにランダムコーデが表示されます。')}</div>`;
   }
   el.innerHTML = html;
 }
@@ -172,7 +170,7 @@ function confirmSaveRandom() {
 
   addSavedCoord(name, currentRandom);
   hideSaveRow();
-  showCoordToast(en ? `Saved "${name}"!` : `「${name}」を保存しました！`);
+  showCoordToast(pickLang(`Saved "${name}"!`, `「${name}」を保存しました！`));
 }
 
 function renderPhotoStatus() {
@@ -180,7 +178,7 @@ function renderPhotoStatus() {
   const clearBtn = overlayEl?.querySelector('#rcPhotoClearBtn');
   if (!status || !clearBtn) return;
   const en = CURRENT_LANG === 'en';
-  status.textContent = randomPhotoDataUrl ? (en ? 'Photo attached' : '写真を添付済み') : (en ? 'Not selected' : '未選択');
+  status.textContent = randomPhotoDataUrl ? (pickLang('Photo attached', '写真を添付済み')) : (pickLang('Not selected', '未選択'));
   clearBtn.style.display = randomPhotoDataUrl ? '' : 'none';
 }
 
@@ -189,7 +187,7 @@ function updateFavOnlyBtn() {
   if (!btn) return;
   const en = CURRENT_LANG === 'en';
   btn.classList.toggle('is-active', favOnlyMode);
-  btn.textContent = favOnlyMode ? (en ? 'Favorites Mode' : 'お気に入り中') : (en ? 'Favorites Only' : 'お気に入りのみ');
+  btn.textContent = favOnlyMode ? (pickLang('Favorites Mode', 'お気に入り中')) : (pickLang('Favorites Only', 'お気に入りのみ'));
 }
 
 function toggleFavOnlyMode() {
@@ -205,41 +203,41 @@ function renderModalHtml() {
   const en = CURRENT_LANG === 'en';
   return `
     <div class="modal-card">
-      <button type="button" class="modal-close-btn" id="rcCloseX" aria-label="${en ? 'Close' : '閉じる'}">
+      <button type="button" class="modal-close-btn" id="rcCloseX" aria-label="${pickLang('Close', '閉じる')}">
         <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg>
       </button>
-      <div class="modal-title">${en ? 'Random Coord' : 'ランダムコーデ'}</div>
+      <div class="modal-title">${pickLang('Random Coord', 'ランダムコーデ')}</div>
 
-      <div id="rcResult"><div class="cd-empty-msg">${en ? 'Loading…' : '読み込み中…'}</div></div>
+      <div id="rcResult"><div class="cd-empty-msg">${pickLang('Loading…', '読み込み中…')}</div></div>
 
       <div class="cd-action-row" id="rcSaveRow" style="display:none;">
-        <input type="text" class="cd-form-input" id="rcSaveName" placeholder="${en ? 'Enter coord name...' : 'コーデ名を入力...'}">
-        <button type="button" class="cd-action-btn primary" id="rcConfirmSaveBtn" style="flex:0 0 auto;">${en ? 'Save' : '保存'}</button>
+        <input type="text" class="cd-form-input" id="rcSaveName" placeholder="${pickLang('Enter coord name...', 'コーデ名を入力...')}">
+        <button type="button" class="cd-action-btn primary" id="rcConfirmSaveBtn" style="flex:0 0 auto;">${pickLang('Save', '保存')}</button>
       </div>
 
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn secondary" id="rcShuffleBtn">${en ? 'Shuffle Again' : 'もう一度'}</button>
-        <button type="button" class="cd-action-btn secondary" id="rcFavOnlyBtn">${en ? 'Favorites Only' : 'お気に入りのみ'}</button>
+        <button type="button" class="cd-action-btn secondary" id="rcShuffleBtn">${pickLang('Shuffle Again', 'もう一度')}</button>
+        <button type="button" class="cd-action-btn secondary" id="rcFavOnlyBtn">${pickLang('Favorites Only', 'お気に入りのみ')}</button>
       </div>
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn primary full" id="rcToggleSaveBtn">${en ? 'Save This Coord' : '保存する'}</button>
+        <button type="button" class="cd-action-btn primary full" id="rcToggleSaveBtn">${pickLang('Save This Coord', '保存する')}</button>
       </div>
 
-      <div class="cs-hint" style="margin-top:16px;">${en ? 'Share image' : '共有する画像'}</div>
+      <div class="cs-hint" style="margin-top:16px;">${pickLang('Share image', '共有する画像')}</div>
       ${coordShareControlsHtml()}
       <div class="cs-photo-row">
         <label class="cs-photo-pick">
-          <svg class="inline-icon" width="16" height="16"><use href="#i-image"/></svg><span>${en ? 'Choose Photo' : '写真を選ぶ'}</span>
+          <svg class="inline-icon" width="16" height="16"><use href="#i-image"/></svg><span>${pickLang('Choose Photo', '写真を選ぶ')}</span>
           <input type="file" accept="image/*" id="rcPhotoInput" style="display:none;">
         </label>
-        <span class="cs-photo-status" id="rcPhotoStatus">${en ? 'Not selected' : '未選択'}</span>
-        <button type="button" class="cs-photo-clear" id="rcPhotoClearBtn" style="display:none;">${en ? 'Remove' : '削除'}</button>
+        <span class="cs-photo-status" id="rcPhotoStatus">${pickLang('Not selected', '未選択')}</span>
+        <button type="button" class="cs-photo-clear" id="rcPhotoClearBtn" style="display:none;">${pickLang('Remove', '削除')}</button>
       </div>
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn x-share full" id="rcShareXBtn">${en ? 'Share Image on X' : 'Xで画像を共有'}</button>
+        <button type="button" class="cd-action-btn x-share full" id="rcShareXBtn">${pickLang('Share Image on X', 'Xで画像を共有')}</button>
       </div>
       <div class="cd-action-row">
-        <button type="button" class="cd-action-btn secondary full" id="rcShareLinkBtn">${en ? 'Share as Link (this combo, what do you think?)' : 'リンクで共有（この組み合わせどう？）'}</button>
+        <button type="button" class="cd-action-btn secondary full" id="rcShareLinkBtn">${pickLang('Share as Link (this combo, what do you think?)', 'リンクで共有（この組み合わせどう？）')}</button>
       </div>
     </div>`;
 }
@@ -262,10 +260,10 @@ function wireControls() {
   });
   q('#rcPhotoClearBtn').addEventListener('click', () => { randomPhotoDataUrl = null; renderPhotoStatus(); });
   q('#rcShareXBtn').addEventListener('click', () => {
-    shareCoordImage(CURRENT_LANG === 'en' ? 'Random Coord' : 'ランダムコーデ', currentRandom, 'random-coord', buildRandomShareText(), randomPhotoDataUrl);
+    shareCoordImage(pickLang('Random Coord', 'ランダムコーデ'), currentRandom, 'random-coord', buildRandomShareText(), randomPhotoDataUrl);
   });
   q('#rcShareLinkBtn').addEventListener('click', () => {
-    shareCoordLink(currentRandom, CURRENT_LANG === 'en' ? 'Random Coord' : 'ランダムコーデ');
+    shareCoordLink(currentRandom, pickLang('Random Coord', 'ランダムコーデ'));
   });
   q('#rcResult').addEventListener('click', e => {
     const btn = e.target.closest('[data-act="toggle-fav"]');
@@ -298,7 +296,7 @@ export async function open() {
     await loadAllItemsOnce();
   } catch (e) {
     console.error('[random-coord] failed to load item data', e);
-    if (overlayEl) overlayEl.querySelector('#rcResult').innerHTML = `<div class="cd-empty-msg">${CURRENT_LANG === 'en' ? 'Failed to load item data.' : 'アイテムデータの読み込みに失敗しました。'}</div>`;
+    if (overlayEl) overlayEl.querySelector('#rcResult').innerHTML = `<div class="cd-empty-msg">${pickLang('Failed to load item data.', 'アイテムデータの読み込みに失敗しました。')}</div>`;
     return;
   }
   if (!overlayEl || !document.body.contains(overlayEl)) return; // 読込待ち中に閉じられた

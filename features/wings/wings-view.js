@@ -41,6 +41,7 @@
 
 import { titlesSlotHtml, refreshTitleLinks } from '../../js/titles.js';
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { getActiveProfileId, ensureProfilesInit, pfDisplayName } from '../../js/state.js';
 import { SEASON_SPIRITS } from './data/season-spirits.js';
 import { REALM_SPIRITS, CAPE_LEVELS } from './data/realm-spirits.js';
@@ -54,7 +55,7 @@ import * as eventDashboard from '../shared/event-dashboard.js';
 const STYLE_LINK_ID = 'wings-view-styles';
 const ICON_SPRITE_ID = 'wings-icon-sprite';
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 // { ja, en } 形式のオブジェクトから現在の表示言語の文字列を返す（元実装のL()相当）
 function L(obj) {
   if (!obj) return '';

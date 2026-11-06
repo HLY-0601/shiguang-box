@@ -36,7 +36,7 @@
      再描画されるDOMにも同じ委譲だけで対応できる）。
    ================================================================ */
 import { titlesSlotHtml, refreshTitleLinks } from '../../js/titles.js';
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { t } from './data/i18n-score.js';
 import { PITCHES, INSTRUMENT_LABELS } from './data/constants.js';
 import * as S from './tai-score-state.js';
@@ -154,7 +154,7 @@ function renderShell() {
   <div class="tai-score-view">
     <div class="app-layout">
       <div>
-        <header class="tool-nav-head"><h1><svg class="inline-icon" width="19" height="19"><use href="#i-music-note"/></svg> ${CURRENT_LANG === 'en' ? 'Sheet Music Maker' : '楽譜づくり'}</h1></header>
+        <header class="tool-nav-head"><h1><svg class="inline-icon" width="19" height="19"><use href="#i-music-note"/></svg> ${pickLang('Sheet Music Maker', '楽譜づくり')}</h1></header>
 
         <div class="banner">
           <div class="banner-inner">
@@ -971,7 +971,7 @@ function onImageFilesSelected(event) {
   const files = Array.from(event.target.files || []);
   if (files.length === 0) return;
   RT.imageImportFiles = files;
-  const sep = CURRENT_LANG === 'en' ? ', ' : '、';
+  const sep = pickLang(', ', '、');
   document.getElementById('imageImportFileList').textContent =
     t('imageSelectedCount', { n: files.length, names: files.map(f => f.name).join(sep) });
 }

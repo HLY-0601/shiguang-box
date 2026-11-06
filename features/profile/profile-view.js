@@ -56,7 +56,8 @@
      簡略化。ドラッグでの開閉自体は元々「見た目の演出」の話で、
      背景タップ/×ボタンでの閉じる操作自体は変わらず機能する）。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { PROFILE, LINKS } from './data/profile-data.js';
 import { findShardStatus, realmName, SHARD_REALMS } from './profile-shard.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
@@ -66,7 +67,7 @@ const STYLE_LINK_ID = 'profile-view-styles';
 const ICON_SPRITE_ID = 'profile-icon-sprite';
 const SHARD_REFRESH_MS = 30000;
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return ; }
 function tpl(str, vars) {
   return Object.keys(vars || {}).reduce((s, k) => s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]), str);
 }
@@ -341,7 +342,7 @@ function renderShardBadge() {
   if (!status) { els.shardBadge.style.display = 'none'; return; }
 
   const now = new Date();
-  const place = CURRENT_LANG === 'en' ? (status.placeEn || status.place) : status.place;
+  const place = pickLang((status.placeEn || status.place), status.place);
 
   // 開催中でなければ、日本時間の「今日」の範囲内に開始するものだけを対象にする
   if (!status.active) {

@@ -13,6 +13,7 @@
    その旨はカードの下に小さく書いておく。
    ================================================================ */
 import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, getActiveProfile, pfDisplayName, isCountableItem } from '../../js/state.js';
 import { CATEGORY_REGISTRY } from '../item/data/categories.js';
 import { injectStylesheet } from '../bingo/bingo-view.js';
@@ -22,7 +23,7 @@ import { saveElementImage, toast } from '../shared/share-image.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
 import { TITLE_TOOLS, toolTitles } from '../../js/titles.js';
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const THEME_KEY = 'sky_recap_style';
 const STYLES = {
   dusk: { ja: '夕焼け', en: 'Dusk' },

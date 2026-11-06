@@ -40,7 +40,7 @@
    - 表示設定モーダル（テーマ/言語/ショートカット）はtai-hub共有のものを
      使うため、このファイルにはロジックごと存在しない。
    ================================================================ */
-import { CURRENT_LANG, escapeHtml, trEvent } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, trEvent, pickLang } from '../../js/i18n.js';
 import { t } from './data/i18n-revisit.js';
 import { REVISIT_DATA, NEVER_REVISITED_DATA } from './data/revisit-data.js';
 import { SPIRIT_ITEMS_MAP } from './data/spirit-items-map.js';
@@ -153,7 +153,7 @@ function typeLabel(type) {
   return key ? t(key) : type;
 }
 
-function areaLabel(area) { return CURRENT_LANG === 'en' ? area : areaJa(area); }
+function areaLabel(area) { return pickLang(area, areaJa(area)); }
 // 🩹 js/i18n.js の trEvent()/SEASON_NAME_EN は、このツールが使う季節名を
 // ほぼ全てカバーしているが「ゴッホの季節」だけは無い（i18n.js側は同じ季節を
 // 「親愛なるファン・ゴッホへ」という別表記のキーで持っているため、trEvent()に
@@ -211,7 +211,7 @@ function hasOngoingVisit(s) { return s.visits.some(isOngoingVisit); }
 // 🔔「待っている」印。付けた精霊が旅の精霊として来ると、ドックの「お知らせ」で知らせる（js/notices.js）
 function waitBtnHtml(nameEn) {
   const on = isWaiting(nameEn);
-  const label = on ? (CURRENT_LANG === 'en' ? 'Waiting' : '待っています') : (CURRENT_LANG === 'en' ? 'Wait for this spirit' : '待っている');
+  const label = on ? (pickLang('Waiting', '待っています')) : (pickLang('Wait for this spirit', '待っている'));
   return `<button type="button" class="tr-wait-btn${on ? ' on' : ''}" data-wait-en="${escapeHtml(nameEn)}" aria-pressed="${on}"><svg class="inline-icon" width="14" height="14"><use href="#i-bell"/></svg>${label}</button>`;
 }
 
@@ -371,7 +371,7 @@ function renderSeasonSummary(seasonFilter) {
     season: seasonDisplay(seasonFilter),
     count: seasonSpirits.length,
     visits: totalVisits,
-    mostOverdue: CURRENT_LANG === 'en' ? mostOverdue.nameEn : mostOverdue.nameJa,
+    mostOverdue: pickLang(mostOverdue.nameEn, mostOverdue.nameJa),
     days: daysSince(lastVisitEndDate(mostOverdue)),
   });
   if (neverCount > 0) line += t('seasonSummaryNeverLine', { n: neverCount });
@@ -630,7 +630,7 @@ function renderShell() {
     <div class="tai-revisit-view">
       <div class="tr-wrap">
         <header class="tool-nav-head">
-          <h1><svg class="inline-icon" width="16" height="16"><use href="#i-wing"/></svg> ${escapeHtml(CURRENT_LANG === 'en' ? 'Revisit Spirit Database' : '再訪精霊データベース')}</h1>
+          <h1><svg class="inline-icon" width="16" height="16"><use href="#i-wing"/></svg> ${escapeHtml(pickLang('Revisit Spirit Database', '再訪精霊データベース'))}</h1>
         </header>
 
         <div class="card">
@@ -640,8 +640,8 @@ function renderShell() {
         </div>
 
         <div class="tr-quick-jump">
-          <button type="button" class="tr-quick-btn" id="trJumpSearchBtn" title="${CURRENT_LANG === 'en' ? 'Search' : '検索'}" aria-label="${CURRENT_LANG === 'en' ? 'Jump to search' : '検索欄へ移動'}"><svg class="inline-icon" width="20" height="20"><use href="#i-search"/></svg></button>
-          <button type="button" class="tr-quick-btn" id="trJumpNeverBtn" title="${CURRENT_LANG === 'en' ? 'Unvisited' : '未再訪'}" aria-label="${CURRENT_LANG === 'en' ? 'Jump to never-revisited spirits' : '未再訪の精霊へ移動'}"><svg class="inline-icon" width="20" height="20"><use href="#i-sparkle"/></svg></button>
+          <button type="button" class="tr-quick-btn" id="trJumpSearchBtn" title="${pickLang('Search', '検索')}" aria-label="${pickLang('Jump to search', '検索欄へ移動')}"><svg class="inline-icon" width="20" height="20"><use href="#i-search"/></svg></button>
+          <button type="button" class="tr-quick-btn" id="trJumpNeverBtn" title="${pickLang('Unvisited', '未再訪')}" aria-label="${pickLang('Jump to never-revisited spirits', '未再訪の精霊へ移動')}"><svg class="inline-icon" width="20" height="20"><use href="#i-sparkle"/></svg></button>
         </div>
 
         <p class="sec-label">${escapeHtml(t('upcomingSectionLabel'))}</p>

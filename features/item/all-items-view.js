@@ -39,7 +39,7 @@ import {
   isWishItem, toggleWishItem,
   recordItemAcquire, removeItemAcquireRecord,
 } from '../../js/state.js';
-import { CURRENT_LANG, trEvent, trCat, trItem, escapeHtml, resetFilterPanel } from '../../js/i18n.js';
+import { CURRENT_LANG, trEvent, trCat, trItem, escapeHtml, resetFilterPanel, pickLang } from '../../js/i18n.js';
 import { CATEGORY_REGISTRY } from './data/categories.js';
 import { isSeasonLikeEvent } from './data/season-data.js';
 import { ITEM_YOMI } from './data/yomi-data.js';
@@ -119,7 +119,7 @@ export async function mount(container) {
   } catch (e) {
     console.error('[all items] failed to load item data', e);
     if (myToken !== mountToken) return;
-    container.innerHTML = `<div class="item-view"><div class="cv-wrap"><a href="#/item" class="back-link">${CURRENT_LANG === 'en' ? '&larr; Back to Main Menu' : '&larr; 総合メニューへ戻る'}</a><div class="cv-empty-message">${CURRENT_LANG === 'en' ? 'Failed to load item data. Please try again.' : 'アイテムデータの読み込みに失敗しました。もう一度お試しください。'}</div></div></div>`;
+    container.innerHTML = `<div class="item-view"><div class="cv-wrap"><a href="#/item" class="back-link">${pickLang('&larr; Back to Main Menu', '&larr; 総合メニューへ戻る')}</a><div class="cv-empty-message">${pickLang('Failed to load item data. Please try again.', 'アイテムデータの読み込みに失敗しました。もう一度お試しください。')}</div></div></div>`;
     return;
   }
   // 動的importの完了待ち中に別ルートへ遷移/unmountされていたら描画しない
@@ -158,14 +158,14 @@ function renderShell() {
   return `
     <div class="item-view">
       <div class="cv-wrap">
-        <a href="#/item" class="back-link">${en ? '&larr; Back to Main Menu' : '&larr; 総合メニューへ戻る'}</a>
+        <a href="#/item" class="back-link">${pickLang('&larr; Back to Main Menu', '&larr; 総合メニューへ戻る')}</a>
 
         <div class="cv-header-card">
           <div class="cv-header-info">
             <div class="cv-header-icon"><svg class="inline-icon" width="26" height="26"><use href="#i-grid"/></svg></div>
             <div>
-              <div class="cv-header-name">${en ? 'All Items' : '全アイテム'}</div>
-              <div class="cv-header-count" id="avHdrCount">-- / -- ${en ? 'owned' : '所持'}</div>
+              <div class="cv-header-name">${pickLang('All Items', '全アイテム')}</div>
+              <div class="cv-header-count" id="avHdrCount">-- / -- ${pickLang('owned', '所持')}</div>
             </div>
           </div>
           <div class="cv-header-pct" id="avHdrPct">--%</div>
@@ -173,66 +173,66 @@ function renderShell() {
 
         <div class="cv-control-panel" id="avControlPanel">
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Name Search' : '名前検索'}</span>
+            <span class="cv-control-label">${pickLang('Name Search', '名前検索')}</span>
             <svg class="inline-icon" width="16" height="16"><use href="#i-search"/></svg>
-            <input type="text" class="cv-select-box cv-search-input" id="avName" autocomplete="off" placeholder="${en ? 'Search by item name, season, or day...' : 'アイテム名・季節/日々で検索...'}">
+            <input type="text" class="cv-select-box cv-search-input" id="avName" autocomplete="off" placeholder="${pickLang('Search by item name, season, or day...', 'アイテム名・季節/日々で検索...')}">
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Season' : '季節・イベント'}</span>
+            <span class="cv-control-label">${pickLang('Season', '季節・イベント')}</span>
             <select class="cv-select-box" id="avEvent">
-              <option value="all">${en ? 'All Seasons/Events' : 'すべての季節・イベント'}</option>
+              <option value="all">${pickLang('All Seasons/Events', 'すべての季節・イベント')}</option>
             </select>
           </div>
           <div class="cv-control-row">
-            <span class="cv-control-label">${en ? 'Filter' : '絞り込み'}</span>
+            <span class="cv-control-label">${pickLang('Filter', '絞り込み')}</span>
             <select class="cv-select-box" id="avCat">
-              <option value="all">${en ? 'All Categories' : 'すべてのカテゴリ'}</option>
-              ${GRID_CATEGORIES.map(c => `<option value="${c.key}">${escapeHtml(en ? c.nameEn : c.name)}</option>`).join('')}
+              <option value="all">${pickLang('All Categories', 'すべてのカテゴリ')}</option>
+              ${GRID_CATEGORIES.map(c => `<option value="${c.key}">${escapeHtml(pickLang(c.nameEn, c.name))}</option>`).join('')}
             </select>
             <select class="cv-select-box" id="avOwned">
-              <option value="all">${en ? 'All ownership states' : 'すべての所持状態'}</option>
-              <option value="owned">${en ? 'Owned only' : '所持中のみ'}</option>
-              <option value="notOwned">${en ? 'Not owned only' : '未所持のみ'}</option>
+              <option value="all">${pickLang('All ownership states', 'すべての所持状態')}</option>
+              <option value="owned">${pickLang('Owned only', '所持中のみ')}</option>
+              <option value="notOwned">${pickLang('Not owned only', '未所持のみ')}</option>
             </select>
             <select class="cv-select-box" id="avFav">
-              <option value="all">${en ? 'All favorites' : 'すべてのお気に入り'}</option>
-              <option value="fav">${en ? 'Favorites only' : 'お気に入り指定のみ'}</option>
+              <option value="all">${pickLang('All favorites', 'すべてのお気に入り')}</option>
+              <option value="fav">${pickLang('Favorites only', 'お気に入り指定のみ')}</option>
             </select>
           </div>
           <div class="cv-control-row">
             <button type="button" class="av-adv-btn" id="avAdvToggle" data-act="toggle-advanced" aria-expanded="false">
-              <span>${en ? 'More Filters &amp; Sort' : '詳細な絞り込み・並び替え'}</span>
+              <span>${pickLang('More Filters &amp; Sort', '詳細な絞り込み・並び替え')}</span>
               <svg class="inline-icon av-adv-chevron" id="avAdvChevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
             </button>
           </div>
           <div class="cv-control-row" id="avAdvRow" style="display:none;">
-            <span class="cv-control-label">${en ? 'Attributes' : '属性・条件'}</span>
+            <span class="cv-control-label">${pickLang('Attributes', '属性・条件')}</span>
             <select class="cv-select-box" id="avCostType">
-              <option value="all">${en ? 'All (Free/Paid)' : 'すべて（無課金・課金）'}</option>
-              <option value="free">${en ? 'Free Only' : '無課金のみ'}</option>
-              <option value="premium">${en ? 'Paid Only' : '課金のみ'}</option>
+              <option value="all">${pickLang('All (Free/Paid)', 'すべて（無課金・課金）')}</option>
+              <option value="free">${pickLang('Free Only', '無課金のみ')}</option>
+              <option value="premium">${pickLang('Paid Only', '課金のみ')}</option>
             </select>
             <select class="cv-select-box" id="avReprint">
-              <option value="all">${en ? 'All (Reprint)' : 'すべて（復刻）'}</option>
-              <option value="reprint">${en ? 'Reprintable Only' : '復刻ありのみ'}</option>
-              <option value="noReprint">${en ? 'No-Reprint Only' : '復刻なしのみ'}</option>
+              <option value="all">${pickLang('All (Reprint)', 'すべて（復刻）')}</option>
+              <option value="reprint">${pickLang('Reprintable Only', '復刻ありのみ')}</option>
+              <option value="noReprint">${pickLang('No-Reprint Only', '復刻なしのみ')}</option>
             </select>
             <select class="cv-select-box" id="avDye">
-              <option value="all">${en ? 'All (Dye)' : 'すべて（染色）'}</option>
-              <option value="dye">${en ? 'Dyeable Only' : '染色可のみ'}</option>
-              <option value="noDye">${en ? 'Not Dyeable Only' : '染色不可のみ'}</option>
+              <option value="all">${pickLang('All (Dye)', 'すべて（染色）')}</option>
+              <option value="dye">${pickLang('Dyeable Only', '染色可のみ')}</option>
+              <option value="noDye">${pickLang('Not Dyeable Only', '染色不可のみ')}</option>
             </select>
             <select class="cv-select-box" id="avSort">
-              <option value="default">${en ? 'Sort: Default (by Category)' : '並び替え：標準（カテゴリ別）'}</option>
-              <option value="name">${en ? 'Sort: Name (A-Z)' : '並び替え：名前順'}</option>
-              <option value="eventOrder">${en ? 'Sort: Season/Day Order' : '並び替え：季節・日々順'}</option>
-              <option value="notOwnedFirst">${en ? 'Sort: Not Owned First' : '並び替え：未所持を先に'}</option>
-              <option value="ownedFirst">${en ? 'Sort: Owned First' : '並び替え：所持済みを先に'}</option>
+              <option value="default">${pickLang('Sort: Default (by Category)', '並び替え：標準（カテゴリ別）')}</option>
+              <option value="name">${pickLang('Sort: Name (A-Z)', '並び替え：名前順')}</option>
+              <option value="eventOrder">${pickLang('Sort: Season/Day Order', '並び替え：季節・日々順')}</option>
+              <option value="notOwnedFirst">${pickLang('Sort: Not Owned First', '並び替え：未所持を先に')}</option>
+              <option value="ownedFirst">${pickLang('Sort: Owned First', '並び替え：所持済みを先に')}</option>
             </select>
           </div>
           <div class="cv-control-row cv-control-reset-row">
             <button type="button" class="cv-control-reset-btn" data-act="reset">
-              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${en ? 'Clear All Filters' : 'フィルターを全てクリア'}</span>
+              <svg class="inline-icon" width="16" height="16"><use href="#i-close"/></svg> <span>${pickLang('Clear All Filters', 'フィルターを全てクリア')}</span>
             </button>
           </div>
         </div>
@@ -245,22 +245,22 @@ function renderShell() {
         <div class="cv-list-header-row">
           <p class="cv-sec-label" id="avCountLabel"></p>
           <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <select class="cv-grid-cols-select" id="avColsSelect" title="${en ? 'Grid columns' : 'グリッドの列数'}" aria-label="${en ? 'Grid columns' : 'グリッドの列数'}">
-              <option value="auto">${en ? 'Columns: Auto' : '列数: 自動'}</option>
-              <option value="2">${en ? '2 columns' : '2列'}</option>
-              <option value="3">${en ? '3 columns' : '3列'}</option>
-              <option value="4">${en ? '4 columns' : '4列'}</option>
-              <option value="5">${en ? '5 columns' : '5列'}</option>
-              <option value="6">${en ? '6 columns' : '6列'}</option>
+            <select class="cv-grid-cols-select" id="avColsSelect" title="${pickLang('Grid columns', 'グリッドの列数')}" aria-label="${pickLang('Grid columns', 'グリッドの列数')}">
+              <option value="auto">${pickLang('Columns: Auto', '列数: 自動')}</option>
+              <option value="2">${pickLang('2 columns', '2列')}</option>
+              <option value="3">${pickLang('3 columns', '3列')}</option>
+              <option value="4">${pickLang('4 columns', '4列')}</option>
+              <option value="5">${pickLang('5 columns', '5列')}</option>
+              <option value="6">${pickLang('6 columns', '6列')}</option>
             </select>
-            <div class="cv-view-toggle" role="group" aria-label="${en ? 'View mode' : '表示切替'}">
+            <div class="cv-view-toggle" role="group" aria-label="${pickLang('View mode', '表示切替')}">
               <button type="button" class="cv-view-toggle-btn" id="avViewGrid" data-act="view-grid" aria-pressed="true">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
-                <span>${en ? 'Grid' : 'グリッド'}</span>
+                <span>${pickLang('Grid', 'グリッド')}</span>
               </button>
               <button type="button" class="cv-view-toggle-btn" id="avViewList" data-act="view-list" aria-pressed="false">
                 <svg class="inline-icon" width="14" height="14"><use href="#i-menu"/></svg>
-                <span>${en ? 'List' : 'リスト'}</span>
+                <span>${pickLang('List', 'リスト')}</span>
               </button>
             </div>
           </div>
@@ -288,10 +288,10 @@ function buildEventOptions() {
   const dayEvents = events.filter(isDayLikeEvent);
   const otherEvents = events.filter(e => !isSeasonLikeEvent(e) && !isDayLikeEvent(e));
   const opts = list => list.map(ev => `<option value="${escapeHtml(ev)}">${escapeHtml(trEvent(ev))}</option>`).join('');
-  select.innerHTML = `<option value="all">${en ? 'All Seasons/Events' : 'すべての季節・イベント'}</option>`
-    + (seasonEvents.length ? `<optgroup label="${en ? 'Seasons' : '季節'}">${opts(seasonEvents)}</optgroup>` : '')
-    + (dayEvents.length ? `<optgroup label="${en ? 'Days' : '日々'}">${opts(dayEvents)}</optgroup>` : '')
-    + (otherEvents.length ? `<optgroup label="${en ? 'Other' : 'その他'}">${opts(otherEvents)}</optgroup>` : '');
+  select.innerHTML = `<option value="all">${pickLang('All Seasons/Events', 'すべての季節・イベント')}</option>`
+    + (seasonEvents.length ? `<optgroup label="${pickLang('Seasons', '季節')}">${opts(seasonEvents)}</optgroup>` : '')
+    + (dayEvents.length ? `<optgroup label="${pickLang('Days', '日々')}">${opts(dayEvents)}</optgroup>` : '')
+    + (otherEvents.length ? `<optgroup label="${pickLang('Other', 'その他')}">${opts(otherEvents)}</optgroup>` : '');
 }
 
 /* ================================================================
@@ -370,7 +370,7 @@ function groupKey(item) { return avGroupKind === 'cat' ? item.catKey : item.even
 function groupLabel(item) {
   if (avGroupKind === 'cat') {
     const c = catOf(item.catKey);
-    return c ? escapeHtml(CURRENT_LANG === 'en' ? c.nameEn : c.name) : escapeHtml(item.catKey);
+    return c ? escapeHtml(pickLang(c.nameEn, c.name)) : escapeHtml(item.catKey);
   }
   return escapeHtml(trEvent(item.event));
 }
@@ -409,7 +409,7 @@ function getFiltered() {
 function sortItems(items, mode) {
   const en = CURRENT_LANG === 'en';
   if (mode === 'name') {
-    return [...items].sort((a, b) => trItem(a).localeCompare(trItem(b), en ? 'en' : 'ja'));
+    return [...items].sort((a, b) => trItem(a).localeCompare(trItem(b), pickLang('en', 'ja')));
   }
   if (mode === 'eventOrder') {
     const sorted = [...items].sort((a, b) => {
@@ -445,17 +445,17 @@ function tileHtml(item) {
   const wikiUrl = `https://www.google.com/search?q=${encodeURIComponent(name + '　Sky')}`;
   const tip = [
     name, trEvent(item.event),
-    item.cost === 'premium' ? (en ? 'Paid' : '課金') : (en ? 'Free' : '無課金'),
-    en ? `Dye ${item.dye ? 'Yes' : 'No'}` : `染色${item.dye ? 'あり' : 'なし'}`,
-    item.noReprint ? (en ? 'No Re-release' : '復刻なし') : '',
+    item.cost === 'premium' ? (pickLang('Paid', '課金')) : (pickLang('Free', '無課金')),
+    pickLang(`Dye ${item.dye ? 'Yes' : 'No'}`, `染色${item.dye ? 'あり' : 'なし'}`),
+    item.noReprint ? (pickLang('No Re-release', '復刻なし')) : '',
   ].filter(Boolean).join(' ／ ');
   return `
     <div class="cv-item-tile av-entry" data-cat="${item.catKey}" data-id="${item.id}">
       <div class="cv-item-tile-frame ${isOwned ? 'is-owned' : ''}" data-act="toggle-owned" title="${escapeHtml(tip)}" tabindex="0" role="button" aria-pressed="${isOwned}">
         ${item.cost === 'premium' ? '<span class="cv-tile-cost-dot" aria-hidden="true"></span>' : ''}
         ${item.noReprint ? '<span class="cv-tile-nr-badge">NR</span>' : ''}
-        <button type="button" class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${en ? 'Favorite' : 'お気に入り'}">${ICON_STAR(isFav)}</button>
-        <button type="button" class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
+        <button type="button" class="cv-tile-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${pickLang('Favorite', 'お気に入り')}">${ICON_STAR(isFav)}</button>
+        <button type="button" class="cv-tile-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${pickLang('Wishlist', 'ウィッシュリスト')}" title="${pickLang('Add to wishlist', 'ウィッシュリストに追加')}"><svg class="inline-icon" width="13" height="13" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg></button>
         <div class="cv-item-tile-img-wrap">
           <img src="${item.img || ''}" alt="${escapeHtml(name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentElement.classList.add('cv-img-fallback')">
           <span class="cv-item-tile-fallback"><svg class="inline-icon" width="22" height="22"><use href="#i-wing"/></svg></span>
@@ -485,15 +485,15 @@ function rowHtml(item) {
         <div class="cv-item-details">
           <a href="${wikiUrl}" target="_blank" rel="noopener noreferrer" class="cv-item-name-link">${escapeHtml(name)}</a>
           <div class="cv-item-meta-row">
-            <span class="cv-badge">${escapeHtml(en ? cat.nameEn : cat.name)}</span>
+            <span class="cv-badge">${escapeHtml(pickLang(cat.nameEn, cat.name))}</span>
             <span class="cv-badge">${escapeHtml(trEvent(item.event))}</span>
-            <span class="cv-badge ${item.cost === 'premium' ? 'cv-badge-premium' : 'cv-badge-free'}">${item.cost === 'premium' ? (en ? 'Paid' : '課金') : (en ? 'Free' : '無課金')}</span>
-            ${item.noReprint ? `<span class="cv-badge cv-badge-no-reprint">${en ? 'No Re-release' : '復刻なし'}</span>` : ''}
+            <span class="cv-badge ${item.cost === 'premium' ? 'cv-badge-premium' : 'cv-badge-free'}">${item.cost === 'premium' ? (pickLang('Paid', '課金')) : (pickLang('Free', '無課金'))}</span>
+            ${item.noReprint ? `<span class="cv-badge cv-badge-no-reprint">${pickLang('No Re-release', '復刻なし')}</span>` : ''}
           </div>
         </div>
       </div>
-      <button type="button" class="cv-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${en ? 'Favorite' : 'お気に入り'}">${ICON_STAR(isFav).replace('width="14" height="14"', 'width="18" height="18"')}</button>
-      <button type="button" class="cv-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${en ? 'Wishlist' : 'ウィッシュリスト'}" title="${en ? 'Add to wishlist' : 'ウィッシュリストに追加'}">
+      <button type="button" class="cv-fav-btn ${isFav ? 'is-fav' : ''}" data-act="toggle-fav" aria-label="${pickLang('Favorite', 'お気に入り')}">${ICON_STAR(isFav).replace('width="14" height="14"', 'width="18" height="18"')}</button>
+      <button type="button" class="cv-wish-btn ${isWish ? 'is-wish' : ''}" data-act="toggle-wish" aria-label="${pickLang('Wishlist', 'ウィッシュリスト')}" title="${pickLang('Add to wishlist', 'ウィッシュリストに追加')}">
         <svg class="inline-icon" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:1.8"><use href="#i-cart"/></svg>
       </button>
     </div>`;
@@ -524,13 +524,13 @@ function refreshCounts() {
     if (s && el) el.textContent = `${s.owned} / ${s.total}`;
   });
   q('#avCountLabel').textContent = avItems.length > 0
-    ? (en ? `${avItems.length} items (${filteredOwned} owned)` : `${avItems.length}件（所持 ${filteredOwned}件）`) : '';
+    ? (pickLang(`${avItems.length} items (${filteredOwned} owned)`, `${avItems.length}件（所持 ${filteredOwned}件）`)) : '';
 
   // 全体の達成率（ダッシュボードと同じく、全カテゴリが分母。That Sky Shop は集計から除く）
   const countable = allItemsCache.filter(isCountableItem);
   const total = countable.length;
   const ownedAll = countable.filter(it => !!st(it.catKey).owned[it.id]).length;
-  q('#avHdrCount').textContent = en ? `${ownedAll} / ${total} owned` : `${ownedAll} / ${total} 所持`;
+  q('#avHdrCount').textContent = pickLang(`${ownedAll} / ${total} owned`, `${ownedAll} / ${total} 所持`);
   q('#avHdrPct').textContent = total > 0 ? `${Math.round(ownedAll / total * 100)}%` : '--%';
 
   // 一括ボタンは「何かで絞り込んでいる時だけ」出す（絞り込み無しで全件を誤って所持済みにしないため）
@@ -539,8 +539,7 @@ function refreshCounts() {
   const bulkBtn = q('#avBulkBtn');
   if (narrowed && notOwned > 0) {
     bulkBtn.style.display = '';
-    q('#avBulkLabel').textContent = en
-      ? `Mark ${notOwned} filtered item(s) as owned` : `絞り込み結果の未所持${notOwned}件を所持済みにする`;
+    q('#avBulkLabel').textContent = pickLang(`Mark ${notOwned} filtered item(s) as owned`, `絞り込み結果の未所持${notOwned}件を所持済みにする`);
   } else {
     bulkBtn.style.display = 'none';
   }
@@ -566,7 +565,7 @@ function renderChunk() {
   const remaining = avItems.length - avRendered;
   if (remaining > 0) {
     more.style.display = '';
-    more.textContent = CURRENT_LANG === 'en' ? `Show more (${remaining} remaining)` : `さらに表示（残り${remaining}件）`;
+    more.textContent = pickLang(`Show more (${remaining} remaining)`, `さらに表示（残り${remaining}件）`);
   } else {
     more.style.display = 'none';
   }
@@ -583,7 +582,7 @@ function renderAll() {
   applyViewUi();
   const list = q('#avList');
   if (avItems.length === 0) {
-    list.innerHTML = `<div class="cv-empty-message">${CURRENT_LANG === 'en' ? 'No matching items found.' : '該当するアイテムが見つかりません。'}</div>`;
+    list.innerHTML = `<div class="cv-empty-message">${pickLang('No matching items found.', '該当するアイテムが見つかりません。')}</div>`;
     q('#avMoreBtn').style.display = 'none';
     refreshCounts();
     return;
@@ -662,13 +661,13 @@ function toggleWish(catKey, id, btn) {
   const en = CURRENT_LANG === 'en';
   const added = toggleWishItem(catKey, id);
   if (added === null) {
-    showCatViewToast(en ? 'Owned items cannot be added to the wishlist' : '所持済みのアイテムはウィッシュリストに追加できません');
+    showCatViewToast(pickLang('Owned items cannot be added to the wishlist', '所持済みのアイテムはウィッシュリストに追加できません'));
     return;
   }
   btn.classList.toggle('is-wish', added);
   showCatViewToast(added
-    ? (en ? 'Added to wishlist' : 'ウィッシュリストに追加しました')
-    : (en ? 'Removed from wishlist' : 'ウィッシュリストから外しました'));
+    ? (pickLang('Added to wishlist', 'ウィッシュリストに追加しました'))
+    : (pickLang('Removed from wishlist', 'ウィッシュリストから外しました')));
 }
 
 /* 現在の絞り込み結果のうち未所持のものをまとめて所持済みにする（確認ダイアログあり） */
@@ -676,7 +675,7 @@ function bulkOwnFiltered() {
   const en = CURRENT_LANG === 'en';
   const targets = avItems.filter(item => !st(item.catKey).owned[item.id]);
   if (targets.length === 0) return;
-  const msg = en ? `Mark ${targets.length} item(s) as owned?` : `${targets.length}件のアイテムを所持済みにします。よろしいですか？`;
+  const msg = pickLang(`Mark ${targets.length} item(s) as owned?`, `${targets.length}件のアイテムを所持済みにします。よろしいですか？`);
   if (!window.confirm(msg)) return;
 
   const touched = new Set();
@@ -691,7 +690,7 @@ function bulkOwnFiltered() {
   });
   notifyTitlesCheck();
   renderAll();
-  showCatViewToast(en ? `${targets.length} item(s) marked as owned` : `${targets.length}件を所持済みにしました`);
+  showCatViewToast(pickLang(`${targets.length} item(s) marked as owned`, `${targets.length}件を所持済みにしました`));
 }
 
 /* 所持状態の変更のたびに称号の新規解禁が無いか確認し、あればトースト通知する
@@ -700,8 +699,8 @@ function notifyTitlesCheck() {
   checkAndUnlockTitles().then(newlyEarned => {
     if (!newlyEarned || !newlyEarned.length) return;
     const msg = newlyEarned.length === 1
-      ? (CURRENT_LANG === 'en' ? `Title unlocked: ${newlyEarned[0].nameEn}` : `称号解禁「${newlyEarned[0].name}」`)
-      : (CURRENT_LANG === 'en' ? `${newlyEarned.length} titles unlocked!` : `称号を${newlyEarned.length}個解禁！`);
+      ? (pickLang(`Title unlocked: ${newlyEarned[0].nameEn}`, `称号解禁「${newlyEarned[0].name}」`))
+      : (pickLang(`${newlyEarned.length} titles unlocked!`, `称号を${newlyEarned.length}個解禁！`));
     showCatViewToast(msg);
   }).catch(e => console.error('[all items] title check failed', e));
 }

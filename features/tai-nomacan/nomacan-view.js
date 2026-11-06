@@ -43,7 +43,8 @@
      のに合わせ、同じ水準（背景タップでの閉じるのみ）にしている。
    ================================================================ */
 import { titlesSlotHtml, refreshTitleLinks } from '../../js/titles.js';
-import { CURRENT_LANG, escapeHtml, trEvent } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, trEvent, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { t, L } from './data/i18n-nomacan.js';
 import { TITLES } from './data/titles.js';
 import * as S from './nomacan-state.js';
@@ -60,7 +61,7 @@ const ICON_SPRITE_ID = 'nomacan-icon-sprite';
 // （保存/取消/削除/追加、ヘッダー見出し）は NOMA_I18N には移植していない
 // （data/i18n-nomacan.jsのコメント参照）。ここではjs/chrome/*.jsと同じ、call-site
 // 数が少ない自前文言向けの素朴なt(ja,en)パターンで賄う。
-function tt(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function tt(ja, en) { return ; }
 
 let containerEl = null;
 let els = {};
@@ -184,7 +185,7 @@ function renderShell() {
         <header class="page-head">
           <div class="title-icon" aria-hidden="true"></div>
           <h1>${escapeHtml(tt('ノマキャン計算機', 'Nomacan Calculator'))}</h1>
-          <p class="subtitle">${CURRENT_LANG === 'en' ? 'Sky: Children of the Light — how many days until your goal?' : 'Sky 星を紡ぐ子どもたち・目標本数まであと何日？'}</p>
+          <p class="subtitle">${pickLang('Sky: Children of the Light — how many days until your goal?', 'Sky 星を紡ぐ子どもたち・目標本数まであと何日？')}</p>
         </header>
 
         <div class="one-year-ago-banner" id="oneYearAgoBanner" role="status" aria-live="polite"></div>

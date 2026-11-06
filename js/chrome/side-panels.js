@@ -9,6 +9,7 @@
    設定は 表示設定 > ワイド画面のサイドパネル（左右を別々に切替。js/state.js の getSidePanelEnabled）。
    ================================================================ */
 import { CURRENT_LANG } from '../i18n.js';
+import { zhTr } from '../i18n-zh.js';
 import { getSidePanelEnabled, SKY_SIDE_TOOLS_KEY, SKY_SIDE_DASH_KEY } from '../state.js';
 import * as toolsDrawer from './tools-drawer.js';
 import * as eventDashboard from '../../features/shared/event-dashboard.js';
@@ -18,7 +19,7 @@ const WIDE = window.matchMedia('(min-width: 1280px)');
 let leftMounted = false;
 let rightMounted = false;
 
-function t(ja, en) { return CURRENT_LANG === 'en' ? en : ja; }
+function t(ja, en) { return CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja); }
 
 function mountLeft() {
   if (leftMounted) return;

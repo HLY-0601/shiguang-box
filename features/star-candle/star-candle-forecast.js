@@ -46,7 +46,7 @@
      での閉じるのみにしている（挙動が減る簡略化点）。
    ================================================================ */
 import { nsKey } from '../../js/state.js';
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { t } from './data/i18n-star-candle.js';
 import { fmt, jpDate, weekdayLabel, formatDateValue, pad2 } from './date-utils.js';
 
@@ -106,7 +106,7 @@ const SHARD_LOCATION_EN = {
   '蟹の沼地': 'Crab Field', '忘れられた箱舟': 'Forgotten Ark', '星月夜の砂漠': 'Starlight Desert', '海月の入り江': 'Jellyfish Cove',
 };
 function shardLocationName(jaName) {
-  return CURRENT_LANG === 'en' ? (SHARD_LOCATION_EN[jaName] || jaName) : jaName;
+  return pickLang((SHARD_LOCATION_EN[jaName] || jaName), jaName);
 }
 
 /* ================================================================
@@ -585,9 +585,11 @@ function wireForecastEvents() {
 function getJstShardLandings(year, month, day) {
   const results = [];
   [-1, 0].forEach((ptDayOffset) => {
-    const ptProbe = new Date(year, month - 1, day + ptDayOffset, 12, 0, 0);
-    const ptY = ptProbe.getFullYear(), ptM = ptProbe.getMonth() + 1, ptD = ptProbe.getDate();
-    const weekday = new Date(ptY, ptM - 1, ptD).getDay();
+    // JST(UTC+9) 12:00 = UTC 03:00。端末のローカルタイムゾーンに依存せず
+    // 暦日を解釈するため、UTCベースで実時刻を作る
+    const ptProbe = new Date(Date.UTC(year, month - 1, day + ptDayOffset, 3, 0, 0));
+    const pt = getPTDateParts(ptProbe);
+    const ptY = pt.year, ptM = pt.month, ptD = pt.day, weekday = pt.weekday;
     const sched = getDaySchedule(ptD, weekday);
     if (sched.color !== 'red' || sched.skipped) return;
     const targetKey = year + '-' + month + '-' + day;

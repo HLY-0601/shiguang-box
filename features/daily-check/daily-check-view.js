@@ -17,7 +17,8 @@
      dailyCheckSheets_v1: { activeId, sheets: [{ id, title, autoReset, style, sections: [{ id, title, rows: [{ id, label, opts: [{ t:'box'|'num', label }] }] }] }] }
      dailyCheckState_v1:  { dayKey: 'YYYY-M-D'（太平洋時間）, sheets: { [sheetId]: { [rowId]: { [i]: true, [i+'n']: '3' } } } }
    ================================================================ */
-import { CURRENT_LANG, escapeHtml } from '../../js/i18n.js';
+import { CURRENT_LANG, escapeHtml, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 import { ptParts, ptToReal } from '../../js/pacific-time.js';
 import { shareSheetImage, savePrintPdf } from './daily-check-share.js';
@@ -28,7 +29,7 @@ const SHEETS_KEY = 'dailyCheckSheets_v1';
 const STATE_KEY = 'dailyCheckState_v1';
 const LOG_KEY = 'dailyCheckLog_v1'; // 記録した日（連続記録・通算日数用）: { days: { 'YYYY-M-D': 1 }, best }
 
-const t = (ja, en) => (CURRENT_LANG === 'en' ? en : ja);
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 
 /* ── 着せ替えの選択肢 ── */
 const COLORS = {
@@ -199,20 +200,20 @@ function templateSheet(title) {
         id: genId(),
         title: t('デイリー', 'Dailies'),
         rows: [
-          row(t('大キャン', 'Big candles'), ['1本', '2本', '3本', '4本'].map((l, i) => box(en ? String(i + 1) : l))),
+          row(t('大キャン', 'Big candles'), ['1本', '2本', '3本', '4本'].map((l, i) => box(pickLang(String(i + 1), l)))),
           row(t('クエスト', 'Quests'), [num(t('個まで', 'done')), box(t('すべて完了', 'All done'))]),
-          row(t('パン焼き', 'Bread baking'), ['1回', '2回'].map((l, i) => box(en ? `#${i + 1}` : l))),
-          row(t('ウニ焼き', 'Geyser'), ['1回', '2回', '3回', '4回'].map((l, i) => box(en ? `#${i + 1}` : l))),
+          row(t('パン焼き', 'Bread baking'), ['1回', '2回'].map((l, i) => box(pickLang(`#${i + 1}`, l)))),
+          row(t('ウニ焼き', 'Geyser'), ['1回', '2回', '3回', '4回'].map((l, i) => box(pickLang(`#${i + 1}`, l)))),
           row(t('シーキャン', 'Season candles'), [box(t('完了', 'Done'))]),
           row(t('連れ歩き', 'Spirit walk'), [box(t('完了', 'Done'))]),
           row(t('日々チケット', 'Daily tickets'), [box(t('完了', 'Done'))]),
-          row(t('染料上限', 'Dye cap'), (en ? DYES_EN : DYES_JA).map(box), 2),
+          row(t('染料上限', 'Dye cap'), (pickLang(DYES_EN, DYES_JA)).map(box), 2),
         ],
       },
       {
         id: genId(),
         title: t('エリアごと', 'By area'),
-        rows: AREA_ROWS.map(a => row(en ? a.en : a.ja, a.spots ? a.spots.map(box) : [box(t('完了', 'Done'))])),
+        rows: AREA_ROWS.map(a => row(pickLang(a.en, a.ja), a.spots ? a.spots.map(box) : [box(t('完了', 'Done'))])),
       },
     ],
   };

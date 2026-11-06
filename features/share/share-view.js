@@ -76,7 +76,7 @@
      衝突を避けて編集しない）。
    ================================================================ */
 import { titlesLinkHtml } from '../../js/titles.js';
-import { CURRENT_LANG } from '../../js/i18n.js';
+import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { nsKey } from '../../js/state.js';
 
 const STYLE_LINK_ID = 'share-view-styles';
@@ -272,7 +272,7 @@ function t(key, params) {
   return str;
 }
 
-function optLabel(o) { return CURRENT_LANG === 'en' ? o.labelEn : o.label; }
+function optLabel(o) { return pickLang(o.labelEn, o.label); }
 
 /* 🏷️ ジャンル選択(複数選択可)・絞り込み */
 const GENRE_OPTIONS = [
@@ -661,7 +661,7 @@ function buildSetup(Vue) {
 
     const getExpiryDateString = (placedDate) => {
       const expiry = new Date(placedDate); expiry.setDate(expiry.getDate() + 14);
-      return expiry.toLocaleDateString(CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      return expiry.toLocaleDateString(pickLang('en-US', 'ja-JP'), { year: 'numeric', month: '2-digit', day: '2-digit' });
     };
 
     const activeGenres = ref(new Set());
@@ -952,7 +952,7 @@ function buildSetup(Vue) {
       const { lines: veventLines, expiry } = buildIcsVevent(item);
       const lines = [
         'BEGIN:VCALENDAR', 'VERSION:2.0',
-        'PRODID:-//taipak5000.github.io//share//' + (CURRENT_LANG === 'en' ? 'EN' : 'JA'),
+        'PRODID:-//taipak5000.github.io//share//' + (pickLang('EN', 'JA')),
         'CALSCALE:GREGORIAN', ...veventLines, 'END:VCALENDAR',
       ];
       downloadTextFile('sky-creation-expiry_' + icsDateStamp(expiry) + '.ics', 'text/calendar;charset=utf-8', lines.join('\r\n'));
@@ -962,14 +962,14 @@ function buildSetup(Vue) {
     const exportAllIcs = () => {
       const targets = activeItemsForIcs.value;
       if (targets.length === 0) return;
-      const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//taipak5000.github.io//share//' + (CURRENT_LANG === 'en' ? 'EN' : 'JA'), 'CALSCALE:GREGORIAN'];
+      const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//taipak5000.github.io//share//' + (pickLang('EN', 'JA')), 'CALSCALE:GREGORIAN'];
       targets.forEach((item) => { lines.push(...buildIcsVevent(item).lines); });
       lines.push('END:VCALENDAR');
       downloadTextFile('sky-creation-expiry-all_' + icsDateStamp(new Date()) + '.ics', 'text/calendar;charset=utf-8', lines.join('\r\n'));
     };
 
     const exportListText = () => {
-      const lines = [t('export.header'), t('export.exportedAt') + ': ' + new Date().toLocaleString(CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP'), ''];
+      const lines = [t('export.header'), t('export.exportedAt') + ': ' + new Date().toLocaleString(pickLang('en-US', 'ja-JP')), ''];
       const list = [...placedItems.value].sort((a, b) => getDaysLeft(a.placedDate) - getDaysLeft(b.placedDate));
       list.forEach((item, idx) => {
         const genreLabels = (item.genres && item.genres.length)
@@ -1013,9 +1013,9 @@ function buildSetup(Vue) {
 
     const startOfMonth = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
     const calendarMonthCursor = ref(startOfMonth(new Date()));
-    const calendarMonthLabel = computed(() => calendarMonthCursor.value.toLocaleDateString(CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP', { year: 'numeric', month: 'long' }));
+    const calendarMonthLabel = computed(() => calendarMonthCursor.value.toLocaleDateString(pickLang('en-US', 'ja-JP'), { year: 'numeric', month: 'long' }));
     const calendarWeekdayLabels = computed(() => {
-      const loc = CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP';
+      const loc = pickLang('en-US', 'ja-JP');
       return Array.from({ length: 7 }, (_, i) => new Date(2023, 0, 1 + i).toLocaleDateString(loc, { weekday: 'short' }));
     });
     const isCurrentMonthShown = computed(() => {
@@ -1078,7 +1078,7 @@ function buildSetup(Vue) {
     const selectedDayItems = computed(() => (selectedCalendarDate.value ? (expiryByDate.value[selectedCalendarDate.value] || []) : []));
     const selectedCalendarDateLabel = computed(() => {
       if (!selectedCalendarDate.value) return '';
-      return parseDateKey(selectedCalendarDate.value).toLocaleDateString(CURRENT_LANG === 'en' ? 'en-US' : 'ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
+      return parseDateKey(selectedCalendarDate.value).toLocaleDateString(pickLang('en-US', 'ja-JP'), { year: 'numeric', month: '2-digit', day: '2-digit', weekday: 'short' });
     });
     // エリアで絞り込むと選択中の日付に該当項目が無くなり得るため、月移動時と同様にリセットする
     watch(calendarAreaFilter, () => { selectedCalendarDate.value = null; });

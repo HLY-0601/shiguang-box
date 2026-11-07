@@ -28,7 +28,11 @@ import {
   getWingStats, SHARE_THEMES, loadShareCustomize, saveShareCustomize,
 } from './wings-state.js';
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 const SITE_URL = toolShareUrl('wings');
 const SHARE_HASHTAG = '#Sky羽トラッカー';

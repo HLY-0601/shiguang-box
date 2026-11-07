@@ -47,7 +47,11 @@ import { pfDisplayName } from '../../js/state.js';
 import { t } from './data/i18n-data-transfer.js';
 import * as S from './data-transfer-state.js';
 
-function tt(ja, en) { return ; }
+function tt(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 const JOINER = pickLang(', ', '、');
 
 const STYLE_LINK_ID = 'data-transfer-view-styles';

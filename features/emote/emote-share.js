@@ -48,7 +48,11 @@ import { toolShareUrl } from '../../js/site-config.js';
 import { EMOTES } from './data/emotes.js';
 import { getStats, formatPct, loadOwned } from './emote-state.js';
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 const SITE_URL = toolShareUrl('emote');
 const SHARE_HASHTAG = '#Skyエモート所持率';

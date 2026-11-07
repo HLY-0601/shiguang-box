@@ -46,7 +46,11 @@ import {
 } from './emote-state.js';
 import * as Share from './emote-share.js';
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 function tpl(str, vars) { return str.replace(/\{(\w+)\}/g, (_, k) => (vars && k in vars) ? vars[k] : ''); }
 // TITLES要素（{name,nameEn}）から現在言語の表示名を返す（元実装のL({ja,en})相当）
 function L(obj) { return pickLang((obj.nameEn || obj.name), obj.name); }

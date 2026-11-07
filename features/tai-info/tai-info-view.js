@@ -38,7 +38,11 @@ import { navigate } from '../../js/router.js';
 import { t } from './data/i18n-info.js';
 import { REFERENCE_SOURCES } from './data/references.js';
 
-function tt(ja, en) { return ; }
+function tt(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 const STYLE_LINK_ID = 'tai-info-view-styles';
 const ICON_SPRITE_ID = 'tai-info-icon-sprite';

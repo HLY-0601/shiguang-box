@@ -61,7 +61,11 @@ const ICON_SPRITE_ID = 'nomacan-icon-sprite';
 // （保存/取消/削除/追加、ヘッダー見出し）は NOMA_I18N には移植していない
 // （data/i18n-nomacan.jsのコメント参照）。ここではjs/chrome/*.jsと同じ、call-site
 // 数が少ない自前文言向けの素朴なt(ja,en)パターンで賄う。
-function tt(ja, en) { return ; }
+function tt(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 let containerEl = null;
 let els = {};

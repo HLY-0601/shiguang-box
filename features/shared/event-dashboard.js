@@ -89,7 +89,11 @@ import {
   seasonInProgress, scheduleWithUpcomingSeason,
 } from '../item/data/season-data.js';
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 /* ================================================================
    🌐 このパネル固有の文言（wings/index.htmlのI18N辞書からdash*キーのみ移植）

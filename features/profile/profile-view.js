@@ -67,7 +67,11 @@ const STYLE_LINK_ID = 'profile-view-styles';
 const ICON_SPRITE_ID = 'profile-icon-sprite';
 const SHARD_REFRESH_MS = 30000;
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 function tpl(str, vars) {
   return Object.keys(vars || {}).reduce((s, k) => s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]), str);
 }

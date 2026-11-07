@@ -38,7 +38,11 @@ const svgSmall = path => `<svg width="18" height="18" viewBox="0 0 24 24" style=
 
 export const COST_ICONS = { coin: ICON_COIN, candle: ICON_CANDLE, star: ICON_STAR, heart: ICON_HEART, gift: ICON_GIFT };
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 function brandHtml() {
   return `<div class="ish-exp-brand"><svg width="13" height="13" viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:3px">${ICON_COIN}</svg>${t('アイテム別コスト管理', 'Item Cost Tracker')}</div>`;

@@ -47,7 +47,11 @@ import { appendItemFooter } from './item-footer.js';
 const LINK_ID = 'item-music-sheet-styles-link';
 const VIEW_MODE_KEY = 'musicSheets_viewMode'; // item/music_sheet.htmlと同一キー（あえてnsKey化しない。元実装もプロフィール非依存）
 
-function t(ja, en) { return ; }
+function t(ja, en) {
+  if (CURRENT_LANG === 'en') return en !== undefined ? en : ja;
+  if (CURRENT_LANG === 'zh') return zhTr(ja);
+  return ja;
+}
 
 // ── モジュール内状態（mount毎に更新される） ──────────────────
 let containerEl = null;

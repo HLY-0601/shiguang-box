@@ -777,7 +777,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabelForSpirit(item, sf.spirit))" class="node-level">{{ getLevel(getItemLabelForSpirit(item, sf.spirit)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabelForSpirit(item, sf.spirit))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabelForSpirit(item, sf.spirit))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabelForSpirit(item, sf.spirit)) }}</div>
@@ -1099,7 +1099,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1121,7 +1121,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1138,7 +1138,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1158,7 +1158,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1178,7 +1178,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1194,7 +1194,7 @@ const TEMPLATE = `
  <div v-if="!item.noPoints" class="node-candle-badge"><svg class="inline-icon" width="11" height="11"><use href="#i-candle"/></svg>{{ item.candles || 0 }}</div>
  <div v-if="getLevel(getItemLabel(item))" class="node-level">{{ getLevel(getItemLabel(item)) }}</div>
  <div class="node-icon">
- <img v-if="getItemImageUrl(item)" class="node-svg-icon" :src="getItemImageUrl(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer">
+ <img v-if="imageUrlFor(item)" class="node-svg-icon" :src="imageUrlFor(item)" :alt="cleanName(getItemLabel(item))" referrerpolicy="no-referrer" @error="markImageFailed(item)">
  <svg v-else class="inline-icon node-svg-icon" viewBox="0 0 100 100"><use :href="'#' + getForecastIconId(item)"></use></svg>
  </div>
  <div class="node-name">{{ cleanName(getItemLabel(item)) }}</div>
@@ -1636,6 +1636,15 @@ function buildSetup(Vue) {
  if (!key) return null;
  return TYPE_IMAGES[key] || null;
  };
+ // 图片加载失败时回退到内置 SVG 图标，避免显示大段 alt 文字撑乱布局
+ const failedImageIds = ref(new Set());
+ const markImageFailed = (item) => {
+ if (item && item.id && !failedImageIds.value.has(item.id)) {
+ failedImageIds.value = new Set([...failedImageIds.value, item.id]);
+ }
+ };
+ // 外部图床（wikia）不稳定且会被防盗链/超时拦截，统一改用内置 SVG 图标，保证离线可用、布局稳定
+ const imageUrlFor = (item) => null;
  const getItemLabel = (item) => {
  if (item.customLabel) return translateItemName(item.customLabel);
  if (!item.type) return translateItemName(item.name);
@@ -2100,7 +2109,7 @@ function buildSetup(Vue) {
  activeIndex, spirits, activeSpirit, activePoints, totalHearts, activeTier2Total, activeTier3Total, activeTier4Total, getSpiritTier4Total, getSpiritPoints, toggleTreeItem, toggleExcluded,
  activeStatusText, activeRemainingDays,
  incrementWalkDays, decrementWalkDays, applyPreset, resetAllConfirming, requestResetAll, cancelResetAll,
- getIcon, getItemImageUrl, TYPE_IMAGES, getLevel, cleanName, getItemLabel, getItemLabelForSpirit, isPhantomItem, getTier2Slots,
+ getIcon, getItemImageUrl, imageUrlFor, markImageFailed, TYPE_IMAGES, getLevel, cleanName, getItemLabel, getItemLabelForSpirit, isPhantomItem, getTier2Slots,
  showOptimizer, sharedNotes, optSelectedId, estimatedDailyCandles, optimizerCandidates, optimizerRows, optimizerSummary, optAdd, optMove, optRemove,
  optCopyStatus, optCopyPlan, heartCopyStatus, heartCopyPlan,
  hasSeasonPass, ownedCandles, candlesPerDay,

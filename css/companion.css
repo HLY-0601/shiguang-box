@@ -845,12 +845,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
             transition: filter 0.3s ease;
         }.companion-view .node-svg-icon{
             width: 26px;
             height: 26px;
             display: block;
-            overflow: visible;
+            flex: 0 0 auto;
+            overflow: hidden;
             object-fit: contain;
         }
 

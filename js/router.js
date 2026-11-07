@@ -62,7 +62,7 @@ function applyRoute() {
   currentEntry = entry;
   currentRoute = { toolKey, sub };
 
-  document.title = entry.title ? entry.title(sub) : 'tai-hub';
+  document.title = entry.title ? entry.title(sub) : '拾光匣';
 }
 
 export function getCurrentRoute() {

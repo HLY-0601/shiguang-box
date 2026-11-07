@@ -119,7 +119,7 @@ function lazyToolEntry(importFn, nameJa, nameEn) {
       token++; // 進行中のmount()（動的import待ち）を無効化
       if (mod) mod.unmount();
     },
-    title() { return `${pickLang(nameEn, nameJa)} - tai-hub`; },
+    title() { return `${pickLang(nameEn, nameJa)} - 拾光匣`; },
   };
 }
 

@@ -175,7 +175,7 @@ function render() {
     <div class="fun-wrap">
       <header class="fun-head">
         <h1 class="fun-h1"><svg class="inline-icon" width="22" height="22" aria-hidden="true"><use href="#i-trophy"/></svg>${t('ふりかえり', 'Recap')}</h1>
-        <p class="fun-lead">${t('tai-hubに残っている記録から、その年・その月に集めたものと続けたことをまとめました。画像にして保存・共有できます。', 'A look back at what you collected and kept up, by year or by month. Save it as an image to share.')}</p>
+        <p class="fun-lead">${t('拾光匣に残っている記録から、その年・その月に集めたものと続けたことをまとめました。画像にして保存・共有できます。', 'A look back at what you collected and kept up, by year or by month. Save it as an image to share.')}</p>
       </header>
       <div class="fun-tabs" role="tablist">
         <button type="button" class="fun-tab${month === null ? ' on' : ''}" role="tab" aria-selected="${month === null}" data-act="period" data-p="year">${t('一年', 'Year')}</button>
@@ -239,7 +239,7 @@ function cardHtml(s) {
     ${tiles.length ? `<div class="rc-tiles">${tiles.join('')}</div>` : `<p class="rc-none">${t('この年の記録はまだありません。アイテムやキャンドルを記録すると、ここに集まっていきます', 'No records for this year yet. Log items or candles and they’ll gather here.')}</p>`}
     ${anyMonth ? `<div class="rc-months${s.month !== null ? ' is-days' : ''}" aria-label="${s.month === null ? t('月ごとに集めた数', 'Collected per month') : t('日ごとに集めた数', 'Collected per day')}">${s.months.map((v, i) => `<div class="rc-month${i === s.topMonth ? ' top' : ''}"><span style="height:${Math.max(4, Math.round(v / max * 100))}%"></span><small>${s.month === null || (i + 1) % 5 === 0 || i === 0 ? i + 1 : ''}</small></div>`).join('')}</div>` : ''}
     ${highlights.length ? `<ul class="rc-highlights">${highlights.map(h => `<li>${escapeHtml(h)}</li>`).join('')}</ul>` : ''}
-    <div class="rc-foot">tai-hub ・ ${escapeHtml(HUB_BASE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</div>
+    <div class="rc-foot">拾光匣 ・ ${escapeHtml(HUB_BASE_URL.replace(/^https?:\/\//, '').replace(/\/$/, ''))}</div>
   </div>`;
 }
 

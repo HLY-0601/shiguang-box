@@ -114,7 +114,7 @@ function render() {
           <span class="bg-count">${t(`${filled} / ${total} マス`, `${filled} / ${total}`)}</span>
         </div>
         ${full ? `<div class="bg-full">${t('ぜんぶ埋まりました！ すてきな1週間でしたね', 'Card complete! What a week!')}</div>` : ''}
-        <div class="fun-credit">${t('tai-hub 週替わりビンゴ', 'tai-hub Weekly Bingo')}</div>
+        <div class="fun-credit">${t('拾光匣 週替わりビンゴ', 'Shiguang Box Weekly Bingo')}</div>
       </div>
 
       <div class="fun-actions">

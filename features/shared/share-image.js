@@ -24,7 +24,7 @@ function isMobileDevice() {
   const ua = navigator.userAgent || '';
   return /Android|iPhone|iPod|iPad/i.test(ua) || (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1);
 }
-export function safeFilename(str) { return String(str).replace(/[\\/:*?"<>|]/g, '_').trim() || 'tai-hub'; }
+export function safeFilename(str) { return String(str).replace(/[\\/:*?"<>|]/g, '_').trim() || '拾光匣'; }
 
 /** el を画像（PNGのBlob）にするだけ（保存・共有は呼び出し側）。外部の画像（アイテムのアイコン）はCORSで読む */
 export async function renderElementBlob(el, bg = '#ffffff') {
@@ -41,7 +41,7 @@ export async function saveElementImage(el, { filename, text, bg = '#ffffff' } = 
   await ensureHtml2Canvas();
   const canvas = await window.html2canvas(el, { backgroundColor: bg, scale: 2, useCORS: true, logging: false });
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-  const name = `${safeFilename(filename || 'tai-hub')}.png`;
+  const name = `${safeFilename(filename || '拾光匣')}.png`;
   if (blob && isMobileDevice() && navigator.share && navigator.canShare) {
     const file = new File([blob], name, { type: 'image/png' });
     if (navigator.canShare({ files: [file] })) {

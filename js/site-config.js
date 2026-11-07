@@ -7,8 +7,8 @@
      移行する日にここを true にするだけで、全ツールの共有文が tai-hub のURL
      （例: https://taipak5000.github.io/tai-hub/#/emote）に切り替わる。
    ================================================================ */
-export const HUB_BASE_URL = 'https://taipak5000.github.io/tai-hub/';
-export const USE_HUB_SHARE_URLS = false;
+export const HUB_BASE_URL = 'https://hly-0601.github.io/shiguang-box/';
+export const USE_HUB_SHARE_URLS = true;
 
 // ツールID（ルート名）→ 旧サイトのURL
 const LEGACY_URLS = {
@@ -25,7 +25,6 @@ const LEGACY_URLS = {
   'tai-card': 'https://taipak5000.github.io/tai-card/',
   'data-transfer': 'https://taipak5000.github.io/tai-transfer/',
   'tai-info': 'https://taipak5000.github.io/tai-info/',
-  profile: 'https://taipak5000.github.io/skyzztai-profile/',
 };
 
 /** 共有文・書き出しに入れる、そのツールのURL */

@@ -281,7 +281,7 @@ export function itemFooterHtml(key) {
   <footer class="item-footer">
     ${escapeHtml(tt('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。',
       'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.'))}<br>
-    ${escapeHtml(tt('作成・ご意見:', 'Created by / feedback:'))} <a class="item-footer-strong" href="https://x.com/Skyzztai" ${A}>@Skyzztai</a>　／　<a class="item-footer-strong" href="https://odaibako.net/u/Skyzztai" ${A}>${escapeHtml(tt('リクエストフォーム', 'Request form'))}</a><br>${refBlock}
+    <strong>拾光匣</strong><br>${refBlock}
     <span class="item-footer-sub"><a href="#/tai-info">${escapeHtml(tt('設定・クレジット・プライバシーポリシー', 'Settings / Credits / Privacy Policy'))}</a></span>
   </footer>`;
 }

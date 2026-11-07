@@ -915,7 +915,7 @@ function icsNextEdenResetAfter(ms) {
 function exportIcs(statusEl) {
   try {
     const now = new Date();
-    const uidHost = 'taipak5000.github.io';
+    const uidHost = 'shiguang-box';
     const events = [];
 
     // シーズン終了（コンプリート期限）

@@ -26,5 +26,4 @@ export const SITE_LINK_TOOLS = [
   { id: 'tai-card',       path: 'tai-card',         icon: 'i-card',        ja: '星紡ぎカード',           en: 'Self-Intro Card Maker',    'zh-TW': '星紡卡片',         ko: '별잣기 카드' },
   { id: 'data-transfer',  path: 'tai-transfer',     icon: 'i-sync',        ja: 'データ引継ぎ',           en: 'Data Transfer',            'zh-TW': '資料轉移',         ko: '데이터 이전' },
   { id: 'tai-info',       path: 'tai-info',         icon: 'i-settings',    ja: '設定・クレジット',       en: 'Settings & Credits',       'zh-TW': '設定・製作名單',   ko: '설정・크레딧' },
-  { id: 'profile',        path: 'skyzztai-profile', icon: 'i-person',      ja: '作者プロフィール',       en: 'Creator Profile',          'zh-TW': '作者個人檔案',     ko: '제작자 프로필' },
 ];

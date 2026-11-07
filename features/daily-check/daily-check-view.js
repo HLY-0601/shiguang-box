@@ -464,7 +464,7 @@ function render() {
       ${showLabLinks ? labLinksHtml() : ''}
       ${embedded ? '' : `<footer class="dc-footer">
         <span>${escapeHtml(t('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.'))}</span><br>
-        <span>${escapeHtml(t('作成・ご意見:', 'Created by / feedback:'))}</span> <a href="https://x.com/Skyzztai" target="_blank" rel="noopener noreferrer">@Skyzztai</a>　／　<a href="https://odaibako.net/u/Skyzztai" target="_blank" rel="noopener noreferrer">${escapeHtml(t('リクエストフォーム', 'Request form'))}</a><br>
+        <span><strong>拾光匣</strong></span><br>
         <a class="dc-footer-sub" href="#/tai-info">${escapeHtml(t('設定・クレジット・プライバシーポリシー', 'Settings, Credits & Privacy Policy'))}</a>
       </footer>`}
     </div>

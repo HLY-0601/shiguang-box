@@ -8,7 +8,7 @@ import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 import { PLACES } from '../shared/places.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const KEY = 'photoGacha_v1';
 const COMPS = [{ ja: '顔のアップ', en: 'Close-up' }, { ja: '全身', en: 'Full body' }, { ja: '後ろ姿', en: 'From behind' }, { ja: '見上げる角度', en: 'Low angle' }, { ja: '見下ろす角度', en: 'High angle' }, { ja: 'シルエット', en: 'Silhouette' }, { ja: '景色を大きく', en: 'Wide landscape' }, { ja: '手もとだけ', en: 'Hands only' }];
 const PEOPLE = [{ ja: 'ひとりで', en: 'Solo' }, { ja: 'ふたりで', en: 'With one friend' }, { ja: 'みんなで', en: 'With a group' }, { ja: '精霊と', en: 'With a spirit' }];

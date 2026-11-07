@@ -13,7 +13,7 @@ import { zhTr } from './i18n-zh.js';
 import { nsKey, nsKeyFor, getActiveProfileId } from './state.js';
 import { TITLE_CATALOG } from '../features/tai-card/data/title-catalog.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 
 /** 称号を持つツール（並び順＝称号一覧の並び）。route は称号一覧から「そのツールを開く」の行き先 */
 export const TITLE_TOOLS = [

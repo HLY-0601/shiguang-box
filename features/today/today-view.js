@@ -20,7 +20,7 @@ import { loadBingo, weekKeyAt, countLines, FREE } from '../bingo/bingo-state.js'
 import { loadFriendsDoc, upcomingAnniversaries } from '../friends/friends-state.js';
 import { loadOmikuji, drawOmikuji, gameDayKey, mergeTodoIntoDailyCheck, FORTUNES, LUCKY_REALMS, LUCKY_COLORS, MESSAGES } from './today-state.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const L = o => (pickLang(o.en, o.ja));
 
 let containerEl = null;

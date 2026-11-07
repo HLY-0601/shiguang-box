@@ -14,7 +14,7 @@ import { nsKey } from '../../js/state.js';
 import { SEASON_DATES } from '../shared/season-dates.js';
 import { EVENT_DATES } from '../shared/event-dates.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 function readJson(key, fb) { try { const v = JSON.parse(localStorage.getItem(nsKey(key))); return v == null ? fb : v; } catch (e) { return fb; } }
 function localDateStr(d = new Date()) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
 

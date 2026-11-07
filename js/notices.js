@@ -22,7 +22,7 @@ import { loadFriendsDoc, upcomingAnniversaries } from '../features/friends/frien
 import { hasBingoData, loadBingo, weekKeyAt } from '../features/bingo/bingo-state.js';
 import { titleTotals, titlesSeenCount } from './titles.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const DAY = 86400000;
 const SEEN_KEY = 'noticesSeen_v1';
 export const WAITLIST_KEY = 'revisitWaitlist_v1'; // 再訪精霊データベースの「待っている」精霊（英語名の配列）

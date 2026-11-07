@@ -8,7 +8,7 @@ import { zhTr } from '../i18n-zh.js';
 import { navigate } from '../router.js';
 import { collectNotices, markSeen, isSeen } from '../notices.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 let overlayEl = null;
 
 const ITEM_CATS = ['cape', 'mask', 'necklace', 'hairstyle', 'hair_accessory', 'head_accessory', 'outfit', 'shoes', 'face_accessory', 'portable_item', 'large_placeable', 'small_placeable'];

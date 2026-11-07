@@ -20,7 +20,7 @@ import { CURRENT_SEASON } from '../item/data/season-data.js';
 import { injectStylesheet } from '../bingo/bingo-view.js';
 import { toast } from '../shared/share-image.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const ORDER_KEY = 'wishPlanOrder_v1';
 const SETTINGS_KEY = 'wishPlanSettings_v1';
 const DAY = 86400000;

@@ -24,7 +24,7 @@ import { albumsHtml } from './season-album.js';
 import { gachaHtml, handleGacha, ensureEmotes, resetGacha, gachaOpen } from './photo-gacha.js';
 import { HUB_BASE_URL } from '../../js/site-config.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 const KEY = 'coordDiary_v1';
 const CATS = CATEGORY_REGISTRY.filter(c => c.section !== 'special');
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;

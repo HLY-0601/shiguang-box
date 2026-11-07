@@ -16,7 +16,7 @@ import {
   loadFriendsDoc, saveFriendsDoc, upcomingAnniversaries, daysSince, todayStr, putPhoto, getPhoto, deletePhoto,
 } from './friends-state.js';
 
-const t = (ja, en) => ();
+const t = (ja, en) => (CURRENT_LANG === 'en' ? en : (CURRENT_LANG === 'zh' ? zhTr(ja) : ja));
 // アイコンにすぐ選べる文字（Skyらしいもの）。自分で好きな文字・絵文字も入れられる
 const AVATAR_PRESETS = ['⭐', '🌙', '☁️', '🕯️', '🦋', '🐳', '🦀', '🌸', '🎵', '💖', '🍵', '🌈'];
 const COLORS = ['#E8679A', '#F59E0B', '#22A06B', '#3489D6', '#8574DB', '#A8646F', '#5F7F63', '#64748B'];

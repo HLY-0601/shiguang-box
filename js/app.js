@@ -74,7 +74,18 @@ showRefreshedToastIfNeeded(pickLang('Updated to the latest version', '最新の�
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
   const isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
   if (!isLocal || /[?&]sw=1\b/.test(location.search)) {
-    const registerSw = () => navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('service worker registration failed', err));
+    // 新 SW 激活（service-worker.js 内 skipWaiting + clients.claim）后自动刷新一次，
+    // 避免旧缓存一直显示旧界面；用标志位防止重复刷新
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (refreshing) return;
+      refreshing = true;
+      window.location.reload();
+    });
+    const registerSw = () => navigator.serviceWorker
+      .register('service-worker.js', { updateViaCache: 'none' })
+      .then((reg) => { reg.update(); })
+      .catch(err => console.warn('service worker registration failed', err));
     if (document.readyState === 'complete') registerSw();
     else window.addEventListener('load', registerSw);
   }

@@ -27,6 +27,7 @@ import {
 import { CURRENT_LANG, trEvent, trItem, escapeHtml, resetFilterPanel, pickLang } from '../../js/i18n.js';
 import { checkAndUnlockTitles } from './titles-panel.js';
 import { appendItemFooter } from './item-footer.js';
+import { resolveLocalIcon } from '../../js/sky-icon-resolver.js';
 
 /* 季節・日々の登場順（イベント名順ソート／絞り込みセレクトの並び順）。
    item/cape.html他、全カテゴリページで完全に同一の定数として定義されて
@@ -53,6 +54,7 @@ let categoryItems = [];
 let userStates = { owned: {}, fav: {} };
 let viewMode = 'grid';
 let gridCols = 'auto';
+let localIconByItemId = new Map();
 // 高速に別ルートへ遷移された場合、先行するmount()の非同期処理(動的import待ち)が
 // 後から解決してcontainerを上書きしてしまわないようにするためのトークン
 let mountToken = 0;
@@ -88,6 +90,15 @@ export async function mount(container, catConfig) {
   userStates = getCategoryState(catConfig.key);
   viewMode = getViewMode();
   gridCols = getGridCols();
+  localIconByItemId = new Map();
+  // 后台把能唯一强匹配的物品换成本地自托管图标，匹配不到的继续用外部图
+  (async () => {
+    for (const it of ITEMS) {
+      const local = await resolveLocalIcon(it.nameEn, catConfig.key);
+      if (local) localIconByItemId.set(it.id, local);
+    }
+    if (myToken === mountToken && localIconByItemId.size) filterAndRender();
+  })();
 
   container.innerHTML = renderShell(catConfig);
   appendItemFooter(container, catConfig.key);
@@ -466,7 +477,7 @@ function filterAndRender() {
     const isFav = !!userStates.fav[item.id];
     const isWish = isWishItem(categoryConfig.key, item.id);
     const wikiUrl = `https://www.google.com/search?q=${encodeURIComponent(trItem(item) + '　Sky')}`;
-    const imgSrc = item.img || `images/${categoryConfig.key}/${item.id}.png`;
+    const imgSrc = localIconByItemId.get(item.id) || item.img || `images/${categoryConfig.key}/${item.id}.png`;
     return { isOwned, isFav, isWish, wikiUrl, imgSrc };
   };
 

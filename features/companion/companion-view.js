@@ -91,6 +91,7 @@
 import { CURRENT_LANG, RAW_LANG, pickLang } from '../../js/i18n.js';
 import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, readCompanionDataRaw } from '../../js/state.js';
+import { resolveLocalIconByText } from '../../js/sky-icon-resolver.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
 import {
  TRANSLATIONS_ZH_TW, TRANSLATIONS_KO, NAME_ZH_TW, NAME_KO, TYPE_LABELS_ZH_TW, TYPE_LABELS_KO,
@@ -1682,8 +1683,36 @@ function buildSetup(Vue) {
  failedImageIds.value = new Set([...failedImageIds.value, item.id]);
  }
  };
- // 外部图床（wikia）不稳定且会被防盗链/超时拦截，统一改用内置 SVG 图标，保证离线可用、布局稳定
- const imageUrlFor = (item) => null;
+ // 本地图标缓存（item id -> 自托管图标路径），挂载时用解析器预热
+ const localIconMap = ref(new Map());
+ // 图标优先级：本地强匹配图标 -> 已校对的外部图（customImage）-> 内置 SVG；
+ // 加载失败的一律回退 SVG，绝不显示 alt 竖排文字
+ const imageUrlFor = (item) => {
+ if (!item || failedImageIds.value.has(item.id)) return null;
+ if (localIconMap.value.has(item.id)) return localIconMap.value.get(item.id);
+ return item.customImage || null;
+ };
+ // 从外部图 URL 里取出文件名用于本地匹配
+ const wikiaFileName = (url) => {
+ if (!url) return '';
+ const m = url.match(/\/([^/]+)\.png/);
+ return m ? m[1] : '';
+ };
+ // 预热全部 4 位先祖节点的本地图标（仅在唯一强匹配时采用）
+ const warmLocalIcons = async () => {
+ const next = new Map();
+ for (const sp of spirits.value) {
+ const all = [];
+ Object.values(sp.treeData).forEach(tier => tier.forEach(it => all.push(it)));
+ for (const it of all) {
+ if (!it.id) continue;
+ const seed = wikiaFileName(it.customImage) || getItemLabel(it);
+ const local = await resolveLocalIconByText(seed, null);
+ if (local) next.set(it.id, local);
+ }
+ }
+ localIconMap.value = next;
+ };
  const getItemLabel = (item) => {
  if (item.customLabel) return translateItemName(item.customLabel);
  if (!item.type) return translateItemName(item.name);
@@ -2134,6 +2163,7 @@ function buildSetup(Vue) {
 
  onMounted(() => {
  load();
+ warmLocalIcons();
  seasonCountdownTimer = setInterval(() => { nowForCountdown.value = new Date(); }, 1000);
  });
  onUnmounted(() => {

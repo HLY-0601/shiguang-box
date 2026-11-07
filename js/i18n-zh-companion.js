@@ -190,4 +190,8 @@ export const COMPANION_PAIRS = [
 ["季節精霊 (Sky Wiki 日本語)","季节先祖（Sky Wiki 日文）"],
 ["親愛なるファン・ゴッホへ (Sky Wiki 日本語)","致亲爱的梵高（Sky Wiki 日文）"],
 ["Dear Van Gogh (Sky Wiki 英語)","Dear Van Gogh（Sky Wiki 英文）"],
+["全部まとめてチェック","一键全部"],
+["全チェック解除","全部取消"],
+["全部チェックしました","已全部勾选"],
+["チェックを全解除しました","已全部取消勾选"],
 ];

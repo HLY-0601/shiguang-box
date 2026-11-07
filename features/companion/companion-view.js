@@ -212,6 +212,8 @@ const TRANSLATIONS = {
  reset_all_btn: '全4体を一気にリセット',
  reset_all_confirm: '全4体のチェックと連れ歩き日数を、初期状態に戻します。よろしいですか？',
  reset_all_do: 'リセットする', reset_all_cancel: 'やめる', reset_all_done: '全4体をリセットしました',
+ check_all_btn: '全部まとめてチェック', clear_all_btn: '全チェック解除',
+ check_all_done: '全部チェックしました', clear_all_done: 'チェックを全解除しました',
 
  opt_title: '交換アイテムを取る順番の計算',
  opt_desc: '欲しいアイテムを優先順に登録すると、所持キャンドルと1日の獲得数から「いつ交換できるか」を上から順に計算し、シーズン終了日に間に合うかを表示します。',
@@ -358,6 +360,8 @@ const TRANSLATIONS = {
  reset_all_btn: 'Reset all 4 at once',
  reset_all_confirm: 'This will reset the checks and walk days of all 4 spirits. Continue?',
  reset_all_do: 'Reset all', reset_all_cancel: 'Cancel', reset_all_done: 'Reset all 4 spirits',
+ check_all_btn: 'Check all at once', clear_all_btn: 'Uncheck all',
+ check_all_done: 'Checked all items', clear_all_done: 'Cleared all checks',
 
  opt_title: 'Exchange Optimizer (purchase order planner)',
  opt_desc: 'Register the items you want in priority order. Using your owned candles and daily candle income, it estimates when each can be exchanged and whether it fits within the season.',
@@ -980,6 +984,11 @@ const TEMPLATE = `
  <button class="btn-sm" @click="applyPreset('no-magic')">{{ t('preset_no_magic') }}</button>
  <button class="btn-sm" @click="applyPreset('reset')" style="color: var(--text-gray);">{{ t('preset_reset') }}</button>
  </div>
+ <!-- ⚡ 一键全部：批量勾选/取消全部 4 位先祖的节点 -->
+ <div class="bulk-all-row">
+ <button type="button" class="btn-sm bulk-check-btn" @click="checkAll">{{ t('check_all_btn') }}</button>
+ <button type="button" class="btn-sm bulk-clear-btn" @click="clearAll">{{ t('clear_all_btn') }}</button>
+ </div>
  <!-- 🔁 4体まとめてリセット（誤操作防止のため、1回目のタップで確認表示→2回目で実行。ポップアップ(confirm)は使わない） -->
  <div class="reset-all-row">
  <button v-if="!resetAllConfirming" type="button" class="btn-sm reset-all-btn" @click="requestResetAll">{{ t('reset_all_btn') }}</button>
@@ -1339,6 +1348,36 @@ function buildSetup(Vue) {
  const toggleExcluded = (item) => {
  item.excluded = !item.excluded;
  activeSpirit.value.currentPreset = 'custom';
+ };
+
+ // 一键全部：批量勾选/取消单个先祖的节点；受通行证限制，正确同步蜡烛
+ const setAllItemsChecked = (spirit, checked) => {
+ let delta = 0;
+ Object.values(spirit.treeData).forEach(tier => {
+ tier.forEach(item => {
+ if (checked) {
+ if (item.checked) return;
+ if (item.requiresSeasonPass && !hasSeasonPass.value) return;
+ item.checked = true;
+ if (!item.noPoints) delta -= (item.candles || 0);
+ } else {
+ if (!item.checked) return;
+ item.checked = false;
+ if (!item.noPoints) delta += (item.candles || 0);
+ }
+ });
+ });
+ if (delta !== 0) ownedCandles.value = (ownedCandles.value || 0) + delta;
+ spirit.currentPreset = 'custom';
+ };
+ // 一键操作全部 4 位先祖
+ const checkAll = () => {
+ spirits.value.forEach(s => setAllItemsChecked(s, true));
+ showToast(t('check_all_done'));
+ };
+ const clearAll = () => {
+ spirits.value.forEach(s => setAllItemsChecked(s, false));
+ showToast(t('clear_all_done'));
  };
 
  const getSpiritCandleItems = (spirit) => {
@@ -2109,6 +2148,7 @@ function buildSetup(Vue) {
  activeIndex, spirits, activeSpirit, activePoints, totalHearts, activeTier2Total, activeTier3Total, activeTier4Total, getSpiritTier4Total, getSpiritPoints, toggleTreeItem, toggleExcluded,
  activeStatusText, activeRemainingDays,
  incrementWalkDays, decrementWalkDays, applyPreset, resetAllConfirming, requestResetAll, cancelResetAll,
+ checkAll, clearAll,
  getIcon, getItemImageUrl, imageUrlFor, markImageFailed, TYPE_IMAGES, getLevel, cleanName, getItemLabel, getItemLabelForSpirit, isPhantomItem, getTier2Slots,
  showOptimizer, sharedNotes, optSelectedId, estimatedDailyCandles, optimizerCandidates, optimizerRows, optimizerSummary, optAdd, optMove, optRemove,
  optCopyStatus, optCopyPlan, heartCopyStatus, heartCopyPlan,

@@ -428,6 +428,9 @@
         .companion-view .reset-all-row{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
         .companion-view .reset-all-btn{ color: var(--danger-text); border-color: rgba(255, 59, 48, 0.4); }
         .companion-view .reset-all-btn.is-confirming{ background: var(--danger-text); border-color: var(--danger-text); color: #fff; }
+        .companion-view .bulk-all-row{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .companion-view .bulk-check-btn{ color: var(--hub-accent, var(--accent-orange)); border-color: var(--hub-accent, var(--accent-orange)); font-weight: 700; }
+        .companion-view .bulk-clear-btn{ color: var(--text-gray); border-color: var(--hub-sep, rgba(0,0,0,0.15)); }
         .companion-view .reset-all-warn{ flex: 1 1 100%; font-size: 12px; font-weight: 700; color: var(--danger-text); line-height: 1.5; }.companion-view .btn-active{ background: rgba(255, 149, 0, 0.1); border-color: var(--accent-orange); color: var(--accent-orange); }.companion-view .walk-input-area{
             display: flex;
             align-items: center;

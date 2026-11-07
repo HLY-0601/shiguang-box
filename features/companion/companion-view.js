@@ -92,6 +92,7 @@ import { CURRENT_LANG, RAW_LANG, pickLang } from '../../js/i18n.js';
 import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, readCompanionDataRaw } from '../../js/state.js';
 import { resolveLocalIconByText } from '../../js/sky-icon-resolver.js';
+import { getPearlIcon } from '../../js/pearl-icon-map.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
 import {
  TRANSLATIONS_ZH_TW, TRANSLATIONS_KO, NAME_ZH_TW, NAME_KO, TYPE_LABELS_ZH_TW, TYPE_LABELS_KO,
@@ -1689,6 +1690,9 @@ function buildSetup(Vue) {
  // 加载失败的一律回退 SVG，绝不显示 alt 竖排文字
  const imageUrlFor = (item) => {
  if (!item || failedImageIds.value.has(item.id)) return null;
+ // 人工核对的确定性映射优先（珍珠季兑换树官方风格图标）
+ const pearl = getPearlIcon(item.id);
+ if (pearl) return pearl;
  if (localIconMap.value.has(item.id)) return localIconMap.value.get(item.id);
  return item.customImage || null;
  };

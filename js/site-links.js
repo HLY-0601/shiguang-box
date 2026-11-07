@@ -21,6 +21,7 @@ const HUB_ONLY_TOOLS = [
   // child: true＝親（afterIdのツール）の兄弟機能として、親のすぐ下に少し字下げして並べる（testの印があっても最後へ回さない）
   { id: 'coord-diary', afterId: 'item', icon: 'i-hanger', ja: 'コーデ日記', en: 'Outfit Diary', child: true },
   { id: 'wish-plan', afterId: 'coord-diary', icon: 'i-cart', ja: 'ほしいもの計画', en: 'Wishlist Plan', child: true },
+  { id: 'account', afterId: 'data-transfer', icon: 'i-person', ja: 'ローカルアカウント', en: 'Local Account', zh: '本地账号', child: true },
 ];
 
 let tools = null;

@@ -138,7 +138,7 @@ export const INFO_I18N = {
  },
  contact: {
  title: { ja: `お問い合わせ`, en: `Contact` },
- body: { ja: `データの扱いについて不安な点や質問があれば、（X）までお気軽にご連絡ください。`, en: `If you have any concerns or questions about how your data is handled, feel free to reach out via (X).` },
+ body: { ja: `データの扱いについて不安な点や質問があれば、下記の連絡先までお気軽にお問い合わせください。`, en: `If you have any concerns or questions about how your data is handled, please feel free to contact us at the addresses below.` },
  },
  },
 

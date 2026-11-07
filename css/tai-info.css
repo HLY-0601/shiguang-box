@@ -127,3 +127,20 @@
 
 .tai-info-view section[data-tab] { display: none; }
 .tai-info-view section[data-tab].show { display: block; }
+
+/* 联系我们：邮箱链接 */
+.tai-info-view .contact-email-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.tai-info-view .contact-email {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--sep);
+  border-radius: 10px;
+  background: var(--indigo-bg);
+  color: var(--indigo-d);
+  font-size: 13px; font-weight: 600;
+  word-break: break-all;
+  text-decoration: none;
+  transition: filter .15s ease, transform .1s ease;
+}
+.tai-info-view .contact-email:hover { filter: brightness(0.97); }
+.tai-info-view .contact-email:active { transform: scale(0.99); }

@@ -225,6 +225,10 @@ function renderShell() {
           <div class="card" id="privacy-contact" tabindex="-1">
             <h3>${escapeHtml(t('privacy.contact.title'))}</h3>
             <p>${t('privacy.contact.body')}</p>
+            <div class="contact-email-list">
+              <a class="contact-email" href="mailto:cafa6794@outlook.com"><svg class="inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>cafa6794@outlook.com</a>
+              <a class="contact-email" href="mailto:XFRfhC9JOb@outlook.com"><svg class="inline-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>XFRfhC9JOb@outlook.com</a>
+            </div>
           </div>
         </section>
 

@@ -12,7 +12,11 @@ import {
   logout,
   currentUser,
   updateProfile,
-} from './account-state.js';
+  getBaseUrl,
+  setBaseUrl,
+  isRemote,
+  refreshSession,
+} from './account-store.js';
 
 const STYLE_ID = 'account-view-styles';
 
@@ -31,6 +35,10 @@ export function mount(container) {
   injectStylesheet();
   containerEl = container;
   render();
+  // 远程模式下校验登录态并从服务器拉取最新数据后再渲染一次
+  refreshSession().then(() => {
+    if (containerEl) render();
+  });
 }
 
 export function unmount() {
@@ -55,12 +63,14 @@ function render() {
 /* ---------------- 登录 / 注册 ---------------- */
 function renderAuth() {
   const isLogin = authMode === 'login';
+  const remote = isRemote();
+  const baseUrl = getBaseUrl();
   return `
   <div class="account-view">
     <div class="ac-head">
       <div class="ac-logo"><svg class="inline-icon" width="24" height="24"><use href="#i-person"/></svg></div>
-      <h1>${isLogin ? '登录本地账号' : '注册本地账号'}</h1>
-      <p>拾光匣 · 账号仅保存在当前浏览器</p>
+      <h1>${isLogin ? '登录账号' : '注册账号'}</h1>
+      <p>拾光匣 · ${remote ? '远程账号（数据保存在后端）' : '本地账号（仅保存在当前浏览器）'}</p>
     </div>
 
     <form class="ac-card" id="acAuthForm" autocomplete="off">
@@ -82,9 +92,20 @@ function renderAuth() {
         : '已经有账号了？<button type="button" class="ac-link" data-action="switch-login">去登录</button>'}
     </div>
 
+    <div class="ac-card ac-backend">
+      <label class="ac-field">
+        <span>后端地址（留空则使用本地账号）</span>
+        <input type="url" id="acBaseUrl" placeholder="https://your-api.example.com" value="${escapeHtml(baseUrl)}">
+      </label>
+      <button type="button" class="ac-btn-ghost" data-action="save-backend">保存后端地址</button>
+      <p class="ac-backend-hint">填写并部署后端后，注册/登录与身高、好友、装扮、跑图数据将保存在服务器并可跨设备同步。</p>
+    </div>
+
     <div class="ac-notice">
       <svg class="inline-icon" width="15" height="15"><use href="#i-warning"/></svg>
-      <p>本地账号不会上传服务器、不能跨设备同步，也无法登录 Sky 游戏或自动读取游戏数据；身高、好友、装扮、跑图等需在对应工具中自行记录。</p>
+      <p>${remote
+        ? '远程账号由拾光匣自己的后端提供，并非 Sky 游戏官方账号；数据由你在本系统内记录，无法自动读取游戏内容。'
+        : '本地账号不会上传服务器、不能跨设备同步，也无法登录 Sky 游戏或自动读取游戏数据；身高、好友、装扮、跑图等需在对应工具中自行记录。'}</p>
     </div>
   </div>`;
 }
@@ -112,7 +133,7 @@ function renderDashboard(user) {
       <div class="ac-avatar"><svg class="inline-icon" width="26" height="26"><use href="#i-person"/></svg></div>
       <div class="ac-dash-id">
         <h1>${escapeHtml(user.username)}</h1>
-        <p>本地账号 · 数据仅保存在此浏览器</p>
+        <p>${isRemote() ? '远程账号 · 数据保存在后端，可跨设备同步' : '本地账号 · 数据仅保存在此浏览器'}</p>
       </div>
       <button type="button" class="ac-btn-ghost" data-action="logout">退出登录</button>
     </div>
@@ -133,7 +154,9 @@ function renderDashboard(user) {
 
     <div class="ac-notice">
       <svg class="inline-icon" width="15" height="15"><use href="#i-warning"/></svg>
-      <p>本页面为浏览器本地记录，不与 Sky 游戏服务器互通；更换设备可用「数据转移」功能迁移。</p>
+      <p>${isRemote()
+        ? '数据由拾光匣后端保存，并非 Sky 游戏官方数据，不与游戏服务器互通。'
+        : '本页面为浏览器本地记录，不与 Sky 游戏服务器互通；更换设备可用「数据转移」功能迁移。'}</p>
     </div>
   </div>`;
 }
@@ -168,7 +191,13 @@ function wireEvents() {
       const action = sw.dataset.action;
       if (action === 'switch-register') { authMode = 'register'; render(); return; }
       if (action === 'switch-login') { authMode = 'login'; render(); return; }
-      if (action === 'logout') { logout(); authMode = 'login'; render(); return; }
+      if (action === 'logout') { Promise.resolve(logout()).then(() => { authMode = 'login'; render(); }); return; }
+      if (action === 'save-backend') {
+        const input = containerEl.querySelector('#acBaseUrl');
+        setBaseUrl(input.value);
+        render();
+        return;
+      }
     }
     const nav = e.target.closest('[data-route]');
     if (nav) {
@@ -178,9 +207,10 @@ function wireEvents() {
 
   const heightSelect = containerEl.querySelector('#acHeight');
   if (heightSelect) {
-    heightSelect.addEventListener('change', () => {
+    heightSelect.addEventListener('change', async () => {
       const val = heightSelect.value === '' ? null : Number(heightSelect.value);
-      updateProfile({ height: val });
+      await updateProfile({ height: val });
+      if (containerEl) render();
     });
   }
 }

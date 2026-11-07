@@ -1,0 +1,17 @@
+# Render 部署配置（Blueprint）
+# 使用方法：在 Render 控制台选择 New -> Blueprint，指向本仓库即可识别。
+# 免费套餐（free）的文件系统在重启/重新部署后会重置，如需持久化请升级到
+# 付费磁盘，或把 db.js 切换为托管数据库（Postgres 等）。
+services:
+  - type: web
+    name: shiguang-box-api
+    runtime: node
+    rootDir: server
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: CORS_ORIGIN
+        value: https://hly-0601.github.io
+      - key: NODE_VERSION
+        value: 22.23.2

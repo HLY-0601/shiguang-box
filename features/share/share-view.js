@@ -77,6 +77,7 @@
  ================================================================ */
 import { titlesLinkHtml } from '../../js/titles.js';
 import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey } from '../../js/state.js';
 
 const STYLE_LINK_ID = 'share-view-styles';
@@ -266,6 +267,7 @@ const TRANSLATIONS = {
 function t(key, params) {
  const dict = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS.ja;
  let str = dict[key] !== undefined ? dict[key] : (TRANSLATIONS.ja[key] !== undefined ? TRANSLATIONS.ja[key] : key);
+ if (CURRENT_LANG === 'zh') str = zhTr(str);
  if (params) {
  Object.keys(params).forEach((k) => { str = str.split('{' + k + '}').join(params[k]); });
  }

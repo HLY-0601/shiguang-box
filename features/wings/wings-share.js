@@ -65,11 +65,12 @@ function buildExportCardEl(opts = {}) {
     <div class="wg-exp-hero">
       <div class="wg-exp-hero-pct">${totalAll.toLocaleString()}${pickLang('', '<span class="wg-num-unit">枚</span>')}</div>
       <div class="wg-exp-hero-label">${t('光の翼 合計', 'Total Winged Light')}</div>
-      <div class="wg-exp-hero-nums">${t(
-        `季節精霊 ${seasonFeathers}/${seasonSpiritsTotal} ・ 恒常精霊 ${permFeathers}/${permTotal}`,
-        `Seasonal ${seasonFeathers}/${seasonSpiritsTotal} · Regular ${permFeathers}/${permTotal}`,
-      )}</div>
-      <div class="wg-exp-hero-sub">${t(`ケープレベル ${capeLevel}`, `Cape Level ${capeLevel}`)}</div>
+      <div class="wg-exp-hero-nums">${CURRENT_LANG === 'en'
+        ? `Seasonal ${seasonFeathers}/${seasonSpiritsTotal} · Regular ${permFeathers}/${permTotal}`
+        : (CURRENT_LANG === 'zh'
+          ? `季节先祖 ${seasonFeathers}/${seasonSpiritsTotal} ・ 常驻先祖 ${permFeathers}/${permTotal}`
+          : `季節精霊 ${seasonFeathers}/${seasonSpiritsTotal} ・ 恒常精霊 ${permFeathers}/${permTotal}`)}</div>
+      <div class="wg-exp-hero-sub">${CURRENT_LANG === 'en' ? `Cape Level ${capeLevel}` : (CURRENT_LANG === 'zh' ? `斗篷等级 ${capeLevel}` : `ケープレベル ${capeLevel}`)}</div>
     </div>
     ${comment ? `<div class="wg-exp-comment">${escapeHtml(comment)}</div>` : ''}
     <div class="wg-exp-date">${dateTxt}</div>

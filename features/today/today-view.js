@@ -118,7 +118,7 @@ function render() {
   r.querySelector('.td-top').innerHTML = `
     <header class="fun-head">
       <h1 class="fun-h1"><svg class="inline-icon" width="22" height="22" aria-hidden="true"><use href="#i-sparkle"/></svg>${t('デイリーチェックシート', 'Daily Checklist')}<span class="lab-badge">${t('試作', 'Preview')}</span></h1>
-      <p class="fun-lead">${t(`ゲームの日付で${p.month}月${p.day}日。デイリーリセットまで`, `Game day ${p.month}/${p.day}. Daily reset in`)} <b class="td-reset" data-cd="reset">${cd(b.nextReset)}</b></p>
+      <p class="fun-lead">${CURRENT_LANG === 'en' ? `Game day ${p.month}/${p.day}. Daily reset in` : (CURRENT_LANG === 'zh' ? `游戏内日期为${p.month}月${p.day}日。距每日重置还` : `ゲームの日付で${p.month}月${p.day}日。デイリーリセットまで`)} <b class="td-reset" data-cd="reset">${cd(b.nextReset)}</b></p>
     </header>
 
     <section class="td-grid">

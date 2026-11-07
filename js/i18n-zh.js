@@ -7,6 +7,10 @@
  ・未登録の文字列は元の日本語のまま返す（フォールバック）
  ================================================================ */
 
+import { EXTRA_PAIRS } from './i18n-zh-extra.js';
+import { RUNTIME_PAIRS } from './i18n-zh-runtime.js';
+import { COMPANION_PAIRS } from './i18n-zh-companion.js';
+
 const ZH_ENTRIES = [
  // ── 短いラベル系 ──
  ['引き継ぎコードを作成', '生成迁移码'],
@@ -2673,6 +2677,9 @@ const ZH_ENTRIES = [
 ];
 
 const ZH_MAP = new Map(ZH_ENTRIES);
+for (const pair of EXTRA_PAIRS) ZH_MAP.set(pair[0], pair[1]);
+for (const pair of RUNTIME_PAIRS) ZH_MAP.set(pair[0], pair[1]);
+for (const pair of COMPANION_PAIRS) ZH_MAP.set(pair[0], pair[1]);
 
 export function zhTr(ja) {
  if (typeof ja !== 'string') return ja;

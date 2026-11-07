@@ -269,7 +269,8 @@ const DICT = {
 
 export function t(key, vars) {
   const dict = DICT[CURRENT_LANG] || DICT.ja;
-  let str = dict[key] !== undefined ? dict[key] : (DICT.ja[key] !== undefined ? zhTr(DICT.ja[key]) : key);
+  let str = dict[key] !== undefined ? dict[key] : (DICT.ja[key] !== undefined ? DICT.ja[key] : key);
+  if (CURRENT_LANG === 'zh') str = zhTr(str);
   if (vars) {
     Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
   }

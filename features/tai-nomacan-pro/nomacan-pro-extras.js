@@ -16,6 +16,7 @@
    ctx.showToast(msg, type)
    ================================================================ */
 import { CURRENT_LANG } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { ptParts, ptToReal } from '../../js/pacific-time.js';
 import { t } from './data/i18n-nomacan-pro.js';
 import { displayAreaName as displayAreaNameRaw } from './data/area-names-en.js';
@@ -84,7 +85,7 @@ function renderTimed() {
       ? `<span class="nmp-tm-live">${esc(t('extras.timedLive', { n: mins }))}</span>`
       : `<span class="nmp-tm-next">${esc(jstFmt.format(new Date(start)))}</span><span class="nmp-tm-left">${esc(t('extras.timedLeft', { n: mins }))}</span>`;
     return `<div class="nmp-tm-row ${live ? 'is-live' : ''}">
-      <div class="nmp-tm-name">${esc(CURRENT_LANG === 'en' ? ev.en : ev.ja)}${picked ? `<span class="nmp-at-tag">${esc(t('extras.inRoute'))}</span>` : ''}
+      <div class="nmp-tm-name">${esc(CURRENT_LANG === 'en' ? ev.en : (CURRENT_LANG === 'zh' ? zhTr(ev.ja) : ev.ja))}${picked ? `<span class="nmp-at-tag">${esc(t('extras.inRoute'))}</span>` : ''}
         <div class="nmp-tm-sub">${light ? `${esc(t('extras.timedLight', { n: light }))} · ` : ''}${esc(t('extras.timedEvery', { m: String(ev.minute).padStart(2, '0') }))}</div></div>
       <div class="nmp-tm-when">${status}</div>
     </div>`;

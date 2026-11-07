@@ -300,7 +300,9 @@ async function renderCategoryGrid(token) {
  const totalAll = results.reduce((s, r) => s + r.total, 0);
  labelEl.textContent = CURRENT_LANG === 'en'
  ? `Categories (${totalOwned}/${totalAll} owned)`
- : `カテゴリ一覧（${totalOwned}/${totalAll} 所持）`;
+ : (CURRENT_LANG === 'zh'
+ ? `分类列表（${totalOwned}/${totalAll} 已拥有）`
+ : `カテゴリ一覧（${totalOwned}/${totalAll} 所持）`);
  }
 }
 

@@ -943,12 +943,7 @@ export function applyRouteSpell(areas, spellText, importedNamePrefix) {
 export const TEMPLATE_ROUTE_AREA_NAME = '20本ルート（ソロ・試練無し）';
 // 以前の名前。既に追加済みのエリア・ルートはこの名前なので、見つけたら新しい名前に揃える
 export const TEMPLATE_ROUTE_OLD_NAMES = ['20本ルート（ソロ・試練なし）'];
-export const TEMPLATE_ROUTE_CREDITS = [
-  { kind: 'tweet', ja: '参考にさせていただいたツイート', en: 'Original post on X', url: 'https://x.com/gmexNK/status/2102794759224123532?s=20' },
-  { kind: 'video', ja: '参考にさせていただいた動画', en: 'Reference video on YouTube', url: 'https://www.youtube.com/watch?v=VyzCXABi8ao' },
-  { kind: 'author', ja: '作成者様（YouTube）@kyohe', en: 'Creator (YouTube) @kyohe', url: 'https://www.youtube.com/@kyohe' },
-  { kind: 'author', ja: '作成者様（X）@gmexNK', en: 'Creator (X) @gmexNK', url: 'https://x.com/gmexNK' },
-];
+export const TEMPLATE_ROUTE_CREDITS = [];
 export function isTemplateRouteName(name) {
   return name === TEMPLATE_ROUTE_AREA_NAME || TEMPLATE_ROUTE_OLD_NAMES.includes(name);
 }

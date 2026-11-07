@@ -89,6 +89,7 @@
  （cp-i-* プレフィックス）を追加注入している。
  ================================================================ */
 import { CURRENT_LANG, RAW_LANG, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { nsKey, readCompanionDataRaw } from '../../js/state.js';
 import * as eventDashboard from '../shared/event-dashboard.js';
 import {
@@ -409,8 +410,14 @@ const TRANSLATIONS = {
 const LANG = RAW_LANG;
 const ALL_TRANSLATIONS = { ...TRANSLATIONS, 'zh-TW': TRANSLATIONS_ZH_TW, ko: TRANSLATIONS_KO };
 function t(key, vars) {
- const dict = ALL_TRANSLATIONS[LANG] || TRANSLATIONS.ja;
- let str = dict[key] !== undefined ? dict[key] : (TRANSLATIONS.ja[key] !== undefined ? TRANSLATIONS.ja[key] : key);
+ const dict = ALL_TRANSLATIONS[LANG];
+ let str;
+ if (dict && dict[key] !== undefined) {
+ str = dict[key];
+ } else {
+ const jaStr = TRANSLATIONS.ja[key] !== undefined ? TRANSLATIONS.ja[key] : key;
+ str = (LANG === 'zh') ? zhTr(jaStr) : jaStr;
+ }
  if (vars) Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
  return str;
 }
@@ -449,8 +456,14 @@ const SEASON_NAME_EN = CURRENT_SEASON_NAME === '遥かなる真珠の季節' ? '
 const FIRST_UNLOCK_SUFFIX = FIRST_UNLOCK_SUFFIX_I18N[LANG] || ' (初回解放)';
 function spiritNameOf(spirit) { return pickLang((SPIRIT_NAME_EN[spirit.name] || spirit.name), spirit.name); }
 const NAME_I18N = { en: NAME_EN, 'zh-TW': NAME_ZH_TW, ko: NAME_KO };
-function translateItemName(str) { const m = NAME_I18N[LANG]; return m ? (m[str] || str) : str; }
-const TYPE_LABELS = { en: TYPE_LABELS_EN, 'zh-TW': TYPE_LABELS_ZH_TW, ko: TYPE_LABELS_KO }[LANG] || TYPE_LABELS_JA;
+function translateItemName(str) {
+ if (LANG === 'zh') return zhTr(str);
+ const m = NAME_I18N[LANG]; return m ? (m[str] || str) : str;
+}
+const _TYPE_LABELS = { en: TYPE_LABELS_EN, 'zh-TW': TYPE_LABELS_ZH_TW, ko: TYPE_LABELS_KO }[LANG] || TYPE_LABELS_JA;
+const TYPE_LABELS = LANG === 'zh'
+ ? Object.fromEntries(Object.entries(TYPE_LABELS_JA).map(([k, v]) => [k, zhTr(v)]))
+ : _TYPE_LABELS;
 // 日付表示のロケール（Intl.DateTimeFormat用）
 const DATE_LOCALE = DATE_LOCALE_I18N[LANG] || 'ja-JP';
 const CIRCLED_NUMS = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨'];

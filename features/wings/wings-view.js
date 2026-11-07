@@ -817,8 +817,16 @@ function renderCapeLevels(total) {
  const nextNeed = CAPE_LEVELS[reachedLevel];
 
  const summary = reachedLevel >= CAPE_LEVELS.length
- ? t(`現在 光の翼 ${total}枚 — 最大ケープレベル ${CAPE_LEVELS.length} に到達済み！`, `Currently ${total} Winged Light — reached the max Cape Level ${CAPE_LEVELS.length}!`)
- : t(`現在 光の翼 ${total}枚（レベル${reachedLevel + 1}まであと ${nextNeed - total}枚）`, `Currently ${total} Winged Light (need ${nextNeed - total} more for Level ${reachedLevel + 1})`);
+ ? (CURRENT_LANG === 'en'
+   ? `Currently ${total} Winged Light — reached the max Cape Level ${CAPE_LEVELS.length}!`
+   : (CURRENT_LANG === 'zh'
+     ? `当前 光翼 ${total}个 — 已达到最大斗篷等级 ${CAPE_LEVELS.length}！`
+     : `現在 光の翼 ${total}枚 — 最大ケープレベル ${CAPE_LEVELS.length} に到達済み！`))
+ : (CURRENT_LANG === 'en'
+   ? `Currently ${total} Winged Light (need ${nextNeed - total} more for Level ${reachedLevel + 1})`
+   : (CURRENT_LANG === 'zh'
+     ? `当前 光翼 ${total}个（距等级${reachedLevel + 1}还需 ${nextNeed - total}个）`
+     : `現在 光の翼 ${total}枚（レベル${reachedLevel + 1}まであと ${nextNeed - total}枚）`));
  containerEl.querySelector('#wgCapeSummary').textContent = summary;
  containerEl.querySelector('#wgCapeLevelLabel').innerHTML = `<span class="cape-lv-prefix">Lv</span>${reachedLevel}`;
 
@@ -978,10 +986,11 @@ function render() {
  // ── 集計表示 ──
  const totalAll = seasonFeathers + permFeathers + lightChildrenGot + S.REBIRTH_BONUS;
  containerEl.querySelector('#wgSumFeathersAll').innerHTML = `${totalAll.toLocaleString()}<span class="num-unit">${t('枚', '')}</span>`;
- containerEl.querySelector('#wgSumFeathersAllSub').textContent = t(
- `季節精霊 ${seasonFeathers} + 恒常精霊 ${permFeathers} + 光の子 ${lightChildrenGot} + 転生 ${S.REBIRTH_BONUS}`,
- `Seasonal ${seasonFeathers} + Regular ${permFeathers} + Children of Light ${lightChildrenGot} + Rebirth ${S.REBIRTH_BONUS}`,
- );
+ containerEl.querySelector('#wgSumFeathersAllSub').textContent = CURRENT_LANG === 'en'
+ `Seasonal ${seasonFeathers} + Regular ${permFeathers} + Children of Light ${lightChildrenGot} + Rebirth ${S.REBIRTH_BONUS}`
+ : (CURRENT_LANG === 'zh'
+   ? `季节先祖 ${seasonFeathers} + 常驻先祖 ${permFeathers} + 光之崽 ${lightChildrenGot} + 转生 ${S.REBIRTH_BONUS}`
+   : `季節精霊 ${seasonFeathers} + 恒常精霊 ${permFeathers} + 光の子 ${lightChildrenGot} + 転生 ${S.REBIRTH_BONUS}`);
  containerEl.querySelector('#wgSumCandles').innerHTML = `${((seasonFeathers * S.CANDLES_PER_FEATHER) + permCandles).toLocaleString()}<span class="num-unit">${t('本', '')}</span>`;
  containerEl.querySelector('#wgSumFeathersSeason').textContent = `${seasonFeathers} / ${seasonSpiritsTotal}`;
  containerEl.querySelector('#wgSumFeathersPerm').textContent = `${permFeathers} / ${permTotal}`;

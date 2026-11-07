@@ -41,6 +41,7 @@
  使うため、このファイルにはロジックごと存在しない。
  ================================================================ */
 import { CURRENT_LANG, escapeHtml, trEvent, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { t } from './data/i18n-revisit.js';
 import { REVISIT_DATA, NEVER_REVISITED_DATA } from './data/revisit-data.js';
 import { SPIRIT_ITEMS_MAP } from './data/spirit-items-map.js';
@@ -419,7 +420,7 @@ function renderUpcomingRevisits() {
  <span class="spirit-icon-fallback"><svg class="inline-icon" width="20" height="20"><use href="#i-wing"/></svg></span>
  </div>
  <div class="spirit-body">
- <span class="spirit-name-ja">${escapeHtml(s.nameJa)}</span>
+ <span class="spirit-name-ja">${escapeHtml(zhTr(s.nameJa))}</span>
  <div class="spirit-name-en">${escapeHtml(s.nameEn)}</div>
  <div class="spirit-meta">
  ${badge}
@@ -555,7 +556,7 @@ function render() {
  <span class="spirit-icon-fallback"><svg class="inline-icon" width="20" height="20"><use href="#i-wing"/></svg></span>
  </div>
  <div class="spirit-body">
- <span class="spirit-name-ja">${escapeHtml(s.nameJa)}</span>
+ <span class="spirit-name-ja">${escapeHtml(zhTr(s.nameJa))}</span>
  <div class="spirit-name-en">${escapeHtml(s.nameEn)}</div>
  <div class="spirit-meta">
  ${ongoingBadge}
@@ -609,7 +610,7 @@ function renderNeverRevisited() {
  : '<svg class="inline-icon" width="20" height="20"><use href="#i-wing"/></svg>'}
  </div>
  <div class="spirit-body">
- <span class="spirit-name-ja">${escapeHtml(s.nameJa)}</span>
+ <span class="spirit-name-ja">${escapeHtml(zhTr(s.nameJa))}</span>
  <div class="spirit-name-en">${escapeHtml(s.nameEn)}</div>
  <div class="spirit-meta">
  <span class="spirit-badge">${escapeHtml(seasonDisplay(s.season))}</span>

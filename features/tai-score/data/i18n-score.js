@@ -468,11 +468,23 @@ const I18N = {
         can be loaded as-is.
         Your data is stored only in this device's browser and is never sent anywhere else.`,
   },
+  zh: {
+    introText: `这是一个可以自由创建、保存、分享和练习乐谱的工具，乐谱可在 Sky 的 5×3 键（竖琴等）乐器上演奏。
+        除支持导入、导出
+        <a href="https://sky-music.specy.app/" target="_blank" rel="noopener noreferrer">Sky Music Nightly</a> 格式的乐谱文件外，
+        还支持读取 Sky Studio 格式的乐谱文件，
+        因此已公开的乐谱也可以直接读取。
+        数据仅保存在本设备的浏览器中，不会发送到外部。`,
+    footerFormatCredit: '乐谱文件格式参考了 <a href="https://sky-music.specy.app/" target="_blank" rel="noopener noreferrer" class="footer-inline-link">Sky Music Nightly</a>（Specy）。',
+  },
 };
 
 export function t(key, vars) {
   const dict = I18N[CURRENT_LANG] || I18N.ja;
-  let str = dict[key] !== undefined ? dict[key] : (I18N.ja[key] !== undefined ? zhTr(I18N.ja[key]) : key);
+  let str = dict[key] !== undefined
+    ? dict[key]
+    : (I18N.ja[key] !== undefined ? I18N.ja[key] : key);
+  if (CURRENT_LANG === 'zh') str = zhTr(str);
   if (vars) {
     Object.keys(vars).forEach(k => { str = str.split('{' + k + '}').join(vars[k]); });
   }

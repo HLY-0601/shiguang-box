@@ -383,7 +383,7 @@ function resetInfoText() {
   const ms = Math.max(0, next - Date.now());
   const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000);
   const at = `${next.getMonth() + 1}/${next.getDate()} ${two(next.getHours())}:${two(next.getMinutes())}`;
-  return t(`次の自動リセット ${at}（あと${h}時間${m}分）`, `Next reset ${at} (in ${h}h ${m}m)`);
+  return CURRENT_LANG === 'en' ? `Next reset ${at} (in ${h}h ${m}m)` : (CURRENT_LANG === 'zh' ? `下次自动重置 ${at}（还剩${h}小时${m}分）` : `次の自動リセット ${at}（あと${h}時間${m}分）`);
 }
 function updateResetInfo() {
   const root = viewRoot();
@@ -731,11 +731,11 @@ function rowHtml(sheet, sec, r, index, mode) {
   const opts = r.opts.map((o, i) => {
     const on = !!c[i];
     if (mode === 'print') {
-      return `<span class="dc-opt">${shapeSvg(st, false)}${o.t === 'num' ? '<span class="dc-num-line"></span>' : ''}<span class="dc-opt-label">${escapeHtml(o.label)}</span></span>`;
+      return `<span class="dc-opt">${shapeSvg(st, false)}${o.t === 'num' ? '<span class="dc-num-line"></span>' : ''}<span class="dc-opt-label">${escapeHtml(zhTr(o.label))}</span></span>`;
     }
-    const boxBtn = `<button type="button" class="dc-box${on ? ' on' : ''}" role="checkbox" aria-checked="${on}" data-act="check" data-r="${rid}" data-i="${i}" aria-label="${escapeHtml(`${r.label} ${o.label}`)}">${shapeSvg(st, on)}${o.t === 'box' ? `<span class="dc-opt-label">${escapeHtml(o.label)}</span>` : ''}</button>`;
+    const boxBtn = `<button type="button" class="dc-box${on ? ' on' : ''}" role="checkbox" aria-checked="${on}" data-act="check" data-r="${rid}" data-i="${i}" aria-label="${escapeHtml(`${r.label} ${o.label}`)}">${shapeSvg(st, on)}${o.t === 'box' ? `<span class="dc-opt-label">${escapeHtml(zhTr(o.label))}</span>` : ''}</button>`;
     if (o.t === 'num') {
-      return `<span class="dc-opt dc-opt-num">${boxBtn}<input class="dc-num" type="number" inputmode="numeric" min="0" max="999" data-edit="num" data-r="${rid}" data-i="${i}" value="${escapeHtml(c[i + 'n'] || '')}" aria-label="${escapeHtml(`${r.label} ${o.label}`)}"><span class="dc-opt-label">${escapeHtml(o.label)}</span></span>`;
+      return `<span class="dc-opt dc-opt-num">${boxBtn}<input class="dc-num" type="number" inputmode="numeric" min="0" max="999" data-edit="num" data-r="${rid}" data-i="${i}" value="${escapeHtml(c[i + 'n'] || '')}" aria-label="${escapeHtml(`${r.label} ${o.label}`)}"><span class="dc-opt-label">${escapeHtml(zhTr(o.label))}</span></span>`;
     }
     return boxBtn;
   }).join('');
@@ -743,7 +743,7 @@ function rowHtml(sheet, sec, r, index, mode) {
   const goalMark = r.goal && !goaling ? `<span class="dc-goal-mark" title="${escapeHtml(t('目標', 'Goal'))}" aria-label="${escapeHtml(t('目標', 'Goal'))}">★</span>` : '';
   const goalBtn = goaling && mode === 'screen'
     ? `<button type="button" class="dc-goal-btn${r.goal ? ' on' : ''}" data-act="goal" data-r="${rid}" aria-pressed="${!!r.goal}">${r.goal ? '★' : '☆'} ${escapeHtml(t('目標', 'Goal'))}</button>` : '';
-  return `<div class="dc-row${allDone ? ' done' : ''}${r.goal ? ' is-goal' : ''}"><span class="dc-label">${goalMark}${escapeHtml(r.label)}${goalBtn}</span><span class="dc-opts${r.cols === 2 ? ' cols-2' : ''}">${opts}</span></div>`;
+  return `<div class="dc-row${allDone ? ' done' : ''}${r.goal ? ' is-goal' : ''}"><span class="dc-label">${goalMark}${escapeHtml(zhTr(r.label))}${goalBtn}</span><span class="dc-opts${r.cols === 2 ? ' cols-2' : ''}">${opts}</span></div>`;
 }
 
 function sheetAdminHtml() {

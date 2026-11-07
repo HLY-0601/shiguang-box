@@ -422,7 +422,7 @@ function renderShell() {
  return `
  <div class="nomacan-pro-view nmp-root">
  <div class="nmp-wrap">
- <header class="nmp-header"><h1>${t('pageTitle') || (CURRENT_LANG === 'en' ? 'Nomacan Calculator Pro' : 'ノマキャン計算機プロ')}</h1></header>
+ <header class="nmp-header"><h1>${t('pageTitle') || (CURRENT_LANG === 'en' ? 'Nomacan Calculator Pro' : (CURRENT_LANG === 'zh' ? '跑图计算器专业版' : 'ノマキャン計算機プロ'))}</h1></header>
  <details class="nmp-card nmp-visibility-card">
  <summary class="nmp-visibility-summary"><svg class="inline-icon" width="14" height="14"><use href="#i-settings"/></svg> ${escHtml(t('settings.panelHeader'))}</summary>
  <div class="nmp-visibility-options">

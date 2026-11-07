@@ -209,7 +209,7 @@ function cardHtml(s) {
   if (s.itemsYear || s.ownedNow) tiles.push(tile('i-folder', fmt(s.itemsYear), t('集めたアイテム', 'Items collected'), s.totalNow ? t(`いまの所持 ${fmt(s.ownedNow)} / ${fmt(s.totalNow)}`, `Owned ${fmt(s.ownedNow)} / ${fmt(s.totalNow)}`) : ''));
   if (s.emotesYear || s.emPct != null) tiles.push(tile('i-masks', fmt(s.emotesYear), t('覚えたエモート', 'Emotes learned'), s.emPct != null ? t(`所持率 ${s.emPct}%`, `${s.emPct}% complete`) : ''));
   if (s.wingsYear || s.wgPct != null) tiles.push(tile('i-wing', fmt(s.wingsYear), t('受け取った羽', 'Wings received'), s.wgPct != null ? t(`所持率 ${s.wgPct}%`, `${s.wgPct}% complete`) : ''));
-  if (s.tree && s.tree.totalNodes) tiles.push(tile('i-tree', fmt(s.tree.doneNodes), t('解放したツリーのマス', 'Tree nodes unlocked'), t(`全${fmt(s.tree.totalNodes)}マス中`, `of ${fmt(s.tree.totalNodes)}`)));
+  if (s.tree && s.tree.totalNodes) tiles.push(tile('i-tree', fmt(s.tree.doneNodes), t('解放したツリーのマス', 'Tree nodes unlocked'), CURRENT_LANG === 'en' ? `of ${fmt(s.tree.totalNodes)}` : (CURRENT_LANG === 'zh' ? `共 ${fmt(s.tree.totalNodes)} 格` : `全${fmt(s.tree.totalNodes)}マス中`)));
   if (s.candles) tiles.push(tile('i-candle', fmt(s.candles), t('記録したキャンドル', 'Candles logged'), s.candleDays ? t(`${s.candleDays}日記録・最長${s.longest}日連続`, `${s.candleDays} days · best ${s.longest} in a row`) : ''));
   if (s.dcDays) tiles.push(tile('i-check', fmt(s.dcDays), t('チェックシートの日', 'Checklist days'), ''));
   if (s.bingo.weeks) tiles.push(tile('i-grid', fmt(s.bingo.lines), t('ビンゴ', 'Bingos'), t(`${s.bingo.weeks}週・${fmt(s.bingo.filled)}マス`, `${s.bingo.weeks} weeks · ${fmt(s.bingo.filled)} squares`)));

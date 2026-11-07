@@ -5,6 +5,7 @@
    同じ分割方針）。
    ================================================================ */
 import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
+import { zhTr } from '../../js/i18n-zh.js';
 import { t } from './data/i18n-nomacan-pro.js';
 import * as S from './nomacan-pro-state.js';
 import { nsKey } from '../../js/state.js';
@@ -103,7 +104,7 @@ function renderRouteCard(route) {
 
   return `<div class="nmp-route-card">
     <div class="nmp-route-card-head">
-      <input type="text" class="nmp-route-name-input" value="${escapeHtml(route.name)}" oninput="__nmpRouteNameInput('${route.id}', this.value)">
+      <input type="text" class="nmp-route-name-input" value="${escapeHtml(displayName(route.name))}" oninput="__nmpRouteNameInput('${route.id}', this.value)">
       <div class="nmp-route-card-actions">
         <button type="button" class="nmp-icon-btn" onclick="__nmpRouteMove('${route.id}', -1)" title="↑"><svg class="inline-icon" width="12" height="12" style="transform:rotate(180deg)"><use href="#i-chevron-down"/></svg></button>
         <button type="button" class="nmp-icon-btn" onclick="__nmpRouteMove('${route.id}', 1)" title="↓"><svg class="inline-icon" width="12" height="12"><use href="#i-chevron-down"/></svg></button>
@@ -147,7 +148,7 @@ function renderRouteCard(route) {
               </div>
             </div>`).join('')}
         </div>
-        <textarea class="nmp-route-memo" placeholder="${escT(t('route.memoPlaceholder'))}" oninput="__nmpRouteMemoInput('${route.id}', this.value)">${escapeHtml(route.memo || '')}</textarea>
+        <textarea class="nmp-route-memo" placeholder="${escT(t('route.memoPlaceholder'))}" oninput="__nmpRouteMemoInput('${route.id}', this.value)">${escapeHtml(zhTr(route.memo || ''))}</textarea>
         <div class="nmp-route-summary">
           <div class="nmp-route-summary-row"><span>${escT(t('route.idealTotal'))}</span><span>🔥${stats.light} / ⏱️${timeStr} / ${escT(t('route.efficiency'))} <b>${stats.eff.toFixed(1)}/s</b></span></div>
         </div>
@@ -264,6 +265,7 @@ export function seedTemplateRoute() {
 
 // テンプレートルートのカードに出す、参考元（ツイート・動画・作成者）へのリンク
 function templateCreditsHtml() {
+  if (!S.TEMPLATE_ROUTE_CREDITS.length) return '';
   const ICON = { tweet: 'i-link', video: 'i-monitor', author: 'i-person' };
   const links = S.TEMPLATE_ROUTE_CREDITS.map((c) => `
       <a class="nmp-credit-link" href="${escapeHtml(c.url)}" target="_blank" rel="noopener noreferrer">

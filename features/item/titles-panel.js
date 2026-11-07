@@ -242,7 +242,7 @@ async function renderPanel(container) {
         </svg>
         <div class="titp-gauge-center">
           <div class="titp-gauge-pct">${pct !== null ? `${pct}<span class="titp-gauge-pct-unit">%</span>` : '--%'}</div>
-          <div class="titp-gauge-lbl">TOTAL</div>
+          <div class="titp-gauge-lbl">${pickLang('TOTAL', '合計')}</div>
         </div>
       </div>
       <div class="titp-gauge-text">

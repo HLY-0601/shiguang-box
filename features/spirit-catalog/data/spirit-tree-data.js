@@ -1399,8 +1399,8 @@ export const SPIRIT_TREE_DATA = [
                 "itemName": "Small Blessing",
                 "itemNameJa": "小さな祝福",
                 "itemType": "Special",
-                "nw": "KytTHdPnRy",
-                "n": "H2LJoq4HlZ",
+                "nw": null,
+                "n": "KytTHdPnRy",
                 "ne": null,
                 "itemCatKey": null,
                 "itemCostId": null
@@ -1415,7 +1415,7 @@ export const SPIRIT_TREE_DATA = [
                 "itemNameJa": "羽ロック",
                 "itemType": "WingBuff",
                 "nw": null,
-                "n": "QP2TB1lcU-",
+                "n": "4Wsd0hVTfl",
                 "ne": null,
                 "itemCatKey": null,
                 "itemCostId": null
@@ -1430,7 +1430,7 @@ export const SPIRIT_TREE_DATA = [
                 "itemNameJa": "祝福",
                 "itemType": "Special",
                 "nw": null,
-                "n": "4Wsd0hVTfl",
+                "n": null,
                 "ne": null,
                 "itemCatKey": null,
                 "itemCostId": null
@@ -1459,9 +1459,9 @@ export const SPIRIT_TREE_DATA = [
                 "itemName": "Heart",
                 "itemNameJa": "ハート",
                 "itemType": "Special",
-                "nw": null,
+                "nw": "H2LJoq4HlZ",
                 "n": null,
-                "ne": null,
+                "ne": "QP2TB1lcU-",
                 "itemCatKey": null,
                 "itemCostId": null
             },

@@ -41369,5 +41369,910 @@ export const SPIRIT_TREE_DATA = [
       }
     ],
     "nodeCount": 6
+  },
+  {
+    "guid": "event_mischief",
+    "name": "Days of Mischief",
+    "nameJa": "悪戯の日々",
+    "nameZh": "万圣节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_mischief",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_m_root",
+    "nodes": [
+      {
+        "guid": "ev_m_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_m_n1",
+        "nw": "ev_m_nw1"
+      },
+      {
+        "guid": "ev_m_nw1",
+        "cost": {
+          "t": 32
+        },
+        "itemName": "Mischief Broom",
+        "itemNameJa": "悪戯ほうき",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_m_n1",
+        "cost": {
+          "t": 2
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_m_nw2",
+        "n": "ev_m_n2"
+      },
+      {
+        "guid": "ev_m_nw2",
+        "cost": {
+          "t": 19
+        },
+        "itemName": "Mischief Hair",
+        "itemNameJa": "悪戯ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_m_n2",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "nw": "ev_m_nw3",
+        "n": "ev_m_n3"
+      },
+      {
+        "guid": "ev_m_nw3",
+        "cost": {
+          "t": 27
+        },
+        "itemName": "Mischief Dress",
+        "itemNameJa": "悪戯ワンピース",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_m_n3",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "nw": "ev_m_nw4",
+        "n": "ev_m_n4"
+      },
+      {
+        "guid": "ev_m_nw4",
+        "cost": {
+          "t": 15
+        },
+        "itemName": "Mischief Ghost",
+        "itemNameJa": "悪戯ゴースト",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_m_n4",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest"
+      }
+    ],
+    "nodeCount": 9
+  },
+  {
+    "guid": "event_camping",
+    "name": "Summer Camping",
+    "nameJa": "サマーキャンピング",
+    "nameZh": "夏日露营",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_camping",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_c_root",
+    "nodes": [
+      {
+        "guid": "ev_c_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_c_n1",
+        "nw": "ev_c_nw1",
+        "ne": "ev_c_ne1"
+      },
+      {
+        "guid": "ev_c_nw1",
+        "cost": {
+          "t": 10
+        },
+        "itemName": "Camping Tent",
+        "itemNameJa": "キャンプテント",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_c_ne1",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Camping Curtain",
+        "itemNameJa": "キャンプカーテン",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_c_n1",
+        "cost": {
+          "t": 2
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_c_nw2",
+        "n": "ev_c_n2"
+      },
+      {
+        "guid": "ev_c_nw2",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Camping Stand",
+        "itemNameJa": "キャンプスタンド",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_c_n2",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Camping Chair",
+        "itemNameJa": "キャンプチェア",
+        "itemType": "Furniture"
+      }
+    ],
+    "nodeCount": 6
+  },
+  {
+    "guid": "event_sunlight",
+    "name": "Days of Sunlight",
+    "nameJa": "日光の日々",
+    "nameZh": "日光节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_sunlight",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_su_root",
+    "nodes": [
+      {
+        "guid": "ev_su_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_su_n1",
+        "nw": "ev_su_nw1",
+        "ne": "ev_su_ne1"
+      },
+      {
+        "guid": "ev_su_nw1",
+        "cost": {
+          "t": 38
+        },
+        "itemName": "Sunlight Board",
+        "itemNameJa": "日光ボード",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_su_ne1",
+        "cost": {
+          "t": 21
+        },
+        "itemName": "Sunlight Hair",
+        "itemNameJa": "日光ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_su_n1",
+        "cost": {
+          "t": 2
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_su_nw2",
+        "n": "ev_su_n2",
+        "ne": "ev_su_ne2"
+      },
+      {
+        "guid": "ev_su_nw2",
+        "cost": {
+          "t": 23
+        },
+        "itemName": "Sunlight Diver",
+        "itemNameJa": "日光ダイバー",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_su_ne2",
+        "cost": {
+          "c": 75
+        },
+        "itemName": "Sunlight Cape",
+        "itemNameJa": "日光ケープ",
+        "itemType": "Cape"
+      },
+      {
+        "guid": "ev_su_n2",
+        "cost": {
+          "c": 98
+        },
+        "itemName": "Sunlight Mask",
+        "itemNameJa": "日光マスク",
+        "itemType": "Mask"
+      }
+    ],
+    "nodeCount": 7
+  },
+  {
+    "guid": "event_anniv7",
+    "name": "Sky 7th Anniversary",
+    "nameJa": "スカイ7周年",
+    "nameZh": "7周年",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_anniv7",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_a_root",
+    "nodes": [
+      {
+        "guid": "ev_a_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_a_n1",
+        "nw": "ev_a_nw1",
+        "ne": "ev_a_ne1"
+      },
+      {
+        "guid": "ev_a_nw1",
+        "cost": {
+          "t": 25
+        },
+        "itemName": "Anniversary TV",
+        "itemNameJa": "記念テレビ",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_a_ne1",
+        "cost": {
+          "t": 18
+        },
+        "itemName": "Anniversary Cap",
+        "itemNameJa": "記念キャップ",
+        "itemType": "HeadAccessory"
+      },
+      {
+        "guid": "ev_a_n1",
+        "cost": {
+          "t": 2
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_a_nw2",
+        "n": "ev_a_n2",
+        "ne": "ev_a_ne2"
+      },
+      {
+        "guid": "ev_a_nw2",
+        "cost": {
+          "c": 29
+        },
+        "itemName": "Anniversary Laptop",
+        "itemNameJa": "記念ラップトップ",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_a_ne2",
+        "cost": {
+          "c": 45
+        },
+        "itemName": "Anniversary Clapper",
+        "itemNameJa": "記念クラッパー",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_a_n2",
+        "cost": {
+          "c": 2
+        },
+        "itemName": "Cake",
+        "itemNameJa": "ケーキ",
+        "itemType": "Special",
+        "nw": "ev_a_nw3",
+        "n": "ev_a_n3",
+        "ne": "ev_a_ne3"
+      },
+      {
+        "guid": "ev_a_nw3",
+        "cost": {
+          "c": 52
+        },
+        "itemName": "Anniversary Sofa",
+        "itemNameJa": "記念ソファ",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_a_ne3",
+        "cost": {
+          "c": 22
+        },
+        "itemName": "Anniversary Balloons",
+        "itemNameJa": "記念バルーン",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_a_n3",
+        "cost": {
+          "c": 72
+        },
+        "itemName": "Anniversary Tuxedo",
+        "itemNameJa": "記念タキシード",
+        "itemType": "Outfit"
+      }
+    ],
+    "nodeCount": 10
+  },
+  {
+    "guid": "event_treasure",
+    "name": "Days of Treasure",
+    "nameJa": "宝探しの日々",
+    "nameZh": "宝藏节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_treasure",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_t_root",
+    "nodes": [
+      {
+        "guid": "ev_t_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_t_n1",
+        "nw": "ev_t_nw1",
+        "ne": "ev_t_ne1"
+      },
+      {
+        "guid": "ev_t_nw1",
+        "cost": {
+          "t": 25
+        },
+        "itemName": "Treasure Outfit",
+        "itemNameJa": "宝探し衣装",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_t_ne1",
+        "cost": {
+          "t": 14
+        },
+        "itemName": "Treasure Hair",
+        "itemNameJa": "宝探しヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_t_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_t_nw2",
+        "n": "ev_t_n2",
+        "ne": "ev_t_ne2"
+      },
+      {
+        "guid": "ev_t_nw2",
+        "cost": {
+          "t": 19
+        },
+        "itemName": "Treasure X",
+        "itemNameJa": "宝探しX",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_t_ne2",
+        "cost": {
+          "c": 32
+        },
+        "itemName": "Treasure Boots",
+        "itemNameJa": "宝探しブーツ",
+        "itemType": "Shoes"
+      },
+      {
+        "guid": "ev_t_n2",
+        "cost": {
+          "c": 35
+        },
+        "itemName": "Treasure Shovel",
+        "itemNameJa": "宝探しシャベル",
+        "itemType": "Held"
+      }
+    ],
+    "nodeCount": 7
+  },
+  {
+    "guid": "event_nature",
+    "name": "Days of Nature",
+    "nameJa": "自然の日々",
+    "nameZh": "自然日",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_nature",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_na_root",
+    "nodes": [
+      {
+        "guid": "ev_na_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_na_n1",
+        "nw": "ev_na_nw1",
+        "ne": "ev_na_ne1"
+      },
+      {
+        "guid": "ev_na_nw1",
+        "cost": {
+          "t": 22
+        },
+        "itemName": "Nature Hair",
+        "itemNameJa": "自然ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_na_ne1",
+        "cost": {
+          "t": 21
+        },
+        "itemName": "Nature Flippers",
+        "itemNameJa": "自然足ヒレ",
+        "itemType": "Shoes"
+      },
+      {
+        "guid": "ev_na_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_na_nw2",
+        "n": "ev_na_n2",
+        "ne": "ev_na_ne2"
+      },
+      {
+        "guid": "ev_na_nw2",
+        "cost": {
+          "t": 17
+        },
+        "itemName": "Nature Shell",
+        "itemNameJa": "自然貝殻",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_na_ne2",
+        "cost": {
+          "c": 45
+        },
+        "itemName": "Nature Antlers",
+        "itemNameJa": "自然角",
+        "itemType": "HairAccessory"
+      },
+      {
+        "guid": "ev_na_n2",
+        "cost": {
+          "c": 70
+        },
+        "itemName": "Nature Outfit",
+        "itemNameJa": "自然衣装",
+        "itemType": "Outfit"
+      }
+    ],
+    "nodeCount": 7
+  },
+  {
+    "guid": "event_bloom",
+    "name": "Days of Bloom",
+    "nameJa": "花の日々",
+    "nameZh": "花节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_bloom",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_b_root",
+    "nodes": [
+      {
+        "guid": "ev_b_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_b_n1",
+        "nw": "ev_b_nw1",
+        "ne": "ev_b_ne1"
+      },
+      {
+        "guid": "ev_b_nw1",
+        "cost": {
+          "t": 26
+        },
+        "itemName": "Bloom Outfit",
+        "itemNameJa": "花衣装",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_b_ne1",
+        "cost": {
+          "t": 18
+        },
+        "itemName": "Bloom Hair",
+        "itemNameJa": "花ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_b_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_b_nw2",
+        "n": "ev_b_n2",
+        "ne": "ev_b_ne2"
+      },
+      {
+        "guid": "ev_b_nw2",
+        "cost": {
+          "t": 30
+        },
+        "itemName": "Bloom Skirt",
+        "itemNameJa": "花スカート",
+        "itemType": "Cape"
+      },
+      {
+        "guid": "ev_b_ne2",
+        "cost": {
+          "c": 32
+        },
+        "itemName": "Bloom Mask",
+        "itemNameJa": "花マスク",
+        "itemType": "Mask"
+      },
+      {
+        "guid": "ev_b_n2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_b_nw3",
+        "n": "ev_b_n3"
+      },
+      {
+        "guid": "ev_b_nw3",
+        "cost": {
+          "c": 38
+        },
+        "itemName": "Bloom Rose",
+        "itemNameJa": "花バラ",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_b_n3",
+        "cost": {
+          "c": 48
+        },
+        "itemName": "Bloom Hairpin",
+        "itemNameJa": "花ヘアピン",
+        "itemType": "HairAccessory"
+      }
+    ],
+    "nodeCount": 9
+  },
+  {
+    "guid": "event_love",
+    "name": "Days of Love",
+    "nameJa": "愛の日々",
+    "nameZh": "情人节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_love",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_l_root",
+    "nodes": [
+      {
+        "guid": "ev_l_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_l_n1",
+        "nw": "ev_l_nw1",
+        "ne": "ev_l_ne1"
+      },
+      {
+        "guid": "ev_l_nw1",
+        "cost": {
+          "c": 52
+        },
+        "itemName": "Love Hair",
+        "itemNameJa": "愛ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_l_ne1",
+        "cost": {
+          "h": 15
+        },
+        "itemName": "Love Cake",
+        "itemNameJa": "愛ケーキ",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_l_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_l_nw2",
+        "n": "ev_l_n2",
+        "ne": "ev_l_ne2"
+      },
+      {
+        "guid": "ev_l_nw2",
+        "cost": {
+          "h": 12
+        },
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
+        "itemType": "Special"
+      },
+      {
+        "guid": "ev_l_ne2",
+        "cost": {
+          "c": 45
+        },
+        "itemName": "Love Beret",
+        "itemNameJa": "愛ベレー",
+        "itemType": "HeadAccessory"
+      },
+      {
+        "guid": "ev_l_n2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Love Potion",
+        "itemNameJa": "愛の薬",
+        "itemType": "Held"
+      }
+    ],
+    "nodeCount": 7
+  },
+  {
+    "guid": "event_fortune",
+    "name": "Days of Fortune",
+    "nameJa": "幸運の日々",
+    "nameZh": "春节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_fortune",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_f_root",
+    "nodes": [
+      {
+        "guid": "ev_f_root",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_f_nw1",
+        "n": "ev_f_n1",
+        "ne": "ev_f_ne1"
+      },
+      {
+        "guid": "ev_f_nw1",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Fortune Horse",
+        "itemNameJa": "幸運馬",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_f_ne1",
+        "cost": {
+          "h": 22
+        },
+        "itemName": "Fortune Lantern",
+        "itemNameJa": "幸運ランタン",
+        "itemType": "Furniture"
+      },
+      {
+        "guid": "ev_f_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_f_nw2",
+        "n": "ev_f_n2",
+        "ne": "ev_f_ne2"
+      },
+      {
+        "guid": "ev_f_nw2",
+        "cost": {
+          "t": 48
+        },
+        "itemName": "Fortune Cape",
+        "itemNameJa": "幸運ケープ",
+        "itemType": "Cape"
+      },
+      {
+        "guid": "ev_f_ne2",
+        "cost": {
+          "c": 15
+        },
+        "itemName": "Fortune Scroll",
+        "itemNameJa": "幸運巻物",
+        "itemType": "Music"
+      },
+      {
+        "guid": "ev_f_n2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Fortune Bottle",
+        "itemNameJa": "幸運ボトル",
+        "itemType": "Special",
+        "nw": "ev_f_nw3",
+        "n": "ev_f_n3"
+      },
+      {
+        "guid": "ev_f_nw3",
+        "cost": {
+          "c": 56
+        },
+        "itemName": "Fortune Mask",
+        "itemNameJa": "幸運マスク",
+        "itemType": "Mask"
+      },
+      {
+        "guid": "ev_f_n3",
+        "cost": {
+          "c": 65
+        },
+        "itemName": "Fortune Outfit",
+        "itemNameJa": "幸運衣装",
+        "itemType": "Outfit"
+      }
+    ],
+    "nodeCount": 9
+  },
+  {
+    "guid": "event_tournament",
+    "name": "Tournament of Triumph",
+    "nameJa": "勝利の祭典",
+    "nameZh": "竞技节",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_tournament",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_to_root",
+    "nodes": [
+      {
+        "guid": "ev_to_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_to_n1",
+        "nw": "ev_to_nw1",
+        "ne": "ev_to_ne1"
+      },
+      {
+        "guid": "ev_to_nw1",
+        "cost": {
+          "t": 48
+        },
+        "itemName": "Tournament Snowboard",
+        "itemNameJa": "大会スノーボード",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_to_ne1",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Tournament Hair",
+        "itemNameJa": "大会ヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_to_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "n": "ev_to_n2"
+      },
+      {
+        "guid": "ev_to_n2",
+        "cost": {
+          "c": 36
+        },
+        "itemName": "Tournament Torch",
+        "itemNameJa": "大会たいまつ",
+        "itemType": "Held"
+      },
+      {
+        "guid": "ev_to_nw2",
+        "cost": {
+          "c": 42
+        },
+        "itemName": "Tournament Wig",
+        "itemNameJa": "大会ウィッグ",
+        "itemType": "Hair"
+      }
+    ],
+    "nodeCount": 6
   }
 ];

@@ -124,5 +124,7 @@ export const ITEMS = [
   { id: 'outfit_115', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/0/0a/Showy-Merchant-Outfit-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Showy Merchant Outfit", name: '見せびらかしの商人　アウトフィット', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
   { id: 'outfit_116', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/6/6d/Wrestling-Sailor-Outfit-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Wrestling Sailor Outfit", name: '腕っぷし自慢の船乗り　アウトフィット', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
   // ── ファッションの日々（テスト版） ──
-  { id: 'outfit_117', img: '/shiguang-box/assets/fashion-day/right-mid-item.png', nameEn: "Style Outfit", name: 'スタイル　ボトムス', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, type: 'onesie' }
+  { id: 'outfit_117', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans.png', nameEn: "Style Wide-Leg Jeans", name: 'スタイル　ワイドレッグジーンズ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
+  { id: 'outfit_118', img: '/shiguang-box/assets/fashion-day/dapper-trio.png', nameEn: "Style Dapper Trio", name: 'スタイル　ダッパートリオ', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' },
+  { id: 'outfit_119', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans-pack.png', nameEn: "Style Wide-Leg Jeans Pack", name: 'スタイル　ワイドレッグジーンズ　パック', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' }
 ];

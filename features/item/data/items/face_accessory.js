@@ -35,5 +35,6 @@ export const ITEMS = [
   { id: 'face_accessory_032', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/7/7b/Fortune-Token-Glasses-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Fortune Token Glasses", name: '来福古銭グラス', event: '来福の日々', cost: 'premium', dye: false, noReprint: false },
   { id: 'face_accessory_033', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/d/df/Migrating-Bellmaker-Face-Accessory-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Migrating Bellmaker Face Accessory", name: '渡りの鐘職人　フェイスアクセサリー', event: '渡りの季節', cost: 'free', dye: true, noReprint: false },
   // ── ファッションの日々（テスト版） ──
-  { id: 'face_accessory_034', img: '/shiguang-box/assets/fashion-day/eyemask.png', nameEn: "Style Eyemask", name: 'スタイル　アイマスク', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false }
+  { id: 'face_accessory_034', img: '/shiguang-box/assets/fashion-day/heart-sunglasses.png', nameEn: "Style Heart Sunglasses", name: 'スタイル　ハートサングラス', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true },
+  { id: 'face_accessory_035', img: '/shiguang-box/assets/fashion-day/flame-sunglasses.png', nameEn: "Style Flame Sunglasses", name: 'スタイル　フレームサングラス', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true }
 ];

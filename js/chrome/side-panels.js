@@ -71,6 +71,35 @@ export function sync() {
   root.toggle('side-dash-on', dash);
   if (tools && WIDE.matches) mountLeft(); else unmountLeft();
   if (dash && WIDE.matches) mountRight(); else unmountRight();
+  // 侧栏关了就显示边缘的重新打开按钮
+  ensureReopenBtns();
+}
+
+function ensureReopenBtns() {
+  let btnL = document.getElementById('sideReopenLeft');
+  let btnR = document.getElementById('sideReopenRight');
+  const tools = getSidePanelEnabled('tools');
+  const dash = getSidePanelEnabled('dash');
+  if (!btnL) {
+    btnL = document.createElement('button');
+    btnL.id = 'sideReopenLeft';
+    btnL.className = 'side-reopen-btn';
+    btnL.innerHTML = '☰';
+    btnL.title = t('関連ツールを表示', 'Show Related Tools');
+    btnL.addEventListener('click', () => { setSidePanelEnabled('tools', true); sync(); });
+    document.body.appendChild(btnL);
+  }
+  if (!btnR) {
+    btnR = document.createElement('button');
+    btnR.id = 'sideReopenRight';
+    btnR.className = 'side-reopen-btn side-reopen-right';
+    btnR.innerHTML = '📅';
+    btnR.title = t('ダッシュボードを表示', 'Show Dashboard');
+    btnR.addEventListener('click', () => { setSidePanelEnabled('dash', true); sync(); });
+    document.body.appendChild(btnR);
+  }
+  btnL.style.display = (!tools && WIDE.matches) ? 'flex' : 'none';
+  btnR.style.display = (!dash && WIDE.matches) ? 'flex' : 'none';
 }
 
 export function init() {

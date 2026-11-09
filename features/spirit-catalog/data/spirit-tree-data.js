@@ -684,6 +684,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "蝶々使い",
+        "nameZh":  "引蝶人",
         "rootNodeGuid":  "4uNOt6mgV6"
     },
     {
@@ -846,6 +847,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "賞賛する鐘の造り手",
+        "nameZh":  "鼓掌钟匠",
         "rootNodeGuid":  "rnOFxvQ8yB"
     },
     {
@@ -1072,6 +1074,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "手を振る鐘の造り手",
+        "nameZh":  "挥手钟匠",
         "rootNodeGuid":  "wuxyhkhW4K"
     },
     {
@@ -1234,6 +1237,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "寝不足の造舟師",
+        "nameZh":  "犯困船工",
         "rootNodeGuid":  "Y25JKDR8q0"
     },
     {
@@ -1411,6 +1415,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "笑う光採取者",
+        "nameZh":  "欢笑光农",
         "rootNodeGuid":  "bQCdZEnHLj"
     },
     {
@@ -1535,6 +1540,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "鳥の語り部",
+        "nameZh":  "鸟语者",
         "rootNodeGuid":  "VOhxITfbm_"
     },
     {
@@ -1697,6 +1703,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "疲弊した荷積み人",
+        "nameZh":  "辛劳码头工",
         "rootNodeGuid":  "RMoSSq_rSG"
     },
     {
@@ -1793,6 +1800,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "式典の礼拝者",
+        "nameZh":  "祭光参事",
         "rootNodeGuid":  "MImCpY6QaA"
     },
     {
@@ -1842,6 +1850,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "草原の長老",
+        "nameZh":  "云野长老",
         "rootNodeGuid":  "6dVXKBi60V"
     },
     {
@@ -2019,6 +2028,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "怯える難民",
+        "nameZh":  "惊恐避难者",
         "rootNodeGuid":  "dXj9dEGxGF"
     },
     {
@@ -2196,6 +2206,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "昏倒する戦士",
+        "nameZh":  "昏厥战士",
         "rootNodeGuid":  "CdzqIK7HYf"
     },
     {
@@ -2350,6 +2361,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "勇敢な戦士",
+        "nameZh":  "无畏士兵",
         "rootNodeGuid":  "GZpqRE7Qt9"
     },
     {
@@ -2504,6 +2516,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "隠れ潜む生存者",
+        "nameZh":  "隐秘幸存者",
         "rootNodeGuid":  "oyQABzBGuU"
     },
     {
@@ -2681,6 +2694,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "敬礼する隊長",
+        "nameZh":  "行礼舰长",
         "rootNodeGuid":  "PoOWkpwfYx"
     },
     {
@@ -2858,6 +2872,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "警戒する斥候",
+        "nameZh":  "望远哨兵",
         "rootNodeGuid":  "Zc_avVFlQx"
     },
     {
@@ -2892,6 +2907,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "捨てられた地の長老",
+        "nameZh":  "暮土长老",
         "rootNodeGuid":  "6COu8N6od3"
     },
     {
@@ -3069,6 +3085,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "凍える先駆者",
+        "nameZh":  "发抖开拓者",
         "rootNodeGuid":  "29JfYP1U6x"
     },
     {
@@ -3246,6 +3263,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "恥じらう探鉱者",
+        "nameZh":  "羞涩勘探者",
         "rootNodeGuid":  "88eWC8NaHK"
     },
     {
@@ -3402,6 +3420,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "かくれんぼ提唱者",
+        "nameZh":  "躲猫猫拓荒者",
         "rootNodeGuid":  "4Qtw5zIpON"
     },
     {
@@ -3609,6 +3628,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "怒れる運び人",
+        "nameZh":  "娇嗔搬运工",
         "rootNodeGuid":  "KsjglEe6SI"
     },
     {
@@ -3816,6 +3836,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "うろたえる狩人",
+        "nameZh":  "沮丧猎人",
         "rootNodeGuid":  "vFmHI2l-5v"
     },
     {
@@ -3993,6 +4014,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "反省する木こり",
+        "nameZh":  "歉意伐木工",
         "rootNodeGuid":  "2aPjMjZxVC"
     },
     {
@@ -4204,6 +4226,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "涙ぐむ光坑夫",
+        "nameZh":  "悲伤矿工",
         "rootNodeGuid":  "OHiyG0ecDH"
     },
     {
@@ -4313,6 +4336,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "鯨の語り部",
+        "nameZh":  "鲸语者",
         "rootNodeGuid":  "T8jA7xBoO6"
     },
     {
@@ -4362,6 +4386,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "雨林の長老",
+        "nameZh":  "雨林长老",
         "rootNodeGuid":  "ncEK0wS3c6"
     },
     {
@@ -4539,6 +4564,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "指差すキャンドル職人",
+        "nameZh":  "指路蜡烛匠",
         "rootNodeGuid":  "TvTVj7KrE3"
     },
     {
@@ -4716,6 +4742,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "先導する星読み",
+        "nameZh":  "引路望星客",
         "rootNodeGuid":  "la5LuzVr3o"
     },
     {
@@ -4893,6 +4920,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "固辞する航行者",
+        "nameZh":  "回绝行者",
         "rootNodeGuid":  "eUTopR_CDA"
     },
     {
@@ -4942,6 +4970,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "孤島の長老",
+        "nameZh":  "晨岛长老",
         "rootNodeGuid":  "4eQ9GIhhcJ"
     },
     {
@@ -5066,6 +5095,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "自信に満ちた観光客",
+        "nameZh":  "自信观光客",
         "rootNodeGuid":  "QXUQtHaV4V"
     },
     {
@@ -5258,6 +5288,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "逆立ちする怖いもの知らず",
+        "nameZh":  "倒立运动员",
         "rootNodeGuid":  "c_m1Wyxrwd"
     },
     {
@@ -5367,6 +5398,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "マンタの語り部",
+        "nameZh":  "鳐语者",
         "rootNodeGuid":  "fUhhICR_SG"
     },
     {
@@ -5544,6 +5576,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "宙返りをする優勝者",
+        "nameZh":  "空翻亚军",
         "rootNodeGuid":  "SiSq-1YcL1"
     },
     {
@@ -5721,6 +5754,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "応援する観客",
+        "nameZh":  "叫好观众",
         "rootNodeGuid":  "Kak3sj4SiH"
     },
     {
@@ -5898,6 +5932,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "お辞儀をするメダリスト",
+        "nameZh":  "鞠躬季军",
         "rootNodeGuid":  "U09Vg1Bo4G"
     },
     {
@@ -6052,6 +6087,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "誇り高き勝者",
+        "nameZh":  "自豪冠军",
         "rootNodeGuid":  "u5yiirWvsH"
     },
     {
@@ -6161,6 +6197,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "峡谷の長老",
+        "nameZh":  "霞谷长老",
         "rootNodeGuid":  "lxz9_FA5lW"
     },
     {
@@ -6338,6 +6375,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "念動力の使い手",
+        "nameZh":  "气功高人",
         "rootNodeGuid":  "7VjqIMArcP"
     },
     {
@@ -6515,6 +6553,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "瞑想する修道士",
+        "nameZh":  "禅修院士",
         "rootNodeGuid":  "oDypNKciuf"
     },
     {
@@ -6669,6 +6708,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "記憶の語り部",
+        "nameZh":  "灵语者",
         "rootNodeGuid":  "HrhoyxoLVs"
     },
     {
@@ -6793,6 +6833,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "敬けんな賢人",
+        "nameZh":  "礼貌学者",
         "rootNodeGuid":  "9IwUGyaG5-"
     },
     {
@@ -7000,6 +7041,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "祈る侍者",
+        "nameZh":  "祈祷圣徒",
         "rootNodeGuid":  "ItpocgQi8H"
     },
     {
@@ -7034,6 +7076,7 @@ export const SPIRIT_TREE_DATA = [
                       }
                   ],
         "nameJa":  "書庫の長老",
+        "nameZh":  "禁阁长老",
         "rootNodeGuid":  "cr2m1Ibgsl"
     },
     {

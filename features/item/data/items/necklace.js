@@ -67,5 +67,7 @@ export const ITEMS = [
   { id: 'necklace_061', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/6/6e/Season-of-Pearl-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Pearl Ultimate Pendant", name: '遥かなる真珠のペンダント', event: '遥かなる真珠の季節', cost: 'premium', dye: false, noReprint: true },
   // ── ファッションの日々（テスト版） ──
   { id: 'necklace_062', img: '/shiguang-box/assets/fashion-day/bow-tie.png', nameEn: "Style Bow Tie", name: 'スタイル　リボンタイ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false },
-  { id: 'necklace_063', img: '/shiguang-box/assets/fashion-day/necklace.png', nameEn: "Style Necklace", name: 'スタイル　ネックレス', event: 'ファッションの日々', cost: 'free', dye: false, noReprint: false }
+  { id: 'necklace_063', img: '/shiguang-box/assets/fashion-day/necklace.png', nameEn: "Style Necklace", name: 'スタイル　ネックレス', event: 'ファッションの日々', cost: 'free', dye: false, noReprint: false },
+  // ── 聖なる星の日々 2026（テスト版） ──
+  { id: 'necklace_064', img: '/shiguang-box/assets/feast-2026/wreath-necklace.png', nameEn: "Winter Wreath Necklace", name: 'ウィンターリースネックレス', event: '聖なる星の日々', cost: 'free', dye: false, noReprint: false },
 ];

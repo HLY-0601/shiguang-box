@@ -200,4 +200,6 @@ export const ITEMS = [
   // ── ファッションの日々（テスト版） ──
   { id: 'cape_188', img: '/shiguang-box/assets/fashion-day/purple-cape.png', nameEn: "Style Purple Cape", name: 'スタイル　パープルケープ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, color: '紫' },
   { id: 'cape_189', img: '/shiguang-box/assets/fashion-day/fluffy-coat.png', nameEn: "Style Fluffy Coat", name: 'スタイル　ふわふわコート', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, color: '紫' },
+  // ── 聖なる星の日々 2026（テスト版） ──
+  { id: 'cape_190', img: '/shiguang-box/assets/feast-2026/red-cape.png', nameEn: "Winter Red Cape", name: 'ウィンターレッドケープ', event: '聖なる星の日々', cost: 'free', dye: false, noReprint: false, color: '赤' },
 ];

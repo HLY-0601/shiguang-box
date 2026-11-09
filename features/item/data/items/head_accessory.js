@@ -29,5 +29,7 @@ export const ITEMS = [
   { id: 'head_accessory_024', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/7/70/Festival-Earrings-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Festival Earrings", name: '花火大会耳飾り', event: '花鳥花火大会', cost: 'free', dye: true, noReprint: false },
   { id: 'head_accessory_025', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/5/58/Moonlight-Ears-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Ears", name: '月灯りの耳', event: '月灯りの日々', cost: 'free', dye: false, noReprint: false },  // チケット16枚
   // ── ファッションの日々（テスト版） ──
-  { id: 'head_accessory_026', img: '/shiguang-box/assets/fashion-day/top-hat.png', nameEn: "Style Top Hat", name: 'スタイル　トップハット', event: 'ファッションの日々', cost: 'free', dye: false, noReprint: false }
+  { id: 'head_accessory_026', img: '/shiguang-box/assets/fashion-day/top-hat.png', nameEn: "Style Top Hat", name: 'スタイル　トップハット', event: 'ファッションの日々', cost: 'free', dye: false, noReprint: false },
+  // ── 聖なる星の日々 2026（テスト版） ──
+  { id: 'head_accessory_027', img: '/shiguang-box/assets/feast-2026/wondrous-snowflake.png', nameEn: "Wondrous Winter Snowflake", name: 'ワンダラスウィンタースノーフレーク', event: '聖なる星の日々', cost: 'premium', dye: false, noReprint: true },
 ];

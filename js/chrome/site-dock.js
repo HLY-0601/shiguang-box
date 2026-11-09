@@ -39,15 +39,25 @@ export function render(mountEl) {
 
   // 点一下回主页，长按(500ms)才开档案切换
   let pressTimer = null;
+  let longPressed = false;
   const profileBtn = document.getElementById('dockProfileBtn');
   profileBtn.addEventListener('click', () => {
-    if (pressTimer) return; // 长按后松开，不触发click
+    if (longPressed) { longPressed = false; return; }
     location.hash = '#/';
   });
-  profileBtn.addEventListener('mousedown', () => {
-    pressTimer = setTimeout(() => { pfModal.open(); pressTimer = null; }, 500);
-  });
-  ['mouseup','mouseleave','touchstart'].forEach(ev => profileBtn.addEventListener(ev, () => { clearTimeout(pressTimer); if (ev !== 'touchstart') pressTimer = null; }));
+  const startPress = () => {
+    longPressed = false;
+    pressTimer = setTimeout(() => {
+      longPressed = true;
+      pfModal.open();
+    }, 500);
+  };
+  const cancelPress = () => { clearTimeout(pressTimer); };
+  profileBtn.addEventListener('mousedown', startPress);
+  profileBtn.addEventListener('touchstart', startPress);
+  profileBtn.addEventListener('mouseup', cancelPress);
+  profileBtn.addEventListener('mouseleave', cancelPress);
+  profileBtn.addEventListener('touchend', cancelPress);
   document.getElementById('dockDashboardBtn').addEventListener('click', () => dashModal.open());
   document.getElementById('dockToolsBtn').addEventListener('click', () => toolsDrawer.open());
   document.getElementById('dockSettingsBtn').addEventListener('click', () => settingsModal.open());

@@ -272,11 +272,7 @@ function renderShell() {
 
         <footer class="ti-footer">
           <span>本网站是 Sky 光·遇的非官方粉丝网站，与 thatgamecompany 无关。</span><br>
-          <strong>夜月</strong><br>
-          <span style="font-size:12px;opacity:.7">参考・图片引用来源：
-            <a href="https://sky-children-of-the-light.fandom.com/ja/wiki/%E6%84%9F%E6%83%85%E8%A1%A8%E7%8F%BE" target="_blank" rel="noopener">日文wiki</a> ／
-            <a href="https://sky-children-of-the-light.fandom.com/wiki/Expressions" target="_blank" rel="noopener">英文wiki</a>
-          </span>
+          <span>© 2024-2026 夜月 | 京ICP备202414753号</span>
         </footer>
       </div>
     </div>

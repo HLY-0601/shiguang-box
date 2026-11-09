@@ -133,6 +133,7 @@ export const ROUTES = {
   wings: lazyToolEntry(() => import('../features/wings/wings-view.js'), '羽トラッカー', 'Wing Tracker'),
   companion: lazyToolEntry(() => import('../features/companion/companion-view.js'), '精霊同行ツール', 'Spirit Companion Tool'),
   'spirit-catalog': lazyToolEntry(() => import('../features/spirit-catalog/spirit-catalog-view.js'), '精霊ツリー管理', 'Spirit Tree Catalog'),
+  'friendship-tree': lazyToolEntry(() => import('../features/friendship-tree/friendship-tree-view.js'), 'フレンドツリー', 'Friendship Tree'),
   'tai-revisit': lazyToolEntry(() => import('../features/tai-revisit/tai-revisit-view.js'), '再訪精霊データベース', 'Revisit Spirit Database'),
   'tai-score': lazyToolEntry(() => import('../features/tai-score/tai-score-view.js'), '楽譜づくり', 'Sheet Music Maker'),
   'tai-card': lazyToolEntry(() => import('../features/tai-card/tai-card-view.js'), '星紡ぎカード', 'Self-Intro Card Maker'),

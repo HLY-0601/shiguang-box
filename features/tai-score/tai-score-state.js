@@ -22,6 +22,7 @@ import { CURRENT_LANG, pickLang } from '../../js/i18n.js';
 import { toolShareUrl } from '../../js/site-config.js';
 import { t } from './data/i18n-score.js';
 import { PITCHES, NOTE_ABC_CODES, instrumentCodeFromLabel, DEFAULT_KEY_BINDINGS } from './data/constants.js';
+import { PRESET_SONGS } from './data/preset-songs.js';
 
 /* ── localStorage キー（すべて nsKey() でプロフィール名前空間化） ── */
 export const SONGS_KEY = () => nsKey('taiScoreSongs_v1');
@@ -58,7 +59,13 @@ export function songNoteCount(s) { return s.frames.reduce((sum, f) => sum + f.le
 
 export function loadSongs() {
   try {
-    const songs = JSON.parse(readProfileOrShared(SONGS_KEY(), 'taiScoreSongs_v1')) || [];
+    let songs = JSON.parse(readProfileOrShared(SONGS_KEY(), 'taiScoreSongs_v1')) || [];
+    // 首次打开时自动导入预置歌曲
+    if (songs.length === 0 && !localStorage.getItem('presetSongsImported_v1')) {
+      songs = PRESET_SONGS.map(s => ({ ...s }));
+      localStorage.setItem('presetSongsImported_v1', '1');
+      saveSongs(songs);
+    }
     // 🧹 以前この端末に存在した2レイヤー機能(値0〜14=レイヤー1, 15〜29=レイヤー2の
     // オフセット方式)の名残りが保存済みの楽譜に残っていた場合、%15で正規化して
     // 単一レイヤーの音程に統合する(重複除去つき)。レイヤー機能を廃止した今、

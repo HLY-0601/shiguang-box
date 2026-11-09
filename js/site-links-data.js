@@ -21,6 +21,8 @@ export const SITE_LINK_TOOLS = [
   { id: 'companion',      path: 'companion',        icon: 'i-sparkle',     ja: '精霊同行ツール',         en: 'Spirit Companion Tool',    'zh-TW': '精靈同行工具',     ko: '정령 동행 도구' },
   { id: 'wings',          path: 'wings',            icon: 'i-wing',        ja: '羽トラッカー',           en: 'Wing Tracker',             'zh-TW': '羽翼追蹤器',       ko: '날개 트래커' },
   { id: 'spirit-catalog', path: 'tai-catalog',      icon: 'i-tree',        ja: '精霊ツリー管理',         en: 'Spirit Tree Catalog',      'zh-TW': '精靈樹管理',       ko: '정령 트리 관리', badgeTest: true },
+  { id: 'friendship-tree', path: 'friendship-tree', icon: 'i-heart',       ja: 'フレンドツリー',         en: 'Friendship Tree',          'zh-TW': '好友樹',           ko: '친구 트리', badgeTest: true },
+  { id: 'height',          path: 'height',           icon: 'i-person',      ja: '身長チェック',           en: 'Height Checker',           'zh-TW': '身高查詢',         ko: '키 측정', badgeTest: true },
   { id: 'tai-revisit',    path: 'tai-revisit',      icon: 'i-wing',        ja: '再訪精霊データベース',   en: 'Revisit Spirit Database',  'zh-TW': '再訪精靈資料庫',   ko: '재방문 정령 데이터베이스' },
   { id: 'tai-score',      path: 'tai-score',        icon: 'i-music-note',  ja: '楽譜づくり',             en: 'Sheet Music Maker',        'zh-TW': '樂譜製作工具',     ko: '악보 제작 도구', badgeTest: true },
   { id: 'tai-card',       path: 'tai-card',         icon: 'i-card',        ja: '星紡ぎカード',           en: 'Self-Intro Card Maker',    'zh-TW': '星紡卡片',         ko: '별잣기 카드' },

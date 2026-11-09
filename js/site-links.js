@@ -12,15 +12,12 @@ import { SITE_LINK_TOOLS } from './site-links-data.js';
 // 一覧データ(site-links-data.js。独立サイトのサイドバーと共有)には載せていない、tai-hub内でだけ使うツール。
 // afterId の直後に差し込む。
 const HUB_ONLY_TOOLS = [
-  { id: 'tai-nomacan-pro', afterId: 'tai-nomacan', icon: 'i-compass', ja: 'ノマキャン計算機プロ', en: 'Candle Calculator Pro', badgeTest: true },
-  // 独立サイトを持たない、tai-hubで新しく作ったツール（2026-11-05）。星紡ぎカードの兄弟機能として、その下に並べる（2026-11-06〜）
-  { id: 'friends', afterId: 'tai-card', icon: 'i-heart', ja: 'フレンド記念日', en: 'Friend Anniversaries', child: true },
-  { id: 'recap', afterId: 'friends', icon: 'i-calendar', ja: 'ふりかえり', en: 'Recap', child: true },
-  { id: 'titles', afterId: 'recap', icon: 'i-trophy', ja: '称号一覧', en: 'Titles', child: true },
-  // 第2弾（2026-11-06）
-  // child: true＝親（afterIdのツール）の兄弟機能として、親のすぐ下に少し字下げして並べる（testの印があっても最後へ回さない）
-  { id: 'coord-diary', afterId: 'item', icon: 'i-hanger', ja: 'コーデ日記', en: 'Outfit Diary', child: true },
-  { id: 'wish-plan', afterId: 'coord-diary', icon: 'i-cart', ja: 'ほしいもの計画', en: 'Wishlist Plan', child: true },
+  { id: 'tai-nomacan-pro', afterId: 'tai-nomacan', icon: 'i-compass', ja: 'ノマキャン計算機プロ', en: 'Candle Calculator Pro', zh: '蜡烛计算器Pro', badgeTest: true },
+  { id: 'friends', afterId: 'tai-card', icon: 'i-heart', ja: 'フレンド記念日', en: 'Friend Anniversaries', zh: '好友纪念日', child: true },
+  { id: 'recap', afterId: 'friends', icon: 'i-calendar', ja: 'ふりかえり', en: 'Recap', zh: '年度回顾', child: true },
+  { id: 'titles', afterId: 'recap', icon: 'i-trophy', ja: '称号一覧', en: 'Titles', zh: '称号一览', child: true },
+  { id: 'coord-diary', afterId: 'item', icon: 'i-hanger', ja: 'コーデ日記', en: 'Outfit Diary', zh: '穿搭日记', child: true },
+  { id: 'wish-plan', afterId: 'coord-diary', icon: 'i-cart', ja: 'ほしいもの計画', en: 'Wishlist Plan', zh: '愿望清单', child: true },
   { id: 'account', afterId: 'data-transfer', icon: 'i-person', ja: 'ローカルアカウント', en: 'Local Account', zh: '本地账号', child: true },
 ];
 

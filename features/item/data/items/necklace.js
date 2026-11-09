@@ -65,4 +65,6 @@ export const ITEMS = [
   { id: 'necklace_059', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/1/19/Days-of-Mischief-Feline-Accessory-Tail-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Mischief Feline Tail Accessory", name: '猫ねこしっぽアクセサリー', event: 'いたずらな日々', cost: 'premium', dye: true, noReprint: false },
   { id: 'necklace_060', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/4/4b/Moonlight-Bunny-Tail-Icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Tufted Tail Accessory", name: '月灯りしっぽアクセサリー', event: '月灯りの日々', cost: 'free', dye: false, noReprint: false },
   { id: 'necklace_061', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/6/6e/Season-of-Pearl-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Pearl Ultimate Pendant", name: '遥かなる真珠のペンダント', event: '遥かなる真珠の季節', cost: 'premium', dye: false, noReprint: true },
+  // ── ファッションの日々（テスト版） ──
+  { id: 'necklace_062', img: '', nameEn: "Style Bow Tie", name: 'スタイル　リボンタイ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false }
 ];

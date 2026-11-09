@@ -119,5 +119,7 @@ export const ITEMS = [
   { id: 'mask_113', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/f/f0/ProudVictor-3.png/revision/latest/scale-to-width-down/51', nameEn: "Proud Victor Mask", name: '誇り高き勝者　マスク', event: '恒常精霊', cost: 'free', dye: false, noReprint: false },
   { id: 'mask_117', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/4/47/Old-Angler-Mask-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Old Angler Mask", name: '老いた漁師　マスク', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false },
   { id: 'mask_118', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/0/00/Cuddly-Rolling-Child-Mask-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Cuddly Rolling Child Mask", name: '転げまわる幼子　マスク', event: '遥かなる真珠の季節', cost: 'free', dye: false, noReprint: false },
-  { id: 'mask_116', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/4/45/Moonlight-Floral-Veil-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Veil", name: '月灯りベール', event: '月灯りの日々', cost: 'premium', dye: false, noReprint: false }
+  { id: 'mask_116', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/4/45/Moonlight-Floral-Veil-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Veil", name: '月灯りベール', event: '月灯りの日々', cost: 'premium', dye: false, noReprint: false },
+  // ── ファッションの日々（テスト版） ──
+  { id: 'mask_119', img: '', nameEn: "Style Mask", name: 'スタイル　仮面', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false }
 ];

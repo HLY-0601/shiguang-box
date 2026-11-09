@@ -196,5 +196,8 @@ export const ITEMS = [
   { id: 'cape_184', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/9/90/Pearl-Ultimate-Cape-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Pearl Ultimate Cape", name: '遥かなる真珠の究極ケープ', event: '遥かなる真珠の季節', cost: 'premium', dye: false, noReprint: true, color: '青' },
   { id: 'cape_185', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/e/ef/Wrestling-Sailor-Cape-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Wrestling Sailor Cape", name: '腕っぷし自慢の船乗り　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, color: '青' },
   { id: 'cape_186', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/a/a6/Cuddly-Rolling-Child-Cape-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Cuddly Rolling Child Cape", name: '転げまわる幼子　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, color: '青' },
-  { id: 'cape_187', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/d/df/Showy-Merchant-Cape-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Showy Merchant Cape", name: '見せびらかしの商人　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: false, noReprint: false, color: 'ピンク' },
+  { id: 'cape_187', img: '', nameEn: "Showy Merchant Cape", name: '見せびらかしの商人　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: false, noReprint: false, color: 'ピンク' },
+  // ── ファッションの日々（テスト版） ──
+  { id: 'cape_188', img: '', nameEn: "Style Purple Cape", name: 'スタイル　パープルケープ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, color: '紫' },
+  { id: 'cape_189', img: '', nameEn: "Style Fluffy Coat", name: 'スタイル　ふわふわコート', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, color: '紫' },
 ];

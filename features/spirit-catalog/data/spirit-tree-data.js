@@ -41105,7 +41105,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Bob Hair",
         "itemNameJa": "スタイルボブヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_188"
       },
       {
         "guid": "ev_s_ne1",
@@ -41114,7 +41116,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Heart Necklace",
         "itemNameJa": "スタイルハートネックレス",
-        "itemType": "Necklace"
+        "itemType": "Necklace",
+        "itemCatKey": "necklace",
+        "itemCostId": "necklace_063"
       },
       {
         "guid": "ev_s_n2",
@@ -41135,7 +41139,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Dress",
         "itemNameJa": "スタイルドレス",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_058"
       },
       {
         "guid": "ev_s_ne2",
@@ -41144,7 +41150,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Headphones",
         "itemNameJa": "スタイルヘッドホン",
-        "itemType": "HeadAccessory"
+        "itemType": "HeadAccessory",
+        "itemCatKey": "hair_accessory",
+        "itemCostId": "hair_accessory_053"
       },
       {
         "guid": "ev_s_n3",
@@ -41174,7 +41182,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Mask",
         "itemNameJa": "スタイルマスク",
-        "itemType": "Mask"
+        "itemType": "Mask",
+        "itemCatKey": "mask",
+        "itemCostId": "mask_119"
       },
       {
         "guid": "ev_s_n4",
@@ -41192,7 +41202,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Bowtie",
         "itemNameJa": "スタイル蝶ネクタイ",
-        "itemType": "Necklace"
+        "itemType": "Necklace",
+        "itemCatKey": "necklace",
+        "itemCostId": "necklace_062"
       },
       {
         "guid": "ev_s_n5",
@@ -41201,7 +41213,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Style Top Hat",
         "itemNameJa": "スタイルトップハット",
-        "itemType": "HeadAccessory"
+        "itemType": "HeadAccessory",
+        "itemCatKey": "head_accessory",
+        "itemCostId": "head_accessory_026"
       }
     ],
     "nodeCount": 13
@@ -41236,7 +41250,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Wreath Necklace",
         "itemNameJa": "フェストリースネックレス",
-        "itemType": "Necklace"
+        "itemType": "Necklace",
+        "itemCatKey": "necklace",
+        "itemCostId": "necklace_051"
       },
       {
         "guid": "ev_f_n1_1",
@@ -41256,7 +41272,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Overalls",
         "itemNameJa": "フェスオーバーオール",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_052"
       },
       {
         "guid": "ev_f_n2_1",
@@ -41274,7 +41292,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Red Cape",
         "itemNameJa": "フェス赤マント",
-        "itemType": "Cape"
+        "itemType": "Cape",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_162"
       },
       {
         "guid": "ev_f_n3_1",
@@ -41336,7 +41356,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Bowtie",
         "itemNameJa": "フェス蝶ネクタイ",
-        "itemType": "Necklace"
+        "itemType": "Necklace",
+        "itemCatKey": "necklace",
+        "itemCostId": "necklace_051"
       },
       {
         "guid": "ev_f_n1_2",
@@ -41356,7 +41378,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Red Cape",
         "itemNameJa": "フェス赤ケープ",
-        "itemType": "Cape"
+        "itemType": "Cape",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_162"
       },
       {
         "guid": "ev_f_ne2_2",
@@ -41365,7 +41389,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Feast Chair",
         "itemNameJa": "フェス椅子",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "large_placeable",
+        "itemCostId": "large_placeable_047"
       }
     ],
     "nodeCount": 6
@@ -41400,7 +41426,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Mischief Broom",
         "itemNameJa": "悪戯ほうき",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_059"
       },
       {
         "guid": "ev_m_n1",
@@ -41420,7 +41448,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Mischief Hair",
         "itemNameJa": "悪戯ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_163"
       },
       {
         "guid": "ev_m_n2",
@@ -41438,7 +41468,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Mischief Dress",
         "itemNameJa": "悪戯ワンピース",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_060"
       },
       {
         "guid": "ev_m_n3",
@@ -41456,7 +41488,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Mischief Ghost",
         "itemNameJa": "悪戯ゴースト",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_062"
       },
       {
         "guid": "ev_m_n4",
@@ -41657,7 +41691,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary TV",
         "itemNameJa": "記念テレビ",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "large_placeable",
+        "itemCostId": "large_placeable_028"
       },
       {
         "guid": "ev_a_ne1",
@@ -41666,7 +41702,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Cap",
         "itemNameJa": "記念キャップ",
-        "itemType": "HeadAccessory"
+        "itemType": "HeadAccessory",
+        "itemCatKey": "hair_accessory",
+        "itemCostId": "hair_accessory_045"
       },
       {
         "guid": "ev_a_n1",
@@ -41687,7 +41725,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Laptop",
         "itemNameJa": "記念ラップトップ",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "large_placeable",
+        "itemCostId": "large_placeable_028"
       },
       {
         "guid": "ev_a_ne2",
@@ -41696,7 +41736,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Clapper",
         "itemNameJa": "記念クラッパー",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_054"
       },
       {
         "guid": "ev_a_n2",
@@ -41717,7 +41759,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Sofa",
         "itemNameJa": "記念ソファ",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "large_placeable",
+        "itemCostId": "large_placeable_028"
       },
       {
         "guid": "ev_a_ne3",
@@ -41726,7 +41770,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Balloons",
         "itemNameJa": "記念バルーン",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "small_placeable",
+        "itemCostId": "small_placeable_051"
       },
       {
         "guid": "ev_a_n3",
@@ -41735,7 +41781,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Anniversary Tuxedo",
         "itemNameJa": "記念タキシード",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_109"
       }
     ],
     "nodeCount": 10
@@ -41771,7 +41819,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Treasure Outfit",
         "itemNameJa": "宝探し衣装",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_053"
       },
       {
         "guid": "ev_t_ne1",
@@ -41780,7 +41830,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Treasure Hair",
         "itemNameJa": "宝探しヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_176"
       },
       {
         "guid": "ev_t_n1",
@@ -41801,7 +41853,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Treasure X",
         "itemNameJa": "宝探しX",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_060"
       },
       {
         "guid": "ev_t_ne2",
@@ -41810,7 +41864,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Treasure Boots",
         "itemNameJa": "宝探しブーツ",
-        "itemType": "Shoes"
+        "itemType": "Shoes",
+        "itemCatKey": "shoes",
+        "itemCostId": "shoes_024"
       },
       {
         "guid": "ev_t_n2",
@@ -41819,7 +41875,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Treasure Shovel",
         "itemNameJa": "宝探しシャベル",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_060"
       }
     ],
     "nodeCount": 7
@@ -41939,7 +41997,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Outfit",
         "itemNameJa": "花衣装",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_045"
       },
       {
         "guid": "ev_b_ne1",
@@ -41948,7 +42008,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Hair",
         "itemNameJa": "花ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_147"
       },
       {
         "guid": "ev_b_n1",
@@ -41969,7 +42031,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Skirt",
         "itemNameJa": "花スカート",
-        "itemType": "Cape"
+        "itemType": "Cape",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_126"
       },
       {
         "guid": "ev_b_ne2",
@@ -41978,7 +42042,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Mask",
         "itemNameJa": "花マスク",
-        "itemType": "Mask"
+        "itemType": "Mask",
+        "itemCatKey": "mask",
+        "itemCostId": "mask_107"
       },
       {
         "guid": "ev_b_n2",
@@ -41998,7 +42064,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Rose",
         "itemNameJa": "花バラ",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_051"
       },
       {
         "guid": "ev_b_n3",
@@ -42007,7 +42075,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Bloom Hairpin",
         "itemNameJa": "花ヘアピン",
-        "itemType": "HairAccessory"
+        "itemType": "HairAccessory",
+        "itemCatKey": "hair_accessory",
+        "itemCostId": "head_accessory_022b"
       }
     ],
     "nodeCount": 9
@@ -42043,7 +42113,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Love Hair",
         "itemNameJa": "愛ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_171"
       },
       {
         "guid": "ev_l_ne1",
@@ -42052,7 +42124,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Love Cake",
         "itemNameJa": "愛ケーキ",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "small_placeable",
+        "itemCostId": "small_placeable_066"
       },
       {
         "guid": "ev_l_n1",
@@ -42082,7 +42156,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Love Beret",
         "itemNameJa": "愛ベレー",
-        "itemType": "HeadAccessory"
+        "itemType": "HeadAccessory",
+        "itemCatKey": "hair_accessory",
+        "itemCostId": "hair_accessory_035"
       },
       {
         "guid": "ev_l_n2",
@@ -42091,7 +42167,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Love Potion",
         "itemNameJa": "愛の薬",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "necklace",
+        "itemCostId": "necklace_045"
       }
     ],
     "nodeCount": 7
@@ -42129,7 +42207,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Horse",
         "itemNameJa": "幸運馬",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_174"
       },
       {
         "guid": "ev_f_ne1",
@@ -42138,7 +42218,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Lantern",
         "itemNameJa": "幸運ランタン",
-        "itemType": "Furniture"
+        "itemType": "Furniture",
+        "itemCatKey": "large_placeable",
+        "itemCostId": "large_placeable_033"
       },
       {
         "guid": "ev_f_n1",
@@ -42159,7 +42241,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Cape",
         "itemNameJa": "幸運ケープ",
-        "itemType": "Cape"
+        "itemType": "Cape",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_122"
       },
       {
         "guid": "ev_f_ne2",
@@ -42168,7 +42252,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Scroll",
         "itemNameJa": "幸運巻物",
-        "itemType": "Music"
+        "itemType": "Music",
+        "itemCatKey": "face_accessory",
+        "itemCostId": "face_accessory_032"
       },
       {
         "guid": "ev_f_n2",
@@ -42188,7 +42274,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Mask",
         "itemNameJa": "幸運マスク",
-        "itemType": "Mask"
+        "itemType": "Mask",
+        "itemCatKey": "mask",
+        "itemCostId": "mask_109"
       },
       {
         "guid": "ev_f_n3",
@@ -42197,7 +42285,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Fortune Outfit",
         "itemNameJa": "幸運衣装",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_110"
       }
     ],
     "nodeCount": 9
@@ -42233,7 +42323,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Tournament Snowboard",
         "itemNameJa": "大会スノーボード",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_056"
       },
       {
         "guid": "ev_to_ne1",
@@ -42242,7 +42334,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Tournament Hair",
         "itemNameJa": "大会ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_174"
       },
       {
         "guid": "ev_to_n1",
@@ -42261,7 +42355,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Tournament Torch",
         "itemNameJa": "大会たいまつ",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "portable_item",
+        "itemCostId": "portable_item_055"
       },
       {
         "guid": "ev_to_nw2",
@@ -42270,7 +42366,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Tournament Wig",
         "itemNameJa": "大会ウィッグ",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_173"
       }
     ],
     "nodeCount": 6

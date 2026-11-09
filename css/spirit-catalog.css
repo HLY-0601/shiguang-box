@@ -267,28 +267,33 @@
 .spirit-catalog-view .tree-node-wrap { position: absolute; display: flex; flex-direction: column; align-items: center; }
 .spirit-catalog-view .tree-node-circle-holder { position: relative; }
 .spirit-catalog-view .tree-node {
-  width: calc(44px * var(--tree-scale, 1)); height: calc(44px * var(--tree-scale, 1)); border-radius: 50%; background: var(--sc-card); border: 2.5px solid var(--sc-sep);
+  width: calc(40px * var(--tree-scale, 1)); height: calc(40px * var(--tree-scale, 1)); border-radius: 50%; background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.35);
   display: flex; align-items: center; justify-content: center; font-size: calc(18px * var(--tree-scale, 1)); flex-shrink: 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; font-family: inherit; padding: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); cursor: pointer; font-family: inherit; padding: 0; color: #fff;
 }
-.spirit-catalog-view .tree-node.checked { background: var(--sc-node-unlocked-tint); border-color: var(--sc-green-d); color: #fff; }
-.spirit-catalog-view .tree-node.next-available { border-color: var(--sc-next-avail); box-shadow: 0 0 0 3px var(--sc-next-avail-glow), 0 1px 3px rgba(0,0,0,0.08); }
+.spirit-catalog-view .tree-node.checked { background: rgba(120,200,120,0.35); border-color: rgba(160,230,160,0.9); color: #fff; }
+.spirit-catalog-view .tree-node.next-available { border-color: #ffd97a; box-shadow: 0 0 0 3px rgba(255,217,122,0.35), 0 1px 3px rgba(0,0,0,0.2); }
 .spirit-catalog-view .tree-node-excluded { opacity: 0.45; border-style: dashed; cursor: default; box-shadow: none; }
 .spirit-catalog-view .tree-node-icon { line-height: 1; display: flex; align-items: center; justify-content: center; }
-.spirit-catalog-view .tree-node-icon svg { width: calc(24px * var(--tree-scale, 1)); height: calc(24px * var(--tree-scale, 1)); }
-.spirit-catalog-view .tree-node-icon img { width: calc(28px * var(--tree-scale, 1)); height: calc(28px * var(--tree-scale, 1)); object-fit: contain; }
+.spirit-catalog-view .tree-node-icon svg { width: calc(22px * var(--tree-scale, 1)); height: calc(22px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-icon img { width: calc(26px * var(--tree-scale, 1)); height: calc(26px * var(--tree-scale, 1)); object-fit: contain; }
 .spirit-catalog-view .tree-node-tier-badge {
   position: absolute; top: -6px; left: -6px; font-size: calc(9px * var(--tree-scale, 1));
   font-weight: 800; padding: 1px 5px; border-radius: 999px; line-height: 1.4;
   background: var(--sc-blue); color: #fff; white-space: nowrap;
 }
-.spirit-catalog-view .tree-node-label {
-  font-size: calc(10px * var(--tree-scale, 1)); color: var(--sc-text); text-align: center; margin-top: 3px; line-height: 1.25;
-  max-width: calc(74px * var(--tree-scale, 1)); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+/* 文字标签默认隐藏（官方图风格：只显示图标+消耗数字） */
+.spirit-catalog-view .tree-node-label { display: none; }
+.spirit-catalog-view .tree-node-label.no-ja { display: none; }
+/* 消耗数字直接贴在图标右下角，不再换行 */
+.spirit-catalog-view .tree-node-cost {
+  position: absolute; right: -6px; bottom: -4px; display: flex; gap: 1px; flex-wrap: nowrap;
+  justify-content: center; margin-top: 0; max-width: none; z-index: 2;
 }
-.spirit-catalog-view .tree-node-label.no-ja { color: var(--sc-text-2); font-style: italic; }
-.spirit-catalog-view .tree-node-cost { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; margin-top: 2px; max-width: calc(78px * var(--tree-scale, 1)); }
-.spirit-catalog-view .tree-node-cost .cost-chip { font-size: calc(8.5px * var(--tree-scale, 1)); padding: calc(1.5px * var(--tree-scale, 1)) calc(4px * var(--tree-scale, 1)); }
+.spirit-catalog-view .tree-node-cost .cost-chip {
+  font-size: calc(9px * var(--tree-scale, 1)); padding: calc(1px * var(--tree-scale, 1)) calc(3px * var(--tree-scale, 1));
+  background: rgba(0,0,0,0.6); color: #fff; border: 1px solid rgba(255,255,255,0.25); line-height: 1.2;
+}
 
 /* ── 段階ツリー（恒常/長老精霊のフレンドシップレベル） ── */
 .spirit-catalog-view .tier-block { margin-bottom: 4px; }

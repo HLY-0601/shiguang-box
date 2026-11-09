@@ -886,7 +886,7 @@ function renderTreeDiagram(spirit) {
  if (!layout) return `<div class="tier-grid-row">${spirit.nodes.map((n) => treeNodeHtml(spirit, n, '')).join('')}</div>`;
 
  const scale = getTreeScale();
- const unitW = 78 * scale, unitH = 96 * scale, pad = 30 * scale, nodeR = 22 * scale;
+ const unitW = 62 * scale, unitH = 82 * scale, pad = 24 * scale, nodeR = 20 * scale;
  const width = layout.leafCount * unitW + pad * 2;
  const height = (layout.maxDepth + 1) * unitH + pad * 2;
  const cx = (guid) => layout.xOf[guid] * unitW + unitW / 2 + pad;
@@ -895,7 +895,7 @@ function renderTreeDiagram(spirit) {
  let lines = '';
  Object.keys(layout.parentOf).forEach((childGuid) => {
  const p = layout.parentOf[childGuid];
- lines += `<line x1="${cx(p)}" y1="${cy(p)}" x2="${cx(childGuid)}" y2="${cy(childGuid)}" stroke="var(--sc-sep)" stroke-width="${3 * scale}" />`;
+ lines += `<line x1="${cx(p)}" y1="${cy(p)}" x2="${cx(childGuid)}" y2="${cy(childGuid)}" stroke="rgba(255,255,255,0.35)" stroke-width="${2 * scale}" />`;
  });
 
  const nodesHtml = spirit.nodes.filter((n) => n.guid in layout.xOf).map((n) => {

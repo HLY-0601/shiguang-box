@@ -70,7 +70,7 @@ function renderAuth() {
     <div class="ac-head">
       <div class="ac-logo"><svg class="inline-icon" width="24" height="24"><use href="#i-person"/></svg></div>
       <h1>${isLogin ? '登录账号' : '注册账号'}</h1>
-      <p>拾光匣 · ${remote ? '远程账号（数据保存在后端）' : '本地账号（仅保存在当前浏览器）'}</p>
+      <p>夜月 · ${remote ? '远程账号（数据保存在后端）' : '本地账号（仅保存在当前浏览器）'}</p>
     </div>
 
     <form class="ac-card" id="acAuthForm" autocomplete="off">
@@ -104,7 +104,7 @@ function renderAuth() {
     <div class="ac-notice">
       <svg class="inline-icon" width="15" height="15"><use href="#i-warning"/></svg>
       <p>${remote
-        ? '远程账号由拾光匣自己的后端提供，并非 Sky 游戏官方账号；数据由你在本系统内记录，无法自动读取游戏内容。'
+        ? '远程账号由夜月自己的后端提供，并非 Sky 游戏官方账号；数据由你在本系统内记录，无法自动读取游戏内容。'
         : '本地账号不会上传服务器、不能跨设备同步，也无法登录 Sky 游戏或自动读取游戏数据；身高、好友、装扮、跑图等需在对应工具中自行记录。'}</p>
     </div>
   </div>`;
@@ -155,7 +155,7 @@ function renderDashboard(user) {
     <div class="ac-notice">
       <svg class="inline-icon" width="15" height="15"><use href="#i-warning"/></svg>
       <p>${isRemote()
-        ? '数据由拾光匣后端保存，并非 Sky 游戏官方数据，不与游戏服务器互通。'
+        ? '数据由夜月后端保存，并非 Sky 游戏官方数据，不与游戏服务器互通。'
         : '本页面为浏览器本地记录，不与 Sky 游戏服务器互通；更换设备可用「数据转移」功能迁移。'}</p>
     </div>
   </div>`;

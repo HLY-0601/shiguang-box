@@ -296,7 +296,7 @@ function buildShell() {
 
         <footer style="text-align:center; padding:24px 16px; color:var(--text-2); font-size:13px; border-top:1px solid var(--sep); margin-top:40px; line-height:1.6;">
           ${t('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This site is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.')}<br>
-          <strong>拾光匣</strong><br>
+          <strong>夜月</strong><br>
           <span style="color:var(--text-2); font-size:12px; margin-top:4px; display:inline-block;">
             ${t('参考・画像引用元:', 'References & image sources:')}
             <a href="https://sky-children-of-the-light.fandom.com/ja/wiki/%E6%84%9F%E6%83%85%E8%A1%A8%E7%8F%BE" target="_blank" rel="noopener noreferrer" style="color:var(--blue); text-decoration:underline;">${t('感情表現 (Sky Wiki 日本語)', 'Expressions (Sky Wiki Japanese)')}</a>

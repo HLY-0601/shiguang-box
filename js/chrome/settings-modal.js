@@ -42,7 +42,7 @@ function startRouteOptions() {
   const cur = getStartRoute();
   return Object.keys(ROUTES).filter(k => !ROUTES[k].hidden || k === cur).map(k => {
     let name = k;
-    try { name = String(ROUTES[k].title('')).replace(/ - 拾光匣$/, ''); } catch (e) { /* 表示名が取れなければキー名 */ }
+    try { name = String(ROUTES[k].title('')).replace(/ - 夜月$/, ''); } catch (e) { /* 表示名が取れなければキー名 */ }
     return `<option value="${k}"${cur === k ? ' selected' : ''}>${escapeHtml(name)}</option>`;
   }).join('');
 }

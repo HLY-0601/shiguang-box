@@ -62,7 +62,7 @@ function applyRoute() {
   currentEntry = entry;
   currentRoute = { toolKey, sub };
 
-  document.title = entry.title ? entry.title(sub) : '拾光匣';
+  document.title = entry.title ? entry.title(sub) : '夜月';
 }
 
 export function getCurrentRoute() {

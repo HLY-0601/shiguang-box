@@ -156,8 +156,8 @@ function appGuideHtml() {
  'In Shiguang Box, go to "Data Transfer" → "Restore from a Code", tap "Choose File" and pick the saved file. Select the sites to restore and tap "Restore Selected Sites".',
  ], [
  '今まで使っていたアプリ（旧サイト）で「データ引継ぎ」を開き、移したいサイトを選んで「選んだサイトのコードを作成」→「ファイルとしてダウンロード」を押します。iPhoneでは「ファイル」アプリの「ダウンロード」フォルダに保存されます。11月1日からは、旧サイトを開くと出る画面の「データをファイルに保存」でも同じように保存できます。',
- '拾光匣を、これから使う場所で開きます。ホーム画面から使う場合は、Safariで拾光匣を開いて共有ボタン →「ホーム画面に追加」を選び、追加したアイコンから開いてください（ホーム画面のアプリとSafariでもデータは別々なので、使う方で次の手順を行います）。',
- '拾光匣の「データ引継ぎ」→「コードから復元」で「ファイルを選択」を押し、保存したファイルを選びます。復元したいサイトを選んで「選んだサイトを復元する」を押せば完了です。',
+ '夜月を、これから使う場所で開きます。ホーム画面から使う場合は、Safariで夜月を開いて共有ボタン →「ホーム画面に追加」を選び、追加したアイコンから開いてください（ホーム画面のアプリとSafariでもデータは別々なので、使う方で次の手順を行います）。',
+ '夜月の「データ引継ぎ」→「コードから復元」で「ファイルを選択」を押し、保存したファイルを選びます。復元したいサイトを選んで「選んだサイトを復元する」を押せば完了です。',
  ]);
  return `
  <details class="card dt-app-guide">
@@ -457,7 +457,7 @@ async function generateExportCode() {
  });
 
  const payload = {
- exportedFrom: '拾光匣 (data-transfer)',
+ exportedFrom: '夜月 (data-transfer)',
  exportedAt: new Date().toISOString(),
  sites: selectedIds,
  siteUpdatedAt,

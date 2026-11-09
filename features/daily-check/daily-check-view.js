@@ -464,7 +464,7 @@ function render() {
       ${showLabLinks ? labLinksHtml() : ''}
       ${embedded ? '' : `<footer class="dc-footer">
         <span>${escapeHtml(t('このサイトはSky 星を紡ぐ子どもたちの非公式ファンサイトです。thatgamecompanyは一切関与していません。', 'This is an unofficial fan site for Sky: Children of the Light. thatgamecompany is not involved in any way.'))}</span><br>
-        <span><strong>拾光匣</strong></span><br>
+        <span>© 2024-2026 夜月 | 京ICP备2024000000号</span><br>
         <a class="dc-footer-sub" href="#/tai-info">${escapeHtml(t('設定・クレジット・プライバシーポリシー', 'Settings, Credits & Privacy Policy'))}</a>
       </footer>`}
     </div>

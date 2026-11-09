@@ -269,7 +269,7 @@ function coordCardHtml(e, photoUrl) {
     <div class="cd-share-head"><b>${t(`${m}月${d}日のコーデ`, `Outfit · ${m}/${d}/${y}`)}</b>${e.place ? `<span>${escapeHtml(placeName(e.place, CURRENT_LANG))}</span>` : ''}</div>
     ${photoUrl ? `<div class="cd-share-photo"><img src="${photoUrl}" alt=""></div>` : ''}
     ${items.length ? `<div class="cd-share-icons${items.length <= 4 ? ' is-few' : ''}">${items.map(it => `<span class="cd-share-icon">${it.img ? `<img src="${escapeHtml(it.img)}" alt="" crossorigin="anonymous" referrerpolicy="no-referrer">` : `<b>${escapeHtml(it.name.slice(0, 6))}</b>`}</span>`).join('')}</div>` : ''}
-    <div class="cd-share-foot"><span>拾光匣 ${t('コーデ日記', 'Outfit Diary')}</span><small>© Sky: Children of the Light Icons by contributors of the Sky: Children of the Light wiki</small></div>
+    <div class="cd-share-foot"><span>夜月 ${t('コーデ日記', 'Outfit Diary')}</span><small>© Sky: Children of the Light Icons by contributors of the Sky: Children of the Light wiki</small></div>
   </div>`;
 }
 async function buildCoordImage(e) {

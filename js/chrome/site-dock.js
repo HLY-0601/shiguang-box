@@ -37,7 +37,17 @@ export function render(mountEl) {
       </button>
     </nav>`;
 
-  document.getElementById('dockProfileBtn').addEventListener('click', () => pfModal.open());
+  // 点一下回主页，长按(500ms)才开档案切换
+  let pressTimer = null;
+  const profileBtn = document.getElementById('dockProfileBtn');
+  profileBtn.addEventListener('click', () => {
+    if (pressTimer) return; // 长按后松开，不触发click
+    location.hash = '#/';
+  });
+  profileBtn.addEventListener('mousedown', () => {
+    pressTimer = setTimeout(() => { pfModal.open(); pressTimer = null; }, 500);
+  });
+  ['mouseup','mouseleave','touchstart'].forEach(ev => profileBtn.addEventListener(ev, () => { clearTimeout(pressTimer); if (ev !== 'touchstart') pressTimer = null; }));
   document.getElementById('dockDashboardBtn').addEventListener('click', () => dashModal.open());
   document.getElementById('dockToolsBtn').addEventListener('click', () => toolsDrawer.open());
   document.getElementById('dockSettingsBtn').addEventListener('click', () => settingsModal.open());

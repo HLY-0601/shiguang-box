@@ -194,5 +194,5 @@ export const ITEMS = [
   { id: 'hairstyle_186', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/d/dc/Wrestling-Sailor-Hair-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Wrestling Sailor Hair", name: '腕っぷし自慢の船乗り　ヘアスタイル', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false },
   { id: 'hairstyle_187', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/5/55/Cuddly-Rolling-Child-Hair-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Cuddly Rolling Child Hair", name: '転げまわる幼子　ヘアスタイル', event: '遥かなる真珠の季節', cost: 'free', dye: false, noReprint: false },
   // ── ファッションの日々（テスト版） ──
-  { id: 'hairstyle_188', img: '', nameEn: "Style Hairstyle", name: 'スタイル　ヘアスタイル', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false }
+  { id: 'hairstyle_188', img: '/shiguang-box/assets/fashion-day/hairstyle.png', nameEn: "Style Hairstyle", name: 'スタイル　ヘアスタイル', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false }
 ];

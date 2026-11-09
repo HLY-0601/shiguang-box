@@ -198,6 +198,6 @@ export const ITEMS = [
   { id: 'cape_186', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/a/a6/Cuddly-Rolling-Child-Cape-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Cuddly Rolling Child Cape", name: '転げまわる幼子　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, color: '青' },
   { id: 'cape_187', img: '', nameEn: "Showy Merchant Cape", name: '見せびらかしの商人　ケープ', event: '遥かなる真珠の季節', cost: 'free', dye: false, noReprint: false, color: 'ピンク' },
   // ── ファッションの日々（テスト版） ──
-  { id: 'cape_188', img: '', nameEn: "Style Purple Cape", name: 'スタイル　パープルケープ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, color: '紫' },
-  { id: 'cape_189', img: '', nameEn: "Style Fluffy Coat", name: 'スタイル　ふわふわコート', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, color: '紫' },
+  { id: 'cape_188', img: '/shiguang-box/assets/fashion-day/purple-cape.png', nameEn: "Style Purple Cape", name: 'スタイル　パープルケープ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, color: '紫' },
+  { id: 'cape_189', img: '/shiguang-box/assets/fashion-day/fluffy-coat.png', nameEn: "Style Fluffy Coat", name: 'スタイル　ふわふわコート', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, color: '紫' },
 ];

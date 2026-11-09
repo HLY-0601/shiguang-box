@@ -69,5 +69,5 @@ export const ITEMS = [
   { id: 'portable_item_064', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/f/f2/Starry-Nights-Canopy-Umbrella-Prop-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Starry Night's Canopy", name: '星月夜の傘', event: '親愛なるファン・ゴッホへ', cost: 'premium', dye: false, noReprint: false, type: '持ち運び/カバー' },
   { id: 'portable_item_065', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/d/d4/Moonlight-Pipa-Icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Lute", name: '月灯りリュート', event: '月灯りの日々', cost: 'premium', dye: false, noReprint: false, type: '楽器' },
   // ── 遥かなる真珠の季節 パック（テスト版） ──
-  { id: 'portable_item_066', img: '', nameEn: "The Pearl", name: 'ザ・パール', event: '遥かなる真珠の季節', cost: 'premium', dye: false, noReprint: true, type: '乗る/船' }
+  { id: 'portable_item_066', img: '/shiguang-box/assets/fashion-day/the-pearl.png', nameEn: "The Pearl", name: 'ザ・パール', event: '遥かなる真珠の季節', cost: 'premium', dye: false, noReprint: true, type: '乗る/船' }
 ];

@@ -91,5 +91,5 @@ export const ITEMS = [
   { id: 'hair_accessory_083', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/7/73/Old-Angler-Hair-Accessory-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Old Angler Hair Accessory", name: '老いた漁師　ヘアアクセサリー', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false },
   { id: 'hair_accessory_081', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/3/39/Moonlight-Lotus-Halo-Icon.png/revision/latest/scale-to-width-down/51', nameEn: "Moonlight Nimbus", name: '月灯りの光背', event: '月灯りの日々', cost: 'premium', dye: true, noReprint: false },
   // ── ファッションの日々（テスト版） ──
-  { id: 'hair_accessory_084', img: '', nameEn: "Style Butterfly Clips", name: 'スタイル　蝶々クリップ', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true }
+  { id: 'hair_accessory_084', img: '/shiguang-box/assets/fashion-day/butterfly-clips.png', nameEn: "Style Butterfly Clips", name: 'スタイル　蝶々クリップ', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true }
 ];

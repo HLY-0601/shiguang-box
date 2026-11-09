@@ -211,6 +211,7 @@ function renderShell() {
  <option value="Elder">${escapeHtml(t('filter.typeElder'))}</option>
  <option value="Guide">${escapeHtml(t('filter.typeGuide'))}</option>
  <option value="Special">${escapeHtml(t('filter.typeSpecial'))}</option>
+ <option value="Event">${escapeHtml(t('filter.typeEvent') || '活动')}</option>
  </select>
  <select class="filter-select" id="scSeasonFilter">
  <option value="all">${escapeHtml(t('filter.seasonAll'))}</option>

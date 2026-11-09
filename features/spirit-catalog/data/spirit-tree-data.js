@@ -41063,5 +41063,311 @@ export const SPIRIT_TREE_DATA = [
       }
     ],
     "nameJa": "転げまわる幼子"
+  },
+  {
+    "guid": "event_style_2026",
+    "name": "Days of Style",
+    "nameJa": "スタイルの日々",
+    "nameZh": "时尚日",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_style_2026",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_s_root",
+    "nodes": [
+      {
+        "guid": "ev_s_root",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_s_n1"
+      },
+      {
+        "guid": "ev_s_n1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_s_nw1",
+        "n": "ev_s_n2",
+        "ne": "ev_s_ne1"
+      },
+      {
+        "guid": "ev_s_nw1",
+        "cost": {
+          "t": 29
+        },
+        "itemName": "Style Bob Hair",
+        "itemNameJa": "スタイルボブヘア",
+        "itemType": "Hair"
+      },
+      {
+        "guid": "ev_s_ne1",
+        "cost": {
+          "t": 23
+        },
+        "itemName": "Style Heart Necklace",
+        "itemNameJa": "スタイルハートネックレス",
+        "itemType": "Necklace"
+      },
+      {
+        "guid": "ev_s_n2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_s_nw2",
+        "n": "ev_s_n3",
+        "ne": "ev_s_ne2"
+      },
+      {
+        "guid": "ev_s_nw2",
+        "cost": {
+          "c": 74
+        },
+        "itemName": "Style Dress",
+        "itemNameJa": "スタイルドレス",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_s_ne2",
+        "cost": {
+          "c": 47
+        },
+        "itemName": "Style Headphones",
+        "itemNameJa": "スタイルヘッドホン",
+        "itemType": "HeadAccessory"
+      },
+      {
+        "guid": "ev_s_n3",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_s_nw3",
+        "n": "ev_s_n4",
+        "ne": "ev_s_ne3"
+      },
+      {
+        "guid": "ev_s_nw3",
+        "cost": {
+          "h": 13
+        },
+        "itemName": "Style Music",
+        "itemNameJa": "スタイル楽譜",
+        "itemType": "Music"
+      },
+      {
+        "guid": "ev_s_ne3",
+        "cost": {
+          "c": 30
+        },
+        "itemName": "Style Mask",
+        "itemNameJa": "スタイルマスク",
+        "itemType": "Mask"
+      },
+      {
+        "guid": "ev_s_n4",
+        "cost": {},
+        "itemName": "Blessing",
+        "itemNameJa": "祝福",
+        "itemType": "Special",
+        "nw": "ev_s_nw4",
+        "n": "ev_s_n5"
+      },
+      {
+        "guid": "ev_s_nw4",
+        "cost": {
+          "c": 72
+        },
+        "itemName": "Style Bowtie",
+        "itemNameJa": "スタイル蝶ネクタイ",
+        "itemType": "Necklace"
+      },
+      {
+        "guid": "ev_s_n5",
+        "cost": {
+          "ac": 12
+        },
+        "itemName": "Style Top Hat",
+        "itemNameJa": "スタイルトップハット",
+        "itemType": "HeadAccessory"
+      }
+    ],
+    "nodeCount": 13
+  },
+  {
+    "guid": "event_feast_top",
+    "name": "Days of Feast: Red Outfit",
+    "nameJa": "フェスティバルの日々：赤い衣装",
+    "nameZh": "圣诞节：红衣先祖",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_feast_top",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_f_root1",
+    "nodes": [
+      {
+        "guid": "ev_f_root1",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_f_n1_1",
+        "nw": "ev_f_nw1_1"
+      },
+      {
+        "guid": "ev_f_nw1_1",
+        "cost": {
+          "t": 12
+        },
+        "itemName": "Feast Wreath Necklace",
+        "itemNameJa": "フェストリースネックレス",
+        "itemType": "Necklace"
+      },
+      {
+        "guid": "ev_f_n1_1",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_f_nw2_1",
+        "n": "ev_f_n2_1"
+      },
+      {
+        "guid": "ev_f_nw2_1",
+        "cost": {
+          "t": 27
+        },
+        "itemName": "Feast Overalls",
+        "itemNameJa": "フェスオーバーオール",
+        "itemType": "Outfit"
+      },
+      {
+        "guid": "ev_f_n2_1",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "nw": "ev_f_nw3_1",
+        "n": "ev_f_n3_1"
+      },
+      {
+        "guid": "ev_f_nw3_1",
+        "cost": {
+          "t": 39
+        },
+        "itemName": "Feast Red Cape",
+        "itemNameJa": "フェス赤マント",
+        "itemType": "Cape"
+      },
+      {
+        "guid": "ev_f_n3_1",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest",
+        "n": "ev_f_n4_1"
+      },
+      {
+        "guid": "ev_f_n4_1",
+        "cost": {},
+        "itemName": "Quest",
+        "itemNameJa": "クエスト",
+        "itemType": "Quest"
+      }
+    ],
+    "nodeCount": 8
+  },
+  {
+    "guid": "event_feast_bottom",
+    "name": "Days of Feast: Red Cape",
+    "nameJa": "フェスティバルの日々：赤いケープ",
+    "nameZh": "圣诞节：红斗篷先祖",
+    "type": "Event",
+    "season": null,
+    "area": "Home",
+    "imageUrl": null,
+    "treeGuid": "event_feast_bottom",
+    "treeSource": "user-provided",
+    "isTiered": false,
+    "rootNodeGuid": "ev_f_root2",
+    "nodes": [
+      {
+        "guid": "ev_f_root2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_f_nw1_2",
+        "n": "ev_f_n1_2",
+        "ne": "ev_f_ne1_2"
+      },
+      {
+        "guid": "ev_f_nw1_2",
+        "cost": {
+          "c": 3
+        },
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
+        "itemType": "Special"
+      },
+      {
+        "guid": "ev_f_ne1_2",
+        "cost": {
+          "h": 15
+        },
+        "itemName": "Feast Bowtie",
+        "itemNameJa": "フェス蝶ネクタイ",
+        "itemType": "Necklace"
+      },
+      {
+        "guid": "ev_f_n1_2",
+        "cost": {
+          "c": 5
+        },
+        "itemName": "Small Blessing",
+        "itemNameJa": "小さな祝福",
+        "itemType": "Special",
+        "nw": "ev_f_nw2_2",
+        "ne": "ev_f_ne2_2"
+      },
+      {
+        "guid": "ev_f_nw2_2",
+        "cost": {
+          "c": 65
+        },
+        "itemName": "Feast Red Cape",
+        "itemNameJa": "フェス赤ケープ",
+        "itemType": "Cape"
+      },
+      {
+        "guid": "ev_f_ne2_2",
+        "cost": {
+          "c": 150
+        },
+        "itemName": "Feast Chair",
+        "itemNameJa": "フェス椅子",
+        "itemType": "Furniture"
+      }
+    ],
+    "nodeCount": 6
   }
 ];

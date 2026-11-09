@@ -41607,7 +41607,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Sunlight Board",
         "itemNameJa": "日光ボード",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "small_placeable",
+        "itemCostId": "small_placeable_067"
       },
       {
         "guid": "ev_su_ne1",
@@ -41616,7 +41618,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Sunlight Hair",
         "itemNameJa": "日光ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_184"
       },
       {
         "guid": "ev_su_n1",
@@ -41637,7 +41641,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Sunlight Diver",
         "itemNameJa": "日光ダイバー",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "outfit",
+        "itemCostId": "outfit_111"
       },
       {
         "guid": "ev_su_ne2",
@@ -41646,7 +41652,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Sunlight Cape",
         "itemNameJa": "日光ケープ",
-        "itemType": "Cape"
+        "itemType": "Cape",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_151"
       },
       {
         "guid": "ev_su_n2",
@@ -41655,7 +41663,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Sunlight Mask",
         "itemNameJa": "日光マスク",
-        "itemType": "Mask"
+        "itemType": "Mask",
+        "itemCatKey": "mask",
+        "itemCostId": "mask_114"
       }
     ],
     "nodeCount": 7
@@ -41913,7 +41923,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Nature Hair",
         "itemNameJa": "自然ヘア",
-        "itemType": "Hair"
+        "itemType": "Hair",
+        "itemCatKey": "hairstyle",
+        "itemCostId": "hairstyle_152"
       },
       {
         "guid": "ev_na_ne1",
@@ -41922,7 +41934,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Nature Flippers",
         "itemNameJa": "自然足ヒレ",
-        "itemType": "Shoes"
+        "itemType": "Shoes",
+        "itemCatKey": "shoes",
+        "itemCostId": "shoes_028"
       },
       {
         "guid": "ev_na_n1",
@@ -41943,7 +41957,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Nature Shell",
         "itemNameJa": "自然貝殻",
-        "itemType": "Held"
+        "itemType": "Held",
+        "itemCatKey": "small_placeable",
+        "itemCostId": "small_placeable_061"
       },
       {
         "guid": "ev_na_ne2",
@@ -41952,7 +41968,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Nature Antlers",
         "itemNameJa": "自然角",
-        "itemType": "HairAccessory"
+        "itemType": "HairAccessory",
+        "itemCatKey": "hair_accessory",
+        "itemCostId": "hair_accessory_036"
       },
       {
         "guid": "ev_na_n2",
@@ -41961,7 +41979,9 @@ export const SPIRIT_TREE_DATA = [
         },
         "itemName": "Nature Outfit",
         "itemNameJa": "自然衣装",
-        "itemType": "Outfit"
+        "itemType": "Outfit",
+        "itemCatKey": "cape",
+        "itemCostId": "cape_137"
       }
     ],
     "nodeCount": 7

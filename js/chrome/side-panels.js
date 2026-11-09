@@ -10,7 +10,7 @@
    ================================================================ */
 import { CURRENT_LANG } from '../i18n.js';
 import { zhTr } from '../i18n-zh.js';
-import { getSidePanelEnabled, SKY_SIDE_TOOLS_KEY, SKY_SIDE_DASH_KEY } from '../state.js';
+import { getSidePanelEnabled, setSidePanelEnabled, SKY_SIDE_TOOLS_KEY, SKY_SIDE_DASH_KEY } from '../state.js';
 import * as toolsDrawer from './tools-drawer.js';
 import * as eventDashboard from '../../features/shared/event-dashboard.js';
 
@@ -28,9 +28,10 @@ function mountLeft() {
   leftMounted = true;
   left.setAttribute('aria-label', t('関連ツール', 'Related Tools'));
   left.innerHTML = `
-    <div class="side-panel-title"><svg class="inline-icon" width="20" height="20"><use href="#i-menu"/></svg> ${t('関連ツール', 'Related Tools')}</div>
+    <div class="side-panel-title"><svg class="inline-icon" width="20" height="20"><use href="#i-menu"/></svg> ${t('関連ツール', 'Related Tools')} <button class="side-panel-close" data-close="tools" title="${t('閉じる', 'Hide')}">×</button></div>
     <nav class="pf-drawer-nav js-tools-nav"></nav>`;
   toolsDrawer.renderNav();
+  left.querySelector('[data-close="tools"]').addEventListener('click', () => { setSidePanelEnabled('tools', false); sync(); });
 }
 
 function mountRight() {
@@ -40,9 +41,10 @@ function mountRight() {
   rightMounted = true;
   right.setAttribute('aria-label', t('今日・今週・今月', 'Today / This Week / This Month'));
   right.innerHTML = `
-    <div class="side-panel-title"><svg class="inline-icon" width="20" height="20"><use href="#i-calendar"/></svg> ${t('今日・今週・今月', 'Today / This Week / This Month')}</div>
+    <div class="side-panel-title"><svg class="inline-icon" width="20" height="20"><use href="#i-calendar"/></svg> ${t('今日・今週・今月', 'Today / This Week / This Month')} <button class="side-panel-close" data-close="dash" title="${t('閉じる', 'Hide')}">×</button></div>
     <div id="sideDashBody"></div>`;
   eventDashboard.mount(right.querySelector('#sideDashBody'), { persistent: true, icsExport: true });
+  right.querySelector('[data-close="dash"]').addEventListener('click', () => { setSidePanelEnabled('dash', false); sync(); });
 }
 
 function unmountLeft() {

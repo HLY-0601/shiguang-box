@@ -31,10 +31,10 @@ let expandedTitleIds = new Set();
 // シンボルを流用。i-walletはtai-hub共有スプライトに無いため、通貨の
 // アイコンとして意味が通るi-gemをセクション見出しに使う）。
 const CURRENCY_FIELDS = [
-  { key: 'candle', icon: 'i-candle', ja: 'キャンドル', en: 'Candles' },
-  { key: 'heart', icon: 'i-heart', ja: 'ハート', en: 'Hearts' },
-  { key: 'starCandle', icon: 'i-star-candle', ja: '星のキャンドル', en: 'Star Candles' },
-  { key: 'seasonCandle', icon: 'i-candle', ja: 'シーズンキャンドル', en: 'Season Candles' },
+  { key: 'candle', icon: 'i-candle', ja: 'キャンドル', en: 'Candles', zh: '蜡烛' },
+  { key: 'heart', icon: 'i-heart', ja: 'ハート', en: 'Hearts', zh: '爱心' },
+  { key: 'starCandle', icon: 'i-star-candle', ja: '星のキャンドル', en: 'Star Candles', zh: '升华蜡烛' },
+  { key: 'seasonCandle', icon: 'i-candle', ja: 'シーズンキャンドル', en: 'Season Candles', zh: '季节蜡烛' },
 ];
 
 let editingId = null;
@@ -212,7 +212,7 @@ function renderCurrency() {
   }
   const values = loadOwnedCurrency(activeId);
   grid.innerHTML = CURRENCY_FIELDS.map(f => {
-    const label = t(f.ja, f.en);
+    const label = CURRENT_LANG === 'zh' ? (f.zh || zhTr(f.ja)) : (CURRENT_LANG === 'en' ? f.en : f.ja);
     return `
     <div class="pf-currency-card">
       <span class="pf-currency-card-label"><svg class="inline-icon" width="13" height="13"><use href="#${f.icon}"/></svg>${label}</span>

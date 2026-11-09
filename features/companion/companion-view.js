@@ -478,7 +478,7 @@ const TYPE_ICONS = { walk: 'cp-i-tree-emote', magic: 'cp-i-tree-magic', seasonal
 const TYPE_IMAGES = {
  walk: '',
  seasonal: '',
- magic: 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/2/28/Special-event-spell-icon.png/revision/latest/scale-to-width-down/51',
+ magic: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/2/28/Special-event-spell-icon.png/revision/latest/scale-to-width-down/51',
  adpass: '',
 };
 

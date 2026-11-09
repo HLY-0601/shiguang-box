@@ -916,7 +916,7 @@ function resolveNodeImgByName(n) {
   }
   return null;
 }
-const QUEST_IMG = 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/8/8b/Exclamation-mark-Ray.png/revision/latest/scale-to-width-down/51';
+const QUEST_IMG = 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/8/8b/Exclamation-mark-Ray.png/revision/latest/scale-to-width-down/51';
 export function resolveNodeImg(n) {
   if (n.itemCatKey && n.itemCostId && itemImgMapByCat) {
     const img = itemImgMapByCat[n.itemCatKey]?.[n.itemCostId];

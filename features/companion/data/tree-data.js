@@ -61,7 +61,7 @@ const SPIRIT_TREE_COSTS = {
 // 🎨 実機アイコン画像（Sky Wikiの各精霊ページの精霊メニューの画像）。特定精霊の特定アイテム専用のため
 // item.customImage で個別に割り当てる（getItemImageUrlで最優先される）。
 // ※ 見せびらかしの商人のアドパス「ネックレス」は、Wiki側でも仮にエモートのアイコンが使われている。
-const pearlImg = (path) => 'https://static.wikia.nocookie.net/sky-children-of-the-light/images/' + path + '/revision/latest/scale-to-width-down/51';
+const pearlImg = (path) => 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/' + path + '/revision/latest/scale-to-width-down/51';
 const PEARL_ART = {
   spell: pearlImg('2/28/Special-event-spell-icon.png'),
   dye_blue: pearlImg('0/0b/Blue-dye-container-icon.png'),

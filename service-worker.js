@@ -16,7 +16,7 @@
    ・ナビゲーション（ページを開く操作）は、オフラインなら保存済みの index.html を返す
      （ルートは#以降なのでページ自体は常に ./ 1枚）。
    ================================================================ */
-const CACHE_VERSION = 'v4';
+const CACHE_VERSION = 'v5';
 const CACHE_NAME = 'tai-hub-' + CACHE_VERSION;
 const CDN_HOSTS = ['cdn.jsdelivr.net', 'cdnjs.cloudflare.com', 'fonts.googleapis.com', 'fonts.gstatic.com'];
 const SHELL = ['./', 'index.html', 'manifest.json', 'icons/app-icon-192.png', 'icons/app-icon-512.png'];

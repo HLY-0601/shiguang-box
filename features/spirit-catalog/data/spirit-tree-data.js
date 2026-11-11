@@ -40288,7 +40288,7 @@ export const SPIRIT_TREE_DATA = [
     "revisitDate": null,
     "revisitName": null,
     "isTiered": true,
-    "nodeCount": 11,
+    "nodeCount": 13,
     "nodes": [
       {
         "guid": "ntHpcpPEIF",
@@ -40355,17 +40355,19 @@ export const SPIRIT_TREE_DATA = [
         "col": 2,
         "cost": {},
         "itemGuid": "x_rKIBtDJK",
-        "itemName": "Blessing",
-        "itemNameJa": "祝福",
-        "itemType": "Special",
+        "itemName": "Arm Wrestle",
+        "itemNameJa": "腕相撲",
+        "itemType": "Emote",
         "itemCatKey": null,
-        "itemCostId": null
+        "itemCostId": null,
+        "emoteId": "emote_122",
+        "emoteLevel": 2
       },
       {
         "guid": "y5O2scI-3u",
-        "tier": 2,
+        "tier": 1,
         "row": 0,
-        "col": 0,
+        "col": 1,
         "cost": {
           "sc": 8
         },
@@ -40375,6 +40377,23 @@ export const SPIRIT_TREE_DATA = [
         "itemType": "Special",
         "itemCatKey": null,
         "itemCostId": null
+      },
+      {
+        "guid": "X3WViFM0wn",
+        "tier": 2,
+        "row": 0,
+        "col": 0,
+        "cost": {
+          "sc": 28
+        },
+        "itemGuid": "LoMrohjOOx",
+        "itemName": "Arm Wrestle",
+        "itemNameJa": "腕相撲",
+        "itemType": "Emote",
+        "itemCatKey": null,
+        "itemCostId": null,
+        "emoteId": "emote_122",
+        "emoteLevel": 3
       },
       {
         "guid": "a89yFo9gSG",
@@ -40420,17 +40439,32 @@ export const SPIRIT_TREE_DATA = [
         "itemCostId": "hairstyle_186"
       },
       {
+        "guid": "QoX7eThlPG",
+        "tier": 3,
+        "row": 0,
+        "col": 1,
+        "cost": {},
+        "itemGuid": "R8rPE-EP52",
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
+        "itemType": "Special",
+        "itemCatKey": null,
+        "itemCostId": null
+      },
+      {
         "guid": "XFNTEqyFAv",
         "tier": 3,
         "row": 0,
         "col": 2,
         "cost": {},
         "itemGuid": "WY9Et2pZDG",
-        "itemName": "Blessing",
-        "itemNameJa": "祝福",
-        "itemType": "Special",
+        "itemName": "Arm Wrestle",
+        "itemNameJa": "腕相撲",
+        "itemType": "Emote",
         "itemCatKey": null,
-        "itemCostId": null
+        "itemCostId": null,
+        "emoteId": "emote_122",
+        "emoteLevel": 4
       },
       {
         "guid": "f67uu4C9-S",
@@ -40463,7 +40497,7 @@ export const SPIRIT_TREE_DATA = [
     "revisitDate": null,
     "revisitName": null,
     "isTiered": true,
-    "nodeCount": 12,
+    "nodeCount": 13,
     "nodes": [
       {
         "guid": "pFBpDttDOu",
@@ -40614,6 +40648,19 @@ export const SPIRIT_TREE_DATA = [
         "itemCostId": "outfit_115"
       },
       {
+        "guid": "Rbv2pWgq4J",
+        "tier": 3,
+        "row": 0,
+        "col": 1,
+        "cost": {},
+        "itemGuid": "i0-iHnmYO2",
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
+        "itemType": "Special",
+        "itemCatKey": null,
+        "itemCostId": null
+      },
+      {
         "guid": "SE8KrwyKIc",
         "tier": 3,
         "row": 0,
@@ -40659,7 +40706,7 @@ export const SPIRIT_TREE_DATA = [
     "revisitDate": null,
     "revisitName": null,
     "isTiered": true,
-    "nodeCount": 13,
+    "nodeCount": 14,
     "nodes": [
       {
         "guid": "wrjmIC52bT",
@@ -40810,6 +40857,19 @@ export const SPIRIT_TREE_DATA = [
         "itemCostId": "outfit_113"
       },
       {
+        "guid": "LoClyuqbL9",
+        "tier": 3,
+        "row": 1,
+        "col": 1,
+        "cost": {},
+        "itemGuid": "AIoCCHc-Ee",
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
+        "itemType": "Special",
+        "itemCatKey": null,
+        "itemCostId": null
+      },
+      {
         "guid": "CaMEAohZOB",
         "tier": 3,
         "row": 1,
@@ -40868,7 +40928,7 @@ export const SPIRIT_TREE_DATA = [
     "revisitDate": null,
     "revisitName": null,
     "isTiered": true,
-    "nodeCount": 13,
+    "nodeCount": 14,
     "nodes": [
       {
         "guid": "YYAU5xYK-3",
@@ -41014,6 +41074,19 @@ export const SPIRIT_TREE_DATA = [
         "itemGuid": "KVX8YSAz-h",
         "itemName": "Blue Dye",
         "itemNameJa": "青色染料",
+        "itemType": "Special",
+        "itemCatKey": null,
+        "itemCostId": null
+      },
+      {
+        "guid": "J1QNvmfxbJ",
+        "tier": 3,
+        "row": 1,
+        "col": 1,
+        "cost": {},
+        "itemGuid": "0YksANkvuu",
+        "itemName": "Heart",
+        "itemNameJa": "ハート",
         "itemType": "Special",
         "itemCatKey": null,
         "itemCostId": null

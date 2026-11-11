@@ -1,0 +1,133 @@
+/* ================================================================
+   season-calc — 季節先祖解鎖計算器（原生モジュール版）
+   色はハブ共通トークン（--hub-*）だけを使い、着せ替えに追従する。
+   ================================================================ */
+
+.sc-view .sc-panel {
+  background: var(--hub-card);
+  border: 1px solid var(--hub-sep);
+  border-radius: var(--hub-r);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+/* --- 方案行 --- */
+.sc-view .sc-profile-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.sc-view .sc-profile-row .fun-input { flex: 1 1 140px; }
+
+/* --- 統計ラベル --- */
+.sc-view .sc-totals { display: flex; flex-wrap: wrap; gap: 8px; }
+.sc-view .sc-total-tag {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  padding: 6px 11px; border-radius: var(--hub-r-sm);
+  background: var(--hub-bg); border: 1px solid var(--hub-sep);
+  font-size: 12.5px; color: var(--hub-text);
+}
+.sc-view .sc-total-label { font-weight: 700; color: var(--hub-text-2); }
+.sc-view .sc-note {
+  width: 100%; font-size: 12px; line-height: 1.5;
+  color: var(--hub-text-2);
+}
+
+/* --- 進度条 --- */
+.sc-view .sc-progress {
+  height: 8px; border-radius: 999px;
+  background: var(--hub-bg); border: 1px solid var(--hub-sep);
+  overflow: hidden;
+}
+.sc-view .sc-progress-bar {
+  height: 100%; width: 0; border-radius: 999px;
+  background: var(--hub-accent); transition: width 0.25s var(--fun-ease, ease);
+}
+
+/* --- 操作群 --- */
+.sc-view .sc-controls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.sc-view .sc-check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer; }
+.sc-view .sc-check input { width: 16px; height: 16px; accent-color: var(--hub-accent); }
+.sc-view .sc-field { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; }
+.sc-view .sc-field input {
+  width: 64px; padding: 7px; border-radius: var(--hub-r-sm);
+  border: 1px solid var(--hub-sep); background: var(--hub-bg);
+  color: var(--hub-text); text-align: center; font: inherit;
+}
+.sc-view .sc-field input:focus, .sc-view .sc-profile-row .fun-input:focus {
+  outline: none; border-color: var(--hub-accent);
+  box-shadow: 0 0 0 3px var(--hub-accent-bg);
+}
+
+/* --- 先祖カード栅格 --- */
+.sc-view .sc-spirits { display: grid; grid-template-columns: 1fr; gap: 16px; }
+@media (min-width: 640px) {
+  .sc-view .sc-spirits { grid-template-columns: repeat(2, 1fr); }
+}
+
+.sc-view .sc-spirit {
+  background: var(--hub-card); border: 1px solid var(--hub-sep);
+  border-radius: var(--hub-r); padding: 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.sc-view .sc-spirit-img {
+  width: 64px; height: 64px; border-radius: 50%;
+  object-fit: contain; background: var(--hub-bg);
+  border: 1px solid var(--hub-sep);
+}
+.sc-view .sc-spirit-header {
+  display: flex; align-items: baseline; gap: 6px;
+  font-size: 15px; font-weight: 700; text-align: center;
+}
+.sc-view .sc-guide-badge { font-size: 11px; font-weight: 500; color: var(--hub-text-2); }
+
+.sc-view .sc-spirit-controls {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  width: 100%; padding-top: 10px; border-top: 1px dashed var(--hub-sep);
+  font-size: 13px;
+}
+.sc-view .sc-exp-line { font-size: 12.5px; color: var(--hub-text-2); }
+.sc-view .sc-exp-row { display: flex; align-items: center; gap: 6px; }
+.sc-view .sc-exp-row input {
+  width: 48px; padding: 6px; border-radius: var(--hub-r-sm);
+  border: 1px solid var(--hub-sep); background: var(--hub-bg);
+  color: var(--hub-text); text-align: center;
+}
+
+/* --- レベル行・ノード --- */
+.sc-view .sc-items { width: 100%; margin-bottom: 4px; }
+.sc-view .sc-level-row {
+  display: flex; flex-direction: column-reverse; align-items: center;
+  gap: 6px; margin-bottom: 6px; padding-top: 8px;
+  border-top: 1px solid var(--hub-sep); width: 100%;
+}
+.sc-view .sc-level-label { font-weight: 700; font-size: 12px; color: var(--hub-text-2); }
+.sc-view .sc-items-row {
+  display: flex; justify-content: flex-start; gap: 6px;
+  width: 198px; max-width: 100%; margin: 0 auto;
+}
+
+.sc-view .sc-item {
+  width: 62px; flex-shrink: 0; text-align: center; cursor: pointer;
+  border: 1.5px solid var(--hub-sep); border-radius: var(--hub-r-sm);
+  padding: 4px; background: var(--hub-bg);
+  display: flex; flex-direction: column; justify-content: space-between;
+  gap: 3px; user-select: none; transition: border-color 0.15s, transform 0.15s, background 0.15s;
+}
+.sc-view .sc-item:hover { border-color: var(--hub-accent); transform: scale(1.04); }
+.sc-view .sc-item.unlocked { border-color: var(--hub-accent); background: var(--hub-accent-bg); }
+.sc-view .sc-item.season { border-color: var(--hub-accent-ink); }
+.sc-view .sc-item.unlocked.season { border-color: var(--hub-accent); background: var(--hub-accent-bg); }
+.sc-view .sc-item.locked { opacity: 0.35; filter: grayscale(1); cursor: not-allowed; }
+.sc-view .sc-item.locked:hover { border-color: var(--hub-sep); transform: none; }
+.sc-view .sc-item-img { width: 100%; aspect-ratio: 1; object-fit: contain; border-radius: 6px; }
+.sc-view .sc-item div { font-size: 10px; line-height: 1.2; word-break: break-all; color: var(--hub-text); }
+
+.sc-view .sc-gap, .sc-view .sc-gap-row { visibility: hidden; pointer-events: none; }
+.sc-view .sc-gap { border-color: transparent; background: transparent; box-shadow: none; }
+
+/* --- カード底部 --- */
+.sc-view .sc-spirit-footer {
+  margin-top: auto; padding-top: 10px; width: 100%;
+  display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px;
+  font-size: 12px; color: var(--hub-text-2);
+}

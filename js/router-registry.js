@@ -133,6 +133,7 @@ export const ROUTES = {
   wings: lazyToolEntry(() => import('../features/wings/wings-view.js'), '羽トラッカー', 'Wing Tracker'),
   companion: lazyToolEntry(() => import('../features/companion/companion-view.js'), '精霊同行ツール', 'Spirit Companion Tool'),
   'spirit-catalog': lazyToolEntry(() => import('../features/spirit-catalog/spirit-catalog-view.js'), '精霊ツリー管理', 'Spirit Tree Catalog'),
+  'season-calc': lazyToolEntry(() => import('../features/season-calc/season-calc-view.js'), '季節精霊計算機', 'Season Spirit Calculator'),
   'friendship-tree': lazyToolEntry(() => import('../features/friendship-tree/friendship-tree-view.js'), 'フレンドツリー', 'Friendship Tree'),
   'height': lazyToolEntry(() => import('../features/height/height-view.js'), '身長チェック', 'Height Checker'),
   'music': lazyToolEntry(() => import('../features/music/music-view.js'), '琴窓', 'Music Piano'),

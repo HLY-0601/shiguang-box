@@ -18,6 +18,7 @@ const HUB_ONLY_TOOLS = [
   { id: 'titles', afterId: 'recap', icon: 'i-trophy', ja: '称号一覧', en: 'Titles', zh: '称号一览', child: true },
   { id: 'coord-diary', afterId: 'item', icon: 'i-hanger', ja: 'コーデ日記', en: 'Outfit Diary', zh: '穿搭日记', child: true },
   { id: 'wish-plan', afterId: 'coord-diary', icon: 'i-cart', ja: 'ほしいもの計画', en: 'Wishlist Plan', zh: '愿望清单', child: true },
+  { id: 'season-calc', afterId: 'spirit-catalog', icon: 'i-candle', ja: '季節精霊計算機', en: 'Season Spirit Calculator', zh: '季节先祖计算器', badgeTest: true },
   { id: 'account', afterId: 'data-transfer', icon: 'i-person', ja: 'ローカルアカウント', en: 'Local Account', zh: '本地账号', child: true },
 ];
 

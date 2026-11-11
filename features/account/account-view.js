@@ -12,8 +12,6 @@ import {
   logout,
   currentUser,
   updateProfile,
-  getBaseUrl,
-  setBaseUrl,
   isRemote,
   refreshSession,
 } from './account-store.js';
@@ -64,7 +62,6 @@ function render() {
 function renderAuth() {
   const isLogin = authMode === 'login';
   const remote = isRemote();
-  const baseUrl = getBaseUrl();
   return `
   <div class="account-view">
     <div class="ac-head">
@@ -90,15 +87,6 @@ function renderAuth() {
       ${isLogin
         ? '还没有账号？<button type="button" class="ac-link" data-action="switch-register">去注册</button>'
         : '已经有账号了？<button type="button" class="ac-link" data-action="switch-login">去登录</button>'}
-    </div>
-
-    <div class="ac-card ac-backend">
-      <label class="ac-field">
-        <span>后端地址（留空则使用本地账号）</span>
-        <input type="url" id="acBaseUrl" placeholder="https://your-api.example.com" value="${escapeHtml(baseUrl)}">
-      </label>
-      <button type="button" class="ac-btn-ghost" data-action="save-backend">保存后端地址</button>
-      <p class="ac-backend-hint">填写并部署后端后，注册/登录与身高、好友、装扮、跑图数据将保存在服务器并可跨设备同步。</p>
     </div>
 
     <div class="ac-notice">
@@ -192,12 +180,6 @@ function wireEvents() {
       if (action === 'switch-register') { authMode = 'register'; render(); return; }
       if (action === 'switch-login') { authMode = 'login'; render(); return; }
       if (action === 'logout') { Promise.resolve(logout()).then(() => { authMode = 'login'; render(); }); return; }
-      if (action === 'save-backend') {
-        const input = containerEl.querySelector('#acBaseUrl');
-        setBaseUrl(input.value);
-        render();
-        return;
-      }
     }
     const nav = e.target.closest('[data-route]');
     if (nav) {

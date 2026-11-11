@@ -1,0 +1,2049 @@
+/* ================================================================
+   自动生成：来自 VoidCipher3/skyiap 的静态快照，机械转换，数据内容未改。
+   最近变更 / 历史记录 / 商品目录。
+   快照时间以 store.meta.fetched 为准；纯静态站不再自动更新。
+   ================================================================ */
+export const DIFF = {
+  "schema": 1,
+  "meta": {
+    "checked": "2026-11-11 21:00:35",
+    "first_run": false,
+    "history_count": 11,
+    "history_limit": 200,
+    "history_trimmed": 0
+  },
+  "latest": {
+    "at": "2026-10-23 15:20:46",
+    "added": [
+      {
+        "sku": "xsolla.sky.snc05"
+      },
+      {
+        "sku": "xsolla.sky.snc06"
+      },
+      {
+        "sku": "xsolla.sky.snc128"
+      },
+      {
+        "sku": "xsolla.sky.snc129"
+      },
+      {
+        "sku": "xsolla.sky.snc14"
+      },
+      {
+        "sku": "xsolla.sky.snc15"
+      },
+      {
+        "sku": "xsolla.sky.snc170"
+      },
+      {
+        "sku": "xsolla.sky.snc171"
+      },
+      {
+        "sku": "xsolla.sky.snc36"
+      },
+      {
+        "sku": "xsolla.sky.snc37"
+      },
+      {
+        "sku": "xsolla.sky.snc38"
+      },
+      {
+        "sku": "xsolla.sky.snc39"
+      },
+      {
+        "sku": "xsolla.sky.snc61"
+      },
+      {
+        "sku": "xsolla.sky.snc62"
+      },
+      {
+        "sku": "xsolla.sky.snc96"
+      },
+      {
+        "sku": "xsolla.sky.snc97"
+      },
+      {
+        "sku": "xsolla.sky.snc98"
+      }
+    ],
+    "removed": [],
+    "changed": [],
+    "n": [
+      17,
+      0,
+      0
+    ],
+    "recorded": true,
+    "unchanged_since": true
+  },
+  "history": [
+    {
+      "at": "2026-10-23 15:20:46",
+      "added": [
+        {
+          "sku": "xsolla.sky.snc05"
+        },
+        {
+          "sku": "xsolla.sky.snc06"
+        },
+        {
+          "sku": "xsolla.sky.snc128"
+        },
+        {
+          "sku": "xsolla.sky.snc129"
+        },
+        {
+          "sku": "xsolla.sky.snc14"
+        },
+        {
+          "sku": "xsolla.sky.snc15"
+        },
+        {
+          "sku": "xsolla.sky.snc170"
+        },
+        {
+          "sku": "xsolla.sky.snc171"
+        },
+        {
+          "sku": "xsolla.sky.snc36"
+        },
+        {
+          "sku": "xsolla.sky.snc37"
+        },
+        {
+          "sku": "xsolla.sky.snc38"
+        },
+        {
+          "sku": "xsolla.sky.snc39"
+        },
+        {
+          "sku": "xsolla.sky.snc61"
+        },
+        {
+          "sku": "xsolla.sky.snc62"
+        },
+        {
+          "sku": "xsolla.sky.snc96"
+        },
+        {
+          "sku": "xsolla.sky.snc97"
+        },
+        {
+          "sku": "xsolla.sky.snc98"
+        }
+      ],
+      "removed": [],
+      "changed": [],
+      "n": [
+        17,
+        0,
+        0
+      ]
+    },
+    {
+      "at": "2026-10-16 15:01:03",
+      "added": [
+        {
+          "sku": "xsolla.sky.scdl10"
+        },
+        {
+          "sku": "xsolla.sky.scdl20"
+        },
+        {
+          "sku": "xsolla.sky.scdl5"
+        },
+        {
+          "sku": "xsolla.sky.scdl50"
+        },
+        {
+          "sku": "xsolla.sky.spassg"
+        },
+        {
+          "sku": "xsolla.sky.spassp3"
+        },
+        {
+          "sku": "xsolla.sky.spassr"
+        }
+      ],
+      "removed": [],
+      "changed": [],
+      "n": [
+        7,
+        0,
+        0
+      ]
+    },
+    {
+      "at": "2026-10-14 04:00:39",
+      "added": [],
+      "removed": [],
+      "changed": [
+        {
+          "sku": "xsolla.sky.cdl10",
+          "changes": [
+            [
+              "ID",
+              169000,
+              199000
+            ],
+            [
+              "IL",
+              34.9,
+              29.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl20",
+          "changes": [
+            [
+              "ID",
+              349000,
+              399000
+            ],
+            [
+              "IL",
+              69.9,
+              59.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl5",
+          "changes": [
+            [
+              "ID",
+              89000,
+              99000
+            ],
+            [
+              "IL",
+              17.9,
+              14.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl50",
+          "changes": [
+            [
+              "ID",
+              799000,
+              999000
+            ],
+            [
+              "IL",
+              179.9,
+              149.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc100",
+          "changes": [
+            [
+              "ID",
+              169000,
+              199000
+            ],
+            [
+              "IL",
+              34.9,
+              29.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc159",
+          "changes": [
+            [
+              "ID",
+              399000,
+              499000
+            ],
+            [
+              "IL",
+              89.9,
+              79.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc206",
+          "changes": [
+            [
+              "ID",
+              49000,
+              59000
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc207",
+          "changes": [
+            [
+              "ID",
+              89000,
+              99000
+            ],
+            [
+              "IL",
+              17.9,
+              14.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc208",
+          "changes": [
+            [
+              "ID",
+              249000,
+              299000
+            ],
+            [
+              "UA",
+              810,
+              800
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc209",
+          "changes": [
+            [
+              "ID",
+              399000,
+              499000
+            ],
+            [
+              "IL",
+              89.9,
+              79.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc210",
+          "changes": [
+            [
+              "ID",
+              249000,
+              299000
+            ],
+            [
+              "UA",
+              810,
+              800
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc70",
+          "changes": [
+            [
+              "ID",
+              399000,
+              499000
+            ],
+            [
+              "IL",
+              89.9,
+              79.9
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc72",
+          "changes": [
+            [
+              "ID",
+              249000,
+              299000
+            ],
+            [
+              "UA",
+              810,
+              800
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc99",
+          "changes": [
+            [
+              "ID",
+              169000,
+              199000
+            ],
+            [
+              "IL",
+              34.9,
+              29.9
+            ]
+          ]
+        }
+      ],
+      "n": [
+        0,
+        0,
+        14
+      ]
+    },
+    {
+      "at": "2026-10-10 15:00:50",
+      "added": [],
+      "removed": [
+        {
+          "sku": "xsolla.sky.snc107"
+        },
+        {
+          "sku": "xsolla.sky.snc108"
+        },
+        {
+          "sku": "xsolla.sky.snc123"
+        },
+        {
+          "sku": "xsolla.sky.snc124"
+        },
+        {
+          "sku": "xsolla.sky.snc13"
+        },
+        {
+          "sku": "xsolla.sky.snc162"
+        },
+        {
+          "sku": "xsolla.sky.snc212"
+        },
+        {
+          "sku": "xsolla.sky.snc213"
+        },
+        {
+          "sku": "xsolla.sky.snc214"
+        },
+        {
+          "sku": "xsolla.sky.snc35"
+        },
+        {
+          "sku": "xsolla.sky.snc95"
+        }
+      ],
+      "changed": [],
+      "n": [
+        0,
+        11,
+        0
+      ]
+    },
+    {
+      "at": "2026-10-02 15:01:08",
+      "added": [],
+      "removed": [
+        {
+          "sku": "xsolla.sky.scdl10"
+        },
+        {
+          "sku": "xsolla.sky.scdl20"
+        },
+        {
+          "sku": "xsolla.sky.scdl5"
+        },
+        {
+          "sku": "xsolla.sky.scdl50"
+        },
+        {
+          "sku": "xsolla.sky.spassg"
+        },
+        {
+          "sku": "xsolla.sky.spassp3"
+        },
+        {
+          "sku": "xsolla.sky.spassr"
+        }
+      ],
+      "changed": [],
+      "n": [
+        0,
+        7,
+        0
+      ]
+    },
+    {
+      "at": "2026-09-19 15:00:19",
+      "added": [
+        {
+          "sku": "xsolla.sky.snc107"
+        },
+        {
+          "sku": "xsolla.sky.snc108"
+        },
+        {
+          "sku": "xsolla.sky.snc123"
+        },
+        {
+          "sku": "xsolla.sky.snc124"
+        },
+        {
+          "sku": "xsolla.sky.snc13"
+        },
+        {
+          "sku": "xsolla.sky.snc162"
+        },
+        {
+          "sku": "xsolla.sky.snc212"
+        },
+        {
+          "sku": "xsolla.sky.snc213"
+        },
+        {
+          "sku": "xsolla.sky.snc214"
+        },
+        {
+          "sku": "xsolla.sky.snc35"
+        },
+        {
+          "sku": "xsolla.sky.snc95"
+        }
+      ],
+      "removed": [],
+      "changed": [],
+      "n": [
+        11,
+        0,
+        0
+      ]
+    },
+    {
+      "at": "2026-09-11 15:00:37",
+      "added": [],
+      "removed": [
+        {
+          "sku": "xsolla.sky.snc211"
+        }
+      ],
+      "changed": [],
+      "n": [
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "at": "2026-09-10 06:01:42",
+      "added": [],
+      "removed": [],
+      "changed": [
+        {
+          "sku": "xsolla.sky.cdl10",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl20",
+          "changes": [
+            [
+              "UA",
+              1049.99,
+              1050
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl5",
+          "changes": [
+            [
+              "UA",
+              269.99,
+              270
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.cdl50",
+          "changes": [
+            [
+              "UA",
+              2699.99,
+              2700
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.scdl10",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.scdl20",
+          "changes": [
+            [
+              "UA",
+              1049.99,
+              1050
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.scdl5",
+          "changes": [
+            [
+              "UA",
+              269.99,
+              270
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.scdl50",
+          "changes": [
+            [
+              "UA",
+              2699.99,
+              2700
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc100",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc159",
+          "changes": [
+            [
+              "UA",
+              1349.99,
+              1350
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc206",
+          "changes": [
+            [
+              "UA",
+              159.99,
+              160
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc207",
+          "changes": [
+            [
+              "UA",
+              269.99,
+              270
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc208",
+          "changes": [
+            [
+              "UA",
+              809.99,
+              810
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc209",
+          "changes": [
+            [
+              "UA",
+              1349.99,
+              1350
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc70",
+          "changes": [
+            [
+              "UA",
+              1349.99,
+              1350
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc72",
+          "changes": [
+            [
+              "UA",
+              809.99,
+              810
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.snc99",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.spassg",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.spassp3",
+          "changes": [
+            [
+              "UA",
+              1049.99,
+              1050
+            ]
+          ]
+        },
+        {
+          "sku": "xsolla.sky.spassr",
+          "changes": [
+            [
+              "UA",
+              539.99,
+              540
+            ]
+          ]
+        }
+      ],
+      "n": [
+        0,
+        0,
+        20
+      ]
+    },
+    {
+      "at": "2026-08-28 15:00:59",
+      "added": [
+        {
+          "sku": "xsolla.sky.snc211"
+        }
+      ],
+      "removed": [],
+      "changed": [],
+      "n": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "at": "2026-08-26 15:00:59",
+      "added": [
+        {
+          "sku": "xsolla.sky.snc210"
+        }
+      ],
+      "removed": [],
+      "changed": [],
+      "n": [
+        1,
+        0,
+        0
+      ]
+    },
+    {
+      "at": "2026-08-21 15:01:11",
+      "added": [],
+      "removed": [
+        {
+          "sku": "xsolla.sky.snc126"
+        },
+        {
+          "sku": "xsolla.sky.snc127"
+        },
+        {
+          "sku": "xsolla.sky.snc161"
+        },
+        {
+          "sku": "xsolla.sky.snc203"
+        },
+        {
+          "sku": "xsolla.sky.snc204"
+        },
+        {
+          "sku": "xsolla.sky.snc205"
+        },
+        {
+          "sku": "xsolla.sky.snc33"
+        },
+        {
+          "sku": "xsolla.sky.snc34"
+        },
+        {
+          "sku": "xsolla.sky.snc59"
+        },
+        {
+          "sku": "xsolla.sky.snc60"
+        },
+        {
+          "sku": "xsolla.sky.snc89"
+        },
+        {
+          "sku": "xsolla.sky.snc90"
+        }
+      ],
+      "changed": [],
+      "n": [
+        0,
+        12,
+        0
+      ]
+    }
+  ],
+  "catalog": {
+    "xsolla.sky.cdl10": {
+      "name": {
+        "tw": "35 一般蠟燭",
+        "cn": "35 一般蜡烛",
+        "en": "35 Regular Candles",
+        "ja": "35 キャンドル",
+        "ko": "35 일반양초"
+      },
+      "group": "candles",
+      "image": "https://sky.thatg.co/xsolla/cdl10-dabbf3cda7a82a73793e2c3dd8fe232e.png",
+      "candles": 35,
+      "candle_type": "regular",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.cdl20": {
+      "name": {
+        "tw": "72 一般蠟燭",
+        "cn": "72 一般蜡烛",
+        "en": "72 Regular Candles",
+        "ja": "72 キャンドル",
+        "ko": "72 일반양초"
+      },
+      "group": "candles",
+      "image": "https://sky.thatg.co/xsolla/cdl20-0a9d2c72fa5e70e03c28e69c521547ca.png",
+      "candles": 72,
+      "candle_type": "regular",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.cdl5": {
+      "name": {
+        "tw": "15 一般蠟燭",
+        "cn": "15 一般蜡烛",
+        "en": "15 Regular Candles",
+        "ja": "15 キャンドル",
+        "ko": "15 일반양초"
+      },
+      "group": "candles",
+      "image": "https://sky.thatg.co/xsolla/cdl5-b05b7b1d7f9c48ea3c9955c4da77ce16.png",
+      "candles": 15,
+      "candle_type": "regular",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.cdl50": {
+      "name": {
+        "tw": "190 一般蠟燭",
+        "cn": "190 一般蜡烛",
+        "en": "190 Regular Candles",
+        "ja": "190 キャンドル",
+        "ko": "190 일반양초"
+      },
+      "group": "candles",
+      "image": "https://sky.thatg.co/xsolla/cdl50-d17bef0d52e73ef3cb98e9f2d15bb692.png",
+      "candles": 190,
+      "candle_type": "regular",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc126": {
+      "name": {
+        "tw": "陽光日神耳環",
+        "cn": "阳光赫利俄斯圆环",
+        "en": "Sunlight Helios Hoops",
+        "ja": "陽光ヘリオスフープ",
+        "ko": "햇빛 헬리오스 이환"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/d78c455ac8ae669b3007843e5ffb04fc.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc127": {
+      "name": {
+        "tw": "陽光編織披肩",
+        "cn": "阳光编织披肩",
+        "en": "Sunlight Woven Wrap",
+        "ja": "陽光の羽織り",
+        "ko": "햇빛 망토"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/58d3094b299f68455ecbd54ed4dda285.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc161": {
+      "name": {
+        "tw": "陽光軟帽套組",
+        "cn": "阳光软帽礼包",
+        "en": "Sunlight Bonnet Bundle",
+        "ja": "陽光ボンネットセット",
+        "ko": "햇빛 보닛 번들"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/ce09687ac980f0ce3cf9f389b785fc8e.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc203": {
+      "name": {
+        "tw": "陽光潛水套裝",
+        "cn": "阳光潜水套装",
+        "en": "Sunlight Diver Duo",
+        "ja": "陽光ダイビングセット",
+        "ko": "햇빛 다이버 세트"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/d00cdcceb1593b1fbb7f5962b38314b5.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc204": {
+      "name": {
+        "tw": "陽光暗蟹游泳圈",
+        "cn": "阳光大螃蟹浮床",
+        "en": "Sunlight Crab Float",
+        "ja": "陽光蟹フロート",
+        "ko": "햇빛 게 튜브"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/2bb02bc9888c1eb1a59080ae3789049b.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc205": {
+      "name": {
+        "tw": "陽光運動墨鏡",
+        "cn": "阳光运动太阳镜",
+        "en": "Sunlight Sporty Sunglasses",
+        "ja": "陽光スポーツサングラス",
+        "ko": "햇빛 스포츠 선글라스"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/61f3b5850b1568d4f07dfea91b5b6512.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc33": {
+      "name": {
+        "tw": "夏日陽傘禮包",
+        "cn": "夏日阳伞礼包",
+        "en": "Summer Parasol",
+        "ja": "常夏パラソル",
+        "ko": "여름 파라솔"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/f15076c519f8e204a838dcab110ec4a2.png",
+      "candles": 35,
+      "candle_type": "bonus",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc34": {
+      "name": {
+        "tw": "夏日貝殼髮夾",
+        "cn": "夏日贝壳发夹",
+        "en": "Summer Seashell Hairpin",
+        "ja": "常夏ヘアピン",
+        "ko": "여름 조개껍데기 헤어핀"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/964cd5f579a36662270292db649b002c.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc59": {
+      "name": {
+        "tw": "陽光營火零嘴套組",
+        "cn": "阳光篝火小吃套件",
+        "en": "Sunlight Campfire Snack Kit",
+        "ja": "陽光キャンプファイヤーおやつキット",
+        "ko": "햇빛 캠프파이어 간식 세트"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/7330d66be01fb9f2045e1a797bb6aa8d.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc60": {
+      "name": {
+        "tw": "陽光水母搭肩小夥伴",
+        "cn": "阳光水母搭肩小伙伴",
+        "en": "Sunlight Jelly Shoulder Buddy",
+        "ja": "陽光の肩乗り海月",
+        "ko": "햇빛 어깨 위 해파리"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/39ad0ecd2fab16ebc41fabe93a98ab27.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc89": {
+      "name": {
+        "tw": "陽光衝浪板",
+        "cn": "阳光冲浪板",
+        "en": "Sunlight Surfboard",
+        "ja": "陽光サーフボード",
+        "ko": "햇살 서핑보드"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/744d89ae7cd9c60f4d8840a110cde853.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc90": {
+      "name": {
+        "tw": "陽光厚底涼鞋",
+        "cn": "阳光厚底凉鞋",
+        "en": "Sunlight Chunky Sandals",
+        "ja": "陽光ずんぐりサンダル",
+        "ko": "햇살 샌달"
+      },
+      "group": "events",
+      "image": "https://cdn3.xsolla.com/img/misc/images/bdfd369d6254a28fa82f88e6e5dc5200.png",
+      "first": "2026-08-01",
+      "last": "2026-08-21",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-08-21"
+        ]
+      ]
+    },
+    "xsolla.sky.snc100": {
+      "name": {
+        "tw": "麻雀讚賞禮包",
+        "cn": "麻雀欣赏包",
+        "en": "Sparrow Appreciation Pack",
+        "ja": "すずめ感謝パック",
+        "ko": "참새 환영 팩"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc100-1f863ef4f93c47b21ae57de74b56a380.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc159": {
+      "name": {
+        "tw": "回憶投影機",
+        "cn": "记忆放映机",
+        "en": "Projector of Memories",
+        "ja": "記憶の映写機",
+        "ko": "기억의 영사기"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc159-3f7c4b6c9c71433b3a17f4215591e666.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc70": {
+      "name": {
+        "tw": "Journey 禮包",
+        "cn": "《风之旅人》礼包",
+        "en": "Journey Pack",
+        "ja": "風ノ旅ビトパック",
+        "ko": "Journey 팩"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc70-6c329a772fb68d9d4dffe7726b8ff41d.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc72": {
+      "name": {
+        "tw": "《花》+《浮游世界》禮包",
+        "cn": "《花》+《浮游世界》礼包",
+        "en": "Flower + FlOw Pack",
+        "ja": "Flowery＆flOwパック",
+        "ko": "Flower + FlOw 팩"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc72-25480f5e72905e7ab352fdf7045dfd1f.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc99": {
+      "name": {
+        "tw": "飛蛾讚賞禮包",
+        "cn": "飞蛾欣赏包",
+        "en": "Moth Appreciation Pack",
+        "ja": "モス感謝パック",
+        "ko": "나방 환영 팩"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc99-4a3ed3810cffe481967dd08c325209ab.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.scdl10": {
+      "name": {
+        "tw": "35 季節蠟燭",
+        "cn": "35 季节蜡烛",
+        "en": "35 Season Candles",
+        "ja": "35 シーズンキャンドル",
+        "ko": "35 시즌양초"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/scdl10-7fec0aeff672b1557c10f68284429d04.png",
+      "candles": 35,
+      "candle_type": "season",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.scdl20": {
+      "name": {
+        "tw": "72 季節蠟燭",
+        "cn": "72 季节蜡烛",
+        "en": "72 Season Candles",
+        "ja": "72 シーズンキャンドル",
+        "ko": "72 시즌양초"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/scdl20-cf4a7a37d6fc219b4770d90b5d1fc4b9.png",
+      "candles": 72,
+      "candle_type": "season",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.scdl5": {
+      "name": {
+        "tw": "15 季節蠟燭",
+        "cn": "15 季节蜡烛",
+        "en": "15 Season Candles",
+        "ja": "15 シーズンキャンドル",
+        "ko": "15 시즌양초"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/scdl5-7ab543f0d8322cd85b76978e9f564cc7.png",
+      "candles": 15,
+      "candle_type": "season",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.scdl50": {
+      "name": {
+        "tw": "190 季節蠟燭",
+        "cn": "190 季节蜡烛",
+        "en": "190 Season Candles",
+        "ja": "190 シーズンキャンドル",
+        "ko": "190 시즌양초"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/scdl50-c3ee19dae8cb9f2139c27cedad258699.png",
+      "candles": 190,
+      "candle_type": "season",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc206": {
+      "name": {
+        "tw": "星夜之顏",
+        "cn": "星月夜面具",
+        "en": "Starry Night's Visage",
+        "ja": "星月夜の面影",
+        "ko": "별이 빛나는 밤의 얼굴"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc206-62dfef640dcbda6ef60796cd81f9854b.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc207": {
+      "name": {
+        "tw": "星夜之吻",
+        "cn": "星月夜耳环",
+        "en": "Starry Night's Kiss",
+        "ja": "星月夜の口づけ",
+        "ko": "별이 빛나는 밤의 입맞춤"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc207-dd8c447f08d8a2df6add3c726bb8b06c.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc208": {
+      "name": {
+        "tw": "麥田斗篷",
+        "cn": "麦田斗篷",
+        "en": "Wheatfield Cape",
+        "ja": "麦畑ケープ",
+        "ko": "밀밭 망토"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc208-209da1ee5681843d19ba110b000734f0.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc209": {
+      "name": {
+        "tw": "星夜斗篷",
+        "cn": "星月夜斗篷",
+        "en": "Starry Night's Mantle",
+        "ja": "星月夜の外套",
+        "ko": "별이 빛나는 밤의 장막"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc209-5d842a53ff1fce42f4285375a2dffdfa.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.spassg": {
+      "name": {
+        "tw": "季票（禮物）",
+        "cn": "礼品季票",
+        "en": "Gift Season Pass",
+        "ja": "ギフト用シーズンパス",
+        "ko": "선물용 시즌패스"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/spassg-dd743d864f9e5572d28d87030ed6f2b9.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.spassp3": {
+      "name": {
+        "tw": "季節禮包",
+        "cn": "季节礼包",
+        "en": "Season Pass Pack",
+        "ja": "シーズンパスパック",
+        "ko": "시즌 패스 팩"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/spassp3-ff71d2db8bc643d15063c8d331780a96.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.spassr": {
+      "name": {
+        "tw": "普通季票",
+        "cn": "普通季票",
+        "en": "Season Pass Regular",
+        "ja": "シーズンパス",
+        "ko": "시즌 패스 일반"
+      },
+      "group": "seasons",
+      "image": "https://sky.thatg.co/xsolla/spassr-e595920f56354f2e9d4e63175134e56c.png",
+      "first": "2026-08-01",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-01",
+          "2026-10-02"
+        ],
+        [
+          "2026-10-16",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc210": {
+      "name": {
+        "tw": "星夜之傘",
+        "cn": "星月夜之伞",
+        "en": "Starry Night's Canopy",
+        "ja": "星月夜の傘",
+        "ko": "별이 빛나는 밤의 우산"
+      },
+      "group": "evergreen",
+      "image": "https://sky.thatg.co/xsolla/snc210-9188d8eaba6026259abab3e8d160e029.png",
+      "first": "2026-08-26",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-08-26",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc211": {
+      "name": {
+        "tw": "羽睫面具",
+        "cn": "羽睫面具",
+        "en": "Feathery Lash Mask",
+        "ja": "羽まつげのマスク",
+        "ko": "깃털 속눈썹 가면"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/b525a24c84f1d54c7ddd46db7f1b6264.png",
+      "first": "2026-08-28",
+      "last": "2026-09-11",
+      "appearances": [
+        [
+          "2026-08-28",
+          "2026-09-11"
+        ]
+      ]
+    },
+    "xsolla.sky.snc107": {
+      "name": {
+        "tw": "九色鹿的賜禮",
+        "cn": "九色鹿的天赋",
+        "en": "Gift of the Nine-Colored Deer",
+        "ja": "九色の鹿の贈り物",
+        "ko": "아홉 빛깔 사슴의 선물"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/8ad64f222563742d4ac250a5d3d3862f.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc108": {
+      "name": {
+        "tw": "九色鹿的輝煌",
+        "cn": "九色鹿的光辉",
+        "en": "Radiance of the Nine-Colored Deer",
+        "ja": "九色の鹿の輝き",
+        "ko": "아홉 빛깔 사슴의 빛"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/5733e5d493a40b326f4968be7d9b5512.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc123": {
+      "name": {
+        "tw": "月光耳環",
+        "cn": "月光耳坠",
+        "en": "Moonlight Earring",
+        "ja": "月灯りイヤリング",
+        "ko": "달빛 귀걸이"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/e08a896bc062c8cb28af14d9d98318c3.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc124": {
+      "name": {
+        "tw": "月華罩袍與高髻",
+        "cn": "月华罩袍与高髻",
+        "en": "Moonlight Frock and Updo",
+        "ja": "月灯りの衣とまとめ髪",
+        "ko": "달빛 드레스와 올림머리"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/fc54dd53ff593aec8cecc9ee7f05b806.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc13": {
+      "name": {
+        "tw": "月華燈籠",
+        "cn": "月光灯笼",
+        "en": "Moonlight Lantern",
+        "ja": "月灯りランタン",
+        "ko": "달빛 등불"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/2ee5a10568f0de6ece47d87c013085ea.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc162": {
+      "name": {
+        "tw": "月華緞斗篷",
+        "cn": "月光花环斗篷",
+        "en": "Moonlight Garland Cape",
+        "ja": "月灯り羽衣ケープ",
+        "ko": "달빛 화환 망토"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/8c915d2daa8f06e137ffaf95004695bd.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc212": {
+      "name": {
+        "tw": "月華魯特琴",
+        "cn": "月华鲁特琴",
+        "en": "Moonlight Lute",
+        "ja": "月灯りリュート",
+        "ko": "달빛 류트"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/492f65dff7bedf0e188a46da6d648575.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc213": {
+      "name": {
+        "tw": "月華光輪",
+        "cn": "月华之轮",
+        "en": "Moonlight Nimbus",
+        "ja": "月灯りの光背",
+        "ko": "달빛 후광"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/3d2ee23d89d6b90d5eeeac766b3d9c14.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc214": {
+      "name": {
+        "tw": "月華面紗",
+        "cn": "月华面纱",
+        "en": "Moonlight Veil",
+        "ja": "月灯りベール",
+        "ko": "달빛 베일"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/164b8d44840cff455aa3bf92b9b0ac61.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc35": {
+      "name": {
+        "tw": "月華兔兔飾品",
+        "cn": "月光兔兔头饰",
+        "en": "Moonlight Bunny Accessory",
+        "ja": "月灯り兎アクセサリー",
+        "ko": "달빛 토끼 액세서리"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/71764d2dbd224b68961ada0cd516b483.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc95": {
+      "name": {
+        "tw": "月華兔兔拖",
+        "cn": "月光兔兔拖",
+        "en": "Moonlight Bunny Slippers",
+        "ja": "月灯りバニーシューズ",
+        "ko": "달빛 토끼 슬리퍼"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/17315127c4f04a0c6f9b312fbe1ef99d.png",
+      "first": "2026-09-19",
+      "last": "2026-10-10",
+      "appearances": [
+        [
+          "2026-09-19",
+          "2026-10-10"
+        ]
+      ]
+    },
+    "xsolla.sky.snc05": {
+      "name": {
+        "tw": "陰森蝙蝠斗篷",
+        "cn": "恐怖的蝙蝠斗篷",
+        "en": "Spooky Bat Cape",
+        "ja": "ドキドキコウモリケープ",
+        "ko": "짜증 박쥐 케이프"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc05-07dcf1ff7fd075b4a8191e9d36aee620.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc06": {
+      "name": {
+        "tw": "飢餓南瓜帽",
+        "cn": "“饥饿的南瓜”帽子",
+        "en": "Hungry Pumpkin Hat",
+        "ja": "はらぺこパンプキンハット",
+        "ko": "굶주린 호박 모자"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc06-366633ad44493270e3a81266e9586db5.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc128": {
+      "name": {
+        "tw": "搗蛋枯枝掃把",
+        "cn": "捣蛋节枯萎扫帚",
+        "en": "Mischief Withered Broom",
+        "ja": "いたずら枯れ木箒",
+        "ko": "장난꾸러기 시든 빗자루"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc128-0288de6b9f32b7f5366e052244a67d96.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc129": {
+      "name": {
+        "tw": "搗蛋渡鴉羽毛斗篷",
+        "cn": "捣蛋节渡鸦羽毛披风",
+        "en": "Mischief Raven-feathered Cloak",
+        "ja": "いたずらカラスの羽ケープ",
+        "ko": "장난꾸러기 까마귀 깃털 망토"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc129-b5ea146e82d774ec63b1d35f74c3fd09.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc14": {
+      "name": {
+        "tw": "魔法女巫帽",
+        "cn": "魔法女巫帽",
+        "en": "Mischief Witch Hat",
+        "ja": "いたずらウィッチハット",
+        "ko": "장난꾸러기 마녀모자"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc14-5b7aa9aac40253f66d7404e0880035e9.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc15": {
+      "name": {
+        "tw": "蜘蛛網斗篷",
+        "cn": "蜘蛛网斗篷",
+        "en": "Mischief Web Cape",
+        "ja": "いたずらスパイダーケープ",
+        "ko": "장난꾸러기 거미줄망토"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc15-503d32d37d1278ce024b12d297e68779.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc170": {
+      "name": {
+        "tw": "搗蛋節貓咪飾品組",
+        "cn": "捣蛋节猫咪饰品套组",
+        "en": "Mischief Feline Accessory Duo",
+        "ja": "猫ねこアクセサリーパック",
+        "ko": "장난꾸러기 고양이 액세서리 듀오"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/3d20c09cd25a2416ed7ebf1b9ea11468.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc171": {
+      "name": {
+        "tw": "搗蛋節謎匠寬沿帽",
+        "cn": "捣蛋节谜题师宽沿帽",
+        "en": "Mischief Puzzlewright's Brimmed Hat",
+        "ja": "いたずらパズル作家のつば付き帽",
+        "ko": "장난꾸러기 퍼즐 제작자의 챙 넓은 모자"
+      },
+      "group": "events",
+      "image": "https://cdn.xsolla.net/merchant-bucket-prod/files/uploaded/366922/a21a5f70a47072535b28338a57c00cdf.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc36": {
+      "name": {
+        "tw": "萬聖節枯萎鹿角",
+        "cn": "万圣节枯萎鹿角",
+        "en": "Mischief Withered Antlers",
+        "ja": "いたずら枯れ木角",
+        "ko": "장난꾸러기 시든 뿔"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc36-abc0bd569fd69ac360464dbd5bd12d26.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc37": {
+      "name": {
+        "tw": "萬聖節女巫服",
+        "cn": "万圣节女巫服",
+        "en": "Mischief Witch Jumper",
+        "ja": "いたずらウィッチ・ジャンパースカート",
+        "ko": "장난꾸러기 마녀 점퍼"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc37-55387b19567b774b104443ba3a21c9f4.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc38": {
+      "name": {
+        "tw": "萬聖節蜘蛛姑娘",
+        "cn": "万圣节蜘蛛姑娘",
+        "en": "Mischief Spider Quiff",
+        "ja": "いたずらスパイダー・ヘア",
+        "ko": "장난꾸러기 거미 헤어스타일"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc38-354ab05b69adccce641cbb406244f01b.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc39": {
+      "name": {
+        "tw": "萬聖節南瓜道具",
+        "cn": "万圣节南瓜道具",
+        "en": "Mischief Pumpkin Prop",
+        "ja": "いたずらパンプキンの置物",
+        "ko": "장난꾸러기 호박 소품"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc39-819ecce5a3285c100697e1591b6ef51e.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc61": {
+      "name": {
+        "tw": "貓咪裝扮禮包",
+        "cn": "猫咪服装礼包",
+        "en": "Cat Costume Pack",
+        "ja": "猫ねこパック",
+        "ko": "고양이 의상 팩"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc61-5770cfcffb216524fe7af8f3f57aefbc.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc62": {
+      "name": {
+        "tw": "貓咪使魔道具",
+        "cn": "猫咪使魔道具",
+        "en": "Feline Familiar Prop",
+        "ja": "猫の使い魔",
+        "ko": "고양이 패밀리어 소품"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc62-27c8d27e7a218a29f44cbddf877699f1.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc96": {
+      "name": {
+        "tw": "頑皮輕巧斗篷",
+        "cn": "顽皮蛛丝斗篷",
+        "en": "Mischief Gossamer Cape",
+        "ja": "いたずら蜘蛛の白紗ケープ",
+        "ko": "장난꾸러기 거미줄 망토"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc96-cdc3c187638dcd65ab49655ed5ab7295.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc97": {
+      "name": {
+        "tw": "頑皮巨蟹面具",
+        "cn": "顽皮蟹古拉面具",
+        "en": "Mischief Crabula Mask",
+        "ja": "いたずら蟹伯爵マスク",
+        "ko": "장난꾸러기 크래뷸라 마스크"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc97-260485d520341a8a6c3d6285e3386564.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    },
+    "xsolla.sky.snc98": {
+      "name": {
+        "tw": "頑皮巨蟹披風",
+        "cn": "顽皮蟹古拉披风",
+        "en": "Mischief Crabula Cloak",
+        "ja": "いたずら蟹伯爵マント",
+        "ko": "장난꾸러기 크래뷸라 망토"
+      },
+      "group": "events",
+      "image": "https://sky.thatg.co/xsolla/snc98-2a0f82c10a98ab53e483be929f895c54.png",
+      "first": "2026-10-23",
+      "last": "2026-11-11",
+      "appearances": [
+        [
+          "2026-10-23",
+          null
+        ]
+      ]
+    }
+  }
+};

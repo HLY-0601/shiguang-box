@@ -1,22 +1,23 @@
 /* ================================================================
    outfit-catalog-view.js — 服饰图鉴（#/outfit-catalog）
 
-   数据源：that-sky-project/that-sky-outfit-preview 的 outfitdefs.min.json
-   （1335 件服饰，10 类），图标热链同仓库 /icons/。
-   运行时 fetch，拉取失败显示空态；不打包 JSON 进仓库。
+   数据源：that-sky-project/that-sky-outfit-preview（通过 jsDelivr CDN）
+   （1335 件服饰，10 类），图标热链同仓库。
+   用 jsDelivr 而不是 raw.githubusercontent.com，避开浏览器 CORS/PNA 限制。
    ================================================================ */
 import { escapeHtml, CURRENT_LANG } from '../../js/i18n.js';
 
-const DATA_URL = 'https://raw.githubusercontent.com/that-sky-project/that-sky-outfit-preview/98defc1f9378b752b83b9b1ae098f84d4926f266/data/outfitdefs.min.json';
-const ICON_BASE = 'https://raw.githubusercontent.com/that-sky-project/that-sky-outfit-preview/98defc1f9378b752b83b9b1ae098f84d4926f266/icons/';
-const TIMEOUT_MS = 8000;
+const CDN = 'https://cdn.jsdelivr.net/gh/that-sky-project/that-sky-outfit-preview@98defc1f9378b752b83b9b1ae098f84d4926f266';
+const DATA_URL = CDN + '/data/outfitdefs.min.json';
+const ICON_BASE = CDN + '/icons/';
+const TIMEOUT_MS = 10000;
 
 const L = CURRENT_LANG;
 const T = {
-  zh: { title: '服饰图鉴', subtitle: '1335 件服饰 · 数据来源 that-sky-project/outfit-preview', search: '搜索服饰…', loading: '加载中…', empty: '没有匹配的服饰', catAll: '全部', wip: '制作中' },
-  ja: { title: '衣装図鑑', subtitle: '全1335点・データ提供元 that-sky-project/outfit-preview', search: '衣装を検索…', loading: '読み込み中…', empty: '該当する衣装がありません', catAll: 'すべて', wip: '未実装' },
-  en: { title: 'Outfit Catalog', subtitle: '1335 items · data from that-sky-project/outfit-preview', search: 'Search outfits…', loading: 'Loading…', empty: 'No outfits match', catAll: 'All', wip: 'WIP' },
-}[L] || { zh: { title: '服饰图鉴', subtitle: '1335 件服饰', search: '搜索…', loading: '加载中…', empty: '无结果', catAll: '全部', wip: '制作中' } };
+  zh: { title: '服饰图鉴', subtitle: '1335 件服饰 · 数据来源 that-sky-project/outfit-preview', search: '搜索服饰…', loading: '加载中…', empty: '没有匹配的服饰', catAll: '全部' },
+  ja: { title: '衣装図鑑', subtitle: '全1335点・データ提供元 that-sky-project/outfit-preview', search: '衣装を検索…', loading: '読み込み中…', empty: '該当する衣装がありません', catAll: 'すべて' },
+  en: { title: 'Outfit Catalog', subtitle: '1335 items · data from that-sky-project/outfit-preview', search: 'Search outfits…', loading: 'Loading…', empty: 'No outfits match', catAll: 'All' },
+}[L] || { zh: { title: '服饰图鉴', subtitle: '1335 件服饰', search: '搜索…', loading: '加载中…', empty: '无结果', catAll: '全部' } };
 
 let container = null;
 let data = null;
@@ -45,12 +46,6 @@ async function fetchData() {
   }
 }
 
-/**
- * 图标文件解析：
- * 1) 优先用 iconFile 字段（上游已填好的文件名）
- * 2) 否则用 icon 字段拼 {icon}_100.png（上游很多 item 只给了 icon 名没给 iconFile）
- * 3) icon 为空 / 为 UiWip（未实装占位）→ 无图
- */
 function iconUrl(it) {
   if (it.iconFile) return ICON_BASE + encodeURIComponent(it.iconFile);
   const icon = it.icon;

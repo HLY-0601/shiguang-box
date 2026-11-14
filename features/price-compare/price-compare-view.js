@@ -4,6 +4,10 @@
    移植元: GitHub VoidCipher3/skyiap。原生重构：静态数据快照固化，
    不保留定时刷新 / Cloudflare Worker 管线；文案跟随夜月 CURRENT_LANG。
    数据为并入时点快照，纯静态站不再自动更新。
+
+   2026-11-14 起：features/price-compare/live-source.js 会在后台从
+   skyiap raw JSON 拉实时数据，拉到后热替换下方快照；离线/失败时静默
+   用打包快照。不影响 PWA 离线可用。
    ================================================================ */
 import { escapeHtml, CURRENT_LANG } from '../../js/i18n.js';
 import { STORE } from './data/store.js';
@@ -12,6 +16,7 @@ import { PRICE_HISTORY } from './data/price-history.js';
 import { TIER_HISTORY } from './data/tier-history.js';
 import { DESCRIPTIONS } from './data/desc.js';
 import { I18N_PRICE } from './data/i18n-price.js';
+import { loadLivePriceData } from './live-source.js';
 
 const SCHEMA = 1;
 const LANG = CURRENT_LANG === 'en' ? 'en' : CURRENT_LANG === 'ja' ? 'ja' : 'zh';
@@ -40,6 +45,8 @@ let activeGroup = "";
 let chartSku = null;
 let wantedBase = null;             // 偏好的基準幣，等 <select> 有選項後才套得上
 let countdownTimer = null;
+let liveDescriptions = null;       // 实时说明文字（live-source 拉到后覆盖快照）
+let liveFetchedAt = null;           // 实时数据的抓取时间戳
 
 const $ = (id) => containerEl?.querySelector('#' + id);
 const esc = escapeHtml;
@@ -194,7 +201,7 @@ function computeRow(item) {
   const spread = (min != null && max > 0 && min > 0) ? Number((max / min - 1).toFixed(4)): null;
   const candles = item.candles || null;
   return { cells, min, max, spread, base, candles,
-           unit: (candles && min != null) ? Number((min / candles).toFixed(2)) : null };
+           unit: (candles && min != null) ? Number((min / candles).toFixed(2)) : null };
 }
 
 // ---------------------------------------------------------------- 篩選 / 排序
@@ -419,7 +426,8 @@ function renderPriceTable() {
   tickCountdowns();
 
   let line = t("showing", { shown: sorted.length, all: items.length, regions: selected.length });
-  if (meta?.fetched) line += ` · ${t("updated", { t: meta.fetched })}`;
+  if (liveFetchedAt) line += ` · ${t("updated", { t: liveFetchedAt })} · 实时`;
+  else if (meta?.fetched) line += ` · ${t("updated", { t: meta.fetched })}`;
   const r = meta?.rates;
   if (showConverted && r?.source) line += ` · ${t("rateNote", { date: (r.date || "").slice(0, 16), src: r.source })}`;
   else if (mode === "converted" && !hasRates()) line += ` · ${t("rateMissing")}`;
@@ -773,11 +781,11 @@ function buildSplitTable(lines) {
       <td class="num strong ${pctCls(s.totalPct)}">${esc(pct(s.totalPct))}
         <div class="split-sub">${esc(fmtMoney(s.baseFrom, s.base, "symbol"))} → ${esc(fmtMoney(s.baseTo, s.base, "symbol"))}</div></td>
     </tr>`;
-  }).join("");
+  });
   return `<h3 class="split-head">${esc(t("fx.heading"))}</h3>
     <div class="table-wrap split-wrap"><table class="split-table">
       <thead><tr><th></th><th>${esc(t("fx.repriced"))}</th><th>${esc(t("fx.rate"))}</th><th>${esc(t("fx.total"))}</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
+      <tbody>${rows.join("")}</tbody></table></div>
     <p class="meta chart-hint">${esc(t("chart.hint"))}</p>`;
 }
 
@@ -797,14 +805,15 @@ function buildPointTable(lines, base) {
       <table class="pt-table"><thead><tr>
         <th>${esc(t("chart.date"))}</th><th>${esc(t("chart.localPrice"))}</th><th>${esc(t("chart.basePrice"))}</th>
       </tr></thead><tbody>${pts}</tbody></table></div>`;
-  }).join("");
+  });
   return `<details class="point-details"><summary>${esc(t("chart.points"))}</summary>
-    <div class="pt-grid">${rows}</div></details>`;
+    <div class="pt-grid">${rows.join("")}</div></details>`;
 }
 
 function descOf(sku) {
+  const pool = liveDescriptions || DESCRIPTIONS;
   for (const lang of [LANG, 'en', 'zh']) {
-    const d = DESCRIPTIONS[lang];
+    const d = pool[lang];
     if (d && d[sku]) return d[sku];
   }
   return "";
@@ -832,12 +841,12 @@ function renderDetail() {
   if (desc) head.push(`<p class="item-desc">${esc(desc)}</p>`);
   if (item.switch_note && !desc) head.push(`<p class="item-desc">${esc(t("switchNote"))}</p>`);
   const badges = itemBadges(item);
-  if (badges) head.push(`<div class="item-sub detail-badges">${badges}</div>`);
+  if (badges) head.push(`<div class="item-sub detail-badges">${esc(badges)}</div>`);
 
   $("chartBody").innerHTML =
     (head.length ? `<div class="detail-head">${head.join("")}</div>` : "") +
     (lines.length
-      ? buildChartSvg(lines, mode, base) + buildPointTable(lines, base) + buildSplitTable(lines)
+      ? buildChartSvg(lines, mode, base) + buildPointTable(lines, base) + buildSplitTable(lines, base)
       : `<div class="empty-table">${esc(t("chart.noData"))}</div>`);
   $("chartMode").classList.toggle("hidden", !lines.length);
 }
@@ -989,6 +998,38 @@ function initData() {
   if (meta?.failed_regions?.length) parts.push(`⚠ ${meta.failed_regions.join(", ")}`);
   const fm = $("fetchMeta");
   if (fm) fm.textContent = parts.join(" · ");
+}
+
+/** 后台拉到实时数据后热替换模块状态并重渲染。 */
+function applyLiveData(live) {
+  if (!live || !containerEl) return;
+  store = live.store;
+  meta = live.store?.meta;
+  items = live.store?.items || [];
+  regions = (meta?.regions || []).map(r => r.code);
+  regionCurrency = Object.fromEntries((meta?.regions || []).map(r => [r.code, r.currency]));
+  latest = live.diff?.latest || null;
+  changeLog = live.diff?.history || [];
+  catalog = live.diff?.catalog || {};
+  diffMeta = live.diff?.meta || {};
+  priceHistory = live.priceHistory;
+  tierData = live.tierHistory;
+  if (live.liveDescriptions) liveDescriptions = live.liveDescriptions;
+  liveFetchedAt = live.fetchedAt;
+
+  const available = new Set(regions);
+  const kept = [...selectedRegions].filter(c => available.has(c));
+  selectedRegions = new Set(kept.length ? kept : DEFAULT_REGIONS.filter(c => available.has(c)));
+
+  renderTierOptions();
+  renderBaseOptions();
+  renderRegionChips();
+  renderGroupChips();
+  renderTab();
+  if (chartSku) renderDetail();
+
+  const fm = $("fetchMeta");
+  if (fm) fm.textContent = `实时 · ${live.fetchedAt || ""}`;
 }
 
 // ---------------------------------------------------------------- 骨架
@@ -1170,6 +1211,10 @@ export function mount(container) {
   document.addEventListener("keydown", onKeydown);
 
   initData();
+
+  // 后台拉实时数据（skyiap raw JSON），回来后热替换；失败静默用快照
+  loadLivePriceData(LANG).then(live => { if (live) applyLiveData(live); });
+
   countdownTimer = setInterval(tickCountdowns, 1000);
 }
 
@@ -1178,4 +1223,6 @@ export function unmount() {
   document.removeEventListener("keydown", onKeydown);
   if (containerEl) containerEl.innerHTML = "";
   containerEl = null;
+  liveDescriptions = null;
+  liveFetchedAt = null;
 }

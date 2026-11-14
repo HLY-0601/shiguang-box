@@ -25,6 +25,7 @@ export const SITE_LINK_TOOLS = [
   { id: 'height',          path: 'height',           icon: 'i-person',      ja: '身長チェック',           en: 'Height Checker',           zh: '身高查询',         'zh-TW': '身高查詢',         ko: '키 측정', badgeTest: true },
   { id: 'music',           path: 'music',            icon: 'i-music-note',  ja: '琴窓',                   en: 'Music Piano',             zh: '琴窗',             'zh-TW': '琴窗',             ko: '피아노', badgeTest: true },
   { id: 'calendar',        path: 'calendar',         icon: 'i-calendar',    ja: 'イベントカレンダー',     en: 'Event Calendar',          zh: '活动日历',         'zh-TW': '活動日曆',         ko: '이벤트 캘린더', badgeTest: true },
+  { id: 'outfit-catalog',  path: 'outfit-catalog',   icon: 'i-folder',      ja: '衣装図鑑',               en: 'Outfit Catalog',           zh: '服饰图鉴',         'zh-TW': '服飾圖鑑',         ko: '의상 도감', badgeTest: true },
   { id: 'tai-revisit',    path: 'tai-revisit',      icon: 'i-wing',        ja: '再訪精霊データベース',   en: 'Revisit Spirit Database',  zh: '复刻先祖数据库',   'zh-TW': '再訪精靈資料庫',   ko: '재방문 정령 데이터베이스' },
   { id: 'tai-score',      path: 'tai-score',        icon: 'i-music-note',  ja: '楽譜づくり',             en: 'Sheet Music Maker',        zh: '乐谱制作',         'zh-TW': '樂譜製作工具',     ko: '악보 제작 도구', badgeTest: true },
   { id: 'tai-card',       path: 'tai-card',         icon: 'i-card',        ja: '星紡ぎカード',           en: 'Self-Intro Card Maker',    zh: '星纺卡片',         'zh-TW': '星紡卡片',         ko: '별잣기 카드' },

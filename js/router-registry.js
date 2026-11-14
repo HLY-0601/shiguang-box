@@ -135,6 +135,7 @@ export const ROUTES = {
   'spirit-catalog': lazyToolEntry(() => import('../features/spirit-catalog/spirit-catalog-view.js'), '精霊ツリー管理', 'Spirit Tree Catalog'),
   'season-calc': lazyToolEntry(() => import('../features/season-calc/season-calc-view.js'), '季節精霊計算機', 'Season Spirit Calculator'),
   'price-compare': lazyToolEntry(() => import('../features/price-compare/price-compare-view.js'), 'ショップ価格比較', 'Shop Price Compare'),
+  'outfit-catalog': lazyToolEntry(() => import('../features/outfit-catalog/outfit-catalog-view.js'), '衣装図鑑', 'Outfit Catalog'),
   'friendship-tree': lazyToolEntry(() => import('../features/friendship-tree/friendship-tree-view.js'), 'フレンドツリー', 'Friendship Tree'),
   'height': lazyToolEntry(() => import('../features/height/height-view.js'), '身長チェック', 'Height Checker'),
   'music': lazyToolEntry(() => import('../features/music/music-view.js'), '琴窓', 'Music Piano'),

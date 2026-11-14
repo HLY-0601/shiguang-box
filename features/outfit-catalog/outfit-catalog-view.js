@@ -3,7 +3,6 @@
 
    数据源：that-sky-project/that-sky-outfit-preview（通过 jsDelivr CDN）
    （1335 件服饰，10 类），图标热链同仓库。
-   用 jsDelivr 而不是 raw.githubusercontent.com，避开浏览器 CORS/PNA 限制。
    ================================================================ */
 import { escapeHtml, CURRENT_LANG } from '../../js/i18n.js';
 
@@ -82,14 +81,12 @@ function render() {
 
   const grid = visible.map(it => {
     const src = iconUrl(it);
-    const isWip = !src && (!it.icon || it.icon === 'UiWip');
     const season = it.season ? `<span class="oc-season">${escapeHtml(it.season)}</span>` : '';
+    const iconHtml = src
+      ? `<img class="oc-icon" src="${src}" alt="" loading="lazy">`
+      : `<div class="oc-icon oc-icon-empty"></div>`;
     return `<div class="oc-cell">
-      <div class="oc-icon-wrap">
-        ${src
-          ? `<img class="oc-icon" src="${src}" alt="" loading="lazy">`
-          : `<div class="oc-icon oc-icon-ph">${isWip ? 'WIP' : '?'}</div>`}
-      </div>
+      <div class="oc-icon-wrap">${iconHtml}</div>
       <div class="oc-label" title="${escapeHtml(it.name || '')}">${escapeHtml(it.label || it.name || '—')}</div>
       <div class="oc-meta"><span class="oc-slot">${escapeHtml(it.slotLabel)}</span>${season}</div>
     </div>`;

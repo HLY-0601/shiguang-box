@@ -22,6 +22,7 @@ export const SITE_LINK_TOOLS = [
   { id: 'wings',          path: 'wings',            icon: 'i-wing',        ja: '羽トラッカー',           en: 'Wing Tracker',             zh: '翼数追踪器',       'zh-TW': '羽翼追蹤器',       ko: '날개 트래커' },
   { id: 'spirit-catalog', path: 'tai-catalog',      icon: 'i-tree',        ja: '精霊ツリー管理',         en: 'Spirit Tree Catalog',      zh: '先祖树管理',       'zh-TW': '精靈樹管理',       ko: '정령 트리 관리', badgeTest: true },
   { id: 'friendship-tree', path: 'friendship-tree', icon: 'i-heart',       ja: 'フレンドツリー',         en: 'Friendship Tree',          zh: '好友树',           'zh-TW': '好友樹',           ko: '친구 트리', badgeTest: true },
+  { id: 'friendship-tree-generator', path: 'friendship-tree-generator', icon: 'i-tree', ja: '先祖フレンドツリー生成', en: 'Spirit Friendship Tree Generator', zh: '先祖好友树生成', 'zh-TW': '先祖好友樹生成', ko: '정령 친구 트리 생성기', badgeTest: true },
   { id: 'height',          path: 'height',           icon: 'i-person',      ja: '身長チェック',           en: 'Height Checker',           zh: '身高查询',         'zh-TW': '身高查詢',         ko: '키 측정', badgeTest: true },
   { id: 'music',           path: 'music',            icon: 'i-music-note',  ja: '琴窓',                   en: 'Music Piano',             zh: '琴窗',             'zh-TW': '琴窗',             ko: '피아노', badgeTest: true },
   { id: 'calendar',        path: 'calendar',         icon: 'i-calendar',    ja: 'イベントカレンダー',     en: 'Event Calendar',          zh: '活动日历',         'zh-TW': '活動日曆',         ko: '이벤트 캘린더', badgeTest: true },

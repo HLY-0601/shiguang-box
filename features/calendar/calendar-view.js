@@ -1,7 +1,12 @@
 /* ================================================================
    calendar-view.js — 活动日历/倒计时
+
+   上半：静态 EVENT_DATES（策划大事件）。
+   下半：后台从 skyevent 实时排程拉「即将结束/即将开始」的有时间窗事件，
+   失败静默（只显示静态日历）。
    ================================================================ */
 import { EVENT_DATES } from '../shared/event-dates.js';
+import { loadLiveEvents } from './live-events.js';
 
 let container = null;
 
@@ -37,9 +42,11 @@ function render() {
         background: rgba(255,255,255,.06);
       }
       .cal-item.ongoing { background: rgba(124,158,255,.2); }
+      .cal-item.live { background: rgba(120,220,160,.12); }
       .cal-name { font-size: 15px; }
       .cal-date { font-size: 13px; opacity: .7; }
       .cal-count { font-size: 14px; font-weight: 600; color: #7c9eff; }
+      .cal-live-meta { font-size: 12px; opacity: .55; margin-top: 6px; }
     </style>
     <div class="cal-wrap">
       <h1 class="cal-title">活动日历</h1>
@@ -57,6 +64,35 @@ function render() {
           <div class="cal-count">${daysBetween(today, e.startD)}天后</div>
         </div>
       `).join('')}
+
+      <div id="calLiveRoot"></div>
     </div>
   `;
+
+  // 实时活动（skyevent）后台填充
+  loadLiveEvents().then(live => {
+    const root = container?.querySelector('#calLiveRoot');
+    if (!root || !live) return;
+    const parts = [];
+    if (live.endingSoon?.length) {
+      parts.push(`<div class="cal-section" style="margin-top:24px">实时 · 即将结束</div>`);
+      parts.push(live.endingSoon.map(e => `
+        <div class="cal-item live">
+          <div><div class="cal-name">${e.label}</div><div class="cal-date">${e.end}</div></div>
+          <div class="cal-count">${Math.ceil(e.ms / 3600000)}h后</div>
+        </div>`).join(''));
+    }
+    if (live.startingSoon?.length) {
+      parts.push(`<div class="cal-section">实时 · 即将开始</div>`);
+      parts.push(live.startingSoon.map(e => `
+        <div class="cal-item live">
+          <div><div class="cal-name">${e.label}</div><div class="cal-date">${e.start}</div></div>
+          <div class="cal-count">${Math.ceil(e.ms / 3600000)}h后</div>
+        </div>`).join(''));
+    }
+    if (parts.length) {
+      parts.push(`<div class="cal-live-meta">数据源：skyevent · 更新于 ${live.fetchedAt || '—'}</div>`);
+      root.innerHTML = parts.join('');
+    }
+  });
 }

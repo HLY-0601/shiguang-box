@@ -13,10 +13,10 @@ const TIMEOUT_MS = 8000;
 
 const L = CURRENT_LANG;
 const T = {
-  zh: { title: '服饰图鉴', subtitle: '1335 件服饰 · 数据来源 that-sky-project/outfit-preview', search: '搜索服饰…', loading: '加载中…', empty: '没有匹配的服饰', catAll: '全部' },
-  ja: { title: '衣装図鑑', subtitle: '全1335点・データ提供元 that-sky-project/outfit-preview', search: '衣装を検索…', loading: '読み込み中…', empty: '該当する衣装がありません', catAll: 'すべて' },
-  en: { title: 'Outfit Catalog', subtitle: '1335 items · data from that-sky-project/outfit-preview', search: 'Search outfits…', loading: 'Loading…', empty: 'No outfits match', catAll: 'All' },
-}[L] || { zh: { title: '服饰图鉴', subtitle: '1335 件服饰', search: '搜索…', loading: '加载中…', empty: '无结果', catAll: '全部' } };
+  zh: { title: '服饰图鉴', subtitle: '1335 件服饰 · 数据来源 that-sky-project/outfit-preview', search: '搜索服饰…', loading: '加载中…', empty: '没有匹配的服饰', catAll: '全部', wip: '制作中' },
+  ja: { title: '衣装図鑑', subtitle: '全1335点・データ提供元 that-sky-project/outfit-preview', search: '衣装を検索…', loading: '読み込み中…', empty: '該当する衣装がありません', catAll: 'すべて', wip: '未実装' },
+  en: { title: 'Outfit Catalog', subtitle: '1335 items · data from that-sky-project/outfit-preview', search: 'Search outfits…', loading: 'Loading…', empty: 'No outfits match', catAll: 'All', wip: 'WIP' },
+}[L] || { zh: { title: '服饰图鉴', subtitle: '1335 件服饰', search: '搜索…', loading: '加载中…', empty: '无结果', catAll: '全部', wip: '制作中' } };
 
 let container = null;
 let data = null;
@@ -45,6 +45,19 @@ async function fetchData() {
   }
 }
 
+/**
+ * 图标文件解析：
+ * 1) 优先用 iconFile 字段（上游已填好的文件名）
+ * 2) 否则用 icon 字段拼 {icon}_100.png（上游很多 item 只给了 icon 名没给 iconFile）
+ * 3) icon 为空 / 为 UiWip（未实装占位）→ 无图
+ */
+function iconUrl(it) {
+  if (it.iconFile) return ICON_BASE + encodeURIComponent(it.iconFile);
+  const icon = it.icon;
+  if (!icon || icon === 'UiWip') return '';
+  return ICON_BASE + encodeURIComponent(icon + '_100.png');
+}
+
 function render() {
   if (!container) return;
   if (!data) {
@@ -55,13 +68,11 @@ function render() {
   const slots = data.slots || [];
   const q = query.trim().toLowerCase();
 
-  // 分类 chips
   const chips = [`<button class="oc-chip ${activeCat === '' ? 'active' : ''}" data-cat="">${escapeHtml(T.catAll)}</button>`]
     .concat(slots.map(s =>
       `<button class="oc-chip ${activeCat === s.key ? 'active' : ''}" data-cat="${escapeHtml(s.key)}">${escapeHtml(s.label)} <span class="oc-chip-n">${s.items.length}</span></button>`
     )).join('');
 
-  // 收集要显示的 items
   const visible = [];
   for (const s of slots) {
     if (activeCat && s.key !== activeCat) continue;
@@ -75,11 +86,14 @@ function render() {
   }
 
   const grid = visible.map(it => {
-    const icon = it.iconFile ? ICON_BASE + encodeURIComponent(it.iconFile) : '';
+    const src = iconUrl(it);
+    const isWip = !src && (!it.icon || it.icon === 'UiWip');
     const season = it.season ? `<span class="oc-season">${escapeHtml(it.season)}</span>` : '';
     return `<div class="oc-cell">
       <div class="oc-icon-wrap">
-        ${icon ? `<img class="oc-icon" src="${icon}" alt="" loading="lazy">` : '<div class="oc-icon oc-icon-ph">?</div>'}
+        ${src
+          ? `<img class="oc-icon" src="${src}" alt="" loading="lazy">`
+          : `<div class="oc-icon oc-icon-ph">${isWip ? 'WIP' : '?'}</div>`}
       </div>
       <div class="oc-label" title="${escapeHtml(it.name || '')}">${escapeHtml(it.label || it.name || '—')}</div>
       <div class="oc-meta"><span class="oc-slot">${escapeHtml(it.slotLabel)}</span>${season}</div>
@@ -96,7 +110,6 @@ function render() {
       <div class="oc-grid">${grid || `<div class="oc-empty">${escapeHtml(T.empty)}</div>`}</div>
     </div>`;
 
-  // 绑定
   container.querySelectorAll('[data-cat]').forEach(btn => {
     btn.onclick = () => { activeCat = btn.dataset.cat; render(); };
   });

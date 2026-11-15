@@ -6,11 +6,11 @@
    纯离线渲染，不依赖协议。节点图标走 Discord CDN，加载失败时降级为
    本地文字标签（成本始终用系统 emoji 符号，不依赖外部资源）。
 
-   数据：data/*.json（由 thatskyapplication 的 utility 包导出并精简，
-   218 个先祖的中文名 + 树结构 + 成本 + 图标 id，按需分片加载）。
+   数据：data/friendship-trees.json（由 thatskyapplication 的 utility 包
+   导出并精简，218 个先祖的中文名 + 树结构 + 成本 + 图标 id）。
    字段缩写：n=name, e=emoji id, en=emojiName, c=cost, l=level, ch=children,
-   t=type, r=realm, s=season, f=tree文件；成本 c=candles, h=hearts,
-   ac=ascendedCandles, sc=seasonalCandles, sh=seasonalHearts, et=eventTickets。
+   t=type, r=realm, s=season；成本 c=candles, h=hearts, ac=ascendedCandles,
+   sc=seasonalCandles, sh=seasonalHearts, et=eventTickets。
    ================================================================ */
 
 import { escapeHtml } from '../../js/i18n.js';
@@ -20,6 +20,7 @@ const INDEX_URL = DATA_DIR + 'spirits-index.json';
 const EMOJI_BASE = 'https://cdn.discordapp.com/emojis/';
 
 // 节点图标（Discord CDN）加载失败时的文字降级标签。
+// 只映射高频的通用节点与常见动作；其余回退到 emojiName 原文。
 const FALLBACK_LABELS = {
   heart: '心', duets_heart: '心', blue_bird_heart: '心', migration_heart: '心',
   blessing_1: '祝福Ⅰ', blessing_2: '祝福Ⅱ', blessing_3: '祝福Ⅲ',
@@ -48,7 +49,7 @@ const FALLBACK_LABELS = {
   evil_laugh: '奸笑', spell_colour_trail: '彩迹', aww: '心软',
 };
 
-// 装扮类节点按类别后缀降级为中文类别名。
+// 装扮类节点（emojiName 形如 "02_outfit"、"05_mask"）按类别后缀降级为中文类别名。
 const FALLBACK_SUFFIX = [
   ['outfit', '衣服'], ['full_outfit', '全套'], ['hair', '头发'], ['mask', '面具'],
   ['hair_accessory', '头饰'], ['head_accessory', '头饰'], ['face_accessory', '脸饰'],
@@ -57,7 +58,7 @@ const FALLBACK_SUFFIX = [
   ['shared_space', '共享空间'],
 ];
 
-// 成本用系统 emoji 符号（不依赖外部 CDN）
+// 成本用系统 emoji 符号（任何设备都能显示，不依赖外部 CDN）
 const COST_ICONS = { c: '🕯️', h: '❤️', ac: '🔺', sc: '🧡', sh: '💗', et: '🎟️' };
 const COST_ORDER = ['c', 'h', 'ac', 'sc', 'sh', 'et'];
 
@@ -97,6 +98,7 @@ function loadTreeFile(file) {
   return treeCache[file];
 }
 
+// 先祖分组（按类型）
 const GROUPS = [
   { key: 'standard', label: '常驻先祖' },
   { key: 'elder', label: '长老' },
@@ -130,31 +132,56 @@ function render(index) {
 
   container.innerHTML = `
     <style>
-      .ftg-wrap { max-width: 760px; margin: 0 auto; padding: 16px; }
+      .ftg-wrap {
+        max-width: 760px; margin: 0 auto; padding: 16px;
+        --ftg-border: rgba(0,0,0,.14);
+        --ftg-select-bg: #ffffff;
+        --ftg-stage-bg: rgba(0,0,0,.035);
+        --ftg-total-bg: rgba(0,0,0,.05);
+        --ftg-node-bg: rgba(0,0,0,.08);
+        --ftg-node-stroke: rgba(0,0,0,.22);
+        --ftg-text: #1c1c1e;
+        --ftg-line: rgba(0,0,0,.32);
+        --ftg-trunk: rgba(0,0,0,.26);
+        --ftg-opt-bg: #ffffff;
+      }
+      html[data-theme="dark"] .ftg-wrap, [data-theme="dark"] .ftg-wrap {
+        --ftg-border: rgba(255,255,255,.15);
+        --ftg-select-bg: rgba(255,255,255,.06);
+        --ftg-stage-bg: rgba(255,255,255,.04);
+        --ftg-total-bg: rgba(255,255,255,.06);
+        --ftg-node-bg: rgba(0,0,0,.35);
+        --ftg-node-stroke: rgba(255,255,255,.25);
+        --ftg-text: #ffffff;
+        --ftg-line: rgba(255,255,255,.35);
+        --ftg-trunk: rgba(255,255,255,.28);
+        --ftg-opt-bg: #1a1d29;
+      }
       .ftg-head { margin-bottom: 16px; }
-      .ftg-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
-      .ftg-sub { font-size: 13px; opacity: .6; margin: 0 0 14px; }
+      .ftg-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; color: var(--ftg-text); }
+      .ftg-sub { font-size: 13px; opacity: .6; margin: 0 0 14px; color: var(--ftg-text); }
       .ftg-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
       .ftg-select {
         flex: 1 1 260px; min-width: 0; padding: 10px 12px; border-radius: 10px;
-        border: 1px solid rgba(255,255,255,.15); background: rgba(255,255,255,.06);
-        color: inherit; font-size: 15px; max-width: 100%;
+        border: 1px solid var(--ftg-border); background: var(--ftg-select-bg);
+        color: var(--ftg-text); font-size: 15px; max-width: 100%;
       }
-      .ftg-select optgroup { background: #1a1d29; color: inherit; }
-      .ftg-select option { background: #1a1d29; color: inherit; }
-      .ftg-meta { font-size: 13px; opacity: .75; margin-top: 8px; }
-      .ftg-stage { margin-top: 16px; border-radius: 14px; background: rgba(255,255,255,.04); padding: 12px; overflow-x: auto; }
+      .ftg-select optgroup { background: var(--ftg-opt-bg); color: var(--ftg-text); }
+      .ftg-select option { background: var(--ftg-opt-bg); color: var(--ftg-text); }
+      .ftg-meta { font-size: 13px; opacity: .75; margin-top: 8px; color: var(--ftg-text); }
+      .ftg-stage { margin-top: 16px; border-radius: 14px; background: var(--ftg-stage-bg); padding: 12px; overflow-x: auto; }
       .ftg-tree-svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
-      .ftg-node circle.ftg-bg { fill: rgba(0,0,0,.35); stroke: rgba(255,255,255,.25); stroke-width: 1.5; }
-      .ftg-node text { fill: #fff; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+      .ftg-node circle.ftg-bg { fill: var(--ftg-node-bg); stroke: var(--ftg-node-stroke); stroke-width: 1.5; }
+      .ftg-node text { fill: var(--ftg-text); font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
       .ftg-node .ftg-cost { font-size: 14px; font-weight: 600; }
       .ftg-node .ftg-lv { font-size: 12px; opacity: .85; }
       .ftg-node .ftg-fb { font-size: 13px; font-weight: 600; text-anchor: middle; }
-      .ftg-line { stroke: rgba(255,255,255,.35); stroke-width: 2; fill: none; }
-      .ftg-trunk { stroke: rgba(255,255,255,.28); stroke-width: 2; }
-      .ftg-total { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 14px; font-weight: 600; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,.06); }
+      .ftg-line { stroke: var(--ftg-line); stroke-width: 2; fill: none; }
+      .ftg-trunk { stroke: var(--ftg-trunk); stroke-width: 2; }
+      .ftg-total { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; font-size: 14px; font-weight: 600; padding: 10px 12px; border-radius: 10px; background: var(--ftg-total-bg); color: var(--ftg-text); }
       .ftg-total span { white-space: nowrap; }
-      .ftg-hint { font-size: 12px; opacity: .5; margin-top: 10px; }
+      .ftg-hint { font-size: 12px; opacity: .5; margin-top: 10px; color: var(--ftg-text); }
+      .ftg-loading, .ftg-error { color: var(--ftg-text); padding: 16px; text-align: center; opacity: .8; }
     </style>
     <div class="ftg-wrap">
       <div class="ftg-head">
@@ -181,6 +208,7 @@ function render(index) {
     select.appendChild(og);
   }
 
+  // 选中某先祖 → 加载对应树数据并绘制
   const selectSpirit = async (meta) => {
     if (!meta) return;
     const stage = container && container.querySelector('#ftgStage');
@@ -205,6 +233,7 @@ function render(index) {
   }
 }
 
+// 计算某先祖树的总成本
 function totalCost(tree) {
   const total = { c: 0, h: 0, ac: 0, sc: 0, sh: 0, et: 0 };
   const walk = (node) => {
@@ -224,13 +253,15 @@ function drawTree(meta, tree) {
   const stage = container && container.querySelector('#ftgStage');
   if (!stage) return;
 
+  // —— 布局参数 ——
   const W = 640;
-  const slotX = [W * 0.22, W * 0.52, W * 0.82];
+  const slotX = [W * 0.22, W * 0.52, W * 0.82]; // 左/中/右 槽位中心
   const nodeR = 38;
   const rowH = 150;
   const topPad = 110;
   const trunkX = W * 0.52;
 
+  // 分层数组：[[node,node],[node],...]，children 展开为该层的额外节点
   const layers = tree.map((layer) => {
     const flat = [];
     layer.forEach((n) => {
@@ -248,6 +279,7 @@ function drawTree(meta, tree) {
   svg.setAttribute('class', 'ftg-tree-svg');
   svg.setAttribute('role', 'img');
 
+  // 树干（中央竖线）
   const trunk = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   trunk.setAttribute('x1', trunkX);
   trunk.setAttribute('y1', topPad - nodeR);
@@ -263,6 +295,7 @@ function drawTree(meta, tree) {
     const count = layer.length;
     const placed = [];
 
+    // 槽位分配：节点在左/右槽位之间均匀分布（1 个居中，2 个左右，3 个左中右，更多则更密集）
     const sxOf = (ni) => {
       if (count === 1) return slotX[1];
       return slotX[0] + (slotX[2] - slotX[0]) * (ni / (count - 1));
@@ -280,6 +313,7 @@ function drawTree(meta, tree) {
       circle.setAttribute('class', 'ftg-bg');
       g.appendChild(circle);
 
+      // 分支连线（从树干到节点）
       if (Math.abs(sx - trunkX) > 4) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', trunkX);
@@ -290,6 +324,7 @@ function drawTree(meta, tree) {
         svg.appendChild(line);
       }
 
+      // 节点图标（emoji 图或降级文字）。CDN 可达则显示 emoji，失败/超时则降级为文字。
       const label = fallbackLabel(node);
       if (node.e) {
         const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
@@ -308,12 +343,13 @@ function drawTree(meta, tree) {
         };
         img.addEventListener('load', () => { done = true; });
         img.addEventListener('error', toFallback);
-        setTimeout(toFallback, 2500);
+        setTimeout(toFallback, 2500); // CDN 挂起时 2.5 秒超时降级
         g.appendChild(img);
       } else {
         g.appendChild(renderFallback(sx, y, nodeR, label));
       }
 
+      // 成本（节点下方）
       if (node.c) {
         const parts = COST_ORDER.filter((k) => typeof node.c[k] === 'number' && node.c[k] > 0);
         if (parts.length) {
@@ -328,6 +364,7 @@ function drawTree(meta, tree) {
         }
       }
 
+      // 等级徽章（节点左上角）
       if (node.l) {
         const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         t.setAttribute('x', sx - nodeR + 4);
@@ -344,6 +381,7 @@ function drawTree(meta, tree) {
     placedByLayer.push(placed);
   });
 
+  // 层间纵向连线（相邻层的节点之间：简单的最近连接）
   for (let i = 0; i < placedByLayer.length - 1; i++) {
     const up = placedByLayer[i];
     const down = placedByLayer[i + 1];

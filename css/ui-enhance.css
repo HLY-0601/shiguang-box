@@ -1,12 +1,14 @@
 /* ================================================================
-   ui-enhance.css — v3 激进可见版
+   ui-enhance.css — v4 质感拉满版
+   参考 21st.dev / magicui / reactbits / uiverse
    ================================================================ */
 
 :root {
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── 1. 页面背景：明显的蓝紫渐变光晕 ───────────────────────── */
+/* ── 1. 页面背景：蓝紫径向光晕 ─────────────────────────────── */
 html[data-theme="light"] body {
   background:
     radial-gradient(ellipse 900px 600px at 15% -10%, rgba(63, 81, 181, 0.15), transparent 60%),
@@ -20,35 +22,56 @@ html[data-theme="dark"] body {
     radial-gradient(ellipse 500px 400px at 50% 100%, rgba(0, 229, 255, 0.10), transparent 60%) !important;
 }
 
-/* ── 2. 大标题：蓝→紫渐变（直接彩色，不从黑色开始） ─────────── */
+/* ── 2. 大标题：流动渐变动画 ─────────────────────────────── */
 .item-view h1.item-large-title,
 .dash-wrap h1.item-large-title {
-  background: linear-gradient(120deg, #3F51B5 0%, #7c4dff 50%, #e040fb 100%) !important;
+  background: linear-gradient(120deg, #3F51B5 0%, #7c4dff 25%, #e040fb 50%, #7c4dff 75%, #3F51B5 100%) !important;
+  background-size: 200% auto !important;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+  animation: enhance-gradient-shift 6s linear infinite !important;
+}
+@keyframes enhance-gradient-shift {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
 }
 
-/* ── 3. 分类卡片：明显玻璃拟态 + 彩色边框 ────────────────────── */
+/* ── 3. 分类卡片：玻璃拟态 + hover 扫光 ──────────────────────── */
 .cat-card, .feature-btn, .welcome-card {
   backdrop-filter: saturate(1.8) blur(20px) !important;
   -webkit-backdrop-filter: saturate(1.8) blur(20px) !important;
   border: 1.5px solid rgba(63, 81, 181, 0.25) !important;
   box-shadow: 0 4px 16px rgba(63, 81, 181, 0.12), 0 16px 40px rgba(0, 0, 0, 0.1) !important;
-  transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-spring), border-color 0.35s ease !important;
+  transition: transform 0.4s var(--ease-spring), box-shadow 0.4s var(--ease-spring), border-color 0.3s ease !important;
   position: relative;
   overflow: hidden;
+}
+/* 扫光层 */
+.cat-card::after, .feature-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transition: left 0.6s var(--ease-spring);
+  pointer-events: none;
+}
+.cat-card:hover::after, .feature-btn:hover::after {
+  left: 100%;
 }
 .cat-card::before, .feature-btn::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 60%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 60%);
   pointer-events: none;
 }
 .cat-card:hover, .feature-btn:hover {
-  transform: translateY(-8px) !important;
+  transform: translateY(-8px) scale(1.02) !important;
   box-shadow: 0 16px 32px rgba(63, 81, 181, 0.25), 0 32px 64px rgba(124, 77, 255, 0.2) !important;
   border-color: #7c4dff !important;
 }
@@ -56,7 +79,7 @@ html[data-theme="dark"] body {
   transform: translateY(-3px) scale(0.98) !important;
 }
 
-/* 分类网格入场 */
+/* 分类网格错峰入场 */
 .cat-grid .cat-card {
   animation: enhance-fade-up 0.5s var(--ease-spring) both;
 }
@@ -68,30 +91,39 @@ html[data-theme="dark"] body {
 .cat-grid .cat-card:nth-child(6) { animation-delay: 0.40s; }
 .cat-grid .cat-card:nth-child(n+7) { animation-delay: 0.45s; }
 
-/* 图标 hover */
+/* 图标 hover 旋转放大 */
 .feature-icon.icon-chip {
-  transition: transform 0.35s var(--ease-spring) !important;
+  transition: transform 0.4s var(--ease-bounce) !important;
 }
 .feature-btn:hover .feature-icon.icon-chip {
-  transform: scale(1.15) rotate(-8deg) !important;
+  transform: scale(1.2) rotate(-10deg) !important;
 }
 
-/* ── 4. 提示横幅：明显渐变边框 ────────────────────────────────── */
+/* ── 4. 提示横幅：渐变边框 ────────────────────────────────── */
 .pf-hint-banner {
   background: linear-gradient(135deg, rgba(63, 81, 181, 0.1), rgba(156, 39, 176, 0.08)) !important;
   border: 1.5px solid #3F51B5 !important;
   border-radius: 12px !important;
 }
 
-/* ── 5. 底部 dock + 侧边栏毛玻璃（注意：backdrop-filter 会创建包含块，
-   不能加在 #dock-root 上，否则里面 nav.site-dock 的 fixed 定位会失效） ── */
+/* ── 5. 底部 dock + 侧边栏毛玻璃 ──────────────────────────── */
 .site-dock, #side-left-root, .side-panel {
   backdrop-filter: saturate(1.8) blur(24px) !important;
   -webkit-backdrop-filter: saturate(1.8) blur(24px) !important;
   border-color: rgba(63, 81, 181, 0.15) !important;
 }
 
-/* ── 6. 按钮 hover 微反馈 ───────────────────────────────────── */
+/* dock 按钮 hover 上浮 + 发光 */
+.site-dock a, .site-dock button, .site-dock .dock-item {
+  transition: transform 0.3s var(--ease-bounce), box-shadow 0.3s ease, color 0.3s ease !important;
+  border-radius: 12px !important;
+}
+.site-dock a:hover, .site-dock button:hover, .site-dock .dock-item:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 6px 16px rgba(124, 77, 255, 0.35) !important;
+}
+
+/* ── 6. 按钮全局 hover 微反馈 ───────────────────────────── */
 button, a, [role="button"] {
   transition: transform 0.25s var(--ease-spring), box-shadow 0.25s var(--ease-spring) !important;
 }
@@ -112,17 +144,20 @@ input:focus, select:focus, textarea:focus {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── 9. 滚动条：主题蓝 ─────────────────────────────────────── */
+/* ── 9. 滚动条：蓝紫渐变 ────────────────────────────────── */
 * {
   scrollbar-width: thin;
   scrollbar-color: #3F51B5 transparent;
 }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: transparent; }
 *::-webkit-scrollbar-thumb {
-  background: #3F51B5;
+  background: linear-gradient(180deg, #3F51B5, #7c4dff);
   border-radius: 8px;
 }
-*::-webkit-scrollbar-thumb:hover { background: #7c4dff; }
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #7c4dff, #e040fb);
+}
 
 /* ── 10. 焦点发光 ──────────────────────────────────────────── */
 :focus-visible {
@@ -130,10 +165,17 @@ input:focus, select:focus, textarea:focus {
   outline-offset: 2px !important;
 }
 
-/* ── 11. 尊重动效偏好 ──────────────────────────────────────── */
+/* ── 11. 左侧边栏选中项高亮 ────────────────────────────────── */
+#side-left-root a.active, #side-left-root .nav-item.active {
+  background: linear-gradient(90deg, rgba(63, 81, 181, 0.2), rgba(124, 77, 255, 0.1)) !important;
+  border-left: 3px solid #7c4dff !important;
+}
+
+/* ── 12. 尊重动效偏好 ──────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
   }
 }

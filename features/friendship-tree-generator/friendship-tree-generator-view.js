@@ -182,6 +182,23 @@ function render(index) {
       .ftg-total span { white-space: nowrap; }
       .ftg-hint { font-size: 12px; opacity: .5; margin-top: 10px; color: var(--ftg-text); }
       .ftg-loading, .ftg-error { color: var(--ftg-text); padding: 16px; text-align: center; opacity: .8; }
+      /* 节点按层弹出 + 连线淡入 */
+      .ftg-node { cursor: pointer; animation: ftg-pop 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+      .ftg-line, .ftg-trunk { animation: ftg-fade 0.6s ease-out both; }
+      @keyframes ftg-pop {
+        from { opacity: 0; transform: scale(0.5); }
+        to   { opacity: 1; transform: scale(1); }
+      }
+      @keyframes ftg-fade {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+      }
+      .ftg-node circle.ftg-bg { transition: stroke 0.2s ease, stroke-width 0.2s ease, fill 0.2s ease; }
+      .ftg-node:hover circle.ftg-bg { stroke: var(--hub-accent, #6366f1); stroke-width: 2.5; fill: var(--hub-accent-bg, rgba(99,102,241,.12)); }
+      .ftg-total { font-variant-numeric: tabular-nums; }
+      @media (prefers-reduced-motion: reduce) {
+        .ftg-node, .ftg-line, .ftg-trunk { animation: none !important; }
+      }
     </style>
     <div class="ftg-wrap">
       <div class="ftg-head">
@@ -305,6 +322,7 @@ function drawTree(meta, tree) {
       const sx = sxOf(ni);
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.setAttribute('class', 'ftg-node');
+      g.style.animationDelay = (li * 0.09 + ni * 0.05) + 's';
 
       const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', sx);
@@ -404,7 +422,7 @@ function drawTree(meta, tree) {
   }
 
   const total = totalCost(tree);
-  const totalParts = COST_ORDER.filter((k) => total[k] > 0).map((k) => COST_ICONS[k] + total[k]);
+  const totalEntries = COST_ORDER.filter((k) => total[k] > 0).map((k) => ({ icon: COST_ICONS[k], target: total[k] }));
 
   stage.innerHTML = `
     <div class="ftg-meta">
@@ -415,11 +433,27 @@ function drawTree(meta, tree) {
     </div>
   `;
   stage.appendChild(svg);
-  if (totalParts.length) {
+  if (totalEntries.length) {
     const totalEl = document.createElement('div');
     totalEl.className = 'ftg-total';
-    totalEl.innerHTML = `<span>全解锁：</span>` + totalParts.map((p) => `<span>${escapeHtml(p)}</span>`).join('');
+    totalEl.innerHTML = `<span>全解锁：</span>` + totalEntries.map((e, i) => `<span>${e.icon}<span class="ftg-count" data-target="${e.target}">0</span></span>`).join('');
     stage.appendChild(totalEl);
+    // 数字从 0 滚动到目标值（尊重 reduced-motion）
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduceMotion) {
+      const counts = totalEl.querySelectorAll('.ftg-count');
+      const duration = 700;
+      const start = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - p, 3);
+        counts.forEach((el) => { el.textContent = Math.round(parseInt(el.dataset.target, 10) * eased); });
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    } else {
+      totalEl.querySelectorAll('.ftg-count').forEach((el) => { el.textContent = el.dataset.target; });
+    }
   }
   stage.insertAdjacentHTML('beforeend', `<div class="ftg-hint">节点图标走 Discord CDN；若显示为文字，说明当前网络无法访问 CDN，已自动降级。</div>`);
 }

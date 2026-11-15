@@ -109,3 +109,77 @@ img.img-fade, .img-fade img {
     animation: none !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   9. 明显视觉升级（玻璃拟态 + 大阴影 + hover 大动作）
+   ════════════════════════════════════════════════════════════ */
+
+/* 分类卡片：真玻璃拟态 + hover 上浮 + 边框发光 */
+.cat-card, .feature-btn, .welcome-card {
+  backdrop-filter: saturate(1.5) blur(16px);
+  -webkit-backdrop-filter: saturate(1.5) blur(16px);
+  border: 1px solid var(--hub-sep);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease;
+}
+.cat-card:hover, .feature-btn:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(63,81,181,0.14);
+  border-color: var(--hub-accent);
+}
+.cat-card:active, .feature-btn:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+/* 分类网格入场：每张卡片错峰浮入 */
+.cat-grid .cat-card {
+  animation: enhance-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+.cat-grid .cat-card:nth-child(1) { animation-delay: 0.05s; }
+.cat-grid .cat-card:nth-child(2) { animation-delay: 0.10s; }
+.cat-grid .cat-card:nth-child(3) { animation-delay: 0.15s; }
+.cat-grid .cat-card:nth-child(4) { animation-delay: 0.20s; }
+.cat-grid .cat-card:nth-child(5) { animation-delay: 0.25s; }
+.cat-grid .cat-card:nth-child(6) { animation-delay: 0.30s; }
+.cat-grid .cat-card:nth-child(n+7) { animation-delay: 0.35s; }
+
+/* 功能按钮：图标 chip 加微光泽 */
+.feature-icon.icon-chip {
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+}
+.feature-btn:hover .feature-icon.icon-chip {
+  transform: scale(1.08) rotate(-3deg);
+}
+
+/* 大标题加一点点渐变文字质感 */
+.item-large-title {
+  background: linear-gradient(120deg, var(--hub-text) 0%, var(--hub-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 提示横幅：柔和渐变 */
+.pf-hint-banner {
+  background: linear-gradient(135deg, var(--hub-accent-bg), transparent);
+  border: 1px solid var(--hub-accent);
+}
+
+/* 底部 dock（主/仪表盘/通知/其他工具/显示设置）毛玻璃 */
+#dock-root {
+  backdrop-filter: saturate(1.6) blur(20px);
+  -webkit-backdrop-filter: saturate(1.6) blur(20px);
+  border-top: 1px solid var(--hub-sep);
+}
+
+/* 分类进度条 fill 加流光 */
+.cat-fill {
+  transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cat-card, .feature-btn, .welcome-card, .cat-grid .cat-card {
+    animation: none !important;
+    transform: none !important;
+  }
+}

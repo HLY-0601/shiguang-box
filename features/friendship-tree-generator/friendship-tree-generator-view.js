@@ -6,20 +6,20 @@
    纯离线渲染，不依赖协议。节点图标走 Discord CDN，加载失败时降级为
    本地文字标签（成本始终用系统 emoji 符号，不依赖外部资源）。
 
-   数据：data/friendship-trees.json（由 thatskyapplication 的 utility 包
-   导出并精简，218 个先祖的中文名 + 树结构 + 成本 + 图标 id）。
+   数据：data/*.json（由 thatskyapplication 的 utility 包导出并精简，
+   218 个先祖的中文名 + 树结构 + 成本 + 图标 id，按需分片加载）。
    字段缩写：n=name, e=emoji id, en=emojiName, c=cost, l=level, ch=children,
-   t=type, r=realm, s=season；成本 c=candles, h=hearts, ac=ascendedCandles,
-   sc=seasonalCandles, sh=seasonalHearts, et=eventTickets。
+   t=type, r=realm, s=season, f=tree文件；成本 c=candles, h=hearts,
+   ac=ascendedCandles, sc=seasonalCandles, sh=seasonalHearts, et=eventTickets。
    ================================================================ */
 
 import { escapeHtml } from '../../js/i18n.js';
 
-const DATA_URL = './features/friendship-tree-generator/data/friendship-trees.json';
+const DATA_DIR = './features/friendship-tree-generator/data/';
+const INDEX_URL = DATA_DIR + 'spirits-index.json';
 const EMOJI_BASE = 'https://cdn.discordapp.com/emojis/';
 
 // 节点图标（Discord CDN）加载失败时的文字降级标签。
-// 只映射高频的通用节点与常见动作；其余回退到 emojiName 原文。
 const FALLBACK_LABELS = {
   heart: '心', duets_heart: '心', blue_bird_heart: '心', migration_heart: '心',
   blessing_1: '祝福Ⅰ', blessing_2: '祝福Ⅱ', blessing_3: '祝福Ⅲ',
@@ -36,9 +36,19 @@ const FALLBACK_LABELS = {
   handstand: '倒立', backflip: '后空翻', leap: '跳跃', float: '漂浮', doze: '打盹',
   faint: '晕倒', duck: '躲避', boo: '吓唬', peek: '偷看', grumpy: '赌气',
   kabuki: '歌舞伎', telekinesis: '念力', yoga: '瑜伽', crab_walk: '横行',
+  whistle: '吹口哨', kiss: '亲吻', no_thanks: '拒绝', butterfly: '引蝶',
+  wipe_brow: '擦汗', shiver: '发抖', look_around: '张望', acknowledge: '认可',
+  kung_fu: '功夫', triple_axel: '三周跳', boogie_dance: '摇摆舞', dont_go: '别走',
+  spin_dance: '旋转舞', blow_kiss: '飞吻', rally_cheer: '打气', belly_scratch: '挠肚',
+  deep_breath: '深呼吸', dust_off: '拍灰', balance: '平衡', chest_pound: '捶胸',
+  spin_trick: '旋转技', show_dance: '展示舞', facepalm: '扶额', scold: '斥责',
+  eww: '嫌弃', marching: '正步', chuckle: '偷笑', bubbles: '泡泡', beckon: '招呼',
+  gloat: '得意', stretch: '拉伸', slouch: '佝偻', sneeze: '喷嚏', hand_rub: '搓手',
+  navigate: '指方向', voila: '揭幕', anxious: '焦虑', calm_down: '冷静', ouch: '痛',
+  evil_laugh: '奸笑', spell_colour_trail: '彩迹', aww: '心软',
 };
 
-// 装扮类节点（emojiName 形如 "02_outfit"、"05_mask"）按类别后缀降级为中文类别名。
+// 装扮类节点按类别后缀降级为中文类别名。
 const FALLBACK_SUFFIX = [
   ['outfit', '衣服'], ['full_outfit', '全套'], ['hair', '头发'], ['mask', '面具'],
   ['hair_accessory', '头饰'], ['head_accessory', '头饰'], ['face_accessory', '脸饰'],
@@ -47,7 +57,7 @@ const FALLBACK_SUFFIX = [
   ['shared_space', '共享空间'],
 ];
 
-// 成本用系统 emoji 符号（任何设备都能显示，不依赖外部 CDN）
+// 成本用系统 emoji 符号（不依赖外部 CDN）
 const COST_ICONS = { c: '🕯️', h: '❤️', ac: '🔺', sc: '🧡', sh: '💗', et: '🎟️' };
 const COST_ORDER = ['c', 'h', 'ac', 'sc', 'sh', 'et'];
 
@@ -64,17 +74,29 @@ function fallbackLabel(node) {
 
 let container = null;
 let dataPromise = null;
+const treeCache = {};
 
-function loadData() {
+// 加载先祖索引（id/中文名/类型/地图/季节/树数据文件）
+function loadIndex() {
   if (dataPromise) return dataPromise;
-  dataPromise = fetch(DATA_URL, { cache: 'no-cache' }).then((r) => {
-    if (!r.ok) throw new Error('好友树数据加载失败：HTTP ' + r.status);
+  dataPromise = fetch(INDEX_URL, { cache: 'no-cache' }).then((r) => {
+    if (!r.ok) throw new Error('先祖索引加载失败：HTTP ' + r.status);
     return r.json();
   });
   return dataPromise;
 }
 
-// 先祖分组（按类型）
+// 按需加载某先祖的树数据文件（{ id: tree }）
+function loadTreeFile(file) {
+  if (!treeCache[file]) {
+    treeCache[file] = fetch(DATA_DIR + file, { cache: 'no-cache' }).then((r) => {
+      if (!r.ok) throw new Error('树数据加载失败：HTTP ' + r.status);
+      return r.json();
+    });
+  }
+  return treeCache[file];
+}
+
 const GROUPS = [
   { key: 'standard', label: '常驻先祖' },
   { key: 'elder', label: '长老' },
@@ -86,8 +108,8 @@ export async function mount(cont, sub) {
   container = cont;
   container.innerHTML = `<div class="ftg-loading">加载先祖数据…</div>`;
   try {
-    const data = await loadData();
-    render(data);
+    const index = await loadIndex();
+    render(index);
   } catch (err) {
     container.innerHTML = `<div class="ftg-error">${escapeHtml(String(err.message || err))}</div>`;
   }
@@ -97,9 +119,9 @@ export function unmount() {
   container = null;
 }
 
-function render(data) {
+function render(index) {
   if (!container) return;
-  const spirits = data.spirits || [];
+  const spirits = Array.isArray(index) ? index : [];
 
   const grouped = GROUPS.map((g) => ({
     ...g,
@@ -159,19 +181,31 @@ function render(data) {
     select.appendChild(og);
   }
 
+  const selectSpirit = async (meta) => {
+    if (!meta) return;
+    const stage = container && container.querySelector('#ftgStage');
+    if (stage) stage.innerHTML = `<div class="ftg-loading">加载「${escapeHtml(meta.n)}」好友树…</div>`;
+    try {
+      const trees = await loadTreeFile(meta.f);
+      const tree = trees[String(meta.id)];
+      if (tree) drawTree(meta, tree);
+    } catch (err) {
+      if (stage) stage.innerHTML = `<div class="ftg-error">${escapeHtml(String(err.message || err))}</div>`;
+    }
+  };
+
   select.addEventListener('change', () => {
-    const spirit = spirits.find((s) => String(s.id) === select.value);
-    if (spirit) drawTree(spirit);
+    const meta = spirits.find((s) => String(s.id) === select.value);
+    selectSpirit(meta);
   });
 
   if (grouped.length && grouped[0].items.length) {
     select.value = String(grouped[0].items[0].id);
-    drawTree(grouped[0].items[0]);
+    selectSpirit(grouped[0].items[0]);
   }
 }
 
-// 计算某先祖树的总成本
-function totalCost(spirit) {
+function totalCost(tree) {
   const total = { c: 0, h: 0, ac: 0, sc: 0, sh: 0, et: 0 };
   const walk = (node) => {
     if (!node) return;
@@ -182,24 +216,22 @@ function totalCost(spirit) {
     }
     if (node.ch) node.ch.forEach(walk);
   };
-  spirit.tree.forEach((layer) => layer.forEach(walk));
+  tree.forEach((layer) => layer.forEach(walk));
   return total;
 }
 
-function drawTree(spirit) {
+function drawTree(meta, tree) {
   const stage = container && container.querySelector('#ftgStage');
   if (!stage) return;
 
-  // —— 布局参数 ——
   const W = 640;
-  const slotX = [W * 0.22, W * 0.52, W * 0.82]; // 左/中/右 槽位中心
+  const slotX = [W * 0.22, W * 0.52, W * 0.82];
   const nodeR = 38;
   const rowH = 150;
   const topPad = 110;
   const trunkX = W * 0.52;
 
-  // 分层数组：[[node,node],[node],...]，children 展开为该层的额外节点
-  const layers = spirit.tree.map((layer) => {
+  const layers = tree.map((layer) => {
     const flat = [];
     layer.forEach((n) => {
       if (!n) return;
@@ -216,7 +248,6 @@ function drawTree(spirit) {
   svg.setAttribute('class', 'ftg-tree-svg');
   svg.setAttribute('role', 'img');
 
-  // 树干（中央竖线）
   const trunk = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   trunk.setAttribute('x1', trunkX);
   trunk.setAttribute('y1', topPad - nodeR);
@@ -232,7 +263,6 @@ function drawTree(spirit) {
     const count = layer.length;
     const placed = [];
 
-    // 槽位分配：节点在左/右槽位之间均匀分布（1 个居中，2 个左右，3 个左中右，更多则更密集）
     const sxOf = (ni) => {
       if (count === 1) return slotX[1];
       return slotX[0] + (slotX[2] - slotX[0]) * (ni / (count - 1));
@@ -250,7 +280,6 @@ function drawTree(spirit) {
       circle.setAttribute('class', 'ftg-bg');
       g.appendChild(circle);
 
-      // 分支连线（从树干到节点）
       if (Math.abs(sx - trunkX) > 4) {
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', trunkX);
@@ -261,7 +290,6 @@ function drawTree(spirit) {
         svg.appendChild(line);
       }
 
-      // 节点图标（emoji 图或降级文字）。CDN 可达则显示 emoji，失败/超时则降级为文字。
       const label = fallbackLabel(node);
       if (node.e) {
         const img = document.createElementNS('http://www.w3.org/2000/svg', 'image');
@@ -280,13 +308,12 @@ function drawTree(spirit) {
         };
         img.addEventListener('load', () => { done = true; });
         img.addEventListener('error', toFallback);
-        setTimeout(toFallback, 2500); // CDN 挂起时 2.5 秒超时降级
+        setTimeout(toFallback, 2500);
         g.appendChild(img);
       } else {
         g.appendChild(renderFallback(sx, y, nodeR, label));
       }
 
-      // 成本（节点下方）
       if (node.c) {
         const parts = COST_ORDER.filter((k) => typeof node.c[k] === 'number' && node.c[k] > 0);
         if (parts.length) {
@@ -301,7 +328,6 @@ function drawTree(spirit) {
         }
       }
 
-      // 等级徽章（节点左上角）
       if (node.l) {
         const t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         t.setAttribute('x', sx - nodeR + 4);
@@ -318,7 +344,6 @@ function drawTree(spirit) {
     placedByLayer.push(placed);
   });
 
-  // 层间纵向连线（相邻层的节点之间：简单的最近连接）
   for (let i = 0; i < placedByLayer.length - 1; i++) {
     const up = placedByLayer[i];
     const down = placedByLayer[i + 1];
@@ -340,14 +365,14 @@ function drawTree(spirit) {
     }
   }
 
-  const total = totalCost(spirit);
+  const total = totalCost(tree);
   const totalParts = COST_ORDER.filter((k) => total[k] > 0).map((k) => COST_ICONS[k] + total[k]);
 
   stage.innerHTML = `
     <div class="ftg-meta">
-      先祖：<strong>${escapeHtml(spirit.n)}</strong>
-      ${spirit.s ? ' · ' + escapeHtml(spirit.s) : ''}
-      ${spirit.r ? ' · ' + escapeHtml(spirit.r) : ''}
+      先祖：<strong>${escapeHtml(meta.n)}</strong>
+      ${meta.s ? ' · ' + escapeHtml(meta.s) : ''}
+      ${meta.r ? ' · ' + escapeHtml(meta.r) : ''}
       · 共 ${layers.length} 层
     </div>
   `;

@@ -1,0 +1,111 @@
+/* ================================================================
+   ui-enhance.css — 全局质感增强层（21st / magicui / reactbits 风格）
+
+   设计原则：
+   - 完全复用 tokens.css 已有的 --hub-* 变量，不重造设计系统
+   - 只加"动效 / 微交互 / 玻璃质感 / 焦点反馈"，不改布局与配色
+   - 尊重 prefers-reduced-motion（系统关动效时全部退化为瞬间）
+   - 新增内容不会破坏任何现有 class（选择器均为叠加式，不覆盖关键属性）
+   ================================================================ */
+
+/* ── 1. 统一过渡曲线（spring 质感：先快后慢） ────────────────── */
+:root {
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --enhance-duration: 0.32s;
+}
+
+/* 所有可交互元素统一过渡（仅对明确可交互元素生效，避免全局性能损耗） */
+button, a, [role="button"], input, select, textarea, .hub-search-open,
+.pf-drawer-link, .pf-drawer-test-toggle, .modal-close-btn, .hub-refresh-btn {
+  transition:
+    transform var(--enhance-duration) var(--ease-spring),
+    box-shadow var(--enhance-duration) var(--ease-spring),
+    background-color var(--enhance-duration) var(--ease-spring),
+    border-color var(--enhance-duration) var(--ease-spring),
+    color var(--enhance-duration) var(--ease-spring),
+    opacity var(--enhance-duration) var(--ease-spring);
+}
+
+/* ── 2. 玻璃质感基础卡：轻微 backdrop-blur + 边框微光 ─────────── */
+.pf-drawer, .modal-card, .hub-search-open, .pf-drawer-link,
+.hub-refresh-btn, .pf-drawer-test-toggle {
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+}
+
+/* ── 3. 可点击元素 hover 上浮 + 焦点发光 ──────────────────────── */
+.pf-drawer-link:hover, .hub-search-open:hover, .hub-refresh-btn:hover {
+  transform: translateY(-1px);
+}
+.pf-drawer-link:active, .hub-search-open:active, .hub-refresh-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* 键盘焦点可访问：柔和发光描边 */
+:focus-visible {
+  outline: 2px solid var(--hub-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── 4. 页面切换淡入（路由切换时 #app-root 内容整体淡入） ─────── */
+#app-root > * {
+  animation: enhance-fade-up 0.42s var(--ease-out) both;
+}
+@keyframes enhance-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* 工具抽屉里链接交错入场 */
+.pf-drawer-nav .pf-drawer-link {
+  animation: enhance-fade-up 0.32s var(--ease-out) both;
+}
+.pf-drawer-nav .pf-drawer-link:nth-child(1) { animation-delay: 0.02s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(2) { animation-delay: 0.05s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(3) { animation-delay: 0.08s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(4) { animation-delay: 0.11s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(5) { animation-delay: 0.14s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(6) { animation-delay: 0.17s; }
+.pf-drawer-nav .pf-drawer-link:nth-child(n+7) { animation-delay: 0.2s; }
+
+/* ── 5. 输入框 / 下拉聚焦发光 ───────────────────────────────── */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--hub-accent) !important;
+  box-shadow: 0 0 0 4px var(--hub-accent-bg);
+}
+
+/* ── 6. 美化滚动条（纤细、跟随主题） ──────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--hub-sep) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: var(--hub-sep);
+  border-radius: 8px;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--hub-text-3); }
+*::-webkit-scrollbar-track { background: transparent; }
+
+/* ── 7. 图片加载渐显（图鉴类图片若带 img-fade 类，淡入） ─────── */
+img.img-fade, .img-fade img {
+  animation: enhance-img-in 0.5s var(--ease-out) both;
+}
+@keyframes enhance-img-in {
+  from { opacity: 0; transform: scale(0.98); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── 8. 尊重系统动效偏好 ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  #app-root > *, .pf-drawer-nav .pf-drawer-link {
+    animation: none !important;
+  }
+}

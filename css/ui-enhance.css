@@ -1,185 +1,158 @@
 /* ================================================================
-   ui-enhance.css — 全局质感增强层（21st / magicui / reactbits 风格）
-
-   设计原则：
-   - 完全复用 tokens.css 已有的 --hub-* 变量，不重造设计系统
-   - 只加"动效 / 微交互 / 玻璃质感 / 焦点反馈"，不改布局与配色
-   - 尊重 prefers-reduced-motion（系统关动效时全部退化为瞬间）
-   - 新增内容不会破坏任何现有 class（选择器均为叠加式，不覆盖关键属性）
+   ui-enhance.css — 全局质感增强层 v2（强制覆盖版）
+   用 !important 和高特异性确保盖过原有 item.css / theme.css
    ================================================================ */
 
-/* ── 1. 统一过渡曲线（spring 质感：先快后慢） ────────────────── */
 :root {
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --enhance-duration: 0.32s;
 }
 
-/* 所有可交互元素统一过渡（仅对明确可交互元素生效，避免全局性能损耗） */
-button, a, [role="button"], input, select, textarea, .hub-search-open,
-.pf-drawer-link, .pf-drawer-test-toggle, .modal-close-btn, .hub-refresh-btn {
+/* ── 1. 页面背景加柔和光晕（一眼可见的变化） ────────────────── */
+html[data-theme="light"] body {
+  background:
+    radial-gradient(ellipse 800px 500px at 20% -10%, rgba(63, 81, 181, 0.08), transparent),
+    radial-gradient(ellipse 600px 400px at 90% 10%, rgba(156, 39, 176, 0.06), transparent) !important;
+}
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse 800px 500px at 20% -10%, rgba(140, 158, 255, 0.10), transparent),
+    radial-gradient(ellipse 600px 400px at 90% 10%, rgba(186, 104, 200, 0.08), transparent) !important;
+}
+
+/* ── 2. 大标题：黑→蓝渐变文字（强制覆盖） ────────────────────── */
+.item-view h1.item-large-title,
+.dash-wrap h1.item-large-title {
+  background: linear-gradient(120deg, var(--hub-text) 0%, var(--hub-accent) 60%, #7c4dff 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+}
+
+/* ── 3. 分类卡片：真玻璃拟态 + 明显 hover 上浮 + 彩色边框 ────── */
+.cat-card, .feature-btn, .welcome-card {
+  backdrop-filter: saturate(1.6) blur(18px) !important;
+  -webkit-backdrop-filter: saturate(1.6) blur(18px) !important;
+  border: 1.5px solid var(--hub-sep) !important;
+  box-shadow: 0 4px 12px rgba(63, 81, 181, 0.08), 0 12px 32px rgba(0, 0, 0, 0.08) !important;
+  transition: transform 0.35s var(--ease-spring), box-shadow 0.35s var(--ease-spring), border-color 0.35s ease !important;
+  position: relative;
+}
+.cat-card::before, .feature-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.cat-card:hover, .feature-btn:hover {
+  transform: translateY(-8px) !important;
+  box-shadow: 0 12px 24px rgba(63, 81, 181, 0.15), 0 28px 56px rgba(63, 81, 181, 0.2) !important;
+  border-color: var(--hub-accent) !important;
+}
+.cat-card:hover::before, .feature-btn:hover::before {
+  opacity: 1;
+}
+.cat-card:active, .feature-btn:active {
+  transform: translateY(-3px) scale(0.98) !important;
+}
+
+/* 分类网格入场：错峰浮入 */
+.cat-grid .cat-card {
+  animation: enhance-fade-up 0.5s var(--ease-out) both;
+}
+.cat-grid .cat-card:nth-child(1) { animation-delay: 0.05s; }
+.cat-grid .cat-card:nth-child(2) { animation-delay: 0.12s; }
+.cat-grid .cat-card:nth-child(3) { animation-delay: 0.19s; }
+.cat-grid .cat-card:nth-child(4) { animation-delay: 0.26s; }
+.cat-grid .cat-card:nth-child(5) { animation-delay: 0.33s; }
+.cat-grid .cat-card:nth-child(6) { animation-delay: 0.40s; }
+.cat-grid .cat-card:nth-child(n+7) { animation-delay: 0.45s; }
+
+/* 功能按钮图标 hover 放大旋转 */
+.feature-icon.icon-chip {
+  transition: transform 0.35s var(--ease-spring) !important;
+}
+.feature-btn:hover .feature-icon.icon-chip {
+  transform: scale(1.12) rotate(-5deg) !important;
+}
+
+/* ── 4. 提示横幅：明显渐变 ──────────────────────────────────── */
+.pf-hint-banner {
+  background: linear-gradient(135deg, var(--hub-accent-bg) 0%, rgba(156, 39, 176, 0.08) 100%) !important;
+  border: 1.5px solid var(--hub-accent) !important;
+  border-radius: 12px !important;
+}
+
+/* ── 5. 底部 dock 毛玻璃 ───────────────────────────────────── */
+#dock-root {
+  backdrop-filter: saturate(1.8) blur(24px) !important;
+  -webkit-backdrop-filter: saturate(1.8) blur(24px) !important;
+  border-top: 1px solid var(--hub-sep) !important;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* ── 6. 左侧边栏毛玻璃 ─────────────────────────────────────── */
+#side-left-root, .side-panel {
+  backdrop-filter: saturate(1.4) blur(16px) !important;
+  -webkit-backdrop-filter: saturate(1.4) blur(16px) !important;
+}
+
+/* ── 7. 按钮统一过渡 + hover 微反馈 ────────────────────────── */
+button, a, [role="button"], input, select, textarea {
   transition:
-    transform var(--enhance-duration) var(--ease-spring),
-    box-shadow var(--enhance-duration) var(--ease-spring),
-    background-color var(--enhance-duration) var(--ease-spring),
-    border-color var(--enhance-duration) var(--ease-spring),
-    color var(--enhance-duration) var(--ease-spring),
-    opacity var(--enhance-duration) var(--ease-spring);
+    transform 0.25s var(--ease-spring),
+    box-shadow 0.25s var(--ease-spring),
+    background-color 0.25s var(--ease-spring),
+    border-color 0.25s var(--ease-spring) !important;
 }
 
-/* ── 2. 玻璃质感基础卡：轻微 backdrop-blur + 边框微光 ─────────── */
-.pf-drawer, .modal-card, .hub-search-open, .pf-drawer-link,
-.hub-refresh-btn, .pf-drawer-test-toggle {
-  backdrop-filter: saturate(1.4) blur(12px);
-  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+/* ── 8. 输入框聚焦发光 ─────────────────────────────────────── */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--hub-accent) !important;
+  box-shadow: 0 0 0 4px var(--hub-accent-bg) !important;
+  outline: none !important;
 }
 
-/* ── 3. 可点击元素 hover 上浮 + 焦点发光 ──────────────────────── */
-.pf-drawer-link:hover, .hub-search-open:hover, .hub-refresh-btn:hover {
-  transform: translateY(-1px);
-}
-.pf-drawer-link:active, .hub-search-open:active, .hub-refresh-btn:active {
-  transform: translateY(0) scale(0.98);
-}
-
-/* 键盘焦点可访问：柔和发光描边 */
-:focus-visible {
-  outline: 2px solid var(--hub-accent);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-/* ── 4. 页面切换淡入（路由切换时 #app-root 内容整体淡入） ─────── */
+/* ── 9. 页面淡入 ───────────────────────────────────────────── */
 #app-root > * {
-  animation: enhance-fade-up 0.42s var(--ease-out) both;
+  animation: enhance-fade-up 0.4s var(--ease-out) both;
 }
 @keyframes enhance-fade-up {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* 工具抽屉里链接交错入场 */
-.pf-drawer-nav .pf-drawer-link {
-  animation: enhance-fade-up 0.32s var(--ease-out) both;
-}
-.pf-drawer-nav .pf-drawer-link:nth-child(1) { animation-delay: 0.02s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(2) { animation-delay: 0.05s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(3) { animation-delay: 0.08s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(4) { animation-delay: 0.11s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(5) { animation-delay: 0.14s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(6) { animation-delay: 0.17s; }
-.pf-drawer-nav .pf-drawer-link:nth-child(n+7) { animation-delay: 0.2s; }
-
-/* ── 5. 输入框 / 下拉聚焦发光 ───────────────────────────────── */
-input:focus, select:focus, textarea:focus {
-  border-color: var(--hub-accent) !important;
-  box-shadow: 0 0 0 4px var(--hub-accent-bg);
-}
-
-/* ── 6. 美化滚动条（纤细、跟随主题） ──────────────────────────── */
+/* ── 10. 美化滚动条 ────────────────────────────────────────── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--hub-sep) transparent;
+  scrollbar-color: var(--hub-accent) transparent;
 }
 *::-webkit-scrollbar { width: 8px; height: 8px; }
 *::-webkit-scrollbar-thumb {
-  background: var(--hub-sep);
+  background: var(--hub-accent);
   border-radius: 8px;
+  opacity: 0.6;
 }
-*::-webkit-scrollbar-thumb:hover { background: var(--hub-text-3); }
+*::-webkit-scrollbar-thumb:hover { background: var(--hub-accent); }
 *::-webkit-scrollbar-track { background: transparent; }
 
-/* ── 7. 图片加载渐显（图鉴类图片若带 img-fade 类，淡入） ─────── */
-img.img-fade, .img-fade img {
-  animation: enhance-img-in 0.5s var(--ease-out) both;
-}
-@keyframes enhance-img-in {
-  from { opacity: 0; transform: scale(0.98); }
-  to   { opacity: 1; transform: scale(1); }
+/* ── 11. 键盘焦点发光 ──────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--hub-accent) !important;
+  outline-offset: 2px !important;
+  border-radius: 6px;
 }
 
-/* ── 8. 尊重系统动效偏好 ─────────────────────────────────────── */
+/* ── 12. 尊重系统动效偏好 ──────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
-  }
-  #app-root > *, .pf-drawer-nav .pf-drawer-link {
-    animation: none !important;
-  }
-}
-
-/* ════════════════════════════════════════════════════════════
-   9. 明显视觉升级（玻璃拟态 + 大阴影 + hover 大动作）
-   ════════════════════════════════════════════════════════════ */
-
-/* 分类卡片：真玻璃拟态 + hover 上浮 + 边框发光 */
-.cat-card, .feature-btn, .welcome-card {
-  backdrop-filter: saturate(1.5) blur(16px);
-  -webkit-backdrop-filter: saturate(1.5) blur(16px);
-  border: 1px solid var(--hub-sep);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
-  transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s cubic-bezier(0.22,1,0.36,1), border-color 0.35s ease;
-}
-.cat-card:hover, .feature-btn:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.08), 0 20px 48px rgba(63,81,181,0.14);
-  border-color: var(--hub-accent);
-}
-.cat-card:active, .feature-btn:active {
-  transform: translateY(-2px) scale(0.99);
-}
-
-/* 分类网格入场：每张卡片错峰浮入 */
-.cat-grid .cat-card {
-  animation: enhance-fade-up 0.5s cubic-bezier(0.22,1,0.36,1) both;
-}
-.cat-grid .cat-card:nth-child(1) { animation-delay: 0.05s; }
-.cat-grid .cat-card:nth-child(2) { animation-delay: 0.10s; }
-.cat-grid .cat-card:nth-child(3) { animation-delay: 0.15s; }
-.cat-grid .cat-card:nth-child(4) { animation-delay: 0.20s; }
-.cat-grid .cat-card:nth-child(5) { animation-delay: 0.25s; }
-.cat-grid .cat-card:nth-child(6) { animation-delay: 0.30s; }
-.cat-grid .cat-card:nth-child(n+7) { animation-delay: 0.35s; }
-
-/* 功能按钮：图标 chip 加微光泽 */
-.feature-icon.icon-chip {
-  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
-}
-.feature-btn:hover .feature-icon.icon-chip {
-  transform: scale(1.08) rotate(-3deg);
-}
-
-/* 大标题加一点点渐变文字质感 */
-.item-large-title {
-  background: linear-gradient(120deg, var(--hub-text) 0%, var(--hub-accent) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* 提示横幅：柔和渐变 */
-.pf-hint-banner {
-  background: linear-gradient(135deg, var(--hub-accent-bg), transparent);
-  border: 1px solid var(--hub-accent);
-}
-
-/* 底部 dock（主/仪表盘/通知/其他工具/显示设置）毛玻璃 */
-#dock-root {
-  backdrop-filter: saturate(1.6) blur(20px);
-  -webkit-backdrop-filter: saturate(1.6) blur(20px);
-  border-top: 1px solid var(--hub-sep);
-}
-
-/* 分类进度条 fill 加流光 */
-.cat-fill {
-  transition: width 0.6s cubic-bezier(0.22,1,0.36,1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cat-card, .feature-btn, .welcome-card, .cat-grid .cat-card {
-    animation: none !important;
-    transform: none !important;
   }
 }

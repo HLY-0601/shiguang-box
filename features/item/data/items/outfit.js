@@ -123,10 +123,10 @@ export const ITEMS = [
   { id: 'outfit_110', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/b/bf/Fortune-Pleated-Dress-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Fortune Pleated Dress", name: '来福ひだ付き装束', event: '来福の日々', cost: 'premium', dye: true, noReprint: false, type: 'onesie' },  // ¥1,300
   { id: 'outfit_115', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/0/0a/Showy-Merchant-Outfit-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Showy Merchant Outfit", name: '見せびらかしの商人　アウトフィット', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
   { id: 'outfit_116', img: 'https://images.weserv.nl/?url=static.wikia.nocookie.net/sky-children-of-the-light/images/6/6d/Wrestling-Sailor-Outfit-icon.png/revision/latest/scale-to-width-down/51', nameEn: "Wrestling Sailor Outfit", name: '腕っぷし自慢の船乗り　アウトフィット', event: '遥かなる真珠の季節', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
-  // ── ファッションの日々（テスト版） ──
-  { id: 'outfit_117', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans.png', nameEn: "Style Wide-Leg Jeans", name: 'スタイル　ワイドレッグジーンズ', event: 'ファッションの日々', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
-  { id: 'outfit_118', img: '/shiguang-box/assets/fashion-day/dapper-trio.png', nameEn: "Style Dapper Trio", name: 'スタイル　ダッパートリオ', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' },
-  { id: 'outfit_119', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans-pack.png', nameEn: "Style Wide-Leg Jeans Pack", name: 'スタイル　ワイドレッグジーンズ　パック', event: 'ファッションの日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' },
+  // ── お洒落な日々（テスト版） ──
+  { id: 'outfit_117', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans.png', nameEn: "Style Wide-Leg Jeans", name: 'スタイル　ワイドレッグジーンズ', event: 'お洒落な日々', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
+  { id: 'outfit_118', img: '/shiguang-box/assets/fashion-day/dapper-trio.png', nameEn: "Style Dapper Trio", name: 'スタイル　ダッパートリオ', event: 'お洒落な日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' },
+  { id: 'outfit_119', img: '/shiguang-box/assets/fashion-day/wide-leg-jeans-pack.png', nameEn: "Style Wide-Leg Jeans Pack", name: 'スタイル　ワイドレッグジーンズ　パック', event: 'お洒落な日々', cost: 'premium', dye: false, noReprint: true, type: 'onesie' },
   // ── 聖なる星の日々 2026（テスト版） ──
   { id: 'outfit_120', img: '/shiguang-box/assets/feast-2026/pink-outfit.png', nameEn: "Winter Pink Outfit", name: 'ウィンターピンクアウトフィット', event: '聖なる星の日々', cost: 'free', dye: true, noReprint: false, type: 'onesie' },
 ];

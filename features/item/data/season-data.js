@@ -56,7 +56,8 @@ export const EVENT_SCHEDULE = [
 ];
 
 export const CANDLE_BONUS_SCHEDULE = [
-  // 現在開催予定なし（終了したボーナスはこの配列から削除してよい）
+  // ボーナス期間が終わったらこの配列から削除してよい
+  { name: 'ハート2倍キャンペーン', start: '2026-11-13T00:00:00-08:00', end: '2026-11-26T23:59:59-08:00' }, // Double Hearts（公式 11/13〜11/26、PT基準）
 ];
 
 export const NEXT_UPDATE = {
@@ -96,7 +97,7 @@ export const REVISIT_SPIRIT_SCHEDULES = [
     end: '2026-10-10T15:59:59+09:00',
   },
   {
-    // 団15 集団再訪（夢かなう季節 / 表現者たちの季節）。11/13〜11/27 に4名、舞い踊る表現者のみ 11/26〜12/02。
+    // 団15 集団再訪（夢かなう季節 / 表現者たちの季節）。公式・三方カレンダーは 11/13〜11/26（PT）の一団来訪。
     items: [
       // そっと覗く郵便屋 (Peeking Postman)
       { catKey: 'cape', id: 'cape_045' },
@@ -116,14 +117,9 @@ export const REVISIT_SPIRIT_SCHEDULES = [
       { catKey: 'portable_item', id: 'portable_item_021' },
       { catKey: 'hairstyle', id: 'hairstyle_094' },
       { catKey: 'mask', id: 'mask_059' },
-      // 舞い踊る表現者 (Dancing Performer) 11/26〜12/02
-      { catKey: 'hairstyle', id: 'hairstyle_069' },
-      { catKey: 'mask', id: 'mask_037' },
-      { catKey: 'portable_item', id: 'portable_item_018' },
-      { catKey: 'cape', id: 'cape_046' },
     ],
     start: '2026-11-13T00:00:00-08:00',
-    end: '2026-12-02T23:59:59-08:00',
+    end: '2026-11-26T23:59:59-08:00',
   },
 ];
 

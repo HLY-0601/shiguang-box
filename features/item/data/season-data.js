@@ -52,6 +52,7 @@ export function scheduleWithUpcomingSeason(schedule = EVENT_SCHEDULE, season = C
 export const EVENT_SCHEDULE = [
   { name: '月灯りの日々', start: '2026-09-19T16:00:00+09:00', end: '2026-10-10T15:59:59+09:00' },
   { name: 'いたずらな日々', start: '2026-10-23T16:00:00+09:00', end: '2026-11-11T23:59:59-08:00' }, // 終了は日本時間 2026/11/12 16:59:59（夏時間の終了後）
+  { name: 'お洒落な日々', start: '2026-11-27T00:00:00-08:00', end: '2026-12-10T23:59:59-08:00' }, // Days of Style（公式 11/27〜12/10、PT基準）
 ];
 
 export const CANDLE_BONUS_SCHEDULE = [
@@ -59,7 +60,7 @@ export const CANDLE_BONUS_SCHEDULE = [
 ];
 
 export const NEXT_UPDATE = {
-  date: null, // 次回アップデート日が未定（発表されたら '2026-XX-XXT00:00:00-07:00' の形式で設定）
+  date: '2026-11-24T00:00:00-08:00', // Update 35.5（公式 2026/11/24、PT基準）
 };
 
 // intervalDaysありの周期は「太平洋時間の壁時計」で数えるため、夏時間の切替（11/1・3月）をまたいでも
@@ -69,18 +70,19 @@ export const REVISIT_SPIRIT_SCHEDULES = [
     // 2週間おきに4日間だけ来る旅の精霊の再訪周期。来訪ごとに違う精霊が来るため、
     // 入れ替わるたびにitemsとanchorStart/anchorEndを直近の実際の来訪に合わせて更新する
     // （intervalDaysは周期そのものなので変更不要）。
-    // 直近の来訪(日本時間 2026-11-05 17:00〜11-09 16:59)は「ぽんぽんする若者」(head_accessory_001＝イヤーマフ, portable_item_012＝ウクレレ)。
+    // 直近の来訪(日本時間 2026-11-19 17:00〜11-23 16:59)は「思慮深き座長」(mask_024＝マスク, portable_item_013＝シロフォン, cape_033＝ケープ)。
     // 🕐 夏時間が11/1に終わったので、日本時間では17:00始まり・16:59終わり。太平洋時間（-08:00）の0:00〜23:59:59で書いておくと、
     //    3月に夏時間へ戻った後の周期も自動で16:00始まりに戻る（周期は太平洋時間の壁時計で数えるため）。
     // spiritJa/spiritEn はお知らせ（js/notices.js）が「待っている精霊」と照らし合わせるのに使う。精霊が入れ替わったら一緒に更新する
-    spiritJa: 'ぽんぽんする若者',
-    spiritEn: 'Hairtousle Teen',
+    spiritJa: '思慮深き座長',
+    spiritEn: 'Thoughtful Director',
     items: [
-      { catKey: 'head_accessory', id: 'head_accessory_001' },
-      { catKey: 'portable_item', id: 'portable_item_012' },
+      { catKey: 'mask', id: 'mask_024' },
+      { catKey: 'portable_item', id: 'portable_item_013' },
+      { catKey: 'cape', id: 'cape_033' },
     ],
-    anchorStart: '2026-11-05T00:00:00-08:00', // 日本時間 2026/11/5 17:00
-    anchorEnd: '2026-11-08T23:59:59-08:00',   // 日本時間 2026/11/9 16:59:59
+    anchorStart: '2026-11-19T00:00:00-08:00', // 日本時間 2026/11/19 17:00
+    anchorEnd: '2026-11-22T23:59:59-08:00',   // 日本時間 2026/11/23 16:59:59
     intervalDays: 14,
   },
   {
@@ -92,6 +94,36 @@ export const REVISIT_SPIRIT_SCHEDULES = [
     ],
     start: '2026-09-19T16:00:00+09:00',
     end: '2026-10-10T15:59:59+09:00',
+  },
+  {
+    // 団15 集団再訪（夢かなう季節 / 表現者たちの季節）。11/13〜11/27 に4名、舞い踊る表現者のみ 11/26〜12/02。
+    items: [
+      // そっと覗く郵便屋 (Peeking Postman)
+      { catKey: 'cape', id: 'cape_045' },
+      { catKey: 'shoes', id: 'shoes_001' },
+      { catKey: 'outfit', id: 'outfit_010' },
+      { catKey: 'mask', id: 'mask_036' },
+      // ハグ好きの隠者 (Bearhug Hermit)
+      { catKey: 'hairstyle', id: 'hairstyle_068' },
+      { catKey: 'outfit', id: 'outfit_076' },
+      { catKey: 'head_accessory', id: 'head_accessory_003' },
+      // 一生懸命な舞台美術家 (Frantic Stagehand)
+      { catKey: 'outfit', id: 'outfit_085' },
+      { catKey: 'mask', id: 'mask_056' },
+      { catKey: 'hairstyle', id: 'hairstyle_092' },
+      // のんびり屋の音楽家 (Mellow Musician)
+      { catKey: 'cape', id: 'cape_066' },
+      { catKey: 'portable_item', id: 'portable_item_021' },
+      { catKey: 'hairstyle', id: 'hairstyle_094' },
+      { catKey: 'mask', id: 'mask_059' },
+      // 舞い踊る表現者 (Dancing Performer) 11/26〜12/02
+      { catKey: 'hairstyle', id: 'hairstyle_069' },
+      { catKey: 'mask', id: 'mask_037' },
+      { catKey: 'portable_item', id: 'portable_item_018' },
+      { catKey: 'cape', id: 'cape_046' },
+    ],
+    start: '2026-11-13T00:00:00-08:00',
+    end: '2026-12-02T23:59:59-08:00',
   },
 ];
 

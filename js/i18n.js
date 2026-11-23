@@ -103,6 +103,7 @@ export const SEASON_NAME_EN = {
   '来訪する精霊団': 'Traveling Spirit Troupe',
   '夏のキャンプ': 'Summer Camp',
   '大キャン２倍・シーズンキャンドル２倍': 'Double Grand & Season Candles',
+  'ハート2倍キャンペーン': 'Double Hearts',
   '恒常精霊': 'Realm Spirits',
   '奏の音楽堂': 'Concert Hall',
   '恒常精霊・過去': 'Realm Spirits (Past)',

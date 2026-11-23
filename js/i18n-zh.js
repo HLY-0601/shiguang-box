@@ -2690,6 +2690,8 @@ const ZH_ENTRIES = [
  ["花瓶（小）", "小花瓶"],
  ["角笛", "号角"],
  ["来福扇子", "新春折扇"],
+ ["大競技会表彰台", "大赛领奖台"],
+ ["FlOw Cape", "FlOw 斗篷"],
 ];
 
 const ZH_MAP = new Map(ZH_ENTRIES);

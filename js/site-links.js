@@ -9,7 +9,7 @@
 import { ROUTES } from './router-registry.js';
 import { SITE_LINK_TOOLS } from './site-links-data.js';
 
-// 一覧データ(site-links-data.js。独立サイトのサイドバーと共有)には載せていない、tai-hub内でだけ使うツール。
+// 一覧データ(site-links-data.js。独立サイドバーと共有)には載せていない、tai-hub内でだけ使うツール。
 // afterId の直後に差し込む。
 const HUB_ONLY_TOOLS = [
   { id: 'tai-nomacan-pro', afterId: 'tai-nomacan', icon: 'i-compass', ja: 'ノマキャン計算機プロ', en: 'Candle Calculator Pro', zh: '蜡烛计算器Pro', badgeTest: true },
@@ -21,6 +21,7 @@ const HUB_ONLY_TOOLS = [
   { id: 'season-calc', afterId: 'spirit-catalog', icon: 'i-candle', ja: '季節精霊計算機', en: 'Season Spirit Calculator', zh: '季节先祖计算器', badgeTest: true },
   { id: 'price-compare', afterId: 'season-calc', icon: 'i-cart', ja: 'ショップ価格比較', en: 'Shop Price Compare', zh: '商城定价对照', badgeTest: true },
   { id: 'account', afterId: 'data-transfer', icon: 'i-person', ja: 'ローカルアカウント', en: 'Local Account', zh: '本地账号', child: true },
+  { id: 'profile', afterId: 'tai-info', icon: 'i-person', ja: '作者プロフィール', en: 'Creator Profile', zh: '作者简介' },
 ];
 
 let tools = null;
@@ -57,6 +58,7 @@ export function siteLinkHref(tool) {
   return { href: `https://taipak5000.github.io/${tool.path}/`, hubRoute: '' };
 }
 
+/** リンク名の表示言語 */
 export function siteLinkName(tool, lang) {
   return tool[lang] || tool.en || tool.ja;
 }

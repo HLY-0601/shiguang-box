@@ -1,56 +1,82 @@
 /* ================================================================
- 作者プロフィール（自己紹介ページ）の表示内容。
- 移植元: profile/index.html の <script> 冒頭にあった `profile` / `links`
- の2つのオブジェクト・配列を、値を一切変えずにそのままES moduleへ
- 移した。site-dock/pf-modal/tools-drawer等の共有chrome向けのリンク
- （共通ツール一覧 site-links.json）とは別物で、こちらは「Links」セクション自体の見出し・
- 説明文（サイト運営者向けの日本語コメントも含め、編集のしやすさを
- 優先した元の1件ずつのオブジェクト形式）をそのまま保持する。
-
- icon フィールドのみ、元実装（<use href="#i-xxx"/>）から参照先を
- tai-hub側のアイコンID体系に合わせて更新している（表示は同一）：
- ・tai-hub共有スプライト(js/icon-sprite.js)に既にあるもの
- （i-folder/i-masks/i-pin/i-candle/i-star-candle/i-sparkle/i-wing/
- i-music-note/i-card/i-sync）はそのまま #i-xxx を参照。
- ・共有スプライトに無いもの（i-x-logo・i-box）だけ、このツール専用の
- ローカルスプライト（profile-view.js が注入。id先頭 pv-i-）を参照する
- よう #pv-i-xxx に差し替えた。
+ 作者资料（自我介绍页）显示内容。
+ 字段留空则对应徽章/段落自动隐藏：
+ mbti / ageStatus / gameName 为空不显示徽章；
+ extraInfo 为空不显示折叠区；avatarImage 为空用名字首字做头像。
  ================================================================ */
 
 export const PROFILE = {
- name: 'たい',
- tagline: 'ものづくりが好きです',
- // ▼ 英語表示用（空欄ならtaglineが代わりに表示されます）
- taglineEn: 'I love making things.',
+  // 展示名（README 署名为夜月/Yueye，GitHub 账号名为夜悦，按需改）
+  name: '夜月',
+  tagline: '喜欢捣鼓各种小工具',
+  taglineEn: 'I like building little tools.',
 
- // MBTIタイプ（空欄なら非表示になります）
- mbti: 'ISTJ',
+  // MBTI（留空则不显示）
+  mbti: '',
 
- // 年齢ステータス（空欄なら非表示になります）
- ageStatus: '成人済み',
- // ▼ 英語表示用（空欄ならageStatusが代わりに表示されます）
- ageStatusEn: 'Adult',
+  // 年龄状态（留空则不显示）
+  ageStatus: '',
+  ageStatusEn: '',
 
- // ゲーム内の名前（空欄なら非表示になります）
- gameName: 'Paㅋ',
+  // 游戏内昵称（留空则不显示）
+  gameName: '',
 
- bio: '普段は自分が欲しいと思ったサイトを作って公開しています。\n効率化やちょっとしたグリッチ技を扱うのが好きです。\n含み笑いのスカウトマスクを愛用している方とフレンドになりたいです。',
- // ▼ 英語表示用（空欄ならbioが代わりに表示されます）
- bioEn: "I usually build and publish whatever websites I feel like I need myself.\nI enjoy efficiency tricks and the occasional small glitch technique.\nI'd love to be friends with anyone who wears the smirking Scout mask.",
+  bio: '平时会把自己用得上的小工具做成网站或页面放出来。\n目前主要在维护光遇粉丝工具合集，也做过机器人菜单卡片、皮肤代码库和 AI 记忆模型相关的小项目。\n数据基本都存在本地浏览器，不经过服务器。',
+  bioEn: "I usually build and publish whatever tools I find useful myself.\nI mainly maintain a Sky fan-tool collection, and have also built bot menu cards, a skin code library, and small AI memory-model projects.\nData stays in the local browser; nothing goes through a server.",
 
- // 「もっと知りたい人向け」を押すと表示される追加情報（空欄なら非表示になります）
- extraInfo: 'Sky以外に、モンストやイナクロもプレイしている方仲良くしてくれると嬉しいです\n切り絵の作成やイラストを描いたりと、いろんなことに手を出しています！',
- // ▼ 英語表示用（空欄ならextraInfoが代わりに表示されます）
- extraInfoEn: "Besides Sky, I'd be happy to get along with anyone who also plays Monster Strike or Inazuma Eleven Climax.\nI also dabble in a bunch of other things, like paper cutting art and illustration!",
+  // 折叠区「感兴趣的人」（留空则整块隐藏）
+  extraInfo: '除了光遇，也在折腾 QQ 机器人、模型微调、游戏拆包这些方向，有同好欢迎交流。',
+  extraInfoEn: 'Besides Sky, I dabble in QQ bots, model fine-tuning, and game data extraction. Feel free to reach out if we share an interest.',
 
- // 写真を使いたい場合はここにファイル名やURLを入れてください
- avatarImage: 'https://pbs.twimg.com/profile_images/2056923572296437760/EnPe2tws_400x400.jpg',
+  // 头像图片地址（留空用名字首字）
+  avatarImage: '',
 
- // 右上の小さなラベル文字
- label: 'SELF INTRODUCTION',
+  // 卡片右上角小标签
+  label: '自我介绍',
 
- // ページ下部の小さな文字（空欄なら「© 年 名前」が自動で入ります）
- footnote: '',
+  // 页脚小字（留空自动生成 © 年份 名字）
+  footnote: '',
 };
 
-export const LINKS = [];
+export const LINKS = [
+  {
+    icon: '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>',
+    title: '时光盒 · 光遇工具合集',
+    titleEn: 'Shiguang-Box · Sky Fan Tools',
+    url: 'https://hly-0601.github.io/shiguang-box/',
+    description: '物品、表情、光翼、先祖树、复刻先祖、乐谱、蜡烛计算等整合在一个 PWA 里，数据保存在本机。',
+    descriptionEn: 'Items, emotes, wings, spirit trees, visits, music sheets and candle calculators in one PWA; data stays local.',
+  },
+  {
+    icon: '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>',
+    title: '讳序 · 功能菜单',
+    titleEn: 'Huixu · Bot Menu',
+    url: 'https://hly-0601.github.io/',
+    description: '香江助手菜单卡片静态页，共 139 项功能入口。',
+    descriptionEn: 'Static menu-card page for the bot, with 139 feature entries.',
+  },
+  {
+    icon: '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>',
+    title: '超自然 · 皮肤代码库',
+    titleEn: 'Skin Code Library',
+    url: 'https://hly-0601.github.io/skin-code-library/',
+    description: '全角色皮肤代码收录：133 款员工皮肤 + 176 款道具，苹果风界面，邮箱认证。',
+    descriptionEn: 'All-character skin codes: 133 character skins + 176 items, Apple-style UI with email auth.',
+  },
+  {
+    icon: '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>',
+    title: 'Mnemo Sonnet Agent',
+    titleEn: 'Mnemo Sonnet Agent',
+    url: 'https://github.com/HLY-0601/mnemo-sonnet-agent',
+    description: '记忆驱动的自我进化模型：纯 numpy Transformer + ReAct Agent + 记忆引擎 + 自动进化闭环。',
+    descriptionEn: 'Memory-driven self-evolving agent: pure-numpy Transformer + ReAct + memory engine + auto-evolution loop.',
+  },
+  {
+    icon: '<svg class="inline-icon" width="20" height="20"><use href="#pv-i-link"/></svg>',
+    title: 'GitHub 主页',
+    titleEn: 'GitHub Profile',
+    url: 'https://github.com/HLY-0601',
+    description: '全部公开项目都在这里。',
+    descriptionEn: 'All public projects are here.',
+  },
+];

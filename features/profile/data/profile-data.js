@@ -6,17 +6,17 @@
  ================================================================ */
 
 export const PROFILE = {
-  // 展示名（README 署名为夜月/Yueye，GitHub 账号名为夜悦，按需改）
-  name: '夜月',
+  // 展示名（GitHub 账号名：夜悦）
+  name: '夜悦',
   tagline: '喜欢捣鼓各种小工具',
   taglineEn: 'I like building little tools.',
 
-  // MBTI（留空则不显示）
-  mbti: '',
+  // MBTI
+  mbti: 'INTJ',
 
-  // 年龄状态（留空则不显示）
-  ageStatus: '',
-  ageStatusEn: '',
+  // 年龄状态
+  ageStatus: '20',
+  ageStatusEn: '20',
 
   // 游戏内昵称（留空则不显示）
   gameName: '',

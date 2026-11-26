@@ -52,6 +52,24 @@ function iconUrl(it) {
   return ICON_BASE + encodeURIComponent(icon + '_100.png');
 }
 
+// 空白/通用占位图标：CDN 上对应的是纯白图或通用菜单图标，不是该服饰的专属图标
+const BLANK_ICONS = new Set([
+  'UiMenuSpellVoid', 'UiMenuBuffBoat', 'UiSocialJoinDragonDance',
+  'UiMenuSpellWater', 'UiMenuSpellEarth', 'UiMenuSpellWind',
+  'UiMenuSpellFire', 'UiMenuSpellMind',
+]);
+
+// 占位 / 无图标 / 圆圈占位条目：不进入图鉴列表
+function isPlaceholder(it) {
+  const icon = it.icon || '';
+  if (it.none) return true;                 // 标记为“无”的占位项
+  if (!icon) return true;                   // 没有任何图标
+  if (icon === 'UiWip') return true;       // WIP 圆圈占位
+  if (/None|Default/.test(icon)) return true; // None / 默认圆圈占位
+  if (BLANK_ICONS.has(icon)) return true;   // 空白或通用占位图标
+  return false;
+}
+
 function render() {
   if (!container) return;
   if (!data) {
@@ -59,7 +77,8 @@ function render() {
     return;
   }
 
-  const slots = data.slots || [];
+  const slots = (data.slots || []).map(s => ({ ...s, items: (s.items || []).filter(it => !isPlaceholder(it)) }));
+  const total = slots.reduce((n, s) => n + s.items.length, 0);
   const q = query.trim().toLowerCase();
 
   const chips = [`<button class="oc-chip ${activeCat === '' ? 'active' : ''}" data-cat="">${escapeHtml(T.catAll)}</button>`]
@@ -95,10 +114,10 @@ function render() {
   container.innerHTML = `
     <div class="oc-wrap">
       <h1 class="oc-title">${escapeHtml(T.title)}</h1>
-      <p class="oc-sub">${escapeHtml(T.subtitle)}</p>
+      <p class="oc-sub">${escapeHtml(T.subtitle.replace('1335', String(total)))}</p>
       <input id="ocSearch" class="oc-search" type="search" placeholder="${escapeHtml(T.search)}" value="${escapeHtml(query)}" autocomplete="off">
       <div class="oc-chips">${chips}</div>
-      <div class="oc-count">${visible.length} / ${slots.reduce((n, s) => n + s.items.length, 0)}</div>
+      <div class="oc-count">${visible.length} / ${total}</div>
       <div class="oc-grid">${grid || `<div class="oc-empty">${escapeHtml(T.empty)}</div>`}</div>
     </div>`;
 

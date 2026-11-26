@@ -18,8 +18,11 @@ const PT_ZONE = 'America/Los_Angeles';
 export const SHARD_REALMS = ['prairie', 'forest', 'valley', 'wasteland', 'vault'];
 const SHARD_REALM_JA = { prairie: '草原', forest: '雨林', valley: '峡谷', wasteland: '捨てられた地', vault: '書庫' };
 const SHARD_REALM_EN = { prairie: 'Prairie', forest: 'Forest', valley: 'Valley', wasteland: 'Wasteland', vault: 'Vault' };
+const SHARD_REALM_ZH = { prairie: '云野', forest: '雨林', valley: '霞谷', wasteland: '暮土', vault: '禁阁' };
 export function realmName(lang, key) {
-  return lang === 'en' ? (SHARD_REALM_EN[key] || key) : (SHARD_REALM_JA[key] || key);
+  if (lang === 'en') return SHARD_REALM_EN[key] || key;
+  if (lang === 'zh') return SHARD_REALM_ZH[key] || key;
+  return SHARD_REALM_JA[key] || key;
 }
 const SHARD_WD_ISO = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 7 };
 // 黒い破片2種・赤い破片3種、それぞれの初回開始時刻（PT）・間隔・発生しない曜日（ISO: 月=1〜日=7）

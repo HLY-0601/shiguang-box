@@ -229,6 +229,14 @@
    chrome.cssの下からのボトムシート(.modal-overlay/.modal-card)とは
    別クラスで持つ。CLAUDE.mdの「開くアニメーションはanimationで」規約に
    合わせ、フェードのみ簡易にanimationで行う） ── */
+/* 祖先（この要素自身）が #app-root > * のフェードイン animation
+   （transform: translateY）を持つと、transform が非 none の要素はその子孫の
+   position: fixed の包含块になる。すると .sc-detail-overlay がビューポートではなく
+   この要素の高さに縛られ、ツリーが長いとスクロールできず下端が切れる。
+   そのため本 view では transform を伴う入场アニメーションを切り、opacity のみで
+   フェードさせる（fixed 包含块をビューポートに戻す）。 */
+.spirit-catalog-view { animation: viewFadeIn 0.4s ease both !important; }
+@keyframes viewFadeIn { from { opacity: 0; } to { opacity: 1; } }
 .spirit-catalog-view .sc-detail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; align-items: flex-start; justify-content: center; padding: 0; overflow-y: auto; }
 .spirit-catalog-view .sc-detail-overlay.open { display: flex; animation: scDetailFade 0.2s ease; }
 @keyframes scDetailFade { from { opacity: 0; } to { opacity: 1; } }

@@ -18,12 +18,15 @@ import { getShortcutsEnabled, toggleTheme } from './state.js';
 const NON_TEXT_INPUT_TYPES = ['checkbox', 'radio', 'button', 'submit', 'reset', 'range', 'color', 'file'];
 
 function closeTopmostOpenOverlay() {
-  const overlays = document.querySelectorAll('.modal-overlay.open, .pf-modal-overlay.open, .pf-drawer.mobile-open');
+  const overlays = document.querySelectorAll('.modal-overlay.open, .pf-modal-overlay.open, .sc-detail-overlay.open, .pf-drawer.mobile-open');
   const topmost = overlays[overlays.length - 1];
   if (!topmost) return false;
   if (topmost.classList.contains('pf-drawer')) {
     topmost.classList.remove('mobile-open');
     document.getElementById('toolsDrawerOverlay')?.classList.remove('show');
+  } else if (topmost.classList.contains('sc-detail-overlay')) {
+    // 先祖ツリー詳細モーダル：専用の closeDetail() 経由で閉じる（状態リセット・再訪DBへの遷移を伴う）
+    topmost.querySelector('[data-sc-detail-act="close"]')?.click();
   } else {
     topmost.classList.remove('open');
   }
